@@ -1,0 +1,40 @@
+/*
+* Copyright (C) 2012-2013, <Aeihu.z, aeihu.z@gmail.com>.
+*
+* Game Scenario Maker is a free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* Version 2(GPLv2) as published by the Free Software Foundation.
+*/
+
+#ifndef _CIMAGEBASECLASS_H_
+    #define _CIMAGEBASECLASS_H_
+
+#include <SFML/Graphics.hpp>
+#include "../Graphics/CSurface.h"
+#include "../Common/CAdder.h"
+
+class CImageBaseClass : public CAdderControl
+{
+	private:
+	protected:
+    sf::Image						_image;
+		sf::Sprite					_sprite;
+		bool								_visible;
+
+		virtual bool Subclass_Loop(){return false;};
+		virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
+		bool IsStandby();
+	public:
+		sf::Vector2f				_Coordinate;
+		int									_Alpha;
+
+		//CImageBaseClass();
+		CImageBaseClass(float x=0.0f, float y=0.0f);
+
+		void OnRender(sf::RenderWindow* Surf_Dest);
+		bool OnLoop();
+
+		virtual bool LoadImg(const char* filename);
+};
+
+#endif
