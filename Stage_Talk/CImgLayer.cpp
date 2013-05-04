@@ -19,9 +19,9 @@ CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
 
 bool CImgLayer::ShowImg(const char* filename)
 {
-	if (!LoadImg(filename))
-		return false;
+    if (!LoadImg(filename))
+        return false;
 
-	return true;
+    return true;
 }
 

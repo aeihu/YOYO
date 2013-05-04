@@ -10,17 +10,17 @@
 
 class CButtonControl
 {
-	private:
-		bool IsExisted(string name);
-	public:
-		map<string, CButton>		_ButtonList;
+    private:
+        bool IsAlreadyExists(string name);
+    public:
+        map<string, CButton>        _ButtonList;
 
-		CButtonControl();
+        CButtonControl();
 
-		char AddButton(string name, const char* filename);
-		bool DelButton(string name);
-		bool SetImageVisibility(string name, int alpha, int incr, int msec, bool pause);
-	
-		void OnLoop(bool &pause);
-		void OnRender(sf::RenderWindow* Surf_Dest);
+        char AddButton(string name, const char* filename);
+        bool DelButton(string name);
+        bool SetImageVisibility(string name, int alpha, int incr, int msec, bool pause);
+    
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };

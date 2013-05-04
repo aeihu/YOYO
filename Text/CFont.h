@@ -7,7 +7,7 @@
 */
 
 #ifndef _CFONT_H_
-	#define _CFONT_H_
+    #define _CFONT_H_
 
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -18,17 +18,17 @@ using namespace std;
 
 class CFont
 {
-  private:
-		unsigned long _menSize;
-		char*					_memFont;
-	protected:
-  public:
-		sf::Font			_Font;
+    private:
+        unsigned long _menSize;
+        char*         _memFont;
+    protected:
+    public:
+        sf::Font      _Font;
 
-		CFont();
-		~CFont();
-		bool LoadFont(string filename, unsigned int size=25);
-    bool SetCharset(string charset, unsigned int size= 25);
+        CFont();
+        ~CFont();
+        bool LoadFont(string filename, unsigned int size=25);
+        bool SetCharset(string charset, unsigned int size=25);
 };
 
 #endif

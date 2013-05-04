@@ -10,33 +10,33 @@
 
 //==============================================================================
 class CAnimation {
-	private:
-		int						_currentFrame;
-		int						_frameInc;
-    int						_frameRate; //Milliseconds
-		unsigned long _oldTime;
+    private:
+        int                     _currentFrame;
+        int                     _frameInc;
+        int                     _frameRate; //Milliseconds
+        unsigned long           _oldTime;
 
-		void					OnOscillate();
-		void					OnALoop();
-		void					OnForWard();
-		void					OnBackWard();
-	public:
-		typedef enum{
-			Oscillate,
-			Loop,
-			Forward,
-			Backward
-		} eAnimationType;
+        void                    OnOscillate();
+        void                    OnALoop();
+        void                    OnForWard();
+        void                    OnBackWard();
+    public:
+        typedef enum{
+            Oscillate,
+            Loop,
+            Forward,
+            Backward
+        } eAnimationType;
 
-		eAnimationType _Type;
-    int						 _MaxFrames;
+        eAnimationType          _Type;
+        int                     _MaxFrames;
 
-		CAnimation();
-		void OnAnimate(unsigned long time);
-    void SetFrameRate(int rate);
-		void SetCurrentFrame(int frame);
-		int GetCurrentFrame();
-		void SetFrameInc(int inc);
+        CAnimation();
+        void OnAnimate(unsigned long time);
+        void SetFrameRate(int rate);
+        void SetCurrentFrame(int frame);
+        int GetCurrentFrame();
+        void SetFrameInc(int inc);
 };
 
 //==============================================================================

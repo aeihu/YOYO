@@ -10,154 +10,122 @@
 #include "../Common/CZlib.h"
 #include "../Common/Cio.h"
 
-CCharacterLayer::CCharacterLayer()
-{
-	_offset.x =
-	_offset.y = 0;
-	_isFaceEnable = false;
-}
-
-
 CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 {
-	_offset.x = 
-	_offset.y = 0;
-	_isFaceEnable = false;
+    _offset.x = 
+    _offset.y = 0;
+    _isFaceEnable = false;
 }
 
 bool CCharacterLayer::Subclass_Loop()
 {
-	if (_spriteFace.GetColor().a != _Alpha)
-		_spriteFace.SetColor(sf::Color(255,255,255,_Alpha));
+    if (_spriteFace.GetColor().a != _Alpha)
+        _spriteFace.SetColor(sf::Color(255,255,255,_Alpha));
 
-	if (_Coordinate+_offset != _spriteFace.GetPosition())
-		_spriteFace.SetPosition(_Coordinate+_offset);
+    if (_Coordinate+_offset != _spriteFace.GetPosition())
+        _spriteFace.SetPosition(_Coordinate+_offset);
 
-	if (_spriteFace.GetScale() != _sprite.GetScale())
-		_spriteFace.SetScale(_sprite.GetScale());
+    if (_spriteFace.GetScale() != _sprite.GetScale())
+        _spriteFace.SetScale(_sprite.GetScale());
 
-	if (_spriteFace.GetRotation() != _sprite.GetRotation())
-		_spriteFace.SetRotation(_sprite.GetRotation());
+    if (_spriteFace.GetRotation() != _sprite.GetRotation())
+        _spriteFace.SetRotation(_sprite.GetRotation());
 
-	if (_spriteFace.GetScale().x > 1.0f || _spriteFace.GetScale().y > 1.0f)
-		_imageFace.SetSmooth(true);
-	else
-		_imageFace.SetSmooth(false);
+    if (_spriteFace.GetScale().x > 1.0f || _spriteFace.GetScale().y > 1.0f)
+        _imageFace.SetSmooth(true);
+    else
+        _imageFace.SetSmooth(false);
 
-	return false;
+    return false;
 }
 
 void CCharacterLayer::Subclass_Render(sf::RenderWindow* Surf_Dest)
 {
-	if (_isFaceEnable)
-		Surf_Dest->Draw(_spriteFace);
+    if (_isFaceEnable)
+        Surf_Dest->Draw(_spriteFace);
 }
 
 bool CCharacterLayer::LoadImage(const char* fileName, sf::Image &image, sf::Sprite &sprite)
 {
-	if (fileName == NULL)
-		return false;
+    if (fileName == NULL)
+        return false;
 
-	if (!CSurface::OnLoad(fileName, image))
-		return false;
+    if (!CSurface::OnLoad(fileName, image))
+        return false;
 
-	image.SetSmooth(false);
-	sprite.SetImage(image);
+    image.SetSmooth(false);
+    sprite.SetImage(image);
 
-	return true;
+    return true;
 }
 
 bool CCharacterLayer::LoadChara(const char* FileName)
 {
-	//char BOM[3] = {0xEF,0xBB,0xBF};
-	list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-	map<string, string> __valueList;
+    //char BOM[3] = {0xEF,0xBB,0xBF};
+    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
+    map<string, string> __valueList;
 
-	for (list<string>::iterator it=__expressions.begin();
-		it!=__expressions.end(); it++){
-		string __paraName = "";
-		string __paraValue = "";
-		if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-			__valueList[__paraName] = __paraValue;
-	}
+    for (list<string>::iterator it=__expressions.begin();
+        it!=__expressions.end(); it++){
+        string __paraName = "";
+        string __paraValue = "";
+        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
+            __valueList[__paraName] = __paraValue;
+    }
 
-	if (!CheckList(__valueList))
-		return false;
+    if (!CheckList(__valueList))
+        return false;
 
-	if (!SetProperty(__valueList))
-		return false;
+    if (!SetProperty(__valueList))
+        return false;
 
-	return true;
+    return true;
 }
 
 bool CCharacterLayer::CheckList(map<string, string> list) 
 {
-	bool result = true;
-	if (list.count("BODY_PATH") < 1){
-		cout << "can't find value of BODY_PATH." << endl;
-		result = false;
-	}
+    bool result = true;
+    if (list.count("BODY_PATH") < 1){
+        cout << "can't find value of BODY_PATH." << endl;
+        result = false;
+    }
 
-	if (list.count("FACE_OFFSET_X") < 1){
-		cout << "can't find value of FACE_OFFSET_X." << endl;
-		result = false;
-	}
-	
-	if (list.count("FACE_OFFSET_Y") < 1){
-		cout << "can't find value of FACE_OFFSET_Y." << endl;
-		result = false;
-	}
+    if (list.count("FACE_OFFSET_X") < 1){
+        cout << "can't find value of FACE_OFFSET_X." << endl;
+        result = false;
+    }
+    
+    if (list.count("FACE_OFFSET_Y") < 1){
+        cout << "can't find value of FACE_OFFSET_Y." << endl;
+        result = false;
+    }
 
-	return result;
+    return result;
 }
 
 bool CCharacterLayer::SetProperty(map<string, string> list)
 {
-	if (!LoadImage(list["BODY_PATH"].c_str(), _image, _sprite))
-		return false;
+    if (!LoadImage(list["BODY_PATH"].c_str(), _image, _sprite))
+        return false;
 
-	_offset.x = atof(list["FACE_OFFSET_X"].c_str());
-	_offset.y = atof(list["FACE_OFFSET_Y"].c_str());
+    _offset.x = atof(list["FACE_OFFSET_X"].c_str());
+    _offset.y = atof(list["FACE_OFFSET_Y"].c_str());
 
-	list.erase("BODY_PATH");
-	list.erase("FACE_OFFSET_X");
-	list.erase("FACE_OFFSET_Y");
+    list.erase("BODY_PATH");
+    list.erase("FACE_OFFSET_X");
+    list.erase("FACE_OFFSET_Y");
 
-	_faceList.clear();
-	_faceList.insert(list.begin(), list.end());
+    _faceList.clear();
+    _faceList.insert(list.begin(), list.end());
 
-	return true;
+    return true;
 }
 
 bool CCharacterLayer::SetFace(string name)
 {
-	_isFaceEnable = false;
-	if (_faceList.count(name) > 0) 
-		_isFaceEnable = LoadImage(_faceList[name].c_str(), _imageFace, _spriteFace);
+    _isFaceEnable = false;
+    if (_faceList.count(name) > 0) 
+        _isFaceEnable = LoadImage(_faceList[name].c_str(), _imageFace, _spriteFace);
 
-	return _isFaceEnable;
+    return _isFaceEnable;
 }
-//bool CCharacterLayer::AddChara(const char* FileName)
-//{
-//	if (FileName == NULL)
-//		return false;
-//
-//	_image = CSurface::OnLoad(FileName);
-//	_sprite.SetImage(_image);
-//	SetTileNo(0);
-//
-//	return true;
-//}
-
-//void CCharacterLayer::SetTileNo(unsigned int no)
-//{
-//	sf::IntRect rect;
-//	unsigned int TilesetWidth  = _image.GetWidth() / _rect.x;
-//	unsigned int TilesetHeight = _image.GetHeight() / _rect.y;
-//
-//	rect.Left = (no % TilesetWidth) * _rect.x;
-//	rect.Top = (no / TilesetHeight) * _rect.y;
-//	rect.Right = rect.Left + _rect.x;
-//	rect.Bottom = rect.Top + _rect.y;
-//	_sprite.SetSubRect(rect);
-//}

@@ -13,13 +13,13 @@
 
 class CTextStyle
 {
-	private:
-	public:
-		unsigned int 			_size;
-		sf::Color					_color;
-		sf::String::Style _style;
+    private:
+    public:
+        unsigned int        _size;
+        sf::Color           _color;
+        sf::String::Style   _style;
 
-		CTextStyle();
+        CTextStyle();
 };
 
 #endif

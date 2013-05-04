@@ -13,28 +13,29 @@
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
 
-class CImageBaseClass : public CAdderControl
+class CImageBaseClass : virtual public CAdderControl
 {
-	private:
-	protected:
-    sf::Image						_image;
-		sf::Sprite					_sprite;
-		bool								_visible;
+    private:
+        CAdderControl::OnLoop;
+        CAdderControl::Count;
+    protected:
+        sf::Image                   _image;
+        sf::Sprite                  _sprite;
+        bool                        _visible;
 
-		virtual bool Subclass_Loop(){return false;};
-		virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
-		bool IsStandby();
-	public:
-		sf::Vector2f				_Coordinate;
-		int									_Alpha;
+        virtual bool Subclass_Loop(){return false;};
+        virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
+        bool IsStandby();
+    public:
+        sf::Vector2f                _Coordinate;
+        int                         _Alpha;
 
-		//CImageBaseClass();
-		CImageBaseClass(float x=0.0f, float y=0.0f);
+        CImageBaseClass(float x=0.0f, float y=0.0f);
 
-		void OnRender(sf::RenderWindow* Surf_Dest);
-		bool OnLoop();
+        virtual void OnRender(sf::RenderWindow* Surf_Dest);
+        virtual bool OnLoop();
 
-		virtual bool LoadImg(const char* filename);
+        virtual bool LoadImg(const char* filename);
 };
 
 #endif

@@ -7,18 +7,18 @@
 */
 
 #ifndef _CZLIB_H_
-	#define _CZLIB_H_
+    #define _CZLIB_H_
 #include "unzip.h"
 #include <string>
 
 class CZlib
 {
-	private:
-	protected:
-	public:
-		static bool SplitFileName(std::string filename, std::string symbol, std::string& s1, std::string& s2);
-		static int OpenFileInZip(std::string filename, char* &file, unsigned long& size);
-		static void CloseFileInZip(char* file);
+    private:
+    protected:
+    public:
+        static bool SplitFileName(std::string filename, std::string symbol, std::string& s1, std::string& s2);
+        static int OpenFileInZip(std::string filename, char* &file, unsigned long& size);
+        static void CloseFileInZip(char* file);
 };
 
 #endif

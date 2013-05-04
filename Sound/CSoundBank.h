@@ -7,7 +7,7 @@
 */
 
 #ifndef _CSOUNDBANK_H_
-	#define _CSOUNDBANK_H_
+    #define _CSOUNDBANK_H_
 
 #include <SFML/Audio.hpp>
 #include <map>
@@ -18,29 +18,28 @@ using namespace std;
 
 
 class CSoundBank {
-	private:
-		map<char, pair<sf::SoundBuffer,sf::Sound> >						_VoiceList;
-//	public:
+    private:
+        map<char, pair<sf::SoundBuffer,sf::Sound> >     _VoiceList;
+        sf::Music                                       _BGM;
+        map<string, pair<sf::SoundBuffer,sf::Sound> >   _SEList;
+    public:
+        static CSoundBank                               SoundControl;
 
-		sf::Music																							_BGM;
-		map<string, pair<sf::SoundBuffer,sf::Sound> >					_SEList;
-	public:
-		static CSoundBank           SoundControl;
-		CSoundBank();
+        CSoundBank();
 
-		void OnLoop();
-		void OnCleanup();
+        void OnLoop();
+        void OnCleanup();
 
-		bool Say(const char* FileName);
+        bool Say(const char* FileName);
 
-		int AddSE(string name, const char* FileName) ;
-		bool PlaySE(string name);
-		bool DeleteSE(string name);
+        int AddSE(string name, const char* FileName) ;
+        bool PlaySE(string name);
+        bool DeleteSE(string name);
 
-		bool OnLoadBGM(const char* FileName);
-		sf::Sound::Status GetBgmStatus();
-		void PlayBgm();
-		void PauseBgm();
+        bool OnLoadBGM(const char* FileName);
+        sf::Sound::Status GetBgmStatus();
+        void PlayBgm();
+        void PauseBgm();
 };
 
 

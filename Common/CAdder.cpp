@@ -10,55 +10,55 @@
 
 CAdder::CAdder()
 {
-	_type = 0;
-	_oldTime = 0;
-	_interval = 0;
-	_pause = false;
+    _type = 0;
+    _oldTime = 0;
+    _interval = 0;
+    _pause = false;
 }
 
 bool CAdder::Exec(unsigned long time)
 {
-	if (_oldTime + _interval > time)
-		return false;
+    if (_oldTime + _interval > time)
+        return false;
 
-	if (!Check())
-		return true;
+    if (!Check())
+        return true;
 
-	_oldTime = time;
+    _oldTime = time;
 
-	switch (_type){
-		case 0:
-			if (Recursion()){
-				return true;
-			}
-			return false;
-		break;
-		case 1:
-			if (DecreaseRecursion()){
-				return true;
-			}
-			return false;
-		break;
-		case 2:
-			if (Oscillate()){
-				return true;
-			}
-			return false;
-		break;
-		case 3:
-		break;
-	}
+    switch (_type){
+        case 0:
+            if (Recursion()){
+                return true;
+            }
+            return false;
+        break;
+        case 1:
+            if (DecreaseRecursion()){
+                return true;
+            }
+            return false;
+        break;
+        case 2:
+            if (Oscillate()){
+                return true;
+            }
+            return false;
+        break;
+        case 3:
+        break;
+    }
 
-	return true;
+    return true;
 }
 
 bool CAdder::IsPause()
 {
-	return _pause;
+    return _pause;
 }
 
 bool CAdder::Oscillate()
 {
-	return true;
+    return true;
 }
 

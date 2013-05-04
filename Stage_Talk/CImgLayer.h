@@ -13,12 +13,12 @@
 
 class CImgLayer : public CImageBaseClass
 {
-	public:
-		CImgLayer();
-		~CImgLayer(){};
-		CImgLayer(float x, float y);
+    public:
+        CImgLayer();
+        ~CImgLayer(){};
+        CImgLayer(float x, float y);
 
-		bool ShowImg(const char* filename);
+        bool ShowImg(const char* filename);
 };
 
 #endif

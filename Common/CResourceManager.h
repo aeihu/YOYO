@@ -16,12 +16,17 @@
 
 class CResourceManager
 {
-	public:
-		static CCharacterLayerControl _CharacterLayerControl;
-		static CImgLayerControl	_ImgLayerControl;
-		static CImgLayerControl	_BackgroundLayerControl;
-		static CMessageBoxControl	_MessageBoxControl;
-		static CButtonControl _ButtonControl;
+    private:
+        template<class X>
+        void static GetInfo(const char* resourcename, map<string, X> xlist);
+    public:
+        static CCharacterLayerControl _CharacterLayerControl;
+        static CImgLayerControl    _ImgLayerControl;
+        static CImgLayerControl    _BackgroundLayerControl;
+        static CMessageBoxControl    _MessageBoxControl;
+        static CButtonControl _ButtonControl;
+        
+        static void GetInfo();
 };
 
 #endif

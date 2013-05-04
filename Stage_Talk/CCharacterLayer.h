@@ -19,25 +19,22 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass
 {
   private:
-		sf::Vector2f								_offset;
-		sf::Image										_imageFace;
-		sf::Sprite									_spriteFace;
-		map<string, string>					_faceList;
-		bool												_isFaceEnable;
+        sf::Vector2f            _offset;
+        sf::Image               _imageFace;
+        sf::Sprite              _spriteFace;
+        map<string, string>     _faceList;
+        bool                    _isFaceEnable;
 
-		bool CheckList(map<string, string> list);
-		bool SetProperty(map<string, string> list);
-		bool LoadImage(const char* FileName, sf::Image &image, sf::Sprite &sprite);
+        bool CheckList(map<string, string> list);
+        bool SetProperty(map<string, string> list);
+        bool LoadImage(const char* FileName, sf::Image &image, sf::Sprite &sprite);
   public:
-		//static map<string, CCharacterLayer>		CharacterLayerList;
-		
-		CCharacterLayer();
-		CCharacterLayer(float x, float y);
+        CCharacterLayer(float x=0.0f, float y=0.0f);
 
-		bool LoadChara(const char* FileName);
-		bool SetFace(string name);
+        bool LoadChara(const char* FileName);
+        bool SetFace(string name);
 
-		bool Subclass_Loop();
-		void Subclass_Render(sf::RenderWindow* Surf_Dest);
+        bool Subclass_Loop();
+        void Subclass_Render(sf::RenderWindow* Surf_Dest);
 };
 #endif

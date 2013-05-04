@@ -19,19 +19,19 @@ using namespace std;
 
 class Cio
 {
-	private:
-		//static string LoadTxtFile(string filename);
-	public:
-		static bool IsOneWord(string &str, string valid_characters);
-		static bool IsNested(string &str, char first_symbol, char last_symbol);
+    private:
+        //static string LoadTxtFile(string filename);
+    public:
+        static bool IsOneWord(string &str, string valid_characters);
+        static bool IsNested(string &str, char first_symbol, char last_symbol);
 
-		static bool LoadFileToMem(string filename, char* &file, unsigned long& size);
-		static void ClearFileInMem(char* &file);
+        static bool LoadFileToMem(string filename, char* &file, unsigned long& size);
+        static void ClearFileInMem(char* &file);
 
-		static string LoadTxtFile(string filename);
-		static list<string> LoadTxtFile(string filename, string symbol, bool isDelete=true);
-		static bool AnalyticExpression(string str, string &name, string &value);
-		static bool AnalyticExpression(string str, string symbol, string &name, string &value);
+        static string LoadTxtFile(string filename);
+        static list<string> LoadTxtFile(string filename, string symbol, bool isDelete=true);
+        static bool AnalyticExpression(string str, string &name, string &value);
+        static bool AnalyticExpression(string str, string symbol, string &name, string &value);
 };
 
 #endif

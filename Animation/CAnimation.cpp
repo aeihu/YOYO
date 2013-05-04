@@ -22,25 +22,25 @@ CAnimation::CAnimation()
 //------------------------------------------------------------------------------
 void CAnimation::OnAnimate(unsigned long time) 
 {
-  if(_oldTime+_frameRate>time) 
+    if(_oldTime+_frameRate>time) 
     return;
 
-  _oldTime = time;
+    _oldTime = time;
 
-	switch(_Type){
-		case Oscillate:
-			OnOscillate();
-		break;
-		case Loop:
-			OnALoop();
-		break;
-		case Forward:
-			OnForWard();
-		break;
-		case Backward:
-			OnBackWard();
-		break;
-	}
+    switch(_Type){
+        case Oscillate:
+            OnOscillate();
+        break;
+        case Loop:
+            OnALoop();
+        break;
+        case Forward:
+            OnForWard();
+        break;
+        case Backward:
+            OnBackWard();
+        break;
+    }
 }
 
 void CAnimation::OnOscillate()
@@ -49,74 +49,74 @@ void CAnimation::OnOscillate()
   if(_frameInc > 0) {
       if(_currentFrame >= _MaxFrames) {
         _frameInc = -_frameInc;
-				_currentFrame = _MaxFrames - 1;
+                _currentFrame = _MaxFrames - 1;
       }
   }
-	else{
+    else{
     if(_currentFrame <= 0) {
       _frameInc = -_frameInc;
-			_currentFrame = 0;
+            _currentFrame = 0;
     }
   }
 }
 
 void CAnimation::OnALoop()
 {
-	if (_frameInc<0)
-		_frameInc = -_frameInc;
+    if (_frameInc<0)
+        _frameInc = -_frameInc;
 
-  _currentFrame += _frameInc;
-  if(_currentFrame >= _MaxFrames) {
-		_currentFrame = 0;
-  }
+    _currentFrame += _frameInc;
+    if(_currentFrame >= _MaxFrames) {
+        _currentFrame = 0;
+    }
 }
 
 void CAnimation::OnForWard()
 {
-	if (_frameInc<0)
-		_frameInc = -_frameInc;
+    if (_frameInc<0)
+        _frameInc = -_frameInc;
 
-  _currentFrame += _frameInc;
-  if(_currentFrame >= _MaxFrames) {
-			_currentFrame = _MaxFrames - 1;
-  }
+    _currentFrame += _frameInc;
+    if(_currentFrame >= _MaxFrames) {
+            _currentFrame = _MaxFrames - 1;
+    }
 }
 
 void CAnimation::OnBackWard()
 {
-	if (_frameInc>0)
-		_frameInc = -_frameInc;
+    if (_frameInc>0)
+        _frameInc = -_frameInc;
 
-  _currentFrame += _frameInc;
-  if(_currentFrame <= 0) {
-		_currentFrame = 0;
-	}
+    _currentFrame += _frameInc;
+    if(_currentFrame <= 0) {
+        _currentFrame = 0;
+    }
 }
 
 //==============================================================================
 void CAnimation::SetFrameRate(int rate) 
 {
-	_frameRate = rate;
+    _frameRate = rate;
 }
 
 //------------------------------------------------------------------------------
 void CAnimation::SetCurrentFrame(int frame) 
 {
-	if(frame < 0 || frame >= _MaxFrames) return;
+    if(frame < 0 || frame >= _MaxFrames) return;
 
-	_currentFrame = frame;
+    _currentFrame = frame;
 }
 
 //------------------------------------------------------------------------------
 int CAnimation::GetCurrentFrame() 
 {
-	return _currentFrame;
+    return _currentFrame;
 }
 
 //------------------------------------------------------------------------------
 void CAnimation::SetFrameInc(int inc) 
 {
-	_frameInc = inc;
+    _frameInc = inc;
 }
 
 //==============================================================================

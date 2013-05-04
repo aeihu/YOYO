@@ -7,7 +7,7 @@
 */
 
 #ifndef _CPOSITIONS_H_
-	#define _CPOSITIONS_H_
+    #define _CPOSITIONS_H_
 
 #include "CCharacterLayer.h"
 #include <map>
@@ -15,26 +15,29 @@
 
 class CCharacterLayerControl
 {
-	private:
-		unsigned int	_interval;
-		map<string, sf::Vector2f>			_positions;
-	public:
-		CCharacterLayerControl();
-		map<string, CCharacterLayer>	_CharacterList;
-		char AddCharacter(std::string name, const char* filename, float x, float y);
-		bool Move(string name, string position, float increment, bool pause);
-		bool Move(string name, float x, float y, float increment, bool pause);
-		bool Show(string name, string position, char type, float buf, float increment, bool pause);
-		bool Show(string name, float x, float y, char type, float buf, float increment, bool pause);
-		bool Hide(string name, char type, float buf, float increment, bool pause);
+    private:
+        unsigned int                    _interval;
+        map<string, sf::Vector2f>       _positions;
+    public:
+        map<string, CCharacterLayer>    _CharacterList;
 
-		bool SetVisibility(string name, int alpha, int increment, bool pause);
-		void AddPosition(string name, float x, float y);
-		void DelPosition(string name);
-		bool GetPosition(string name, float* x, float* y);
+        CCharacterLayerControl();
+        
+        bool IsAlreadyExists(string name);
+        char AddCharacter(string name, const char* filename, float x, float y);
+        bool Move(string name, string position, float increment, bool pause);
+        bool Move(string name, float x, float y, float increment, bool pause);
+        bool Show(string name, string position, char type, float buf, float increment, bool pause);
+        bool Show(string name, float x, float y, char type, float buf, float increment, bool pause);
+        bool Hide(string name, char type, float buf, float increment, bool pause);
 
-		void OnLoop(bool &pause);
-		void OnRender(sf::RenderWindow* Surf_Dest);
+        bool SetVisibility(string name, int alpha, int increment, bool pause);
+        void AddPosition(string name, float x, float y);
+        void DelPosition(string name);
+        bool GetPosition(string name, float* x, float* y);
+
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };
 
 #endif

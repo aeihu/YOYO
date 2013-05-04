@@ -16,16 +16,16 @@
 
 class CImgLayerControl
 {
-	private:
-		bool IsExisted(std::string name);
-	public:
-    std::map<std::string, CImgLayer>	_ImgLayerList;
+    private:
+    public:
+        std::map<std::string, CImgLayer>    _ImgLayerList;
 
-		bool AddImage(std::string name, const char* filename, float x, float y);
-		bool SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause);
-
-		void OnLoop(bool &pause);
-		void OnRender(sf::RenderWindow* Surf_Dest);
+        bool IsAlreadyExists(std::string name);
+        bool AddImage(std::string name, const char* filename, float x=0.0f, float y=0.0f);
+        bool DelImage(std::string name);
+        bool SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause);
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };
 
 #endif

@@ -15,28 +15,30 @@
 #include <cstdio>
 #include "../Common/CCommon.h"
 #include "../Animation/CAnimation.h"
+#include "../Graphics/CSequenceOfFrames.h"
 
-class CMessageBox : public CBox , public CTextProcessing
+class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFrames
 {        
-  private:        
-		int						TilesetOfCursor;
-		int						SizeOfCursor;
-		sf::String		_speakerName;
-		bool					_isPaused;
+  private:
+        sf::String        _speakerName;
+        bool              _isPaused;
 
-		bool Sub_CheckList(map<string, string> list);
-		bool Sub_OnLoad();
-		bool Subclass_Loop();
-		void Subclass_Render(sf::RenderWindow* Surf_Dest);
+        bool Sub_CheckList(map<string, string> list);
+        bool Sub_OnLoad();
   public:
-    CMessageBox();
+        CAnimation      _AnimationControl;
 
-		void SetText(string msg);
-		void OnMouseMove(int x, int y);
-		bool OnLButtonDown(int x, int y);
-		bool OnLButtonUp(int x, int y);
-		bool OnRButtonDown(int x, int y);
-		bool OnRButtonUp(int x, int y);
-		void SetSpeakerName(string name);
+        CMessageBox();
+
+        void SetText(string msg);
+        void OnMouseMove(int x, int y);
+        bool OnLButtonDown(int x, int y);
+        bool OnLButtonUp(int x, int y);
+        bool OnRButtonDown(int x, int y);
+        bool OnRButtonUp(int x, int y);
+        bool OnLoop();
+        void OnRender(sf::RenderWindow* Surf_Dest);
+
+        void SetSpeakerName(string name);
 };
 #endif

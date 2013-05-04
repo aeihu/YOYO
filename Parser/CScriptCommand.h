@@ -20,6 +20,7 @@ using namespace std;
 //int Cmd_DeleteCharacter(const char* name);
 //bool Cmd_CreateCharacter(const char* name, int x, int y, const char* filename, int width, int height, int maxframes, bool isNPC);
 //
+bool Cmd_ShowInfo(string para="");
 
 void Cmd_AddPosition(string name, float x, float y);
 void Cmd_DelPosition(string name);
@@ -34,11 +35,15 @@ void Cmd_SetFaceCharacterLayer(string name, string face);
 //bool Cmd_LoadMap(const char* name);
 //bool Cmd_LoadScript(const char* filename, const char* Section);
 //
-bool Cmd_ShowBackground(const char* filename, float x, float y, int inrc, int msec);
-bool Cmd_HideBackground(int inrc, int msec);
+bool Cmd_AddBackground(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowBackground(string name, int inrc, int msec, bool pause);
+bool Cmd_HideBackground(string name, int inrc, int msec, bool pause);
+bool Cmd_DelBackground(string name);
 //
-bool Cmd_ShowImg(string name, const char* filename, float x, float y,  int inrc, int msec, bool pause);
+bool Cmd_AddImg(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowImg(string name, int inrc, int msec, bool pause);
 bool Cmd_HideImg(string name, int inrc, int msec, bool pause);
+bool Cmd_DelImg(string name);
 //
 //void Cmd_WhiteScreen(int msec);
 //void Cmd_BlackScreen(int msec);
@@ -103,7 +108,7 @@ bool Cmd_HideMessageBox(string name, int incr, int msec, bool pause);
 //int Cmd_AddAnimationScript(string name, int framerate);
 //int Cmd_DelAnimationScript(string name);
 //int Cmd_AddAnimationData(string scrname,string dataname,string filename, 
-//	int startindex, int maxframes, bool loop, int size, string se);
+//    int startindex, int maxframes, bool loop, int size, string se);
 //int Cmd_DelAnimationData(string scrname, string dataname);
 //
 //int Cmd_If(string op, string val1, string val2);

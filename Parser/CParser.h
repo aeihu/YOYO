@@ -7,7 +7,7 @@
 */
 
 #ifndef _CPARSER_H_
-	#define _CPARSER_H_
+    #define _CPARSER_H_
 
 #include <string>
 #include <list>
@@ -24,30 +24,30 @@ using namespace std;
 
 class CParser
 {
-	private:        
-		list<string>				_CmdList;
-		long								_Delay;
-		bool*								_pRunning;
+    private:        
+        list<string>            _CmdList;
+        long                    _Delay;
+        bool*                   _pRunning;
 
-		bool	FindSection(list<string> &Commands, const char* Section);
-		void	ExecuteCmd(string cmd);
-		int AnalysisOfParameters(string para, vector<string> &plist);
+        bool FindSection(list<string> &Commands, const char* Section);
+        void ExecuteCmd(string cmd);
+        int AnalysisOfParameters(string para, vector<string> &plist);
 
     public:
-		static CParser parser;
-		CParser();
-		bool LoadScript(const char* FileName, const char* Section);
-		bool LoadScript(const char* FileName, const char* Section, list<string> &Commands);
-		void OnLoop();
-		void OnCleanup();
+        static CParser parser;
+        CParser();
+        bool LoadScript(const char* FileName, const char* Section);
+        bool LoadScript(const char* FileName, const char* Section, list<string> &Commands);
+        void OnLoop();
+        void OnCleanup();
 
-		bool ExecuteAllCmd(const char* FileName, const char* Section);
-		void ExecuteAllCmd(list<string> commands);
-		void InsertCmdList(list<string> commands);
-		void SetDeplay(int ms);
+        bool ExecuteAllCmd(const char* FileName, const char* Section);
+        void ExecuteAllCmd(list<string> commands);
+        void InsertCmdList(list<string> commands);
+        void SetDeplay(int ms);
 
-		bool IsDeplaying();
-		void SetRunning(bool* running);
+        bool IsDeplaying();
+        void SetRunning(bool* running);
 };
 
 #endif

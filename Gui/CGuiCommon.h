@@ -7,7 +7,7 @@
 */
 
 #ifndef _CGUICOMMON_H_
-	#define _CGUICOMMON_H_
+    #define _CGUICOMMON_H_
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -16,10 +16,10 @@
 class CGuiCommon
 {
     private:
-		static std::vector<std::vector<unsigned int> > OnLoad(const char* File);
+        static std::vector<std::vector<unsigned int> > OnLoad(const char* File);
     public:
-		static bool CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size);
-	protected:
+        static bool CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size);
+    protected:
 };
 
 #endif

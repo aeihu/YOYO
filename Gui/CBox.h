@@ -7,7 +7,7 @@
 */
 
 #ifndef _CBOX_H_
-	#define _CBOX_H_
+    #define _CBOX_H_
 
 #include "../Graphics/CSurface.h"
 #include "../Graphics/CImageBaseClass.h"
@@ -17,26 +17,17 @@
 
 class CBox : public CImageBaseClass
 {
-	private:
-	protected:
-		map<string, string>				_parameterList;
-		bool CheckList(map<string, string> list);
-		virtual bool Sub_CheckList(map<string, string> list){ return true;}
-		virtual bool Sub_OnLoad(){ return true;}
+    private:
+    protected:
+        map<string, string>     _parameterList;
 
-		//virtual void Subclass_Loop(){};
-		//virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
-  public:
-		CBox();
-		CBox(float x, float y);
+        bool CheckList(map<string, string> list);
+        virtual bool Sub_CheckList(map<string, string> list){ return true;}
+        virtual bool Sub_OnLoad(){ return true;}
+    public:
+        CBox();
+        CBox(float x, float y);
 
-		bool LoadBox(const char* FileName);
-
-		//bool OnLoop();
-		//void OnRender(sf::RenderWindow* Surf_Dest);
-		//void OnCleanup();
-		//void Show(bool* target);
-		//void Hide(bool* target);
-		//void SetPosition(float x, float y);
+        bool LoadBox(const char* FileName);
 };
 #endif

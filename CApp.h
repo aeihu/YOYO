@@ -42,11 +42,11 @@
 
 class CApp : public CEvent {
     private:
-        bool						Running;
+        bool                        Running;
 
-        sf::RenderWindow*			sf_Display;
+        sf::RenderWindow*           sf_Display;
 
-		bool						FullScreen;
+        bool                        FullScreen;
 
     public:
         CApp();
@@ -58,19 +58,19 @@ class CApp : public CEvent {
 
         void OnEvent(sf::Event* Event);
 
-		void OnKeyDown(sf::Event::KeyEvent key);
+        void OnKeyDown(sf::Event::KeyEvent key);
 
-    	void OnKeyUp(sf::Event::KeyEvent key);
+        void OnKeyUp(sf::Event::KeyEvent key);
 
-    	void OnLButtonDown(int mX, int mY);
-		
-    	void OnLButtonUp(int mX, int mY);
-				
-		void OnRButtonDown(int mX, int mY);
+        void OnLButtonDown(int mX, int mY);
+        
+        void OnLButtonUp(int mX, int mY);
+                
+        void OnRButtonDown(int mX, int mY);
 
-		void OnRButtonUp(int mX, int mY);
+        void OnRButtonUp(int mX, int mY);
 
-    	void OnMouseMove(int mX, int mY);
+        void OnMouseMove(int mX, int mY);
 
         void OnExit();
 
