@@ -23,18 +23,18 @@ int CSoundBank::AddSE(std::string name, const char* FileName) {
         return -1;
 
     sf::SoundBuffer Buffer;
-    if (!Buffer.LoadFromFile(FileName))
+    if (!Buffer.loadFromFile(FileName))
         return -2;
 
     _SEList[name].first = Buffer;
-    _SEList[name].second.SetBuffer(_SEList[name].first);
+    _SEList[name].second.setBuffer(_SEList[name].first);
 
   return 0;
 }
 //https://github.com/LaurentGomila/SFML/wiki/Source%3A-MP3-Player
 bool CSoundBank::OnLoadBGM(const char* FileName)
 {
-    if (!_BGM.OpenFromFile(FileName))
+    if (!_BGM.openFromFile(FileName))
         return false;
 
     return true;
@@ -54,7 +54,7 @@ bool CSoundBank::PlaySE(string name)
     if (_SEList.count(name) < 1)
         return false;
 
-    _SEList[name].second.Play();
+    _SEList[name].second.play();
     return true;
 }
 
@@ -71,23 +71,23 @@ bool CSoundBank::DeleteSE(string name)
 
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
-    return _BGM.GetStatus();
+    return _BGM.getStatus();
 }
 
 void CSoundBank::PauseBgm()
 {
-    _BGM.Pause();
+    _BGM.pause();
 }
 
 void CSoundBank::PlayBgm()
 {
-    _BGM.Play();
+    _BGM.play();
 }
 
 bool CSoundBank::Say(const char* FileName)
 {    
     sf::SoundBuffer Buffer;
-    if (!Buffer.LoadFromFile(FileName))
+    if (!Buffer.loadFromFile(FileName))
         return false;
 
     char name = 0;
@@ -96,8 +96,8 @@ bool CSoundBank::Say(const char* FileName)
     }
 
     _VoiceList[name].first = Buffer;
-    _VoiceList[name].second.SetBuffer(_VoiceList[name].first);
-    _VoiceList[name].second.Play();
+    _VoiceList[name].second.setBuffer(_VoiceList[name].first);
+    _VoiceList[name].second.play();
 
   return true;
 }
@@ -110,7 +110,7 @@ void CSoundBank::OnLoop()
     for (map<char, pair<sf::SoundBuffer,sf::Sound> >::iterator 
         it=_VoiceList.begin(); it!=_VoiceList.end();  )
     {
-        if ((*it).second.second.GetStatus() == sf::Sound::Stopped){
+        if ((*it).second.second.getStatus() == sf::Sound::Stopped){
             _VoiceList.erase(it);
             if (it==_VoiceList.end())
                 break;

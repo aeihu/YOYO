@@ -9,21 +9,22 @@
 #include "CResourceManager.h"
 
 CCharacterLayerControl CResourceManager::_CharacterLayerControl;
-CImgLayerControl    CResourceManager::_ImgLayerControl;
-CImgLayerControl    CResourceManager::_BackgroundLayerControl;
-CMessageBoxControl    CResourceManager::_MessageBoxControl;
+CImgLayerControl CResourceManager::_ImgLayerControl;
+CImgLayerControl CResourceManager::_BackgroundLayerControl;
+CMessageBoxControl CResourceManager::_MessageBoxControl;
 CButtonControl CResourceManager::_ButtonControl;
 
-template<class X>
+template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
 {
     unsigned int __total = 0;
     cout<<resourcename<<":"<<endl;
-    for (map<std::string, X>::iterator it=xlist.begin(); 
+
+    for (typename map<std::string,  X>::iterator it=xlist.begin();
         it!=xlist.end(); it++ )
     {
         __total++;
-        cout<<__total<<": "<<(*it).first<<endl;
+        cout<<__total<<": "<< (*it).first <<endl;
     }
     cout<<"Total: "<<__total<<endl;
     cout<<"=========================" <<endl<<endl;

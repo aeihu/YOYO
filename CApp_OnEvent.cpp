@@ -16,8 +16,8 @@ void CApp::OnEvent(sf::Event* Event) {
 
 //==============================================================================
 void CApp::OnKeyDown(sf::Event::KeyEvent key) {
-    switch(key.Code) {
-        case sf::Key::Left: {
+    switch(key.code) {
+        case sf::Keyboard::Left: {
             //CPositions::PositionsControl.Move("ma",0, 50, 5, true);
             //CPositions::PositionsControl._characterList["ma"].SetFace("FACE1");
             //switch (CCommon::common.EventFocus)
@@ -41,7 +41,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Right: {
+        case sf::Keyboard::Right: {
             //CPositions::PositionsControl.Move("ma",660, 0, 5, true);
             //CPositions::PositionsControl._characterList["ma"].SetFace("FACE2");
             switch (CCommon::common.EventFocus)
@@ -64,7 +64,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Up: {
+        case sf::Keyboard::Up: {
             //CPositions::PositionsControl._characterList["ma"].SetFace("FACE3");
             //switch (CCommon::common.EventFocus)
             //{
@@ -91,7 +91,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Down: {
+        case sf::Keyboard::Down: {
             //CPositions::PositionsControl._characterList["ma"].SetFace("FACE4");
             //switch (CCommon::common.EventFocus)
             //{
@@ -118,7 +118,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
                         
-        case sf::Key::Return: {
+        case sf::Keyboard::Return: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -137,7 +137,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
 
             break;
         }
-        case sf::Key::Space: {
+        case sf::Keyboard::Space: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -156,7 +156,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Escape: {
+        case sf::Keyboard::Escape: {
             
             switch (CCommon::common.EventFocus)
             {
@@ -180,28 +180,22 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             break;
         }
         
-        case sf::Key::F4: {
+        case sf::Keyboard::F4: {
             if (!FullScreen)
             {
                 
-                sf_Display->Create(
-                    sf::VideoMode(
-                    CCommon::common.WWIDTH, 
-                    CCommon::common.WHEIGHT, 32), CCommon::common.GAME_NAME, sf::Style::Fullscreen);
-                //if((sf_Display = SDL_SetVideoMode(
+                //sf_Display->Create(
+                //    sf::VideoMode(
                 //    CCommon::common.WWIDTH, 
-                //    CCommon::common.WHEIGHT, 32,  SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN)) == NULL) {
-                //        cout << "Unable to set "<< CCommon::common.WWIDTH << "x" << CCommon::common.WHEIGHT 
-                //            <<" video: " << SDL_GetError() << endl;
-                //    return;
-                //}
-                FullScreen = true;
+                //    CCommon::common.WHEIGHT, 32), CCommon::common.GAME_NAME, sf::Style::Fullscreen);
+          
+                //FullScreen = true;
             }
             else{
-                sf_Display->Create(
-                    sf::VideoMode(
-                    CCommon::common.WWIDTH, 
-                    CCommon::common.WHEIGHT, 32), CCommon::common.GAME_NAME);
+                //sf_Display->Create(
+                //    sf::VideoMode(
+                //    CCommon::common.WWIDTH, 
+                //    CCommon::common.WHEIGHT, 32), CCommon::common.GAME_NAME);
             
                 FullScreen = false;
             }
@@ -215,8 +209,8 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
 
 //------------------------------------------------------------------------------
 void CApp::OnKeyUp(sf::Event::KeyEvent key) {
-    switch(key.Code) {
-        case sf::Key::Up: {
+    switch(key.code) {
+        case sf::Keyboard::Up: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -238,7 +232,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Down: {
+        case sf::Keyboard::Down: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -259,7 +253,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Left: {
+        case sf::Keyboard::Left: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -281,7 +275,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Right: {
+        case sf::Keyboard::Right: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -302,7 +296,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Return: {
+        case sf::Keyboard::Return: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -323,7 +317,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Space: {
+        case sf::Keyboard::Space: {
             switch (CCommon::common.EventFocus)
             {
                 case BUTTON_FOCUS: 
@@ -343,7 +337,7 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
             break;
         }
 
-        case sf::Key::Escape: {
+        case sf::Keyboard::Escape: {
             
             switch (CCommon::common.EventFocus)
             {

@@ -10,10 +10,11 @@
     #define _CMESSAGEBOXCONTROL_H_
 
 #include "CMessageBox.h"
+#include "../Common/CControlBaseClass.h"
 #include <map>
 #include <string>
 
-class CMessageBoxControl
+class CMessageBoxControl : public CControlBaseClass
 {
     private:
         bool IsAlreadyExists(std::string name);
@@ -23,10 +24,10 @@ class CMessageBoxControl
 
         char AddMessageBox(std::string name, const char* filename);
         bool DelMessageBox(std::string name);
-        bool SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause);
+        bool SetImageVisibility(std::string name, int alpha, int incr, bool pause);
     
         void OnLoop(bool &pause);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(CWindow* Surf_Dest);
 };
 
 #endif

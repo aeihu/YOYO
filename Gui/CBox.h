@@ -25,8 +25,8 @@ class CBox : public CImageBaseClass
         virtual bool Sub_CheckList(map<string, string> list){ return true;}
         virtual bool Sub_OnLoad(){ return true;}
     public:
-        CBox();
-        CBox(float x, float y);
+        CBox(float x=0.0f, float y=0.0f);
+        ~CBox();
 
         bool LoadBox(const char* FileName);
 };

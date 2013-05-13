@@ -128,26 +128,22 @@ void CParser::ExecuteCmd(string cmd)
             else if (__cmd_para_list[0] == "@show_img_nb")
             {
                 Cmd_ShowImg(__cmd_para_list[1].c_str(),
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,false);
+                    CCommon::common.INCREMENT,false);
             }
             else if (__cmd_para_list[0] == "@show_img")
             {
                 Cmd_ShowImg(__cmd_para_list[1].c_str(),
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,true);
+                    CCommon::common.INCREMENT,true);
             }
             else if (__cmd_para_list[0] == "@hide_img_nb")
             {
                 Cmd_HideImg(__cmd_para_list[1].c_str() ,
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,false);
+                    CCommon::common.INCREMENT,false);
             }
             else if (__cmd_para_list[0] == "@hide_img")
             {
                 Cmd_HideImg(__cmd_para_list[1].c_str() ,
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,true);
+                    CCommon::common.INCREMENT,true);
             }
             else if (__cmd_para_list[0] == "@del_img")
             {
@@ -158,26 +154,22 @@ void CParser::ExecuteCmd(string cmd)
             else if (__cmd_para_list[0] == "@show_bg_nb")
             {
                 Cmd_ShowBackground(__cmd_para_list[1].c_str(),
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,false);
+                    CCommon::common.INCREMENT,false);
             }
             else if (__cmd_para_list[0] == "@show_bg")
             {
                 Cmd_ShowBackground(__cmd_para_list[1].c_str(),
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,true);
+                    CCommon::common.INCREMENT,true);
             }
             else if (__cmd_para_list[0] == "@hide_bg_nb")
             {
                 Cmd_HideBackground(__cmd_para_list[1].c_str() ,
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,false);
+                    CCommon::common.INCREMENT,false);
             }
             else if (__cmd_para_list[0] == "@hide_bg")
             {
                 Cmd_HideBackground(__cmd_para_list[1].c_str() ,
-                    CCommon::common.IMAGELAYER_ALPHA_INCREMENT,
-                    CCommon::common.IMAGELAYER_ALPHA_INTERVAL,true);
+                    CCommon::common.INCREMENT,true);
             }
             else if (__cmd_para_list[0] == "@del_bg")
             {
@@ -207,29 +199,29 @@ void CParser::ExecuteCmd(string cmd)
             else if (__cmd_para_list[0] == "@show_msgbox")
             {
                 Cmd_ShowMessageBox(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
+//                    CCommon::common.INTERVAL,
                     true);
             }
             else if (__cmd_para_list[0] == "@show_msgbox_nb")
             {
                 Cmd_ShowMessageBox(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
+//                    CCommon::common.INTERVAL,
                     false);
             }
             else if (__cmd_para_list[0] == "@hide_msgbox")
             {
                 Cmd_HideMessageBox(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
+//                    CCommon::common.INTERVAL,
                     true);
             }
             else if (__cmd_para_list[0] == "@hide_msgbox_nb")
             {
                 Cmd_HideMessageBox(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
+//                    CCommon::common.INTERVAL,
                     false);
             }
             else if (__cmd_para_list[0] == "@del_msgbox")
@@ -241,15 +233,13 @@ void CParser::ExecuteCmd(string cmd)
             else if (__cmd_para_list[0] == "@show_btn")
             {
                 Cmd_ShowButton(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
                     true);
             }
             else if (__cmd_para_list[0] == "@hide_btn")
             {
                 Cmd_HideButton(__cmd_para_list[1],
-                    CCommon::common.BOX_ALPHA_INCREMENT,
-                    CCommon::common.BOX_ALPHA_INTERVAL,
+                    CCommon::common.INCREMENT,
                     true);
             }
             else if (__cmd_para_list[0] == "@del_btn")
@@ -269,14 +259,16 @@ void CParser::ExecuteCmd(string cmd)
             else if (__cmd_para_list[0] == "@hide_chara_nb")
             {
                 Cmd_HideCharacterLayer(__cmd_para_list[1],__cmd_para_list[2].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,false);
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,false);
             }
             else if (__cmd_para_list[0] == "@hide_chara")
             {
                 Cmd_HideCharacterLayer(__cmd_para_list[1],__cmd_para_list[2].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,true);
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,true);
             }
             else if (__cmd_para_list[0] == "@add_se")
             {
@@ -302,6 +294,30 @@ void CParser::ExecuteCmd(string cmd)
                 Cmd_Message(__cmd_para_list[1],
                     __cmd_para_list[2]);
             }
+            else if (__cmd_para_list[0] == "@show_msgbox")
+            {
+                Cmd_ShowMessageBox(__cmd_para_list[1],
+                    atoi(__cmd_para_list[2].c_str()),
+                    true);
+            }
+            else if (__cmd_para_list[0] == "@show_msgbox_nb")
+            {
+                Cmd_ShowMessageBox(__cmd_para_list[1],
+                    atoi(__cmd_para_list[2].c_str()),
+                    false);
+            }
+            else if (__cmd_para_list[0] == "@hide_msgbox")
+            {
+                Cmd_HideMessageBox(__cmd_para_list[1],
+                    atoi(__cmd_para_list[2].c_str()),
+                    true);
+            }
+            else if (__cmd_para_list[0] == "@hide_msgbox_nb")
+            {
+                Cmd_HideMessageBox(__cmd_para_list[1],
+                    atoi(__cmd_para_list[2].c_str()),
+                    false);
+            }
 
 //=========================================================
             else if (__cmd_para_list[0] == "@add_btn")
@@ -316,11 +332,51 @@ void CParser::ExecuteCmd(string cmd)
                 Cmd_AddImg(__cmd_para_list[1],
                     __cmd_para_list[2].c_str());
             }
+            else if (__cmd_para_list[0] == "@show_img_nb")
+            {
+                Cmd_ShowImg(__cmd_para_list[1].c_str(), 
+                    atoi(__cmd_para_list[2].c_str()), false);
+            }
+            else if (__cmd_para_list[0] == "@show_img")
+            {
+                Cmd_ShowImg(__cmd_para_list[1].c_str(), 
+                    atoi(__cmd_para_list[2].c_str()), true);
+            }
+            else if (__cmd_para_list[0] == "@hide_img_nb")
+            {
+                Cmd_HideImg(__cmd_para_list[1].c_str() ,
+                    atoi(__cmd_para_list[2].c_str()),false);
+            }
+            else if (__cmd_para_list[0] == "@hide_img")
+            {
+                Cmd_HideImg(__cmd_para_list[1].c_str() ,
+                    atoi(__cmd_para_list[2].c_str()),true);
+            }
 //=========================================================
             else if (__cmd_para_list[0] == "@add_bg")
             {
                 Cmd_AddBackground(__cmd_para_list[1],
                     __cmd_para_list[2].c_str());
+            }
+            else if (__cmd_para_list[0] == "@show_bg_nb")
+            {
+                Cmd_ShowBackground(__cmd_para_list[1].c_str(), 
+                    atoi(__cmd_para_list[2].c_str()),  false);
+            }
+            else if (__cmd_para_list[0] == "@show_bg")
+            {
+                Cmd_ShowBackground(__cmd_para_list[1].c_str(), 
+                    atoi(__cmd_para_list[2].c_str()),  true);
+            }
+            else if (__cmd_para_list[0] == "@hide_bg_nb")
+            {
+                Cmd_HideBackground(__cmd_para_list[1].c_str() ,
+                    atoi(__cmd_para_list[2].c_str()),false);
+            }
+            else if (__cmd_para_list[0] == "@hide_bg")
+            {
+                Cmd_HideBackground(__cmd_para_list[1].c_str() ,
+                    atoi(__cmd_para_list[2].c_str()),true);
             }
             
 //=========================================================
@@ -330,60 +386,8 @@ void CParser::ExecuteCmd(string cmd)
                 //cout << "syntax error: " << cmd << "." << endl;
             }
         break;
-        case 4:        
-            if (__cmd_para_list[0] == "@show_img_nb")
-            {
-                Cmd_ShowImg(__cmd_para_list[1].c_str(), 
-                    atoi(__cmd_para_list[2].c_str()), 
-                    atoi(__cmd_para_list[3].c_str()), false);
-            }
-            else if (__cmd_para_list[0] == "@show_img")
-            {
-                Cmd_ShowImg(__cmd_para_list[1].c_str(), 
-                    atoi(__cmd_para_list[2].c_str()), 
-                    atoi(__cmd_para_list[3].c_str()), true);
-            }
-            else if (__cmd_para_list[0] == "@hide_img_nb")
-            {
-                Cmd_HideImg(__cmd_para_list[1].c_str() ,
-                    atoi(__cmd_para_list[2].c_str()),
-                    atoi(__cmd_para_list[3].c_str()),false);
-            }
-            else if (__cmd_para_list[0] == "@hide_img")
-            {
-                Cmd_HideImg(__cmd_para_list[1].c_str() ,
-                    atoi(__cmd_para_list[2].c_str()),
-                    atoi(__cmd_para_list[3].c_str()),true);
-            }
-//=========================================================
-
-            else if (__cmd_para_list[0] == "@show_bg_nb")
-            {
-                Cmd_ShowBackground(__cmd_para_list[1].c_str(), 
-                    atoi(__cmd_para_list[2].c_str()), 
-                    atoi(__cmd_para_list[3].c_str()), false);
-            }
-            else if (__cmd_para_list[0] == "@show_bg")
-            {
-                Cmd_ShowBackground(__cmd_para_list[1].c_str(), 
-                    atoi(__cmd_para_list[2].c_str()), 
-                    atoi(__cmd_para_list[3].c_str()), true);
-            }
-            else if (__cmd_para_list[0] == "@hide_bg_nb")
-            {
-                Cmd_HideBackground(__cmd_para_list[1].c_str() ,
-                    atoi(__cmd_para_list[2].c_str()),
-                    atoi(__cmd_para_list[3].c_str()),false);
-            }
-            else if (__cmd_para_list[0] == "@hide_bg")
-            {
-                Cmd_HideBackground(__cmd_para_list[1].c_str() ,
-                    atoi(__cmd_para_list[2].c_str()),
-                    atoi(__cmd_para_list[3].c_str()),true);
-            }
-//=========================================================
-
-            else if (__cmd_para_list[0] == "@add_position")
+        case 4:
+            if (__cmd_para_list[0] == "@add_position")
             {
                 Cmd_AddPosition(__cmd_para_list[1],
                     atof(__cmd_para_list[2].c_str()),
@@ -417,8 +421,9 @@ void CParser::ExecuteCmd(string cmd)
                     __cmd_para_list[2].c_str(),
                     __cmd_para_list[3],
                     __cmd_para_list[4].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,
                     false);
             }
             else if (__cmd_para_list[0] == "@show_chara")
@@ -428,8 +433,9 @@ void CParser::ExecuteCmd(string cmd)
                     __cmd_para_list[2].c_str(),
                     __cmd_para_list[3],
                     __cmd_para_list[4].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,
                     true);
             }
             else if (__cmd_para_list[0] == "@move_chara_nb")
@@ -481,8 +487,9 @@ void CParser::ExecuteCmd(string cmd)
                     atof(__cmd_para_list[3].c_str()),
                     atof(__cmd_para_list[4].c_str()),
                     __cmd_para_list[5].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,
                     false);
             }
             else if (__cmd_para_list[0] == "@show_chara")
@@ -493,8 +500,9 @@ void CParser::ExecuteCmd(string cmd)
                     atof(__cmd_para_list[3].c_str()),
                     atof(__cmd_para_list[4].c_str()),
                     __cmd_para_list[5].at(0),
-                    CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
-                    CCommon::common.CHARACTERLAYER_MOVE_INCREMENT,
+                    //CCommon::common.CHARACTERLAYER_MOVE_BUFFER,
+                    20.0f,
+                    CCommon::common.INCREMENT,
                     true);
             }
             else

@@ -6,20 +6,16 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CTEXTSTYLE_H_ 
-    #define _CTEXTSTYLE_H_
+#ifndef _CCONTROLBASECLASS_H_
+    #define _CCONTROLBASECLASS_H_
 
-#include <SFML/Graphics.hpp>
-
-class CTextStyle
+class CControlBaseClass
 {
-    private:
+    protected:
+        unsigned int _interval;
+        inline CControlBaseClass() {_interval = 10;}
     public:
-        unsigned int        _size;
-        sf::Color           _color;
-        //sf::String::   _style;
-
-        CTextStyle();
+        inline void SetInterval(unsigned int interval) {_interval = interval;}
 };
 
 #endif

@@ -8,12 +8,12 @@
 
 #include "CSequenceOfFrames.h"
 
-CSequenceOfFrames::CSequenceOfFrames(float x, float y, int left, int top, int right, int bottom):CImageBaseClass(x,y)
+CSequenceOfFrames::CSequenceOfFrames(float x, float y, int left, int top, int width, int height):CImageBaseClass(x,y)
 {
-    _rect.Top = left;
-    _rect.Left = top;
-    _rect.Right = right;
-    _rect.Bottom = bottom;
+    _rect.top = left;
+    _rect.left = top;
+    _rect.width = width;
+    _rect.height = height;
 }
 
 bool CSequenceOfFrames::LoadImg(const char* filename)
@@ -27,42 +27,42 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
-    int TilesetWidth  = _image.GetWidth() / _rect.GetWidth();
+    unsigned int TilesetWidth  = _image.GetWidth() / _rect.width;
     //int TilesetHeight  = _image.GetHeight() / _rect.GetHeight();
-    int Width = _rect.GetWidth();
-    int Height = _rect.GetHeight();
+    unsigned int Width = _rect.width;
+    unsigned int Height = _rect.height;
 
-    _rect.Left = (frame % TilesetWidth) * _rect.GetWidth();
-    _rect.Right = _rect.Left+Width;
-    _rect.Top = (frame / TilesetWidth) * _rect.GetHeight();
-    _rect.Bottom = _rect.Top+Height;
+    _rect.left = (frame % TilesetWidth) * _rect.width;
+    //_rect.Right = _rect.Left+Width;
+    _rect.top = (frame / TilesetWidth) * _rect.height;
+    //_rect.Bottom = _rect.Top+Height;
 
-    _sprite.SetSubRect(_rect);
+    _sprite.SetTextureRect(_rect);
 }
 
-sf::Vector2f CSequenceOfFrames::GetPosition()
+CCoordinate2f CSequenceOfFrames::GetPosition()
 {
     return _sprite.GetPosition();
 }
 
 void CSequenceOfFrames::SetWidth(int w)
 {
-    _rect.Right = _rect.Left + w;
+    _rect.width = w;
 }
 
 void CSequenceOfFrames::SetHeight(int h)
 {
-    _rect.Bottom = _rect.Top + h;
+    _rect.height = h;
 }
 
 int CSequenceOfFrames::GetWidth()
 {
-    return _rect.GetWidth();
+    return _rect.width;
 }
 
 int CSequenceOfFrames::GetHeight()
 {
-    return _rect.GetHeight();
+    return _rect.height;
 }
 
 void CSequenceOfFrames::SetPosition(float x, float y)

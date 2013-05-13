@@ -46,11 +46,11 @@ bool CMessageBoxControl::DelMessageBox(std::string name)
     return false;
 }
 
-bool CMessageBoxControl::SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause)
+bool CMessageBoxControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
     if (IsAlreadyExists(name)){
         _MessageBoxList[name].Insert(0,
-            alpha, msec, pause,
+            alpha, _interval, pause,
             &_MessageBoxList[name].CBox::_Alpha,
             incr);
 
@@ -69,7 +69,7 @@ void CMessageBoxControl::OnLoop(bool &pause)
     }
 }
 
-void CMessageBoxControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CMessageBoxControl::OnRender(CWindow* Surf_Dest)
 {
     std::map<std::string, CMessageBox>::iterator it;
 

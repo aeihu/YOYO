@@ -29,19 +29,19 @@ bool Cio::LoadFileToMem(string filename, char* &file, unsigned long& size)
 		return false;
 	}
 	else{
-		filebuf* __pBuf;  
-		ifstream __fileStr;    
-  
-		__fileStr.open (filename.c_str(), ios::binary); 
-    __pBuf=__fileStr.rdbuf();
-  
-    size=__pBuf->pubseekoff (0,ios::end,ios::in); 
-    __pBuf->pubseekpos (0,ios::in);    
+        filebuf* __pBuf;  
+        ifstream __fileStr;    
 
-    file=new char[size]; 
-    __pBuf->sgetn (file,size); 
-		__fileStr.close();  
-		return true;
+        __fileStr.open (filename.c_str(), ios::binary); 
+        __pBuf=__fileStr.rdbuf();
+
+        size=__pBuf->pubseekoff (0,ios::end,ios::in); 
+        __pBuf->pubseekpos (0,ios::in);    
+
+        file=new char[size]; 
+        __pBuf->sgetn (file,size); 
+        __fileStr.close();  
+        return true;
 	}
 }
 
@@ -133,6 +133,8 @@ bool Cio::IsOneWord(std::string &str, std::string valid_characters)
 	}
 }
 
+
+//==============_(:3J Z)_===================
 bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 {
 	if (str.find_first_of(first_symbol)==string::npos ||

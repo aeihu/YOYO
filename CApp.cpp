@@ -19,16 +19,16 @@ CApp::CApp() {
 }
 
 //------------------------------------------------------------------------------
-int CApp::OnExecute() {
-  if(OnInit() == false) {
+int CApp::OnExecute() 
+{
+    if(OnInit() == false) {
 	  return -1;
     }
+    sf::Event Event;
 
-	sf::Event Event;
-
-  while(Running) {
-		while(sf_Display->IsOpened()){
-			while(sf_Display->GetEvent(Event)) {
+    while(Running) {
+		while(sf_Display->IsOpen()){
+			while(sf_Display->PollEvent(Event)) {
 				OnEvent(&Event);
 			}
 
@@ -37,8 +37,8 @@ int CApp::OnExecute() {
 		}
     }
 
-  OnCleanup();
-  return 0;
+    OnCleanup();
+    return 0;
 }
 
 //==============================================================================

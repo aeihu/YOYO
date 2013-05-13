@@ -7,8 +7,9 @@
 */
 
 #include "CButton.h"
+#include "../Common/CControlBaseClass.h"
 
-class CButtonControl
+class CButtonControl : public CControlBaseClass
 {
     private:
         bool IsAlreadyExists(string name);
@@ -19,8 +20,8 @@ class CButtonControl
 
         char AddButton(string name, const char* filename);
         bool DelButton(string name);
-        bool SetImageVisibility(string name, int alpha, int incr, int msec, bool pause);
+        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
     
         void OnLoop(bool &pause);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(CWindow* Surf_Dest);
 };

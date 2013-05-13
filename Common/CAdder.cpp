@@ -16,6 +16,9 @@ CAdder::CAdder()
     _pause = false;
 }
 
+CAdder::~CAdder()
+{}
+
 bool CAdder::Exec(unsigned long time)
 {
     if (_oldTime + _interval > time)

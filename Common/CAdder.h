@@ -30,6 +30,7 @@ class CAdder
         virtual bool  Oscillate();
     public:
         CAdder();
+        virtual ~CAdder();
         bool Exec(unsigned long time);
         bool IsPause();
 };

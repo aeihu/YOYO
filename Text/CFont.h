@@ -13,22 +13,33 @@
 #include <string>
 #include <iostream>
 #include "../Common/Cio.h"
+#include "../Graphics/CText.h"
 
 using namespace std;
 
+//class CFont
+//{
+//    private:
+//        unsigned long _menSize;
+//        char*         _memFont;
+//    protected:
+//    public:
+//        sf::Font      _Font;
+//
+//        CFont();
+//        ~CFont();
+//        bool LoadFont(string filename);
+//        //bool SetCharset(string charset);
+//};
 class CFont
 {
     private:
-        unsigned long _menSize;
-        char*         _memFont;
-    protected:
+        sf::Font _font;
+        friend void CText::SetFont(CFont& font);
     public:
-        sf::Font      _Font;
-
         CFont();
         ~CFont();
-        bool LoadFont(string filename, unsigned int size=25);
-        bool SetCharset(string charset, unsigned int size=25);
+        bool LoadFont(string filename);
 };
 
 #endif

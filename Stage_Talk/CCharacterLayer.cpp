@@ -20,7 +20,7 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 bool CCharacterLayer::Subclass_Loop()
 {
     if (_spriteFace.GetColor().a != _Alpha)
-        _spriteFace.SetColor(sf::Color(255,255,255,_Alpha));
+        _spriteFace.SetColor(CColor(255,255,255,_Alpha));
 
     if (_Coordinate+_offset != _spriteFace.GetPosition())
         _spriteFace.SetPosition(_Coordinate+_offset);
@@ -39,13 +39,13 @@ bool CCharacterLayer::Subclass_Loop()
     return false;
 }
 
-void CCharacterLayer::Subclass_Render(sf::RenderWindow* Surf_Dest)
+void CCharacterLayer::Subclass_Render(CWindow* Surf_Dest)
 {
     if (_isFaceEnable)
         Surf_Dest->Draw(_spriteFace);
 }
 
-bool CCharacterLayer::LoadImage(const char* fileName, sf::Image &image, sf::Sprite &sprite)
+bool CCharacterLayer::LoadImage(const char* fileName, CImage &image, CSprite &sprite)
 {
     if (fileName == NULL)
         return false;
@@ -54,7 +54,7 @@ bool CCharacterLayer::LoadImage(const char* fileName, sf::Image &image, sf::Spri
         return false;
 
     image.SetSmooth(false);
-    sprite.SetImage(image);
+    sprite.SetTexture(image);
 
     return true;
 }

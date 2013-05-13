@@ -8,14 +8,14 @@
 
 #include "CBox.h"
 
-CBox::CBox()
+CBox::CBox(float x, float y):CImageBaseClass(x,y)
 {
     _parameterList.clear();
 }
 
-CBox::CBox(float x, float y):CImageBaseClass(x,y)
+CBox::~CBox()
 {
-    _parameterList.clear();
+	_parameterList.clear();
 }
 
 bool CBox::LoadBox(const char* FileName)
@@ -47,7 +47,7 @@ bool CBox::LoadBox(const char* FileName)
         &_image, &Surf_tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
         return false;
 
-    _sprite.SetImage(_image);
+    _sprite.SetTexture(_image);
 
     return Sub_OnLoad();
 }

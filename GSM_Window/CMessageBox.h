@@ -20,7 +20,7 @@
 class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFrames
 {        
   private:
-        sf::String        _speakerName;
+        CText        _speakerName;
         bool              _isPaused;
 
         bool Sub_CheckList(map<string, string> list);
@@ -37,7 +37,7 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
         bool OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(CWindow* Surf_Dest);
 
         void SetSpeakerName(string name);
 };

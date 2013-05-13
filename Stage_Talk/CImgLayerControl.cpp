@@ -43,11 +43,11 @@ bool CImgLayerControl::DelImage(std::string name)
         return false;
 }
 
-bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause)
+bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
     if (IsAlreadyExists(name)){
         _ImgLayerList[name].Insert(0,
-            alpha, msec, pause,
+            alpha, _interval, pause,
             &_ImgLayerList[name]._Alpha,
             incr);
 
@@ -66,7 +66,7 @@ void CImgLayerControl::OnLoop(bool &pause)
     }
 }
 
-void CImgLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CImgLayerControl::OnRender(CWindow* Surf_Dest)
 {
     for (std::map<std::string, CImgLayer>::iterator it=_ImgLayerList.begin(); 
         it!=_ImgLayerList.end(); it++)

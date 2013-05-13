@@ -12,7 +12,40 @@
 
 using namespace std;
 
-bool CSurface::OnLoad(string File, sf::Image &Img) {
+bool CSurface::OnLoad(std::string File, sf::Image &Img)
+{
+    if (File.find("*") == string::npos){
+        if (!Img.loadFromFile(File)){
+            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+            return false;
+        }
+        else
+            return true;
+    }
+    else {
+        char* __image = NULL;
+        unsigned long __size = 0;
+        CZlib::OpenFileInZip(File, __image, __size);
+
+        if (__image != NULL){
+            if (Img.loadFromMemory(__image, __size)){
+                CZlib::CloseFileInZip(__image);
+                return true;
+            }
+            else{
+                CZlib::CloseFileInZip(__image);
+                cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+                return false;
+            }
+        }
+        else{
+            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
+            return false;
+        }
+    }
+}
+
+bool CSurface::OnLoad(string File, CImage &Img) {
     if (File.find("*") == string::npos){
         if (!Img.LoadFromFile(File)){
             cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
@@ -45,25 +78,26 @@ bool CSurface::OnLoad(string File, sf::Image &Img) {
 }
 
 //==============================================================================
-sf::Image* CSurface::OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
+CImage* CSurface::OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
 {
-    sf::Image* result = new sf::Image();
-    sf::Color color(R,G,B,A);
+    CImage* result = new CImage();
+    CColor color(R,G,B,A);
 
-    if (result->Create(W,H,color))
+//    if (
+        result->Create(W,H);//)
         return result;
-    else{
-        if (result != NULL){
-            delete result;
-            result = NULL;
-        }
+    //else{
+    //    if (result != NULL){
+    //        delete result;
+    //        result = NULL;
+    //    }
 
-        return NULL;
-    }
+    //    return NULL;
+    //}
 }
 
 //==============================================================================
-sf::Image* CSurface::OnCreate(unsigned int W, unsigned int H)
+CImage* CSurface::OnCreate(unsigned int W, unsigned int H)
 {
     return CSurface::OnCreate(W, H, 0, 0, 0, 255);
 }
@@ -75,7 +109,7 @@ bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src)
         return false;
     }
 
-    Surf_Dest->Copy(*Surf_Src, 0, 0, sf::IntRect(0, 0, Surf_Src->GetWidth(),  Surf_Src->GetHeight()), true);
+    Surf_Dest->copy(*Surf_Src, 0, 0, sf::IntRect(0, 0, Surf_Src->getSize().x,  Surf_Src->getSize().y), true);
     return true;
 }
 
@@ -86,7 +120,7 @@ bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, int X, int Y)
         return false;
     }
 
-    Surf_Dest->Copy(*Surf_Src, X, Y, sf::IntRect(0, 0, Surf_Src->GetWidth(),  Surf_Src->GetHeight()), true);
+    Surf_Dest->copy(*Surf_Src, X, Y, sf::IntRect(0, 0, Surf_Src->getSize().x,  Surf_Src->getSize().y), true);
     return true;
 }
 
@@ -96,7 +130,7 @@ bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, unsigned int X,
         return false;
     }
 
-    Surf_Dest->Copy(*Surf_Src, X, Y, sf::IntRect(X2, Y2, X2+W, Y2+H), true);
+    Surf_Dest->copy(*Surf_Src, X, Y, sf::IntRect(X2, Y2, X2+W, Y2+H), true);
     return true;
 }
 
@@ -106,7 +140,7 @@ bool CSurface::Transparent(sf::Image* Surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::U
         return false;
     }
 
-    Surf_Dest->CreateMaskFromColor(sf::Color(R, G, B, A));
+//    Surf_Dest->createMaskFromColor(sf::Color(R, G, B, A));
     return true;
 }
 

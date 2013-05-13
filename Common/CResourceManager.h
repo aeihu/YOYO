@@ -17,7 +17,7 @@
 class CResourceManager
 {
     private:
-        template<class X>
+        template<typename X>
         void static GetInfo(const char* resourcename, map<string, X> xlist);
     public:
         static CCharacterLayerControl _CharacterLayerControl;

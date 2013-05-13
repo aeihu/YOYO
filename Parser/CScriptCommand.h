@@ -36,13 +36,13 @@ void Cmd_SetFaceCharacterLayer(string name, string face);
 //bool Cmd_LoadScript(const char* filename, const char* Section);
 //
 bool Cmd_AddBackground(string name, const char* filename, float x=0.0f, float y=0.0f);
-bool Cmd_ShowBackground(string name, int inrc, int msec, bool pause);
-bool Cmd_HideBackground(string name, int inrc, int msec, bool pause);
+bool Cmd_ShowBackground(string name, int inrc, bool pause);
+bool Cmd_HideBackground(string name, int inrc, bool pause);
 bool Cmd_DelBackground(string name);
 //
 bool Cmd_AddImg(string name, const char* filename, float x=0.0f, float y=0.0f);
-bool Cmd_ShowImg(string name, int inrc, int msec, bool pause);
-bool Cmd_HideImg(string name, int inrc, int msec, bool pause);
+bool Cmd_ShowImg(string name, int inrc, bool pause);
+bool Cmd_HideImg(string name, int inrc, bool pause);
 bool Cmd_DelImg(string name);
 //
 //void Cmd_WhiteScreen(int msec);
@@ -60,8 +60,8 @@ bool Cmd_PlaySE(const char* name);
 //
 bool Cmd_AddButton(string name, const char* filename);
 bool Cmd_DelButton(string name);
-bool Cmd_ShowButton(string name, int incr, int msec, bool pause);
-bool Cmd_HideButton(string name, int incr, int msec, bool pause);
+bool Cmd_ShowButton(string name, int incr, bool pause);
+bool Cmd_HideButton(string name, int incr, bool pause);
 //
 //void Cmd_FullScreen();
 //void Cmd_Window();
@@ -71,8 +71,8 @@ bool Cmd_Message(string name, string msg);
 //bool Cmd_SetMessageBoxSpeakerName(string name);
 bool Cmd_AddMessageBox(string name, const char* filename);
 bool Cmd_DelMessageBox(string name);
-bool Cmd_ShowMessageBox(string name, int incr, int msec, bool pause);
-bool Cmd_HideMessageBox(string name, int incr, int msec, bool pause);
+bool Cmd_ShowMessageBox(string name, int incr, bool pause);
+bool Cmd_HideMessageBox(string name, int incr, bool pause);
 //
 //bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section);
 //bool Cmd_MenuBoxDelBtn(string name);

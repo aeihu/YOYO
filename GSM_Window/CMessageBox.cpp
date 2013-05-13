@@ -23,7 +23,7 @@ CMessageBox::CMessageBox()
 bool CMessageBox::Sub_OnLoad()
 {
     if (!CTextProcessing::OnInit(
-        CBox::_sprite.GetSize().x - atof(_parameterList["MSG_OFFSET_X"].c_str()) * 2))
+        CBox::_sprite.GetGlobalBounds().width - atof(_parameterList["MSG_OFFSET_X"].c_str()) * 2))
         return false;
 
 //=================Init cursor==================================
@@ -87,7 +87,7 @@ bool CMessageBox::Sub_CheckList(map<string, string> list)
 bool CMessageBox::OnLoop()
 {
     bool __result = CBox::OnLoop();
-    _speakerName.SetPosition(CCommon::common.MSGBOX_SPEAKER_OFFSET_X, CCommon::common.MSGBOX_SPEAKER_OFFSET_Y);
+//    _speakerName.SetPosition(CCommon::common.MSGBOX_SPEAKER_OFFSET_X, CCommon::common.MSGBOX_SPEAKER_OFFSET_Y);
     CTextProcessing::SetPosition(
         CBox::_Coordinate.x + atof(_parameterList["MSG_OFFSET_X"].c_str()), 
         CBox::_Coordinate.y + atof(_parameterList["MSG_OFFSET_Y"].c_str()));
@@ -99,7 +99,7 @@ bool CMessageBox::OnLoop()
         CSequenceOfFrames::_Coordinate = 
             CTextProcessing::GetPosition()+
             CTextProcessing::GetCharacterPos(GetText().length()-1)+
-            sf::Vector2f(2.0f, 5.0f);
+            CCoordinate2f(2.0f, 5.0f);
         //CSequenceOfFrames::_Coordinate.x = CTextProcessing::GetPosition()
         //CSequenceOfFrames::_Coordinate.y = 
         CSequenceOfFrames::_Alpha = 255;
@@ -112,7 +112,7 @@ bool CMessageBox::OnLoop()
     return _isPaused || !IsTextAllShown() || __result;
 }
 
-void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
+void CMessageBox::OnRender(CWindow* Surf_Dest)
 {
     CBox::OnRender(Surf_Dest);
     Surf_Dest->Draw(_speakerName);
@@ -122,7 +122,7 @@ void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CMessageBox::SetSpeakerName(string name)
 {
-    _speakerName.SetText(name.c_str());
+    _speakerName.SetString(name.c_str());
 }
 
 void CMessageBox::SetText(string msg)

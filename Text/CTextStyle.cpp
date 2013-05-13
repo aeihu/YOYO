@@ -11,5 +11,5 @@
 CTextStyle::CTextStyle()
 {
     _size=25;
-    _style=sf::String::Regular;
+   // _style=sf::String::Regular;
 }

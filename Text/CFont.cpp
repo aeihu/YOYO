@@ -10,40 +10,38 @@
 
 CFont::CFont()
 {
-    _memFont = NULL;
-    _menSize = 0;
+    //_memFont = NULL;
+    //_menSize = 0;
 }
 
 CFont::~CFont()
 {
-    Cio::ClearFileInMem(_memFont);
+    //Cio::ClearFileInMem(_memFont);
 }
 
-/*--------------------------------------------------
-读取字体文件
-==================================================*/
-bool CFont::LoadFont(string filename, unsigned int size)
-{
-    Cio::ClearFileInMem(_memFont);
 
-    if (!Cio::LoadFileToMem(filename, _memFont, _menSize)){
-    cout << "CFont::LoadFont(): failed to load" << filename << "." << endl;
+bool CFont::LoadFont(string filename)
+{
+    unsigned long __menSize = 0;
+    char*         __memFont = NULL;
+
+    if (!Cio::LoadFileToMem(filename, __memFont, __menSize)){
+        cout << "CFont::LoadFont(): failed to load" << filename << "." << endl;
         return false;
     }
 
-    if (!_Font.LoadFromMemory(_memFont, _menSize, size)){
-    cout << "CFont::LoadFont(): failed to load."<< endl;
-        return false;
-    }
+    bool __result = _font.loadFromMemory(__memFont, __menSize);
+    if (!__result)
+        cout << "CFont::LoadFont(): failed to load."<< endl;
 
-  return true;
+    return __result;
 }
 
-bool CFont::SetCharset(string charset, unsigned int size)
-{
-    if (_memFont != NULL)
-        return _Font.LoadFromMemory(_memFont, _menSize, size, sf::Unicode::Text((const unsigned char *)charset.c_str()));
-
-    cout << "CFont::SetCharset(): _memFont is NULL."<< endl;
-    return false;
-}
+//bool CFont::SetCharset(string charset)
+//{
+//    if (_memFont != NULL)
+//        return _Font.loadFromMemory(_memFont, _menSize);
+//
+//    cout << "CFont::SetCharset(): _memFont is NULL."<< endl;
+//    return false;
+//}

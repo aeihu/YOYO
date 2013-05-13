@@ -14,7 +14,7 @@ class CAnimation {
         int                     _currentFrame;
         int                     _frameInc;
         int                     _frameRate; //Milliseconds
-        unsigned long           _oldTime;
+        unsigned long          _oldTime;
 
         void                    OnOscillate();
         void                    OnALoop();

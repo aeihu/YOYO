@@ -10,14 +10,15 @@
     #define _CPOSITIONS_H_
 
 #include "CCharacterLayer.h"
+#include "../Common/CControlBaseClass.h"
+#include "../Common/Define.h"
 #include <map>
 #include <string>
 
-class CCharacterLayerControl
+class CCharacterLayerControl : public CControlBaseClass
 {
     private:
-        unsigned int                    _interval;
-        map<string, sf::Vector2f>       _positions;
+        map<string, CCoordinate2f>       _positions;
     public:
         map<string, CCharacterLayer>    _CharacterList;
 
@@ -37,7 +38,7 @@ class CCharacterLayerControl
         bool GetPosition(string name, float* x, float* y);
 
         void OnLoop(bool &pause);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(CWindow* Surf_Dest);
 };
 
 #endif

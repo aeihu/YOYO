@@ -46,11 +46,11 @@ bool CButtonControl::DelButton(std::string name)
     return false;
 }
 
-bool CButtonControl::SetImageVisibility(std::string name, int alpha, int incr, int msec, bool pause)
+bool CButtonControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
     if (IsAlreadyExists(name)){
         _ButtonList[name].Insert(0,
-            alpha, msec, pause,
+            alpha, _interval, pause,
             &_ButtonList[name]._Alpha,
             incr);
 
@@ -68,7 +68,7 @@ void CButtonControl::OnLoop(bool &pause)
     }
 }
 
-void CButtonControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CButtonControl::OnRender(CWindow* Surf_Dest)
 {
     map<std::string, CButton>::iterator it;
 

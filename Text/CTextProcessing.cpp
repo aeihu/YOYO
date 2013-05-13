@@ -42,8 +42,9 @@ bool CTextProcessing::OnInit(unsigned int width, unsigned int height)
 {
     _rowWidth = width;
     if (!_font.LoadFont(CCommon::common.FONT_PATH.c_str()))
-    return false; 
+        return false; 
 
+    _sfText.SetFont(_font);
     return true;
 }
 
@@ -53,7 +54,7 @@ void CTextProcessing::Clear()
     _cursorPos =
     _index = 0;
     _text = "";
-    _sfText.SetText("");
+    _sfText.SetString("");
 }
 
 void CTextProcessing::SetText(string msg, bool isAppend)
@@ -68,10 +69,6 @@ void CTextProcessing::SetText(string msg, bool isAppend)
     _cursorPos =
     _index = 0;
     _text = msg;
-    if (_font.SetCharset(msg+_textOfShown)){
-        _sfText.SetFont(_font._Font);
-        _sfText.SetSize(_font._Font.GetCharacterSize());
-    }
 }
 
 string CTextProcessing::GetText()
@@ -90,7 +87,7 @@ void CTextProcessing::OnLoop()
             return;
 
         if (_index < _text.length()){
-            unsigned int __fontSize = _font._Font.GetCharacterSize();
+            unsigned int __fontSize = _sfText.GetCharacterSize();
             unsigned int __size = CCommon::common.SizeOfCharWithUTF8(_text[_index]);
             string __str = "";
 
@@ -110,11 +107,13 @@ void CTextProcessing::OnLoop()
                 __str = "\n";
 
             _textOfShown += __str + _text.substr(_index, __size);
+
             if (__str == "\n") 
                 _cursorPos=__size==1?__fontSize>>1:__fontSize;
 
             _index += __size;
-            _sfText.SetText(sf::Unicode::Text((const unsigned char *)_textOfShown.c_str()));
+
+            _sfText.SetString(_textOfShown);
         }
         else
             _isSkip = false;
@@ -126,13 +125,13 @@ void CTextProcessing::Skip()
     _isSkip = true;
 }
 
-void CTextProcessing::OnRender(sf::RenderWindow* Surf_Dest)
+void CTextProcessing::OnRender(CWindow* Surf_Dest)
 {
-    _sfText.SetCenter(-2.0f, -2.0f);
-    _sfText.SetColor(sf::Color(200, 128, 0, 100));
+    _sfText.SetOrigin(-2.0f, -2.0f);
+    _sfText.SetColor(CColor(200, 128, 0, 100));
     Surf_Dest->Draw(_sfText);
 
-    _sfText.SetCenter(0.0f, 0.0f);
+    _sfText.SetOrigin(0.0f, 0.0f);
     _sfText.SetColor(_textColor);
     Surf_Dest->Draw(_sfText);
 }
@@ -144,20 +143,20 @@ bool CTextProcessing::IsTextAllShown()
 
 float CTextProcessing::GetWidth()
 {
-    return _sfText.GetRect().GetWidth();
+    return _sfText.GetGlobalBounds().width;
 }
 
 float CTextProcessing::GetHeight()
 {
-    return _sfText.GetRect().GetHeight();
+    return _sfText.GetGlobalBounds().height;
 }
 
-sf::Vector2f CTextProcessing::GetCharacterPos(unsigned int index)
+CCoordinate2f CTextProcessing::GetCharacterPos(unsigned int index)
 {
-    return _sfText.GetCharacterPos(index);
+    return _sfText.FindCharacterPos(index);
 }
 
-sf::Vector2f CTextProcessing::GetPosition()
+CCoordinate2f CTextProcessing::GetPosition()
 {
     return _coordinate;
 }

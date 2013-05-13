@@ -39,7 +39,7 @@ vector<vector<unsigned int> > CGuiCommon::OnLoad(const char* File)
   return table;
 }
 
-bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size)
+bool CGuiCommon::CreateBoxBackground(CImage* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size)
 {
     if(Surf_Dest == NULL || Surf_Src == NULL) {
         cout << "CGuiCommon::CreateBoxBackground(): failed to creat surface." << endl;
@@ -53,13 +53,15 @@ bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, 
         cout << "CGuiCommon::CreateBoxBackground(): form of table is error." << endl;
         return false;
     }
-    Surf_Dest->Create(table[0].size() * Tile_Size, table.size() * Tile_Size);
+    sf::Image __img;
+    __img.create(table[0].size() * Tile_Size, table.size() * Tile_Size);
+    //Surf_Dest->create(table[0].size() * Tile_Size, table.size() * Tile_Size);
 
-    unsigned int tileset_width = Surf_Src->GetWidth() / Tile_Size;
+    unsigned int tileset_width = Surf_Src->getSize().x / Tile_Size;
 
     for (int i=0; i<table.size(); i++){
         for (int j=0; j<table[i].size(); j++){
-            CSurface::OnDraw(Surf_Dest, Surf_Src, 
+            CSurface::OnDraw(&__img, Surf_Src, 
                 j * Tile_Size, 
                 i * Tile_Size, 
                 (table[i][j] % tileset_width) * Tile_Size, 
@@ -67,6 +69,7 @@ bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, 
                 Tile_Size, Tile_Size);
         }
     }
+    Surf_Dest->LoadFromImage(__img);
 
     return true;
 }

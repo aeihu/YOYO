@@ -233,9 +233,9 @@ bool Cmd_AddBackground(string name, const char* filename, float x, float y)
     }
 }
 
-bool Cmd_ShowBackground(string name, int inrc, int msec, bool pause)
+bool Cmd_ShowBackground(string name, int inrc, bool pause)
 {
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 255, inrc, msec, pause))
+    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 255, inrc, pause))
         return true;
 
     cout << "Cmd_ShowBackground(): can't find image \""<< name << "\"." << endl;
@@ -253,9 +253,9 @@ bool Cmd_DelBackground(string name)
     }
 }
 
-bool Cmd_HideBackground(string name, int inrc, int msec, bool pause)
+bool Cmd_HideBackground(string name, int inrc, bool pause)
 {
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 0, inrc, msec, pause))
+    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 0, inrc, pause))
         return true;
 
     cout << "Cmd_HideBackground(): can't find image \""<< name << "\"." << endl;
@@ -273,18 +273,18 @@ bool Cmd_AddImg(string name, const char* filename, float x, float y)
     }
 }
 
-bool Cmd_ShowImg(string name, int inrc, int msec, bool pause)
+bool Cmd_ShowImg(string name, int inrc, bool pause)
 {
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 255, inrc, msec, pause))
+    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 255, inrc, pause))
         return true;
 
     cout << "Cmd_ShowImg(): can't find image \""<< name << "\"." << endl;
     return false;
 }
 
-bool Cmd_HideImg(string name, int inrc, int msec, bool pause)
+bool Cmd_HideImg(string name, int inrc, bool pause)
 {
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 0, inrc, msec, pause))
+    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 0, inrc, pause))
         return true;
 
     cout << "Cmd_HideImg(): can't find image \""<< name << "\"." << endl;
@@ -398,9 +398,9 @@ bool Cmd_DelButton(string name)
     return false;
 }
 
-bool Cmd_ShowButton(string name, int incr, int msec, bool pause)
+bool Cmd_ShowButton(string name, int incr, bool pause)
 {
-    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 255, incr, msec, pause)){
+    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 255, incr, pause)){
         cout << "Cmd_ShowButton(): can't find Button \""<< name << "\"." <<endl;
         return false;
     }
@@ -408,9 +408,9 @@ bool Cmd_ShowButton(string name, int incr, int msec, bool pause)
     return true;
 }
 
-bool Cmd_HideButton(string name, int incr, int msec, bool pause)
+bool Cmd_HideButton(string name, int incr, bool pause)
 {
-    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 0, incr, msec, pause)){
+    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 0, incr, pause)){
         cout << "Cmd_HideButton(): can't find Button \""<< name << "\"." <<endl;
         return false;
     }
@@ -485,9 +485,9 @@ bool Cmd_DelMessageBox(string name)
     return false;
 }
 
-bool Cmd_ShowMessageBox(string name, int incr, int msec, bool pause)
+bool Cmd_ShowMessageBox(string name, int incr, bool pause)
 {
-    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 255, incr, msec, pause)){
+    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 255, incr, pause)){
         cout << "Cmd_ShowMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
         return false;
     }
@@ -495,9 +495,9 @@ bool Cmd_ShowMessageBox(string name, int incr, int msec, bool pause)
     return true;
 }
 
-bool Cmd_HideMessageBox(string name, int incr, int msec, bool pause)
+bool Cmd_HideMessageBox(string name, int incr, bool pause)
 {
-    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 0, incr, msec, pause)){
+    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 0, incr, pause)){
         cout << "Cmd_HideMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
         return false;
     }

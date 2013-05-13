@@ -203,19 +203,20 @@ void CCharacterLayerControl::OnLoop(bool &pause)
         if((*it).second.OnLoop()) 
             pause=true;
 
-        if((*it).second._Alpha == 0){
-            (*it).second.Clear();
-            it=_CharacterList.erase(it);
-            
-            if (it == _CharacterList.end())
-                break;
-        }
+//        if((*it).second._Alpha == 0){
+//            (*it).second.Clear();
+//            it=_CharacterList.erase(it);
+//
+//            if (it == _CharacterList.end())
+//                break;
+//        }
+
         else
             it++;
     }
 }
 
-void CCharacterLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CCharacterLayerControl::OnRender(CWindow* Surf_Dest)
 {
     for (map<std::string, CCharacterLayer>::iterator it=_CharacterList.begin(); 
         it!=_CharacterList.end(); it++ )

@@ -17,6 +17,9 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _visible = false;
 }
 
+CImageBaseClass::~CImageBaseClass()
+{}
+
 bool CImageBaseClass::IsStandby()
 {
     return _visible && Count()==0;
@@ -31,11 +34,11 @@ bool CImageBaseClass::LoadImg(const char* fileName)
         return false;
 
     _image.SetSmooth(false);
-    _sprite.SetImage(_image);
+    _sprite.SetTexture(_image);
     return true;
 }
 
-void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
+void CImageBaseClass::OnRender(CWindow* Surf_Dest)
 {
     if (!_visible) return;
     Surf_Dest->Draw(_sprite);
@@ -53,7 +56,7 @@ bool CImageBaseClass::OnLoop()
         _Alpha = 0;
 
     if (_sprite.GetColor().a != _Alpha)
-        _sprite.SetColor(sf::Color(255,255,255,_Alpha));
+        _sprite.SetColor(CColor(255,255,255,_Alpha));
 
     if (_Coordinate != _sprite.GetPosition())
         _sprite.SetPosition(_Coordinate);

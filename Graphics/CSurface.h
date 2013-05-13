@@ -9,8 +9,8 @@
 #ifndef _CSURFACE_H_
     #define _CSURFACE_H_
 
-#include <SFML/Graphics.hpp>
 #include "../Common/CZlib.h"
+#include "CImage.h"
 
 //==============================================================================
 class CSurface {
@@ -18,11 +18,12 @@ class CSurface {
         CSurface();
 
     public:
+        static bool OnLoad(std::string File, CImage &Img);
         static bool OnLoad(std::string File, sf::Image &Img);
 
-        static sf::Image* OnCreate(unsigned int W, unsigned int H);
+        static CImage* OnCreate(unsigned int W, unsigned int H);
 
-        static sf::Image* OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
+        static CImage* OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
 
         static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src);
 

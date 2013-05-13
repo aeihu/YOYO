@@ -12,11 +12,12 @@
 //==============================================================================
 CAnimation::CAnimation() 
 {
-    _currentFrame    = 0;
-    _MaxFrames       = 0;
-    _frameInc        = 1;
-    _frameRate       = 100; //Milliseconds
-    _oldTime         = 0;
+    _currentFrame = 0;
+    _MaxFrames = 0;
+    _frameInc = 1;
+    _frameRate = 100; //Milliseconds
+    _oldTime = 0;
+    _Type = Forward;
 }
 
 //------------------------------------------------------------------------------
