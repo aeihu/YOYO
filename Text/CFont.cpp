@@ -37,6 +37,11 @@ bool CFont::LoadFont(string filename)
     return __result;
 }
 
+const sf::Font CFont::GetFont()
+{
+    return _font;
+}
+
 //bool CFont::SetCharset(string charset)
 //{
 //    if (_memFont != NULL)

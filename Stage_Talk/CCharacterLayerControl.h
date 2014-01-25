@@ -11,14 +11,14 @@
 
 #include "CCharacterLayer.h"
 #include "../Common/CControlBaseClass.h"
-#include "../Common/Define.h"
+
 #include <map>
 #include <string>
 
 class CCharacterLayerControl : public CControlBaseClass
 {
     private:
-        map<string, CCoordinate2f>          _positions;
+        map<string, sf::Vector2f>          _positions;
     public:
         map<string, CCharacterLayer>        _CharacterList;
 
@@ -28,9 +28,9 @@ class CCharacterLayerControl : public CControlBaseClass
         char AddCharacter(string name, const char* filename, float x, float y);
         bool Move(string name, string position, float increment, bool pause);
         bool Move(string name, float x, float y, float increment, bool pause);
-        bool Show(string name, string position, char type, float buf, float increment, bool pause);
-        bool Show(string name, float x, float y, char type, float buf, float increment, bool pause);
-        bool Hide(string name, char type, float buf, float increment, bool pause);
+        bool Show(string name, string position, char type, float increment, bool pause);
+        bool Show(string name, float x, float y, char type, float increment, bool pause);
+        bool Hide(string name, char type, float increment, bool pause);
 
         bool SetVisibility(string name, int alpha, int increment, bool pause);
         void AddPosition(string name, float x, float y);
@@ -38,7 +38,7 @@ class CCharacterLayerControl : public CControlBaseClass
         bool GetPosition(string name, float* x, float* y);
 
         void OnLoop(bool &pause);
-        void OnRender(CWindow* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };
 
 #endif

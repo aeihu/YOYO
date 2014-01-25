@@ -109,19 +109,19 @@ int CAdderControl::OnLoop()
     return __result;
 }
 
-void CAdderControl::Insert(char type, int goal, unsigned int interval, bool pause, int* val, int val1, int val2, int val3, int val4, bool isGoFinish)
+void CAdderControl::Insert(char type, int goal, bool pause, int* val, int val1, int val2, int val3, int val4, bool isGoFinish)
 {
     if (IsAlreadyExists(val))
         Delete(val,isGoFinish);
         
-    _iAdderList.push_back(CiAdder(type, goal, interval, pause, val, val1, val2, val3, val4));
+    _iAdderList.push_back(CiAdder(type, goal, pause, val, val1, val2, val3, val4));
 }
 
-void CAdderControl::Insert(char type, float goal, unsigned int interval, bool pause, float* val, float val1, float val2, float val3, float val4, bool isGoFinish)
+void CAdderControl::Insert(char type, float goal, bool pause, float* val, float val1, float val2, float val3, float val4, bool isGoFinish)
 {
     if (IsAlreadyExists(val))
         Delete(val,isGoFinish);
 
-    _fAdderList.push_back(CfAdder(type, goal, interval, pause, val, val1, val2, val3, val4));
+    _fAdderList.push_back(CfAdder(type, goal, pause, val, val1, val2, val3, val4));
 }
         

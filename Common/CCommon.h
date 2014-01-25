@@ -45,8 +45,8 @@ class CCommon
         int COLOR_KEY_GREEN;
         int COLOR_KEY_BLUE;
 
-        int INCREMENT;//    25
-        int INTERVAL;//    25
+        unsigned int INCREMENT;//    25
+        unsigned int INTERVAL;//    25
 
         //<config>
         int  TILE_SIZE;//    32
@@ -74,6 +74,8 @@ class CCommon
         string MOUSEOVER_SE;// "MOUSEOVER"
         string MOUSEDOWN_SE;// "MOUSEDOWN"
         string BOXCLOSED_SE;// "BOXCLOSED"
+
+        float CHARACTER_LAYER_MOVE_BUFFER;// 30
 
         static CCommon common;
 

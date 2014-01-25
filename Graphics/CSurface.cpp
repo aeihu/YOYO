@@ -45,9 +45,9 @@ bool CSurface::OnLoad(std::string File, sf::Image &Img)
     }
 }
 
-bool CSurface::OnLoad(string File, CImage &Img) {
+bool CSurface::OnLoad(string File,  sf::Texture &Img) {
     if (File.find("*") == string::npos){
-        if (!Img.LoadFromFile(File)){
+        if (!Img.loadFromFile(File)){
             cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
             return false;
         }
@@ -60,7 +60,7 @@ bool CSurface::OnLoad(string File, CImage &Img) {
         CZlib::OpenFileInZip(File, __image, __size);
 
         if (__image != NULL){
-            if (Img.LoadFromMemory(__image, __size)){
+            if (Img.loadFromMemory(__image, __size)){
                 CZlib::CloseFileInZip(__image);
                 return true;
             }
@@ -78,29 +78,29 @@ bool CSurface::OnLoad(string File, CImage &Img) {
 }
 
 //==============================================================================
-CImage* CSurface::OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
-{
-    CImage* result = new CImage();
-    CColor color(R,G,B,A);
-
-//    if (
-        result->Create(W,H);//)
-        return result;
-    //else{
-    //    if (result != NULL){
-    //        delete result;
-    //        result = NULL;
-    //    }
-
-    //    return NULL;
-    //}
-}
+//CImage* CSurface::OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
+//{
+//    CImage* result = new CImage();
+//    CColor color(R,G,B,A);
+//
+////    if (
+//        result->Create(W,H);//)
+//        return result;
+//    //else{
+//    //    if (result != NULL){
+//    //        delete result;
+//    //        result = NULL;
+//    //    }
+//
+//    //    return NULL;
+//    //}
+//}
 
 //==============================================================================
-CImage* CSurface::OnCreate(unsigned int W, unsigned int H)
-{
-    return CSurface::OnCreate(W, H, 0, 0, 0, 255);
-}
+//CImage* CSurface::OnCreate(unsigned int W, unsigned int H)
+//{
+//    return CSurface::OnCreate(W, H, 0, 0, 0, 255);
+//}
 
 //==============================================================================
 bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src)

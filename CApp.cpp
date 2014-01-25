@@ -27,8 +27,8 @@ int CApp::OnExecute()
     sf::Event Event;
 
     while(Running) {
-		while(sf_Display->IsOpen()){
-			while(sf_Display->PollEvent(Event)) {
+		while(sf_Display->isOpen()){
+			while(sf_Display->pollEvent(Event)) {
 				OnEvent(&Event);
 			}
 

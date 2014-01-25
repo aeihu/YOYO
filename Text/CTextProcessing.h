@@ -15,21 +15,21 @@
 #include <map>
 #include "../Graphics/CSurface.h"
 #include "../Common/CCommon.h"
-#include "../Common/Define.h"
+
 
 class CTextProcessing
 {
   private:
-        CCoordinate2f   _coordinate;
+        sf::Vector2f   _coordinate;
         bool            _isSkip;
         string          _text;
         string          _textOfShown;
-        CText           _sfText;
+        sf::Text           _sfText;
         unsigned int    _rowWidth;
         unsigned int    _cursorPos;
         unsigned int    _index;
-        CColor          _textColor;
-        CColor          _shadowColor;
+        sf::Color          _textColor;
+        sf::Color          _shadowColor;
         unsigned long   _oldTime;
         CFont           _font;
 
@@ -39,7 +39,7 @@ class CTextProcessing
 
         bool OnInit(unsigned int width, unsigned int height=0);
         void OnLoop();
-        void OnRender(CWindow* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest);
         void Skip();
         void Clear();
         bool IsTextAllShown();
@@ -48,8 +48,8 @@ class CTextProcessing
         string GetText();
         float GetWidth();
         float GetHeight();
-        CCoordinate2f GetCharacterPos(unsigned int index); 
-        CCoordinate2f GetPosition();
+        sf::Vector2f GetCharacterPos(unsigned int index); 
+        sf::Vector2f GetPosition();
         void SetPosition(float x, float y);
 };
 

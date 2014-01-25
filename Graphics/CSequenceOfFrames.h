@@ -9,12 +9,12 @@
     #define _CSEQUENCEOFFRAMES_H_
 
 #include "CImageBaseClass.h"
-#include "../Common/Define.h"
+
 
 class CSequenceOfFrames : public CImageBaseClass
 {
     private:
-        CIntRect        _rect;
+        sf::IntRect        _rect;
     public:
         CSequenceOfFrames(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);
@@ -23,7 +23,7 @@ class CSequenceOfFrames : public CImageBaseClass
         void SetPosition(float x, float y);
         bool LoadImg(const char* filename);
 
-        CCoordinate2f GetPosition();
+        sf::Vector2f GetPosition();
         int GetWidth();
         int GetHeight();
 };

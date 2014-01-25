@@ -44,7 +44,7 @@ bool CTextProcessing::OnInit(unsigned int width, unsigned int height)
     if (!_font.LoadFont(CCommon::common.FONT_PATH.c_str()))
         return false; 
 
-    _sfText.SetFont(_font);
+    _sfText.setFont(_font.GetFont());
     return true;
 }
 
@@ -54,7 +54,7 @@ void CTextProcessing::Clear()
     _cursorPos =
     _index = 0;
     _text = "";
-    _sfText.SetString("");
+    _sfText.setString("");
 }
 
 void CTextProcessing::SetText(string msg, bool isAppend)
@@ -79,7 +79,7 @@ string CTextProcessing::GetText()
 void CTextProcessing::OnLoop()
 {
     do {
-        _sfText.SetPosition(_coordinate);
+        _sfText.setPosition(_coordinate);
         if (_oldTime + CCommon::common.TEXT_FRAMERATE <= CCommon::common.GetTicks() || _isSkip){
             _oldTime = CCommon::common.GetTicks();
         }
@@ -87,7 +87,7 @@ void CTextProcessing::OnLoop()
             return;
 
         if (_index < _text.length()){
-            unsigned int __fontSize = _sfText.GetCharacterSize();
+            unsigned int __fontSize = _sfText.getCharacterSize();
             unsigned int __size = CCommon::common.SizeOfCharWithUTF8(_text[_index]);
             string __str = "";
 
@@ -113,7 +113,7 @@ void CTextProcessing::OnLoop()
 
             _index += __size;
 
-            _sfText.SetString(_textOfShown);
+            _sfText.setString(_textOfShown);
         }
         else
             _isSkip = false;
@@ -125,15 +125,15 @@ void CTextProcessing::Skip()
     _isSkip = true;
 }
 
-void CTextProcessing::OnRender(CWindow* Surf_Dest)
+void CTextProcessing::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    _sfText.SetOrigin(-2.0f, -2.0f);
-    _sfText.SetColor(CColor(200, 128, 0, 100));
-    Surf_Dest->Draw(_sfText);
+    _sfText.setOrigin(-2.0f, -2.0f);
+    _sfText.setColor(sf::Color(200, 128, 0, 100));
+    Surf_Dest->draw(_sfText);
 
-    _sfText.SetOrigin(0.0f, 0.0f);
-    _sfText.SetColor(_textColor);
-    Surf_Dest->Draw(_sfText);
+    _sfText.setOrigin(0.0f, 0.0f);
+    _sfText.setColor(_textColor);
+    Surf_Dest->draw(_sfText);
 }
 
 bool CTextProcessing::IsTextAllShown()
@@ -143,20 +143,20 @@ bool CTextProcessing::IsTextAllShown()
 
 float CTextProcessing::GetWidth()
 {
-    return _sfText.GetGlobalBounds().width;
+    return _sfText.getGlobalBounds().width;
 }
 
 float CTextProcessing::GetHeight()
 {
-    return _sfText.GetGlobalBounds().height;
+    return _sfText.getGlobalBounds().height;
 }
 
-CCoordinate2f CTextProcessing::GetCharacterPos(unsigned int index)
+sf::Vector2f CTextProcessing::GetCharacterPos(unsigned int index)
 {
-    return _sfText.FindCharacterPos(index);
+    return _sfText.findCharacterPos(index);
 }
 
-CCoordinate2f CTextProcessing::GetPosition()
+sf::Vector2f CTextProcessing::GetPosition()
 {
     return _coordinate;
 }

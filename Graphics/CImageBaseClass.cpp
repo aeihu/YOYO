@@ -10,7 +10,7 @@
 
 CImageBaseClass::CImageBaseClass(float x, float y)
 {
-    _sprite.SetPosition(x,y);
+    _sprite.setPosition(x,y);
     _Coordinate.x = x;
     _Coordinate.y = y;
     _Alpha = 0;
@@ -33,15 +33,15 @@ bool CImageBaseClass::LoadImg(const char* fileName)
     if (!CSurface::OnLoad(fileName, _image))
         return false;
 
-    _image.SetSmooth(false);
-    _sprite.SetTexture(_image);
+    _image.setSmooth(false);
+    _sprite.setTexture(_image);
     return true;
 }
 
-void CImageBaseClass::OnRender(CWindow* Surf_Dest)
+void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 {
     if (!_visible) return;
-    Surf_Dest->Draw(_sprite);
+    Surf_Dest->draw(_sprite);
     Subclass_Render(Surf_Dest);
 }
 
@@ -55,16 +55,16 @@ bool CImageBaseClass::OnLoop()
     else if (_Alpha < 0)
         _Alpha = 0;
 
-    if (_sprite.GetColor().a != _Alpha)
-        _sprite.SetColor(CColor(255,255,255,_Alpha));
+    if (_sprite.getColor().a != _Alpha)
+        _sprite.setColor(sf::Color(255,255,255,_Alpha));
 
-    if (_Coordinate != _sprite.GetPosition())
-        _sprite.SetPosition(_Coordinate);
+    if (_Coordinate != _sprite.getPosition())
+        _sprite.setPosition(_Coordinate);
 
-    if (_sprite.GetScale().x > 1.0f || _sprite.GetScale().y > 1.0f)
-        _image.SetSmooth(true);
+    if (_sprite.getScale().x > 1.0f || _sprite.getScale().y > 1.0f)
+        _image.setSmooth(true);
     else
-        _image.SetSmooth(false);
+        _image.setSmooth(false);
 
     __result = Subclass_Loop() ? true : __result;
     return __result;

@@ -114,7 +114,7 @@
 //    return true;
 //}
 //
-bool Cmd_ShowInfo(queue<string> para)
+bool Cmd_ShowInfo(vector<string> args)
 {
     CResourceManager::GetInfo();
     //CResourceManager::GetInfo("ImageList", CResourceManager::_ImgLayerControl._ImgLayerList);
@@ -125,7 +125,7 @@ bool Cmd_ShowInfo(queue<string> para)
 }
 
 //void Cmd_AddPosition(string name, float x, float y)
-bool Cmd_AddPosition(vector<string> args);
+bool Cmd_AddPosition(vector<string> args)
 {
     if (args.size() != 3)
         return false;
@@ -138,7 +138,7 @@ bool Cmd_AddPosition(vector<string> args);
 }
 
 //void Cmd_DelPosition(string name)
-bool Cmd_DelPosition(vector<string> args);
+bool Cmd_DelPosition(vector<string> args)
 {
     if (args.size() != 1)
         return false;
@@ -149,7 +149,7 @@ bool Cmd_DelPosition(vector<string> args);
 }
 
 //bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
-bool Cmd_ShowCharacterLayer(vector<string> args);
+bool Cmd_ShowCharacterLayer(vector<string> args)
 {    
     if (args.size() != 1)
         return false;
@@ -157,11 +157,11 @@ bool Cmd_ShowCharacterLayer(vector<string> args);
     string name = args[0];
     const char* filename = args[1].c_str();
     float x = atof(args[2].c_str());
-    float y = atof(args[4].c_str());
+    float y = atof(args[3].c_str());
 
     switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename, x, y)){
         case 0:
-            CResourceManager::_CharacterLayerControl.Show(name, x, y, type, buf, incr, pause);
+       ///     CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
             return true;
         break;
         case 1:
@@ -177,12 +177,12 @@ bool Cmd_ShowCharacterLayer(vector<string> args);
 
 bool Cmd_ShowCharacterLayer(string name, const char* filename, string position, char type, float buf, float incr, bool pause)
 {    
-    float x=0,y=0;
-    if (CResourceManager::_CharacterLayerControl.GetPosition(position,&x,&y)){
-        Cmd_ShowCharacterLayer(name, filename, x, y, type, buf, incr, pause);
-        return true;
-    }
-    cout << "Cmd_ShowCharacterLayer(): can't find position \""<< position << "\"." <<endl;
+    //float x=0,y=0;
+    //if (CResourceManager::_CharacterLayerControl.GetPosition(position,&x,&y)){
+    //    Cmd_ShowCharacterLayer(name, filename, x, y, type, incr, pause);
+    //    return true;
+    //}
+    //cout << "Cmd_ShowCharacterLayer(): can't find position \""<< position << "\"." <<endl;
     return false;
 }
 
@@ -213,7 +213,7 @@ bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool 
         return false;
     }
 
-    CResourceManager::_CharacterLayerControl.Hide(name, type, buf, incr, pause);
+    CResourceManager::_CharacterLayerControl.Hide(name, type, incr, pause);
     return true;
 }
 

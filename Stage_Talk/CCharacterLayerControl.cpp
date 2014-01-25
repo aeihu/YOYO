@@ -54,29 +54,29 @@ bool CCharacterLayerControl::Move(string name, float x, float y, float increment
         float ratio = 1;
         if (abs(_CharacterList[name]._Coordinate.y-y) != 0){
             ratio = abs(_CharacterList[name]._Coordinate.y-y) / abs(_CharacterList[name]._Coordinate.x-x);
-            _CharacterList[name].Insert(0, y, _interval, pause, &_CharacterList[name]._Coordinate.y, increment*ratio);
+            _CharacterList[name].Insert(0, y, pause, &_CharacterList[name]._Coordinate.y, increment*ratio);
         }
         
-        _CharacterList[name].Insert(0, x, _interval, pause, &_CharacterList[name]._Coordinate.x, increment);
+        _CharacterList[name].Insert(0, x, pause, &_CharacterList[name]._Coordinate.x, increment);
     }
     else if (abs(_CharacterList[name]._Coordinate.x-x) 
         < abs(_CharacterList[name]._Coordinate.y-y)){
         float ratio = 1;
         if (abs(_CharacterList[name]._Coordinate.x-x) != 0){
             ratio = abs(_CharacterList[name]._Coordinate.x-x) / abs(_CharacterList[name]._Coordinate.y-y);
-            _CharacterList[name].Insert(0, x, _interval, pause, &_CharacterList[name]._Coordinate.x, increment*ratio);
+            _CharacterList[name].Insert(0, x, pause, &_CharacterList[name]._Coordinate.x, increment*ratio);
         }
 
-        _CharacterList[name].Insert(0, y, _interval, pause, &_CharacterList[name]._Coordinate.y, increment);
+        _CharacterList[name].Insert(0, y, pause, &_CharacterList[name]._Coordinate.y, increment);
     }
     else{
-        _CharacterList[name].Insert(0, x, _interval, pause, &_CharacterList[name]._Coordinate.x, increment);
-        _CharacterList[name].Insert(0, y, _interval, pause, &_CharacterList[name]._Coordinate.y, increment);
+        _CharacterList[name].Insert(0, x, pause, &_CharacterList[name]._Coordinate.x, increment);
+        _CharacterList[name].Insert(0, y, pause, &_CharacterList[name]._Coordinate.y, increment);
     }
     return true;
 }
 
-bool CCharacterLayerControl::Show(string name, float x, float y, char type, float buf, float increment, bool pause)
+bool CCharacterLayerControl::Show(string name, float x, float y, char type, float increment, bool pause)
 {
     if (_CharacterList.count(name) < 1)
         return false;
@@ -84,6 +84,7 @@ bool CCharacterLayerControl::Show(string name, float x, float y, char type, floa
     if (_CharacterList[name]._Alpha == 255)
         return false;
 
+    float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = x;
     float __y = y;
     int __inc = ((int)buf)/((int)increment);
@@ -119,19 +120,20 @@ bool CCharacterLayerControl::Show(string name, float x, float y, char type, floa
     return false;
 }
 
-bool CCharacterLayerControl::Show(string name, string position, char type, float buf, float increment, bool pause)
+bool CCharacterLayerControl::Show(string name, string position, char type, float increment, bool pause)
 {
     if (_positions.count(position) < 1)
         return false;
 
-    return Show(name, _positions[position].x, _positions[position].y, type, buf, increment, pause);
+    return Show(name, _positions[position].x, _positions[position].y, type, increment, pause);
 }
 
-bool CCharacterLayerControl::Hide(string name, char type, float buf, float increment, bool pause)
+bool CCharacterLayerControl::Hide(string name, char type, float increment, bool pause)
 {
     if (_CharacterList.count(name) < 1)
         return false;
 
+    float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = _CharacterList[name]._Coordinate.x;
     float __y = _CharacterList[name]._Coordinate.y;
 
@@ -169,7 +171,7 @@ bool CCharacterLayerControl::SetVisibility(string name, int alpha, int increment
     if (_CharacterList.count(name) < 1)
         return false;
 
-    _CharacterList[name].Insert(0, alpha, _interval, pause, &_CharacterList[name]._Alpha, increment);
+    _CharacterList[name].Insert(0, alpha, pause, &_CharacterList[name]._Alpha, increment);
     return true;
 }
 
@@ -216,7 +218,7 @@ void CCharacterLayerControl::OnLoop(bool &pause)
     }
 }
 
-void CCharacterLayerControl::OnRender(CWindow* Surf_Dest)
+void CCharacterLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     for (map<std::string, CCharacterLayer>::iterator it=_CharacterList.begin(); 
         it!=_CharacterList.end(); it++ )

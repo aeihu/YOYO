@@ -47,7 +47,7 @@ bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr,
 {
     if (IsAlreadyExists(name)){
         _ImgLayerList[name].Insert(0,
-            alpha, _interval, pause,
+            alpha, pause,
             &_ImgLayerList[name]._Alpha,
             incr);
 
@@ -66,7 +66,7 @@ void CImgLayerControl::OnLoop(bool &pause)
     }
 }
 
-void CImgLayerControl::OnRender(CWindow* Surf_Dest)
+void CImgLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     for (std::map<std::string, CImgLayer>::iterator it=_ImgLayerList.begin(); 
         it!=_ImgLayerList.end(); it++)

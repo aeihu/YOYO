@@ -12,7 +12,7 @@
 //==============================================================================
 bool CApp::OnInit() 
 {
-    sf_Display = new CWindow();
+    sf_Display = new sf::RenderWindow();
 
     if (!CCommon::common.OnInit()){
         return false;
@@ -20,11 +20,11 @@ bool CApp::OnInit()
 
     CParser::parser.SetRunning(&Running);
 
-    sf_Display->Create(
+    sf_Display->create(
         sf::VideoMode(CCommon::common.WWIDTH, CCommon::common.WHEIGHT, 32), 
         CCommon::common.GAME_NAME);
 
-    sf_Display->SetFramerateLimit(CCommon::common.MAX_FPS);
+    sf_Display->setFramerateLimit(CCommon::common.MAX_FPS);
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 

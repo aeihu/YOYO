@@ -19,33 +19,33 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 
 bool CCharacterLayer::Subclass_Loop()
 {
-    if (_spriteFace.GetColor().a != _Alpha)
-        _spriteFace.SetColor(CColor(255,255,255,_Alpha));
+    if (_spriteFace.getColor().a != _Alpha)
+        _spriteFace.setColor(sf::Color(255,255,255,_Alpha));
 
-    if (_Coordinate+_offset != _spriteFace.GetPosition())
-        _spriteFace.SetPosition(_Coordinate+_offset);
+    if (_Coordinate+_offset != _spriteFace.getPosition())
+        _spriteFace.setPosition(_Coordinate+_offset);
 
-    if (_spriteFace.GetScale() != _sprite.GetScale())
-        _spriteFace.SetScale(_sprite.GetScale());
+    if (_spriteFace.getScale() != _sprite.getScale())
+        _spriteFace.setScale(_sprite.getScale());
 
-    if (_spriteFace.GetRotation() != _sprite.GetRotation())
-        _spriteFace.SetRotation(_sprite.GetRotation());
+    if (_spriteFace.getRotation() != _sprite.getRotation())
+        _spriteFace.setRotation(_sprite.getRotation());
 
-    if (_spriteFace.GetScale().x > 1.0f || _spriteFace.GetScale().y > 1.0f)
-        _imageFace.SetSmooth(true);
+    if (_spriteFace.getScale().x > 1.0f || _spriteFace.getScale().y > 1.0f)
+        _imageFace.setSmooth(true);
     else
-        _imageFace.SetSmooth(false);
+        _imageFace.setSmooth(false);
 
     return false;
 }
 
-void CCharacterLayer::Subclass_Render(CWindow* Surf_Dest)
+void CCharacterLayer::Subclass_Render(sf::RenderWindow* Surf_Dest)
 {
     if (_isFaceEnable)
-        Surf_Dest->Draw(_spriteFace);
+        Surf_Dest->draw(_spriteFace);
 }
 
-bool CCharacterLayer::LoadImage(const char* fileName, CImage &image, CSprite &sprite)
+bool CCharacterLayer::LoadImage(const char* fileName, sf::Texture &image, sf::Sprite &sprite)
 {
     if (fileName == NULL)
         return false;
@@ -53,8 +53,8 @@ bool CCharacterLayer::LoadImage(const char* fileName, CImage &image, CSprite &sp
     if (!CSurface::OnLoad(fileName, image))
         return false;
 
-    image.SetSmooth(false);
-    sprite.SetTexture(image);
+    image.setSmooth(false);
+    sprite.setTexture(image);
 
     return true;
 }

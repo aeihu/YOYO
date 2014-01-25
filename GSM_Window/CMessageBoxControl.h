@@ -27,7 +27,7 @@ class CMessageBoxControl : public CControlBaseClass
         bool SetImageVisibility(std::string name, int alpha, int incr, bool pause);
     
         void OnLoop(bool &pause);
-        void OnRender(CWindow* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };
 
 #endif

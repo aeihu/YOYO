@@ -50,7 +50,7 @@ bool CButtonControl::SetImageVisibility(std::string name, int alpha, int incr, b
 {
     if (IsAlreadyExists(name)){
         _ButtonList[name].Insert(0,
-            alpha, _interval, pause,
+            alpha, pause,
             &_ButtonList[name]._Alpha,
             incr);
 
@@ -68,7 +68,7 @@ void CButtonControl::OnLoop(bool &pause)
     }
 }
 
-void CButtonControl::OnRender(CWindow* Surf_Dest)
+void CButtonControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     map<std::string, CButton>::iterator it;
 

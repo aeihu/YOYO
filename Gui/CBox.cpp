@@ -39,7 +39,7 @@ bool CBox::LoadBox(const char* FileName)
     _Coordinate.x = atof(_parameterList["X"].c_str());
     _Coordinate.y = atof(_parameterList["Y"].c_str());
 
-    sf::Image Surf_tileset;
+    sf::Texture Surf_tileset;
     if (!CSurface::OnLoad(_parameterList["TILESET_PATH"].c_str(), Surf_tileset))
         return false;
 
@@ -47,7 +47,7 @@ bool CBox::LoadBox(const char* FileName)
         &_image, &Surf_tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
         return false;
 
-    _sprite.SetTexture(_image);
+    _sprite.setTexture(_image);
 
     return Sub_OnLoad();
 }

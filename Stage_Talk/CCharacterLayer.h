@@ -11,7 +11,7 @@
 
 #include "../Graphics/CImageBaseClass.h"
 #include "../Common/CCommon.h"
-#include "../Common/Define.h"
+
 #include <map>
 #include <string>
 
@@ -20,15 +20,15 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass
 {
   private:
-        CCoordinate2f           _offset;
-        CImage                  _imageFace;
-        CSprite                 _spriteFace;
+        sf::Vector2f               _offset;
+        sf::Texture                   _imageFace;
+        sf::Sprite                   _spriteFace;
         map<string, string>     _faceList;
-        bool                    _isFaceEnable;
+        bool                          _isFaceEnable;
 
         bool CheckList(map<string, string> list);
         bool SetProperty(map<string, string> list);
-        bool LoadImage(const char* FileName, CImage &image, CSprite &sprite);
+        bool LoadImage(const char* FileName, sf::Texture &image, sf::Sprite &sprite);
   public:
         CCharacterLayer(float x=0.0f, float y=0.0f);
 
@@ -36,6 +36,6 @@ class CCharacterLayer : public CImageBaseClass
         bool SetFace(string name);
 
         bool Subclass_Loop();
-        void Subclass_Render(CWindow* Surf_Dest);
+        void Subclass_Render(sf::RenderWindow* Surf_Dest);
 };
 #endif

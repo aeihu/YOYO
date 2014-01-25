@@ -14,7 +14,7 @@
 #include "Common/CAdder.h"
 #include <algorithm>
 #include "Common/CFPS.h"
-#include "Common/Define.h"
+//#include "Common/Define.h"
 #include "Stage_Action/CArea.h"
 #include "Battlefield/CBattle.h"
 #include "Stage_Action/CCamera.h"
@@ -45,7 +45,7 @@ class CApp : public CEvent {
     private:
         bool                        Running;
 
-        CWindow*                    sf_Display;
+        sf::RenderWindow*                    sf_Display;
 
         bool                        FullScreen;
 

@@ -8,7 +8,7 @@
 
 #include "CAdder.h"
 
-CfAdder::CfAdder(char type, float goal, unsigned int interval, bool pause, float* val, float val1, float val2, float val3, float val4)
+CfAdder::CfAdder(char type, float goal, bool pause, float* val, float val1, float val2, float val3, float val4)
 {
     _type = type;
     _pValue = val;

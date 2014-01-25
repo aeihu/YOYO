@@ -27,7 +27,7 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
-    unsigned int TilesetWidth  = _image.GetWidth() / _rect.width;
+    unsigned int TilesetWidth  = _image.getSize().x / _rect.width;
     //int TilesetHeight  = _image.GetHeight() / _rect.GetHeight();
     unsigned int Width = _rect.width;
     unsigned int Height = _rect.height;
@@ -37,12 +37,12 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
     _rect.top = (frame / TilesetWidth) * _rect.height;
     //_rect.Bottom = _rect.Top+Height;
 
-    _sprite.SetTextureRect(_rect);
+    _sprite.setTextureRect(_rect);
 }
 
-CCoordinate2f CSequenceOfFrames::GetPosition()
+sf::Vector2f CSequenceOfFrames::GetPosition()
 {
-    return _sprite.GetPosition();
+    return _sprite.getPosition();
 }
 
 void CSequenceOfFrames::SetWidth(int w)
@@ -67,5 +67,5 @@ int CSequenceOfFrames::GetHeight()
 
 void CSequenceOfFrames::SetPosition(float x, float y)
 {
-    _sprite.SetPosition(x,y);
+    _sprite.setPosition(x,y);
 }

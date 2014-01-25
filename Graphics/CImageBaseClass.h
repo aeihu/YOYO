@@ -12,7 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
-#include "../Common/Define.h"
+
 
 class CImageBaseClass : virtual public CAdderControl
 {
@@ -20,21 +20,21 @@ class CImageBaseClass : virtual public CAdderControl
         using CAdderControl::OnLoop;
         using CAdderControl::Count;
     protected:
-        CImage                      _image;
-        CSprite                     _sprite;
-        bool                        _visible;
+        sf::Texture         _image;
+        sf::Sprite           _sprite;
+        bool                  _visible;
 
         virtual bool Subclass_Loop(){return false;};
-        virtual void Subclass_Render(CWindow* Surf_Dest){};
+        virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
         bool IsStandby();
     public:
-        CCoordinate2f               _Coordinate;
+        sf::Vector2f            _Coordinate;
         int                         _Alpha;
 
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
 
-        virtual void OnRender(CWindow* Surf_Dest);
+        virtual void OnRender(sf::RenderWindow* Surf_Dest);
         virtual bool OnLoop();
 
         virtual bool LoadImg(const char* filename);

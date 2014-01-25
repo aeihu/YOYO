@@ -13,7 +13,7 @@
 #include <string>
 #include <iostream>
 #include "../Common/Cio.h"
-#include "../Graphics/CText.h"
+//#include "../Graphics/CText.h"
 
 using namespace std;
 
@@ -35,11 +35,14 @@ class CFont
 {
     private:
         sf::Font _font;
-        friend void CText::SetFont(CFont& font);
+//        friend void CText::SetFont(CFont& font);
+    protected:
     public:
         CFont();
         ~CFont();
+
         bool LoadFont(string filename);
+        const sf::Font GetFont();
 };
 
 #endif

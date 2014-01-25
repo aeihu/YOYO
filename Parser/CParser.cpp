@@ -93,6 +93,14 @@ void CParser::ExecuteCmd(string cmd)
 {
     vector<string> __listOfCmdPara;
     if (AnalysisOfParameters(cmd, __listOfCmdPara) > 0){
+
+#ifdef _DEBUG
+        for (unsigned int i=0; i<__listOfCmdPara.size(); i++){
+            cout << i << ": " << __listOfCmdPara[i] << " ";
+        }
+        cout << endl;
+#endif
+
         string __commandName = __listOfCmdPara[0];
         __listOfCmdPara.erase(__listOfCmdPara.begin());
 
@@ -101,18 +109,18 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
         else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
-        else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
-        else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
+        //else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
+        //else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
 
-        else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
-        else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
-        else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
-        else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
-        
-        else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
-        else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
-        else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
-        else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
+        //else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
+        //else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
+        //else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
+        //else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
+        //
+        //else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
+        //else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
+        //else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
+        //else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
         else 
             return;
 

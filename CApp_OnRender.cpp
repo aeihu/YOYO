@@ -11,7 +11,7 @@
 
 //==============================================================================
 void CApp::OnRender() {
-    sf_Display->Clear();
+    sf_Display->clear();
     //SDL_FillRect(sf_Display, &Rect, 0);
     //
     //if (CCommon::common.EventFocus != 99)
@@ -76,7 +76,7 @@ void CApp::OnRender() {
     //CAnimationBank::animationbank.OnRender(sf_Display);
 
     //SDL_Flip(sf_Display);
-    sf_Display->Display();
+    sf_Display->display();
 }
 
 

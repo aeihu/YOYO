@@ -19,10 +19,10 @@ class CAdder
 {
     private:
     protected:
-        unsigned int    _interval;
-        unsigned long   _oldTime;
-        char            _type;
-        bool            _pause;
+        unsigned int       _interval;
+        unsigned long     _oldTime;
+        char                  _type;
+        bool                  _pause;
 
         virtual bool  Check()=0;
         virtual bool  Recursion()=0;
@@ -39,7 +39,7 @@ class CAdder
 class CiAdder : public CAdder
 {
     private:
-        friend class        CAdderControl;
+        friend class     CAdderControl;
         int*                _pValue;
         int                 _goal;
         int                 _value1;
@@ -51,13 +51,13 @@ class CiAdder : public CAdder
         bool Recursion();
         bool DecreaseRecursion();
     public:
-        CiAdder(char type, int goal, unsigned int interval, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0);
+        CiAdder(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0);
 };
 
 class CfAdder : public CAdder
 {
     private:
-        friend class            CAdderControl;
+        friend class          CAdderControl;
         float*                  _pValue;
         float                   _goal;
         float                   _value1;
@@ -70,7 +70,7 @@ class CfAdder : public CAdder
         bool DecreaseRecursion();
         bool Oscillate();
     public:
-        CfAdder(char type, float goal, unsigned int interval, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f);
+        CfAdder(char type, float goal, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f);
 };
 
 
@@ -88,8 +88,8 @@ class CAdderControl
         int OnLoop();
         unsigned int Count();
     public:
-        void Insert(char type, int goal, unsigned int interval, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0, bool isGoFinish=true);
-        void Insert(char type, float goal, unsigned int interval, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);
+        void Insert(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0, bool isGoFinish=true);
+        void Insert(char type, float goal, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);
         void Clear();
 };
 

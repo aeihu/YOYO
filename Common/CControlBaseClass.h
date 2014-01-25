@@ -12,10 +12,10 @@
 class CControlBaseClass
 {
     protected:
-        unsigned int _interval;
-        inline CControlBaseClass() {_interval = 10;}
+        unsigned int _interval; // no used
+        inline CControlBaseClass() {_interval = 10;} // no used
     public:
-        inline void SetInterval(unsigned int interval) {_interval = interval;}
+        inline void SetInterval(unsigned int interval) {_interval = interval;} // no used
 };
 
 #endif

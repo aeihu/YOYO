@@ -8,7 +8,7 @@
 
 #include "CAdder.h"
 
-CiAdder::CiAdder(char type, int goal, unsigned int interval, bool pause, int* val, int val1, int val2, int val3, int val4)
+CiAdder::CiAdder(char type, int goal, bool pause, int* val, int val1, int val2, int val3, int val4)
 {
     _type = type;
     _pValue = val;
