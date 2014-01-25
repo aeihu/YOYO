@@ -10,6 +10,7 @@
     #define _CSCRIPTCOMMAND_H_
 #include <string>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -20,59 +21,59 @@ using namespace std;
 //int Cmd_DeleteCharacter(const char* name);
 //bool Cmd_CreateCharacter(const char* name, int x, int y, const char* filename, int width, int height, int maxframes, bool isNPC);
 //
-bool Cmd_ShowInfo(string para="");
+bool Cmd_ShowInfo(vector<string>);//
 
-void Cmd_AddPosition(string name, float x, float y);
-void Cmd_DelPosition(string name);
-bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause);
-bool Cmd_ShowCharacterLayer(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
-bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool pause);
-bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause);
-bool Cmd_MoveCharacterLayer(string name, string position, float incr, bool pause);
-void Cmd_SetFaceCharacterLayer(string name, string face);
+bool Cmd_AddPosition(vector<string>);//(string name, float x, float y);
+bool Cmd_DelPosition(vector<string>);//(string name);
+bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause);
+//bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
+bool Cmd_HideCharacterLayer(vector<string>);//(string name, char type, float buf, float incr, bool pause);
+bool Cmd_MoveCharacterLayer(vector<string>);//(string name, float x, float y, float incr, bool pause);
+//bool Cmd_MoveCharacterLayer(vector<string>);//(string name, string position, float incr, bool pause);
+bool Cmd_SetFaceCharacterLayer(vector<string>);//(string name, string face);
 //bool Cmd_AlphaCharacterLayer(char postion, int alpha);
 //
 //bool Cmd_LoadMap(const char* name);
 //bool Cmd_LoadScript(const char* filename, const char* Section);
 //
-bool Cmd_AddBackground(string name, const char* filename, float x=0.0f, float y=0.0f);
-bool Cmd_ShowBackground(string name, int inrc, bool pause);
-bool Cmd_HideBackground(string name, int inrc, bool pause);
-bool Cmd_DelBackground(string name);
+bool Cmd_AddBackground(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowBackground(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_HideBackground(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_DelBackground(vector<string>);//(string name);
 //
-bool Cmd_AddImg(string name, const char* filename, float x=0.0f, float y=0.0f);
-bool Cmd_ShowImg(string name, int inrc, bool pause);
-bool Cmd_HideImg(string name, int inrc, bool pause);
-bool Cmd_DelImg(string name);
+bool Cmd_AddImg(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowImg(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_HideImg(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_DelImg(vector<string>);//(string name);
 //
 //void Cmd_WhiteScreen(int msec);
 //void Cmd_BlackScreen(int msec);
 //
-bool Cmd_Say(const char* filename);
+bool Cmd_Say(vector<string>);//(const char* filename);
 
-bool Cmd_PlayBGM(const char* filename);
-void Cmd_PauseBGM();
-void Cmd_ResumeBGM();
+bool Cmd_PlayBGM(vector<string>);//(const char* filename);
+bool Cmd_PauseBGM(vector<string>);//();
+bool Cmd_ResumeBGM(vector<string>);//();
 //
-int Cmd_AddSE(const char* name, const char* filename);
-bool Cmd_DelSE(string name);
-bool Cmd_PlaySE(const char* name);
+int Cmd_AddSE(vector<string>);//(vector<string>);//(const char* name, const char* filename);
+bool Cmd_DelSE(vector<string>);//(string name);
+bool Cmd_PlaySE(vector<string>);//(const char* name);
 //
-bool Cmd_AddButton(string name, const char* filename);
-bool Cmd_DelButton(string name);
-bool Cmd_ShowButton(string name, int incr, bool pause);
-bool Cmd_HideButton(string name, int incr, bool pause);
+bool Cmd_AddButton(vector<string>);//(string name, const char* filename);
+bool Cmd_DelButton(vector<string>);//(string name);
+bool Cmd_ShowButton(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_HideButton(vector<string>);//(string name, int incr, bool pause);
 //
 //void Cmd_FullScreen();
 //void Cmd_Window();
 //
 //void Cmd_SetFontShadow(bool b);
-bool Cmd_Message(string name, string msg);
+bool Cmd_Message(vector<string>);//(string name, string msg);
 //bool Cmd_SetMessageBoxSpeakerName(string name);
-bool Cmd_AddMessageBox(string name, const char* filename);
-bool Cmd_DelMessageBox(string name);
-bool Cmd_ShowMessageBox(string name, int incr, bool pause);
-bool Cmd_HideMessageBox(string name, int incr, bool pause);
+bool Cmd_AddMessageBox(vector<string>);//(string name, const char* filename);
+bool Cmd_DelMessageBox(vector<string>);//(string name);
+bool Cmd_ShowMessageBox(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
 //
 //bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section);
 //bool Cmd_MenuBoxDelBtn(string name);

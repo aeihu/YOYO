@@ -11,6 +11,7 @@
 
 #include <string>
 #include <list>
+#include <queue>
 #include <map>
 #include <iostream>
 #include <exception>
@@ -32,7 +33,9 @@ class CParser
         bool FindSection(list<string> &Commands, const char* Section);
         void ExecuteCmd(string cmd);
         int AnalysisOfParameters(string para, vector<string> &plist);
+        //int AnalysisOfParameters(string para, queue<string> &plist);
 
+        bool (*_pFunc)(vector<string>);
     public:
         static CParser parser;
         CParser();

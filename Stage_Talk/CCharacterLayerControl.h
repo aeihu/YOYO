@@ -18,9 +18,9 @@
 class CCharacterLayerControl : public CControlBaseClass
 {
     private:
-        map<string, CCoordinate2f>       _positions;
+        map<string, CCoordinate2f>          _positions;
     public:
-        map<string, CCharacterLayer>    _CharacterList;
+        map<string, CCharacterLayer>        _CharacterList;
 
         CCharacterLayerControl();
         

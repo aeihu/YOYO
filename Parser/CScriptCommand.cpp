@@ -114,7 +114,7 @@
 //    return true;
 //}
 //
-bool Cmd_ShowInfo(string para)
+bool Cmd_ShowInfo(queue<string> para)
 {
     CResourceManager::GetInfo();
     //CResourceManager::GetInfo("ImageList", CResourceManager::_ImgLayerControl._ImgLayerList);
@@ -124,18 +124,41 @@ bool Cmd_ShowInfo(string para)
     return true;
 }
 
-void Cmd_AddPosition(string name, float x, float y)
+//void Cmd_AddPosition(string name, float x, float y)
+bool Cmd_AddPosition(vector<string> args);
 {
+    if (args.size() != 3)
+        return false;
+
+    string name = args[0];
+    float x = atof(args[1].c_str());
+    float y = atof(args[2].c_str());
     CResourceManager::_CharacterLayerControl.AddPosition(name, x, y);
+    return true;
 }
 
-void Cmd_DelPosition(string name)
+//void Cmd_DelPosition(string name)
+bool Cmd_DelPosition(vector<string> args);
 {
+    if (args.size() != 1)
+        return false;
+
+    string name = args[0];
     CResourceManager::_CharacterLayerControl.DelPosition(name);
+    return true;
 }
 
-bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
+//bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
+bool Cmd_ShowCharacterLayer(vector<string> args);
 {    
+    if (args.size() != 1)
+        return false;
+
+    string name = args[0];
+    const char* filename = args[1].c_str();
+    float x = atof(args[2].c_str());
+    float y = atof(args[4].c_str());
+
     switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename, x, y)){
         case 0:
             CResourceManager::_CharacterLayerControl.Show(name, x, y, type, buf, incr, pause);
