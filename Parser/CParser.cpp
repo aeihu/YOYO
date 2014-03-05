@@ -67,9 +67,14 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
             break;
         }
 
-        (*it).erase((*it).find_last_of(";"),1);
-        while ((*it).find_first_of("\n\r") != string::npos)
-            (*it).erase((*it).find_first_of("\n\r"),1);
+        try {
+            (*it).erase((*it).find_last_of(";"),1);
+            while ((*it).find_first_of("\n\r") != string::npos)
+                (*it).erase((*it).find_first_of("\n\r"),1);
+        }
+        catch (const std::out_of_range& oor) {
+            std::cerr << "Out of Range error: " << oor.what() << '\n';
+        }
     }
     
     Commands.insert(Commands.begin(), __commands.begin(), __commands.end());
@@ -112,10 +117,10 @@ void CParser::ExecuteCmd(string cmd)
         //else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         //else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
 
-        //else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
-        //else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
-        //else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
-        //else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
+        else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
+        else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
+        else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
+        else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
         //
         //else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
         //else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;

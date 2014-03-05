@@ -31,7 +31,6 @@ class CParser
         bool*                   _pRunning;
 
         bool FindSection(list<string> &Commands, const char* Section);
-        void ExecuteCmd(string cmd);
         int AnalysisOfParameters(string para, vector<string> &plist);
         //int AnalysisOfParameters(string para, queue<string> &plist);
 
@@ -44,6 +43,7 @@ class CParser
         void OnLoop();
         void OnCleanup();
 
+        void ExecuteCmd(string cmd);
         bool ExecuteAllCmd(const char* FileName, const char* Section);
         void ExecuteAllCmd(list<string> commands);
         void InsertCmdList(list<string> commands);

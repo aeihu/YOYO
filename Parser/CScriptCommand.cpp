@@ -245,8 +245,28 @@ void Cmd_SetFaceCharacterLayer(string name, string face)
 //    return CParser::parser.LoadScript(filename, Section);
 //}
 //
-bool Cmd_AddBackground(string name, const char* filename, float x, float y)
+//bool Cmd_AddBackground(string name, const char* filename, float x, float y)
+bool Cmd_AddBackground(vector<string> args)
 {
+    float x = 0.0f;
+    float y = 0.0f;
+
+    if (args.size() == 4){
+        x = atof(args[2].c_str());
+        y = atof(args[3].c_str());
+    }
+    else if (args.size() == 2){
+    
+    }
+    else{
+        cout << "Cmd_AddBackground(): command invaild." << args.size()
+            << " can't set  argument(s) in the command.." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    const char* filename = args[1].c_str();
+
     if (CResourceManager::_BackgroundLayerControl.AddImage(name, filename)){
         return true;
     }
@@ -256,8 +276,24 @@ bool Cmd_AddBackground(string name, const char* filename, float x, float y)
     }
 }
 
-bool Cmd_ShowBackground(string name, int inrc, bool pause)
+//bool Cmd_ShowBackground(string name, int inrc, bool pause)
+bool Cmd_ShowBackground(vector<string> args)
 {
+    int inrc = 10;
+    if (args.size() == 2){
+        inrc = atoi(args[1].c_str());
+    }
+    else if (args.size() == 1){
+    }
+    else{
+        cout << "Cmd_ShowBackground(): command invaild." << args.size()
+            << " can't set  argument(s) in the command.." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    bool pause = false;
+
     if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 255, inrc, pause))
         return true;
 
@@ -265,8 +301,17 @@ bool Cmd_ShowBackground(string name, int inrc, bool pause)
     return false;
 }
 
-bool Cmd_DelBackground(string name)
+//bool Cmd_DelBackground(string name)
+bool Cmd_DelBackground(vector<string> args)
 {
+    if (args.size() != 1){
+        cout << "Cmd_DelBackground(): command invaild." << args.size()
+            << " can't set  argument(s) in the command.." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+
     if (CResourceManager::_BackgroundLayerControl.DelImage(name)){
         return true;
     }
@@ -276,8 +321,24 @@ bool Cmd_DelBackground(string name)
     }
 }
 
-bool Cmd_HideBackground(string name, int inrc, bool pause)
+//bool Cmd_HideBackground(string name, int inrc, bool pause)
+bool Cmd_HideBackground(vector<string> args)
 {
+    int inrc = 10;
+    if (args.size() == 2){
+        inrc = atoi(args[1].c_str());
+    }
+    else if (args.size() == 1){
+    }
+    else{
+        cout << "Cmd_HideBackground(): command invaild." << args.size()
+            << " can't set  argument(s) in the command.." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    bool pause = false;
+
     if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 0, inrc, pause))
         return true;
 
@@ -285,8 +346,23 @@ bool Cmd_HideBackground(string name, int inrc, bool pause)
     return false;
 }
 
-bool Cmd_AddImg(string name, const char* filename, float x, float y)
+/*
+    Cmd_AddImg: comand of add image.
+    args[0]: set image name.
+    args[1]: set image path.
+    args[2]: set image postion of x.
+    args[3]: set image postion of y.
+*/
+bool Cmd_AddImg(vector<string> args)
 {
+    if (args.size() != 4)
+        return false;
+
+    string name = args[0];
+    const char* filename = args[1].c_str();
+    float x = atof(args[2].c_str());
+    float y = atof(args[3].c_str());
+
     if (CResourceManager::_ImgLayerControl.AddImage(name, filename, x, y)){
         return true;
     }
@@ -296,8 +372,16 @@ bool Cmd_AddImg(string name, const char* filename, float x, float y)
     }
 }
 
-bool Cmd_ShowImg(string name, int inrc, bool pause)
+//bool Cmd_ShowImg(string name, int inrc, bool pause)
+bool Cmd_ShowImg(vector<string> args)
 {
+    if (args.size() != 3)
+        return false;
+
+    string name = args[0];
+    int inrc = atof(args[1].c_str());
+    bool pause =true;
+
     if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 255, inrc, pause))
         return true;
 

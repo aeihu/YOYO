@@ -19,19 +19,31 @@ CApp::CApp() {
 }
 
 //------------------------------------------------------------------------------
+void FuncOfStdin()
+{
+    string __cmd;
+    while (true){
+        getline(cin,__cmd);
+        //cin >> __cmd;
+        CParser::parser.ExecuteCmd(__cmd);
+    }
+}
+
+//------------------------------------------------------------------------------
 int CApp::OnExecute() 
 {
     if(OnInit() == false) {
 	  return -1;
     }
     sf::Event Event;
-
+    sf::Thread  _threadOfStdin(&FuncOfStdin);
+    _threadOfStdin.launch();
     while(Running) {
 		while(sf_Display->isOpen()){
 			while(sf_Display->pollEvent(Event)) {
 				OnEvent(&Event);
 			}
-
+            
 			OnLoop();
 			OnRender();
 		}

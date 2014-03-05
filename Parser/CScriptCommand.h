@@ -36,13 +36,13 @@ bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename
 ////bool Cmd_LoadMap(const char* name);
 ////bool Cmd_LoadScript(const char* filename, const char* Section);
 ////
-//bool Cmd_AddBackground(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
-//bool Cmd_ShowBackground(vector<string>);//(string name, int inrc, bool pause);
-//bool Cmd_HideBackground(vector<string>);//(string name, int inrc, bool pause);
-//bool Cmd_DelBackground(vector<string>);//(string name);
+bool Cmd_AddBackground(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowBackground(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_HideBackground(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_DelBackground(vector<string>);//(string name);
 ////
-//bool Cmd_AddImg(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
-//bool Cmd_ShowImg(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_AddImg(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
+bool Cmd_ShowImg(vector<string>);//(string name, int inrc, bool pause);
 //bool Cmd_HideImg(vector<string>);//(string name, int inrc, bool pause);
 //bool Cmd_DelImg(vector<string>);//(string name);
 ////
