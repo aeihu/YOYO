@@ -25,11 +25,9 @@ bool Cmd_ShowInfo(vector<string>);//
 
 bool Cmd_AddPosition(vector<string>);//(string name, float x, float y);
 bool Cmd_DelPosition(vector<string>);//(string name);
-bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause);
-//bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
-//bool Cmd_HideCharacterLayer(vector<string>);//(string name, char type, float buf, float incr, bool pause);
-//bool Cmd_MoveCharacterLayer(vector<string>);//(string name, float x, float y, float incr, bool pause);
-//bool Cmd_MoveCharacterLayer(vector<string>);//(string name, string position, float incr, bool pause);
+bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
+bool Cmd_HideCharacterLayer(vector<string>);//(string name, char type, float buf, float incr, bool pause);
+bool Cmd_MoveCharacterLayer(vector<string>);//(string name, float x, float y, float incr, bool pause);
 //bool Cmd_SetFaceCharacterLayer(vector<string>);//(string name, string face);
 ////bool Cmd_AlphaCharacterLayer(char postion, int alpha);
 ////
@@ -43,8 +41,8 @@ bool Cmd_DelBackground(vector<string>);//(string name);
 ////
 bool Cmd_AddImg(vector<string>);//(string name, const char* filename, float x=0.0f, float y=0.0f);
 bool Cmd_ShowImg(vector<string>);//(string name, int inrc, bool pause);
-//bool Cmd_HideImg(vector<string>);//(string name, int inrc, bool pause);
-//bool Cmd_DelImg(vector<string>);//(string name);
+bool Cmd_HideImg(vector<string>);//(string name, int inrc, bool pause);
+bool Cmd_DelImg(vector<string>);//(string name);
 ////
 ////void Cmd_WhiteScreen(int msec);
 ////void Cmd_BlackScreen(int msec);

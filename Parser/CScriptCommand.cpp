@@ -127,8 +127,11 @@ bool Cmd_ShowInfo(vector<string> args)
 //void Cmd_AddPosition(string name, float x, float y)
 bool Cmd_AddPosition(vector<string> args)
 {
-    if (args.size() != 3)
+    if (args.size() != 3){
+        cout << "Cmd_AddPosition(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
+    }
 
     string name = args[0];
     float x = atof(args[1].c_str());
@@ -140,8 +143,11 @@ bool Cmd_AddPosition(vector<string> args)
 //void Cmd_DelPosition(string name)
 bool Cmd_DelPosition(vector<string> args)
 {
-    if (args.size() != 1)
+    if (args.size() != 1){
+        cout << "Cmd_DelPosition(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;     
         return false;
+    }
 
     string name = args[0];
     CResourceManager::_CharacterLayerControl.DelPosition(name);
@@ -151,17 +157,34 @@ bool Cmd_DelPosition(vector<string> args)
 //bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
 bool Cmd_ShowCharacterLayer(vector<string> args)
 {    
-    if (args.size() != 1)
+    if (args.size() != 7 && args.size() != 6){
+        cout << "Cmd_ShowCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
+    }
 
     string name = args[0];
     const char* filename = args[1].c_str();
-    float x = atof(args[2].c_str());
-    float y = atof(args[3].c_str());
+    float x = 0;
+    float y = 0;
+    if (args.size() == 6){
+        x = atof(args[2].c_str());
+        y = atof(args[3].c_str());
+    }
+    else{
+        if (!CResourceManager::_CharacterLayerControl.GetPosition(args[2],&x,&y)){
+            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< args[2] << "\"." <<endl;
+            return false;
+        }
+    }
+
+    char type = args[4-(7-args.size())].c_str()[0];
+    float incr = atof(args[5-(7-args.size())].c_str());
+    bool pause = args[6-(7-args.size())] == "T" ? true : false;
 
     switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename, x, y)){
         case 0:
-       ///     CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
+           CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
             return true;
         break;
         case 1:
@@ -175,19 +198,32 @@ bool Cmd_ShowCharacterLayer(vector<string> args)
     return false;
 }
 
-bool Cmd_ShowCharacterLayer(string name, const char* filename, string position, char type, float buf, float incr, bool pause)
-{    
-    //float x=0,y=0;
-    //if (CResourceManager::_CharacterLayerControl.GetPosition(position,&x,&y)){
-    //    Cmd_ShowCharacterLayer(name, filename, x, y, type, incr, pause);
-    //    return true;
-    //}
-    //cout << "Cmd_ShowCharacterLayer(): can't find position \""<< position << "\"." <<endl;
-    return false;
-}
-
-bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause)
+//bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause)
+bool Cmd_MoveCharacterLayer(vector<string> args)
 {
+    if (args.size() != 4 && args.size() != 5){
+        cout << "Cmd_MoveCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." << endl;
+        return false;
+    }
+
+    string name = args[0];
+    float x = 0;
+    float y = 0;
+    if (args.size() == 5){
+        x = atof(args[1].c_str());
+        y = atof(args[2].c_str());
+    }
+    else{
+        if (!CResourceManager::_CharacterLayerControl.GetPosition(args[1],&x,&y)){
+            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< args[1] << "\"." <<endl;
+            return false;
+        }
+    }
+
+    float incr = atof(args[3-(5-args.size())].c_str());
+    bool pause = args[4-(5-args.size())] == "T" ? true : false;
+
     if(!CResourceManager::_CharacterLayerControl.Move(name, x, y, incr, pause)){
         cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
         return false;
@@ -195,19 +231,20 @@ bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool paus
     return true;
 }
 
-bool Cmd_MoveCharacterLayer(string name, string position, float incr, bool pause)
+//bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool pause)
+bool Cmd_HideCharacterLayer(vector<string> args)
 {
-    float x=0,y=0;
-    if (CResourceManager::_CharacterLayerControl.GetPosition(position,&x,&y)){
-        Cmd_MoveCharacterLayer(name, x, y, incr, pause);
-        return true;
+    if (args.size() != 4){
+        cout << "Cmd_HideCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." << endl;
+        return false;
     }
-    cout << "Cmd_ShowCharacterLayer(): can't find position \""<< position << "\"." <<endl;
-    return false;
-}
 
-bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool pause)
-{
+    string name = args[0];
+    char type = args[1].c_str()[0];
+    float incr = atof(args[2].c_str());
+    bool pause = args[3] == "T" ? true : false;
+
     if (!CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
         cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
         return false;
@@ -259,8 +296,8 @@ bool Cmd_AddBackground(vector<string> args)
     
     }
     else{
-        cout << "Cmd_AddBackground(): command invaild." << args.size()
-            << " can't set  argument(s) in the command.." <<endl;
+        cout << "Cmd_AddBackground(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
@@ -286,8 +323,8 @@ bool Cmd_ShowBackground(vector<string> args)
     else if (args.size() == 1){
     }
     else{
-        cout << "Cmd_ShowBackground(): command invaild." << args.size()
-            << " can't set  argument(s) in the command.." <<endl;
+        cout << "Cmd_ShowBackground(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
@@ -305,8 +342,8 @@ bool Cmd_ShowBackground(vector<string> args)
 bool Cmd_DelBackground(vector<string> args)
 {
     if (args.size() != 1){
-        cout << "Cmd_DelBackground(): command invaild." << args.size()
-            << " can't set  argument(s) in the command.." <<endl;
+        cout << "Cmd_DelBackground(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
@@ -331,8 +368,8 @@ bool Cmd_HideBackground(vector<string> args)
     else if (args.size() == 1){
     }
     else{
-        cout << "Cmd_HideBackground(): command invaild." << args.size()
-            << " can't set  argument(s) in the command.." <<endl;
+        cout << "Cmd_HideBackground(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
@@ -355,13 +392,24 @@ bool Cmd_HideBackground(vector<string> args)
 */
 bool Cmd_AddImg(vector<string> args)
 {
-    if (args.size() != 4)
+    float x = 0.0f;
+    float y = 0.0f;
+
+    if (args.size() == 4){
+        x = atof(args[2].c_str());
+        y = atof(args[3].c_str());
+    }
+    else if (args.size() == 2){
+    
+    }
+    else{
+        cout << "Cmd_AddImg(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
+    }
 
     string name = args[0];
     const char* filename = args[1].c_str();
-    float x = atof(args[2].c_str());
-    float y = atof(args[3].c_str());
 
     if (CResourceManager::_ImgLayerControl.AddImage(name, filename, x, y)){
         return true;
@@ -375,12 +423,20 @@ bool Cmd_AddImg(vector<string> args)
 //bool Cmd_ShowImg(string name, int inrc, bool pause)
 bool Cmd_ShowImg(vector<string> args)
 {
-    if (args.size() != 3)
+    int inrc = 10;
+    if (args.size() == 2){
+        inrc = atoi(args[1].c_str());
+    }
+    else if (args.size() == 1){
+    }
+    else{
+        cout << "Cmd_ShowImg(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
+    }
 
     string name = args[0];
-    int inrc = atof(args[1].c_str());
-    bool pause =true;
+    bool pause = false;
 
     if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 255, inrc, pause))
         return true;
@@ -389,8 +445,24 @@ bool Cmd_ShowImg(vector<string> args)
     return false;
 }
 
-bool Cmd_HideImg(string name, int inrc, bool pause)
+//bool Cmd_HideImg(string name, int inrc, bool pause)
+bool Cmd_HideImg(vector<string> args)
 {
+    int inrc = 10;
+    if (args.size() == 2){
+        inrc = atoi(args[1].c_str());
+    }
+    else if (args.size() == 1){
+    }
+    else{
+        cout << "Cmd_HideImg(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    bool pause = false;
+
     if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 0, inrc, pause))
         return true;
 
@@ -398,8 +470,17 @@ bool Cmd_HideImg(string name, int inrc, bool pause)
     return false;
 }
 
-bool Cmd_DelImg(string name)
+//bool Cmd_DelImg(string name)
+bool Cmd_DelImg(vector<string> args)
 {
+    if (args.size() != 1){
+        cout << "Cmd_DelImg(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+
     if (CResourceManager::_ImgLayerControl.DelImage(name)){
         return true;
     }

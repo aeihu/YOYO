@@ -114,7 +114,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
         else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
-        //else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
+        else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         //else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
 
         else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
@@ -122,12 +122,14 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
         else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
         //
-        //else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
-        //else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
-        //else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
-        //else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
-        else 
+        else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
+        else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
+        else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
+        else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
+        else{
+            cout << "unknown command." << endl;
             return;
+        }
 
         _pFunc(__listOfCmdPara);
     }
