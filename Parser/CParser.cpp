@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2012-2013, <Aeihu.z, aeihu.z@gmail.com>.
+* Copyright (C) 2012-2014, <Aeihu.z, aeihu.z@gmail.com>.
 *
 * Game Scenario Maker is a free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -93,7 +93,6 @@ void CParser::OnCleanup() {
     _pRunning = NULL;
 }
 
-
 void CParser::ExecuteCmd(string cmd)
 {
     vector<string> __listOfCmdPara;
@@ -115,6 +114,8 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
+        else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
+        
         //else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
 
         else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;

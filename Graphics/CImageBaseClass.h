@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2012-2013, <Aeihu.z, aeihu.z@gmail.com>.
+* Copyright (C) 2012-2014, <Aeihu.z, aeihu.z@gmail.com>.
 *
 * Game Scenario Maker is a free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
