@@ -39,14 +39,15 @@ bool CBox::LoadBox(const char* FileName)
     _Coordinate.x = atof(_parameterList["X"].c_str());
     _Coordinate.y = atof(_parameterList["Y"].c_str());
 
-    sf::Texture Surf_tileset;
-    if (!CSurface::OnLoad(_parameterList["TILESET_PATH"].c_str(), Surf_tileset))
+    sf::Image __tileset, __dest;
+    if (!CSurface::OnLoad(_parameterList["TILESET_PATH"].c_str(), __tileset))
         return false;
 
     if (!CGuiCommon::CreateBoxBackground(
-        &_image, &Surf_tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
+        &__dest, &__tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
         return false;
 
+    _image.loadFromImage(__dest);
     _sprite.setTexture(_image);
 
     return Sub_OnLoad();

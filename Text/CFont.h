@@ -17,32 +17,20 @@
 
 using namespace std;
 
-//class CFont
-//{
-//    private:
-//        unsigned long _menSize;
-//        char*         _memFont;
-//    protected:
-//    public:
-//        sf::Font      _Font;
-//
-//        CFont();
-//        ~CFont();
-//        bool LoadFont(string filename);
-//        //bool SetCharset(string charset);
-//};
 class CFont
 {
     private:
-        sf::Font _font;
 //        friend void CText::SetFont(CFont& font);
     protected:
+        sf::Font _font;
+
+        void SetString(sf::Text& text, string str);
     public:
         CFont();
         ~CFont();
 
         bool LoadFont(string filename);
-        const sf::Font GetFont();
+        //const sf::Font GetFont();
 };
 
 #endif

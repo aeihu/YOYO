@@ -115,18 +115,27 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
-        
-        //else if (__commandName == "@face") _pFunc = &Cmd_SetFaceCharacterLayer;
+        else if (__commandName == "@set_face") _pFunc = &Cmd_SetFaceCharacterLayer;
 
         else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
         else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
-        //
+
         else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
         else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
+
+        else if (__commandName == "@add_msgbox") _pFunc = &Cmd_AddMessageBox;
+        else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
+        else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;
+        else if (__commandName == "@del_msgbox") _pFunc = &Cmd_DelMessageBox;
+        else if (__commandName == "@msg") _pFunc = &Cmd_Message;
+
+        else if (__commandName == "@add_se") _pFunc = &Cmd_AddSE;
+        else if (__commandName == "@del_se") _pFunc = &Cmd_DelSE;
+        else if (__commandName == "@play_se") _pFunc = &Cmd_PlaySE;
         else{
             cout << "unknown command." << endl;
             return;

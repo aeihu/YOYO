@@ -37,10 +37,18 @@ bool CFont::LoadFont(string filename)
     return __result;
 }
 
-const sf::Font CFont::GetFont()
+void CFont::SetString(sf::Text& text, std::string str)
 {
-    return _font;
+    sf::Uint32* __uft32String = new sf::Uint32[str.length()];
+    sf::Utf8::toUtf32(str.begin(), str.end(), __uft32String);
+    text.setString(__uft32String);
+    delete[] __uft32String;
 }
+
+//const sf::Font CFont::GetFont()
+//{
+//    return _font;
+//}
 
 //bool CFont::SetCharset(string charset)
 //{

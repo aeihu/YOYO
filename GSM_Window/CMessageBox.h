@@ -20,13 +20,15 @@
 class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFrames
 {        
   private:
-      sf::Text        _speakerName;
-        bool              _isPaused;
+        sf::Text        _speakerName;
+        bool             _isPaused;
 
         bool Sub_CheckList(map<string, string> list);
         bool Sub_OnLoad();
+  protected:
+        CImageBaseClass::_visible;
   public:
-        CAnimation      _AnimationControl;
+        CAnimation   _AnimationControl;
 
         CMessageBox();
 

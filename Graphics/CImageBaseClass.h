@@ -21,15 +21,15 @@ class CImageBaseClass : virtual public CAdderControl
         using CAdderControl::Count;
     protected:
         sf::Texture         _image;
-        sf::Sprite           _sprite;
-        bool                  _visible;
+        sf::Sprite          _sprite;
+        bool                _visible;
 
         virtual bool Subclass_Loop(){return false;};
         virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
         bool IsStandby();
     public:
-        sf::Vector2f            _Coordinate;
-        int                         _Alpha;
+        sf::Vector2f        _Coordinate;
+        int                 _Alpha;
 
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();

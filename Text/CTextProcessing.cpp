@@ -17,7 +17,7 @@ CTextProcessing::CTextProcessing()
     _isSkip = false;
     _rowWidth =
     _index=
-    _oldTime = 0;
+    _oldTime =
     _cursorPos = 0;
 
     _textOfShown =
@@ -41,10 +41,10 @@ bool CTextProcessing::isWordOrNumber(char c)
 bool CTextProcessing::OnInit(unsigned int width, unsigned int height)
 {
     _rowWidth = width;
-    if (!_font.LoadFont(CCommon::common.FONT_PATH.c_str()))
+    if (!CFont::LoadFont(CCommon::common.FONT_PATH.c_str()))
         return false; 
 
-    _sfText.setFont(_font.GetFont());
+    _sfText.setFont(_font);
     return true;
 }
 
@@ -113,7 +113,7 @@ void CTextProcessing::OnLoop()
 
             _index += __size;
 
-            _sfText.setString(_textOfShown);
+            CFont::SetString(_sfText, _textOfShown);
         }
         else
             _isSkip = false;

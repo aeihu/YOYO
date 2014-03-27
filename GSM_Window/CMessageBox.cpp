@@ -114,10 +114,12 @@ bool CMessageBox::OnLoop()
 
 void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    CBox::OnRender(Surf_Dest);
-    Surf_Dest->draw(_speakerName);
-    CTextProcessing::OnRender(Surf_Dest);
-    CSequenceOfFrames::OnRender(Surf_Dest);
+    if (_visible){
+        CImageBaseClass::OnRender(Surf_Dest);
+        Surf_Dest->draw(_speakerName);
+        CTextProcessing::OnRender(Surf_Dest);
+        CSequenceOfFrames::OnRender(Surf_Dest);
+    }
 }
 
 void CMessageBox::SetSpeakerName(string name)

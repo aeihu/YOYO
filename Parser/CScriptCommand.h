@@ -28,7 +28,7 @@ bool Cmd_DelPosition(vector<string>);//(string name);
 bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
 bool Cmd_HideCharacterLayer(vector<string>);//(string name, char type, float buf, float incr, bool pause);
 bool Cmd_MoveCharacterLayer(vector<string>);//(string name, float x, float y, float incr, bool pause);
-//bool Cmd_SetFaceCharacterLayer(vector<string>);//(string name, string face);
+bool Cmd_SetFaceCharacterLayer(vector<string>);//(string name, string face);
 ////bool Cmd_AlphaCharacterLayer(char postion, int alpha);
 ////
 ////bool Cmd_LoadMap(const char* name);
@@ -49,13 +49,13 @@ bool Cmd_DelImg(vector<string>);//(string name);
 ////
 //bool Cmd_Say(vector<string>);//(const char* filename);
 //
-//bool Cmd_PlayBGM(vector<string>);//(const char* filename);
+bool Cmd_PlayBGM(vector<string>);//(const char* filename);
 //bool Cmd_PauseBGM(vector<string>);//();
 //bool Cmd_ResumeBGM(vector<string>);//();
 ////
-//int Cmd_AddSE(vector<string>);//(vector<string>);//(const char* name, const char* filename);
-//bool Cmd_DelSE(vector<string>);//(string name);
-//bool Cmd_PlaySE(vector<string>);//(const char* name);
+bool Cmd_AddSE(vector<string>);//(vector<string>);//(const char* name, const char* filename);
+bool Cmd_DelSE(vector<string>);//(string name);
+bool Cmd_PlaySE(vector<string>);//(const char* name);
 ////
 //bool Cmd_AddButton(vector<string>);//(string name, const char* filename);
 //bool Cmd_DelButton(vector<string>);//(string name);
@@ -66,12 +66,12 @@ bool Cmd_DelImg(vector<string>);//(string name);
 ////void Cmd_Window();
 ////
 ////void Cmd_SetFontShadow(bool b);
-//bool Cmd_Message(vector<string>);//(string name, string msg);
+bool Cmd_Message(vector<string>);//(string name, string msg);
 ////bool Cmd_SetMessageBoxSpeakerName(string name);
-//bool Cmd_AddMessageBox(vector<string>);//(string name, const char* filename);
-//bool Cmd_DelMessageBox(vector<string>);//(string name);
-//bool Cmd_ShowMessageBox(vector<string>);//(string name, int incr, bool pause);
-//bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_AddMessageBox(vector<string>);//(string name, const char* filename);
+bool Cmd_DelMessageBox(vector<string>);//(string name);
+bool Cmd_ShowMessageBox(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
 ////
 ////bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section);
 ////bool Cmd_MenuBoxDelBtn(string name);

@@ -17,21 +17,20 @@
 #include "../Common/CCommon.h"
 
 
-class CTextProcessing
+class CTextProcessing : private CFont
 {
-  private:
-        sf::Vector2f   _coordinate;
-        bool            _isSkip;
-        string          _text;
-        string          _textOfShown;
-        sf::Text           _sfText;
-        unsigned int    _rowWidth;
-        unsigned int    _cursorPos;
-        unsigned int    _index;
-        sf::Color          _textColor;
-        sf::Color          _shadowColor;
-        unsigned long   _oldTime;
-        CFont           _font;
+    private:
+        sf::Vector2f        _coordinate;
+        bool                _isSkip;
+        string              _text;
+        string              _textOfShown;
+        sf::Text            _sfText;
+        unsigned int        _rowWidth;
+        unsigned int        _cursorPos;
+        unsigned int        _index;
+        sf::Color           _textColor;
+        sf::Color           _shadowColor;
+        unsigned long       _oldTime;
 
         bool isWordOrNumber(char c);
     public:

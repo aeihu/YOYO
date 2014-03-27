@@ -23,7 +23,55 @@
 #include "../Common/CResourceManager.h"
 #include "../GSM_Window/CLogBox.h"
 #include <iostream>
+#include <algorithm>
 
+
+map<string, string> Cmd_ArgsToKV(string funcName, list<string> flags, vector<string> args)
+{
+    map<string, string> __result;
+	list<string>::iterator __it;
+
+    for(__it=flags.begin();__it!=flags.end();++__it){
+        switch (std::count(args.begin(), args.end(), *__it)){
+            case 0:
+            break;
+            case 1:
+                {
+	                vector<string>::iterator __itOfArgs;
+                    __itOfArgs = std::find (args.begin(), args.end(), *__it);
+
+                    if (__itOfArgs != args.end()){
+                        ++__itOfArgs;
+
+                        if (__itOfArgs != args.end())
+                            __result[*__it] = *__itOfArgs;
+                        else{
+                            cout << funcName << "(): flag \"" << *__it << "\" has no argument." << endl;
+                            __result.clear();
+                            return __result;
+                        }
+                    }
+                }
+            break;
+            default:
+                cout << funcName << "(): can't has same flag " << *__it << "." << endl;
+                __result.clear();
+                return __result;
+            break;
+        }
+    }
+
+#ifdef _DEBUG
+    for (map<string, string>::iterator it=__result.begin();
+        it!=__result.end();)
+    {
+        cout << (*it).first << " : " << (*it).second << endl;
+        it++;
+    }
+#endif
+
+    return __result;
+}
 //
 //int Cmd_Move(const char* name, int x, int y, bool pause)
 //{
@@ -254,9 +302,19 @@ bool Cmd_HideCharacterLayer(vector<string> args)
     return true;
 }
 
-void Cmd_SetFaceCharacterLayer(string name, string face)
+//void Cmd_SetFaceCharacterLayer(string name, string face)
+bool Cmd_SetFaceCharacterLayer(vector<string> args)
 {
+    if (args.size() != 2){
+        cout << "Cmd_SetFaceCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." << endl;
+        return false;
+    }
+
+    string name = args[0];
+    string face = args[1];
     CResourceManager::_CharacterLayerControl._CharacterList[name].SetFace(face);
+    return true;
 }
 //
 //bool Cmd_AlphaCharacterLayer(char postion, int alpha)
@@ -520,8 +578,16 @@ bool Cmd_Say(const char* filename)
     return CSoundBank::SoundControl.Say(filename);
 }
 
-bool Cmd_PlayBGM(const char* filename)
+//bool Cmd_PlayBGM(const char* filename)
+bool Cmd_PlayBGM(vector<string> args)
 {
+    if (args.size() != 1){
+        cout << "Cmd_PlayBGM(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    const char* filename = args[0].c_str();
     if(!CSoundBank::SoundControl.OnLoadBGM(filename))
         return false;
 
@@ -541,21 +607,65 @@ void Cmd_ResumeBGM()
         CSoundBank::SoundControl.PlayBgm();
 }
 
-int Cmd_AddSE(const char* name, const char* filename)
+//int Cmd_AddSE(const char* name, const char* filename)
+bool Cmd_AddSE(vector<string> args)
 {
-    return CSoundBank::SoundControl.AddSE(name, filename);
+    if (args.size() != 2){
+        cout << "Cmd_AddSE(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    const char* name = args[0].c_str();
+    const char* filename = args[1].c_str();
+
+    switch(CSoundBank::SoundControl.AddSE(name, filename))
+    {
+        case -1:
+            cout << "Cmd_AddSE(): SE \"" << name << "\" has existed." <<endl;
+            return false;
+        break;
+        case -2:
+            cout << "Cmd_AddSE(): failed to add SE." <<endl;
+            return false;
+        break;
+    }
+
+    return true;
 }
 
-bool Cmd_DelSE(string name)
+//bool Cmd_DelSE(string name)
+bool Cmd_DelSE(vector<string> args)
 {
-    return CSoundBank::SoundControl.DeleteSE(name);
+    if (args.size() != 1){
+        cout << "Cmd_DelSE(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0].c_str();
+
+    if (CSoundBank::SoundControl.DeleteSE(name))
+        return true;
+
+    cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
+    return false;
 }
 
-bool Cmd_PlaySE(const char* name)
+//bool Cmd_PlaySE(const char* name)
+bool Cmd_PlaySE(vector<string> args)
 {
+    if (args.size() != 1){
+        cout << "Cmd_PlaySE(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    string name = args[0].c_str();
+
     if(CSoundBank::SoundControl.PlaySE(name))
         return true;
 
+    cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
     return false;
 }
 
@@ -630,14 +740,69 @@ bool Cmd_HideButton(string name, int incr, bool pause)
 //    CCommon::common.FONT_SHADOW = b;
 //}
 //
-bool Cmd_Message(string name, string msg)
+//bool Cmd_Message(string name, string msg)
+bool Cmd_Message(vector<string> args)
 {
-    if(CResourceManager::_MessageBoxControl._MessageBoxList.count(name) < 1){
-            cout << "Cmd_Message(): MessageBox \"" << name << "\" has no existed." <<endl;
+    std::list<string> __flags;
+    __flags.push_back("-b");    //MessageBoxName
+    __flags.push_back("-c");    //character
+    __flags.push_back("-m");    //message
+    __flags.push_back("-n");    //speakername
+    __flags.push_back("-v");    //voice
+    
+    map<string,string> __values = Cmd_ArgsToKV("Cmd_Message", __flags, args);
+
+    if (__values.size() < 1)
+        return false;
+    
+    string __msgBoxName = "";
+    string __characterName = "";
+    string __msg = "";
+    string __speakerName = "";
+    string __voice = "";
+
+    if (__values.count("-b") == 0){
+        cout << "Cmd_Message(): flag \"-b\" must be need." <<endl;
+        return false;
+    }
+    else{
+        __msgBoxName = __values["-b"];
+    }
+
+    if (__values.count("-c") > 0){
+        __characterName = __values["-c"];
+    }
+
+    if (__values.count("-m") == 0){
+        cout << "Cmd_Message(): flag \"-m\" must be need." <<endl;
+        return false;
+    }
+    else{
+        __msg = __values["-m"];
+    }
+
+    if (__values.count("-n") > 0){
+        __speakerName = __values["-n"];
+    }
+
+    if (__values.count("-v") > 0){
+        __voice = __values["-v"];
+    }
+
+    if(CResourceManager::_MessageBoxControl._MessageBoxList.count(__msgBoxName) < 1){
+        cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
         return false;
     }
 
-    CResourceManager::_MessageBoxControl._MessageBoxList[name].SetText(msg);
+    if (__characterName != "")
+        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__characterName) < 1){
+            cout << "Cmd_Message(): Character \"" << __characterName << "\" has no existed." <<endl;
+            //return false;
+        }
+
+    CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetText(__msg);
+    //__flags.push_back("-n");    //speakername
+    //__flags.push_back("-v");    //voice
     return true;
 }
 //
@@ -646,8 +811,18 @@ bool Cmd_Message(string name, string msg)
 //    return CMessageBox::messagebox.SetSpeakerName(name.c_str());
 //}
 //
-bool Cmd_AddMessageBox(string name, const char* filename)
+//bool Cmd_AddMessageBox(string name, const char* filename)
+bool Cmd_AddMessageBox(vector<string> args)
 {
+    if (args.size() != 2){
+        cout << "Cmd_AddMessageBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    const char* filename = args[1].c_str();
+
     switch (CResourceManager::_MessageBoxControl.AddMessageBox(name, filename))
     {
         case 0:
@@ -664,8 +839,16 @@ bool Cmd_AddMessageBox(string name, const char* filename)
     return false;
 }
 
-bool Cmd_DelMessageBox(string name)
+//bool Cmd_DelMessageBox(string name)
+bool Cmd_DelMessageBox(vector<string> args)
 {
+    if (args.size() != 1){
+        cout << "Cmd_DelMessageBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
     if (CResourceManager::_MessageBoxControl.DelMessageBox(name))
         return true;
 
@@ -673,8 +856,19 @@ bool Cmd_DelMessageBox(string name)
     return false;
 }
 
-bool Cmd_ShowMessageBox(string name, int incr, bool pause)
+//bool Cmd_ShowMessageBox(string name, int incr, bool pause)
+bool Cmd_ShowMessageBox(vector<string> args)
 {
+    if (args.size() != 3){
+        cout << "Cmd_HideMessageBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    int incr = atoi(args[1].c_str()); 
+    bool pause = args[2] == "T" ? true : false;
+
     if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 255, incr, pause)){
         cout << "Cmd_ShowMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
         return false;
@@ -683,8 +877,19 @@ bool Cmd_ShowMessageBox(string name, int incr, bool pause)
     return true;
 }
 
-bool Cmd_HideMessageBox(string name, int incr, bool pause)
+//bool Cmd_HideMessageBox(string name, int incr, bool pause)
+bool Cmd_HideMessageBox(vector<string> args)
 {
+    if (args.size() != 3){
+        cout << "Cmd_HideMessageBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    int incr = atoi(args[1].c_str()); 
+    bool pause = args[2] == "T" ? true : false;
+
     if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 0, incr, pause)){
         cout << "Cmd_HideMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
         return false;
