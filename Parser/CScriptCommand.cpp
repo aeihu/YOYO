@@ -756,7 +756,7 @@ bool Cmd_Message(vector<string> args)
         return false;
     
     string __msgBoxName = "";
-    string __characterName = "";
+    string __character = "";
     string __msg = "";
     string __speakerName = "";
     string __voice = "";
@@ -770,7 +770,7 @@ bool Cmd_Message(vector<string> args)
     }
 
     if (__values.count("-c") > 0){
-        __characterName = __values["-c"];
+        __character = __values["-c"];
     }
 
     if (__values.count("-m") == 0){
@@ -794,14 +794,14 @@ bool Cmd_Message(vector<string> args)
         return false;
     }
 
-    if (__characterName != "")
-        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__characterName) < 1){
-            cout << "Cmd_Message(): Character \"" << __characterName << "\" has no existed." <<endl;
+    if (__character != "")
+        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__character) < 1){
+            cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
             //return false;
         }
 
     CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetText(__msg);
-    //__flags.push_back("-n");    //speakername
+    CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
     //__flags.push_back("-v");    //voice
     return true;
 }

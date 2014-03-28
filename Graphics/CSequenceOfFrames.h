@@ -16,6 +16,9 @@ class CSequenceOfFrames : public CImageBaseClass
     private:
         sf::IntRect        _rect;
     public:
+        using CImageBaseClass::_image;
+        using CImageBaseClass::_sprite;
+
         CSequenceOfFrames(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);
         void SetWidth(int w);

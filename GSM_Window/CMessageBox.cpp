@@ -26,6 +26,8 @@ bool CMessageBox::Sub_OnLoad()
         CBox::_sprite.getGlobalBounds().width - atof(_parameterList["MSG_OFFSET_X"].c_str()) * 2))
         return false;
 
+    _speakerName.setFont(CFont::_font);
+
 //=================Init cursor==================================
     if (!CSequenceOfFrames::LoadImg(_parameterList["CURSOR_PATH"].c_str()))
         return false;
@@ -81,16 +83,30 @@ bool CMessageBox::Sub_CheckList(map<string, string> list)
         result = false;
     }
 
+    if (list.count("SPEAKER_OFFSET_X") < 1){
+        cout << "can't find value of SPEAKER_OFFSET_X." << endl;
+        result = false;
+    }
+
+    if (list.count("SPEAKER_OFFSET_Y") < 1){
+        cout << "can't find value of SPEAKER_OFFSET_Y." << endl;
+        result = false;
+    }
+
     return result;
 }
 
 bool CMessageBox::OnLoop()
 {
     bool __result = CBox::OnLoop();
-//    _speakerName.setPosition(CCommon::common.MSGBOX_SPEAKER_OFFSET_X, CCommon::common.MSGBOX_SPEAKER_OFFSET_Y);
+
+    _speakerName.setPosition(CBox::_Coordinate.x + atof(_parameterList["SPEAKER_OFFSET_X"].c_str()), 
+        CBox::_Coordinate.y + atof(_parameterList["SPEAKER_OFFSET_Y"].c_str()));
+
     CTextProcessing::SetPosition(
         CBox::_Coordinate.x + atof(_parameterList["MSG_OFFSET_X"].c_str()), 
         CBox::_Coordinate.y + atof(_parameterList["MSG_OFFSET_Y"].c_str()));
+
 
     if (IsTextAllShown() && !GetText().empty()){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
@@ -124,7 +140,7 @@ void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CMessageBox::SetSpeakerName(string name)
 {
-    _speakerName.setString(name.c_str());
+    CFont::SetString(_speakerName, name.c_str());
 }
 
 void CMessageBox::SetText(string msg)

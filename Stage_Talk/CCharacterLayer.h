@@ -11,7 +11,8 @@
 
 #include "../Graphics/CImageBaseClass.h"
 #include "../Common/CCommon.h"
-
+#include "../Animation/CAnimation.h"
+#include "../Graphics/CSequenceOfFrames.h"
 #include <map>
 #include <string>
 
@@ -20,16 +21,19 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass
 {
   private:
-        sf::Vector2f               _offset;
-        sf::Texture                   _imageFace;
-        sf::Sprite                   _spriteFace;
-        map<string, string>     _faceList;
-        bool                          _isFaceEnable;
+        sf::Vector2f                _offset;
+        sf::Texture                 _imageFace;
+        //sf::Sprite                  _spriteFace;
+        map<string, string>         _faceList;
+        bool                        _isFaceEnable;
+        CSequenceOfFrames           _framesOfMouth;
 
         bool CheckList(map<string, string> list);
         bool SetProperty(map<string, string> list);
         bool LoadImage(const char* FileName, sf::Texture &image, sf::Sprite &sprite);
   public:
+        CAnimation                  _AnimationControl;
+
         CCharacterLayer(float x=0.0f, float y=0.0f);
 
         bool LoadChara(const char* FileName);

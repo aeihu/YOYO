@@ -21,7 +21,7 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
 {        
   private:
         sf::Text        _speakerName;
-        bool             _isPaused;
+        bool            _isPaused;
 
         bool Sub_CheckList(map<string, string> list);
         bool Sub_OnLoad();

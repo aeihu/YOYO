@@ -17,7 +17,7 @@
 #include "../Common/CCommon.h"
 
 
-class CTextProcessing : private CFont
+class CTextProcessing : protected CFont
 {
     private:
         sf::Vector2f        _coordinate;

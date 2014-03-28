@@ -15,26 +15,30 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _offset.x = 
     _offset.y = 0;
     _isFaceEnable = false;
+    _AnimationControl._Type = CAnimation::Oscillate;
 }
 
 bool CCharacterLayer::Subclass_Loop()
 {
-    if (_spriteFace.getColor().a != _Alpha)
-        _spriteFace.setColor(sf::Color(255,255,255,_Alpha));
+    if (_framesOfMouth._sprite.getColor().a != _Alpha)
+        _framesOfMouth._sprite.setColor(sf::Color(255,255,255,_Alpha));
 
-    if (_Coordinate+_offset != _spriteFace.getPosition())
-        _spriteFace.setPosition(_Coordinate+_offset);
+    if (_Coordinate+_offset != _framesOfMouth._sprite.getPosition())
+        _framesOfMouth._sprite.setPosition(_Coordinate+_offset);
 
-    if (_spriteFace.getScale() != _sprite.getScale())
-        _spriteFace.setScale(_sprite.getScale());
+    if (_framesOfMouth._sprite.getScale() != _sprite.getScale())
+        _framesOfMouth._sprite.setScale(_sprite.getScale());
 
-    if (_spriteFace.getRotation() != _sprite.getRotation())
-        _spriteFace.setRotation(_sprite.getRotation());
+    if (_framesOfMouth._sprite.getRotation() != _sprite.getRotation())
+        _framesOfMouth._sprite.setRotation(_sprite.getRotation());
 
-    if (_spriteFace.getScale().x > 1.0f || _spriteFace.getScale().y > 1.0f)
+    if (_framesOfMouth._sprite.getScale().x > 1.0f || _framesOfMouth._sprite.getScale().y > 1.0f)
         _imageFace.setSmooth(true);
     else
         _imageFace.setSmooth(false);
+
+    _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
+    _AnimationControl.OnAnimate(CCommon::common.GetTicks());
 
     return false;
 }
@@ -42,7 +46,7 @@ bool CCharacterLayer::Subclass_Loop()
 void CCharacterLayer::Subclass_Render(sf::RenderWindow* Surf_Dest)
 {
     if (_isFaceEnable)
-        Surf_Dest->draw(_spriteFace);
+        Surf_Dest->draw(_framesOfMouth._sprite);
 }
 
 bool CCharacterLayer::LoadImage(const char* fileName, sf::Texture &image, sf::Sprite &sprite)
@@ -100,6 +104,26 @@ bool CCharacterLayer::CheckList(map<string, string> list)
         result = false;
     }
 
+    if (list.count("FACE_WIDTH") < 1){
+        cout << "can't find value of FACE_WIDTH." << endl;
+        result = false;
+    }
+    
+    if (list.count("FACE_HEIGHT") < 1){
+        cout << "can't find value of FACE_HEIGHT." << endl;
+        result = false;
+    }
+    
+    if (list.count("TALK_MAX_FRAMES") < 1){
+        cout << "can't find value of TALK_MAX_FRAMES." << endl;
+        result = false;
+    }
+    
+    if (list.count("TALK_FRAME_RATE") < 1){
+        cout << "can't find value of TALK_FRAME_RATE." << endl;
+        result = false;
+    }
+
     return result;
 }
 
@@ -118,14 +142,22 @@ bool CCharacterLayer::SetProperty(map<string, string> list)
     _faceList.clear();
     _faceList.insert(list.begin(), list.end());
 
+    _AnimationControl._MaxFrames = atoi(list["TALK_MAX_FRAMES"].c_str());
+    _AnimationControl.SetFrameRate(atoi(list["TALK_FRAME_RATE"].c_str()));
+
+    _framesOfMouth.SetWidth(atoi(list["FACE_WIDTH"].c_str()));
+    _framesOfMouth.SetHeight(atoi(list["FACE_HEIGHT"].c_str()));
     return true;
 }
 
 bool CCharacterLayer::SetFace(string name)
 {
     _isFaceEnable = false;
-    if (_faceList.count(name) > 0) 
-        _isFaceEnable = LoadImage(_faceList[name].c_str(), _imageFace, _spriteFace);
+    if (_faceList.count(name) > 0) {
+ //       _isFaceEnable = LoadImage(_faceList[name].c_str(), _imageFace, _framesOfMouth._sprite);
+        _isFaceEnable = LoadImage(_faceList[name].c_str(), _framesOfMouth._image, _framesOfMouth._sprite);
+        
+    }
 
     return _isFaceEnable;
 }

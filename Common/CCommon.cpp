@@ -328,7 +328,7 @@ void CCommon::SetValue(const char* name, const char* value)
 }
 
 unsigned long CCommon::GetTicks(){
-    return Clock.getElapsedTime().asMicroseconds();
+    return Clock.getElapsedTime().asMilliseconds();
 }
 
 unsigned int CCommon::SizeOfCharWithUTF8(char Char)
