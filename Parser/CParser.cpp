@@ -112,6 +112,8 @@ void CParser::ExecuteCmd(string cmd)
 
         else if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
         else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
+        else if (__commandName == "@add_chara") _pFunc = &Cmd_AddCharacterLayer;
+        else if (__commandName == "@del_chara") _pFunc = &Cmd_DelCharacterLayer;
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
@@ -717,6 +719,11 @@ void CParser::InsertCmdList(list<string> commands)
         //Pause = false;
     }
     commands.clear();
+}
+
+void CParser::InsertCmd(string cmd)
+{
+    _CmdList.push_back(cmd);
 }
 
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)

@@ -25,7 +25,8 @@ class CCharacterLayerControl : public CControlBaseClass
         CCharacterLayerControl();
         
         bool IsAlreadyExists(string name);
-        char AddCharacter(string name, const char* filename, float x, float y);
+        char AddCharacter(string name, const char* filename);
+        bool DelCharacter(string name);
         bool Move(string name, string position, float increment, bool pause);
         bool Move(string name, float x, float y, float increment, bool pause);
         bool Show(string name, string position, char type, float increment, bool pause);

@@ -26,27 +26,32 @@
 #include <algorithm>
 
 
-map<string, string> Cmd_ArgsToKV(string funcName, list<string> flags, vector<string> args)
+map<string, string> Cmd_ArgsToKV(string funcName, list<pair<string, bool> > flags, vector<string> args)
 {
     map<string, string> __result;
-	list<string>::iterator __it;
+	list<pair<string, bool> >::iterator __it;
 
     for(__it=flags.begin();__it!=flags.end();++__it){
-        switch (std::count(args.begin(), args.end(), *__it)){
+        switch (std::count(args.begin(), args.end(), (*__it).first)){
             case 0:
+                if ((*__it).second){
+                    cout << funcName << "(): flag \"" << (*__it).first << "\" must be need." << endl;
+                    __result.clear();
+                    return __result;
+                }
             break;
             case 1:
                 {
 	                vector<string>::iterator __itOfArgs;
-                    __itOfArgs = std::find (args.begin(), args.end(), *__it);
+                    __itOfArgs = std::find (args.begin(), args.end(), (*__it).first);
 
                     if (__itOfArgs != args.end()){
                         ++__itOfArgs;
 
                         if (__itOfArgs != args.end())
-                            __result[*__it] = *__itOfArgs;
+                            __result[(*__it).first] = *__itOfArgs;
                         else{
-                            cout << funcName << "(): flag \"" << *__it << "\" has no argument." << endl;
+                            cout << funcName << "(): flag \"" << (*__it).first << "\" has no argument." << endl;
                             __result.clear();
                             return __result;
                         }
@@ -54,7 +59,7 @@ map<string, string> Cmd_ArgsToKV(string funcName, list<string> flags, vector<str
                 }
             break;
             default:
-                cout << funcName << "(): can't has same flag " << *__it << "." << endl;
+                cout << funcName << "(): can't has same flag " << (*__it).first << "." << endl;
                 __result.clear();
                 return __result;
             break;
@@ -202,45 +207,83 @@ bool Cmd_DelPosition(vector<string> args)
     return true;
 }
 
-//bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
-bool Cmd_ShowCharacterLayer(vector<string> args)
-{    
-    if (args.size() != 7 && args.size() != 6){
-        cout << "Cmd_ShowCharacterLayer(): command invaild. can't set " << args.size()
+bool Cmd_AddCharacterLayer(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_AddCharacterLayer(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
     string name = args[0];
     const char* filename = args[1].c_str();
-    float x = 0;
-    float y = 0;
-    if (args.size() == 6){
-        x = atof(args[2].c_str());
-        y = atof(args[3].c_str());
+
+    switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename)){
+        case 0:
+            return true;
+        break;
+        case 1:
+            cout << "Cmd_AddCharacterLayer(): character layer \""<< name << "\" has existed." <<endl;
+        break;
+        case 2:
+            cout << "Cmd_AddCharacterLayer(): failed to create character layer." <<endl;
+        break;
     }
-    else{
-        if (!CResourceManager::_CharacterLayerControl.GetPosition(args[2],&x,&y)){
-            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< args[2] << "\"." <<endl;
+
+    return false;
+}
+
+bool Cmd_DelCharacterLayer(vector<string> args)
+{
+    if (args.size() != 1){
+        cout << "Cmd_DelCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    if (!CResourceManager::_CharacterLayerControl.DelCharacter(name)){
+        cout << "Cmd_DelCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
+        return false;
+    }
+
+    return true;
+}
+
+//bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
+bool Cmd_ShowCharacterLayer(vector<string> args)
+{
+    std::list<pair<string, bool> > __flags;
+    __flags.push_back(pair<string, bool>("-i", false));    //incr
+    __flags.push_back(pair<string, bool>("-n", true));    //name
+    __flags.push_back(pair<string, bool>("-p", false));    //pause
+    __flags.push_back(pair<string, bool>("-s", false));    //position
+    __flags.push_back(pair<string, bool>("-t", false));    //type
+    __flags.push_back(pair<string, bool>("-x", false));    //x
+    __flags.push_back(pair<string, bool>("-y", false));    //y
+
+    map<string,string> __values = Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args);
+
+    float x = 0.0f;
+    float y = 0.0f;
+
+    if (__values.count("-s") > 1){
+        if (!CResourceManager::_CharacterLayerControl.GetPosition(__values["-s"],&x,&y)){
+            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
             return false;
         }
     }
 
-    char type = args[4-(7-args.size())].c_str()[0];
-    float incr = atof(args[5-(7-args.size())].c_str());
-    bool pause = args[6-(7-args.size())] == "T" ? true : false;
+    float incr = __values.count("-i") == 0 ? 0.0f : atof(__values["-i"].c_str());
+    string name = __values.count("-n") == 0 ? "" : __values["-n"];
+    char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
+    bool pause = __values.count("-p") == 0 ? false : (__values["-p"] == "T" ? true:false);
+    x = __values.count("-x") == 0 ? x : atof(__values["-x"].c_str());
+    y = __values.count("-y") == 0 ? y : atof(__values["-y"].c_str());
 
-    switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename, x, y)){
-        case 0:
-           CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
-            return true;
-        break;
-        case 1:
-            cout << "Cmd_ShowCharacterLayer(): character layer \""<< name << "\" has existed." <<endl;
-        break;
-        case 2:
-            cout << "Cmd_ShowCharacterLayer(): failed to create character layer." <<endl;
-        break;
+    if (CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
+        CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
+        return true;
     }
 
     return false;
@@ -313,8 +356,13 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 
     string name = args[0];
     string face = args[1];
-    CResourceManager::_CharacterLayerControl._CharacterList[name].SetFace(face);
-    return true;
+
+    if (CResourceManager::_CharacterLayerControl._CharacterList[name].SetFace(face))
+        return true;
+    else{
+        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< name << "\"." <<endl;
+        return false;
+    }
 }
 //
 //bool Cmd_AlphaCharacterLayer(char postion, int alpha)
@@ -743,51 +791,23 @@ bool Cmd_HideButton(string name, int incr, bool pause)
 //bool Cmd_Message(string name, string msg)
 bool Cmd_Message(vector<string> args)
 {
-    std::list<string> __flags;
-    __flags.push_back("-b");    //MessageBoxName
-    __flags.push_back("-c");    //character
-    __flags.push_back("-m");    //message
-    __flags.push_back("-n");    //speakername
-    __flags.push_back("-v");    //voice
+    std::list<pair<string, bool> > __flags;
+    __flags.push_back(pair<string, bool>("-b", true));    //MessageBoxName
+    __flags.push_back(pair<string, bool>("-c", false));    //character
+    __flags.push_back(pair<string, bool>("-m", true));    //message
+    __flags.push_back(pair<string, bool>("-n", false));    //speakername
+    __flags.push_back(pair<string, bool>("-v", false));    //voice
     
     map<string,string> __values = Cmd_ArgsToKV("Cmd_Message", __flags, args);
 
     if (__values.size() < 1)
         return false;
     
-    string __msgBoxName = "";
-    string __character = "";
-    string __msg = "";
-    string __speakerName = "";
-    string __voice = "";
-
-    if (__values.count("-b") == 0){
-        cout << "Cmd_Message(): flag \"-b\" must be need." <<endl;
-        return false;
-    }
-    else{
-        __msgBoxName = __values["-b"];
-    }
-
-    if (__values.count("-c") > 0){
-        __character = __values["-c"];
-    }
-
-    if (__values.count("-m") == 0){
-        cout << "Cmd_Message(): flag \"-m\" must be need." <<endl;
-        return false;
-    }
-    else{
-        __msg = __values["-m"];
-    }
-
-    if (__values.count("-n") > 0){
-        __speakerName = __values["-n"];
-    }
-
-    if (__values.count("-v") > 0){
-        __voice = __values["-v"];
-    }
+    string __msgBoxName = __values.count("-b") == 0 ? "" : __values["-b"];
+    string __character = __values.count("-c") == 0 ? "" : __values["-c"];
+    string __msg = __values.count("-m") == 0 ? "" : __values["-m"];
+    string __speakerName = __values.count("-n") == 0 ? "" : __values["-n"];
+    string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
 
     if(CResourceManager::_MessageBoxControl._MessageBoxList.count(__msgBoxName) < 1){
         cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;

@@ -47,6 +47,7 @@ class CParser
         bool ExecuteAllCmd(const char* FileName, const char* Section);
         void ExecuteAllCmd(list<string> commands);
         void InsertCmdList(list<string> commands);
+        void InsertCmd(string cmd);
         void SetDeplay(int ms);
 
         bool IsDeplaying();

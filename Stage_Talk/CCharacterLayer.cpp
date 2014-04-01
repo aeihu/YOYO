@@ -37,8 +37,10 @@ bool CCharacterLayer::Subclass_Loop()
     else
         _imageFace.setSmooth(false);
 
-    _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-    _AnimationControl.OnAnimate(CCommon::common.GetTicks());
+    if (_isFaceEnable){
+        _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
+        _AnimationControl.OnAnimate(CCommon::common.GetTicks());
+    }
 
     return false;
 }
@@ -135,18 +137,23 @@ bool CCharacterLayer::SetProperty(map<string, string> list)
     _offset.x = atof(list["FACE_OFFSET_X"].c_str());
     _offset.y = atof(list["FACE_OFFSET_Y"].c_str());
 
-    list.erase("BODY_PATH");
-    list.erase("FACE_OFFSET_X");
-    list.erase("FACE_OFFSET_Y");
-
-    _faceList.clear();
-    _faceList.insert(list.begin(), list.end());
-
     _AnimationControl._MaxFrames = atoi(list["TALK_MAX_FRAMES"].c_str());
     _AnimationControl.SetFrameRate(atoi(list["TALK_FRAME_RATE"].c_str()));
 
     _framesOfMouth.SetWidth(atoi(list["FACE_WIDTH"].c_str()));
     _framesOfMouth.SetHeight(atoi(list["FACE_HEIGHT"].c_str()));
+
+    list.erase("BODY_PATH");
+    list.erase("FACE_OFFSET_X");
+    list.erase("FACE_OFFSET_Y");
+    list.erase("TALK_MAX_FRAMES");
+    list.erase("TALK_FRAME_RATE");
+    list.erase("FACE_WIDTH");
+    list.erase("FACE_HEIGHT");
+
+    _faceList.clear();
+    _faceList.insert(list.begin(), list.end());
+
     return true;
 }
 
@@ -154,7 +161,6 @@ bool CCharacterLayer::SetFace(string name)
 {
     _isFaceEnable = false;
     if (_faceList.count(name) > 0) {
- //       _isFaceEnable = LoadImage(_faceList[name].c_str(), _imageFace, _framesOfMouth._sprite);
         _isFaceEnable = LoadImage(_faceList[name].c_str(), _framesOfMouth._image, _framesOfMouth._sprite);
         
     }

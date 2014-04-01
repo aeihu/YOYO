@@ -25,6 +25,8 @@ bool Cmd_ShowInfo(vector<string>);//
 
 bool Cmd_AddPosition(vector<string>);//(string name, float x, float y);
 bool Cmd_DelPosition(vector<string>);//(string name);
+bool Cmd_AddCharacterLayer(vector<string>);
+bool Cmd_DelCharacterLayer(vector<string>);
 bool Cmd_ShowCharacterLayer(vector<string>);//(string name, const char* filename, string position, char type, float buf, float incr, bool pause);
 bool Cmd_HideCharacterLayer(vector<string>);//(string name, char type, float buf, float incr, bool pause);
 bool Cmd_MoveCharacterLayer(vector<string>);//(string name, float x, float y, float incr, bool pause);

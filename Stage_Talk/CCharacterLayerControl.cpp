@@ -19,7 +19,7 @@ bool CCharacterLayerControl::IsAlreadyExists(string name)
     return _CharacterList.count(name) < 1 ? false : true;
 }
 
-char CCharacterLayerControl::AddCharacter(string name, const char* filename, float x, float y)
+char CCharacterLayerControl::AddCharacter(string name, const char* filename)
 {
     if (_CharacterList.count(name)>0){
         return 1;
@@ -34,6 +34,16 @@ char CCharacterLayerControl::AddCharacter(string name, const char* filename, flo
         }
     }
     return 0;
+}
+
+bool CCharacterLayerControl::DelCharacter(string name)
+{
+    if (_CharacterList.count(name) == 0)
+        return false;
+    else{
+        _CharacterList.erase(name);
+    }
+    return true;
 }
 
 bool CCharacterLayerControl::Move(string name, string position, float increment, bool pause)
@@ -87,7 +97,8 @@ bool CCharacterLayerControl::Show(string name, float x, float y, char type, floa
     float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = x;
     float __y = y;
-    int __inc = ((int)buf)/((int)increment);
+    int __inc = (int)increment;
+    __inc = ((int)buf)/(__inc == 0 ? 1:__inc);//???
     __inc = __inc<=0?255:255/__inc;
 
     switch (type)
