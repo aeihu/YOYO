@@ -72,7 +72,7 @@ void CApp::OnCleanup() {
 
  //   SDL_FreeSurface(sf_Display);
     //
-    //CSoundBank::SoundControl.OnCleanup();
+    //CSoundBank::_SoundControl.OnCleanup();
  //   TTF_Quit(); 
     //Mix_CloseAudio();
  //   SDL_Quit();

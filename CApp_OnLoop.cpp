@@ -74,7 +74,7 @@ void CApp::OnLoop() {
     CResourceManager::_MessageBoxControl.OnLoop(__isPause);
     CResourceManager::_ButtonControl.OnLoop(__isPause);
 
-    CSoundBank::SoundControl.OnLoop();
+    CSoundBank::_SoundControl.OnLoop();
     //if (CMessageBox::messagebox.Visible)
 
     //if (CMessageBox::messagebox.GetAnimateState() == 1)

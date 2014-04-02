@@ -138,6 +138,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@add_se") _pFunc = &Cmd_AddSE;
         else if (__commandName == "@del_se") _pFunc = &Cmd_DelSE;
         else if (__commandName == "@play_se") _pFunc = &Cmd_PlaySE;
+        else if (__commandName == "@get") _pFunc = &Cmd_getSE;
         else{
             cout << "unknown command." << endl;
             return;

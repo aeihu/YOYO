@@ -10,31 +10,31 @@
 #include "CSoundBank.h"
 
 //==============================================================================
-CSoundBank CSoundBank::SoundControl;
+CSoundBank CSoundBank::_SoundControl;
 
 //==============================================================================
 CSoundBank::CSoundBank() {
-    _VoiceList.clear();
+    _voiceList.clear();
 }
 
 //------------------------------------------------------------------------------
 int CSoundBank::AddSE(std::string name, const char* FileName) {
-    if(_SEList.count(name) > 0)
+    if(_seList.count(name) > 0)
         return -1;
 
     sf::SoundBuffer Buffer;
     if (!Buffer.loadFromFile(FileName))
         return -2;
 
-    _SEList[name].first = Buffer;
-    _SEList[name].second.setBuffer(_SEList[name].first);
+    _seList[name].first = Buffer;
+    _seList[name].second.setBuffer(_seList[name].first);
 
   return 0;
 }
 //https://github.com/LaurentGomila/SFML/wiki/Source%3A-MP3-Player
 bool CSoundBank::OnLoadBGM(const char* FileName)
 {
-    if (!_BGM.openFromFile(FileName))
+    if (!_bgm.openFromFile(FileName))
         return false;
 
     return true;
@@ -43,27 +43,27 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
 //------------------------------------------------------------------------------
 void CSoundBank::OnCleanup()
 {
-    _SEList.clear();
-    _VoiceList.clear();
+    _seList.clear();
+    _voiceList.clear();
 }
 
 
 //==============================================================================
 bool CSoundBank::PlaySE(string name)
 {
-    if (_SEList.count(name) < 1)
+    if (_seList.count(name) < 1)
         return false;
 
-    _SEList[name].second.play();
+    _seList[name].second.play();
     return true;
 }
 
 bool CSoundBank::DeleteSE(string name)
 {
-    if(_SEList.count(name) < 1)
+    if(_seList.count(name) < 1)
         return false;
 
-    _SEList.erase(name);
+    _seList.erase(name);
     return true;
 }
 
@@ -71,17 +71,17 @@ bool CSoundBank::DeleteSE(string name)
 
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
-    return _BGM.getStatus();
+    return _bgm.getStatus();
 }
 
 void CSoundBank::PauseBgm()
 {
-    _BGM.pause();
+    _bgm.pause();
 }
 
 void CSoundBank::PlayBgm()
 {
-    _BGM.play();
+    _bgm.play();
 }
 
 bool CSoundBank::Say(const char* FileName)
@@ -91,31 +91,36 @@ bool CSoundBank::Say(const char* FileName)
         return false;
 
     char name = 0;
-    while (_VoiceList.count(name) > 0){
+    while (_voiceList.count(name) > 0){
         name++;
     }
 
-    _VoiceList[name].first = Buffer;
-    _VoiceList[name].second.setBuffer(_VoiceList[name].first);
-    _VoiceList[name].second.play();
+    _voiceList[name].first = Buffer;
+    _voiceList[name].second.setBuffer(_voiceList[name].first);
+    _voiceList[name].second.play();
 
   return true;
 }
 
 void CSoundBank::OnLoop()
 {
-    if (_VoiceList.size() < 1)
+    if (_voiceList.size() < 1)
         return;
 
     for (map<char, pair<sf::SoundBuffer,sf::Sound> >::iterator 
-        it=_VoiceList.begin(); it!=_VoiceList.end();  )
+        it=_voiceList.begin(); it!=_voiceList.end();  )
     {
         if ((*it).second.second.getStatus() == sf::Sound::Stopped){
-            _VoiceList.erase(it);
-            if (it==_VoiceList.end())
+            _voiceList.erase(it);
+            if (it==_voiceList.end())
                 break;
         }
         else
             it++;
     }
+}
+
+unsigned int CSoundBank::GetSEPitch(string name)
+{
+    return *(_seList[name].second.getBuffer()->getSamples());
 }

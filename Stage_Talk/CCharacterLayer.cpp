@@ -37,7 +37,7 @@ bool CCharacterLayer::Subclass_Loop()
     else
         _imageFace.setSmooth(false);
 
-    if (_isFaceEnable){
+    if (_isFaceEnable && _AnimationControl.GetEnable()){
         _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::common.GetTicks());
     }
@@ -96,6 +96,11 @@ bool CCharacterLayer::CheckList(map<string, string> list)
         result = false;
     }
 
+    if (list.count("FACE_ENABLE") < 1){
+        cout << "can't find value of FACE_ENABLE." << endl;
+        result = false;
+    }
+
     if (list.count("FACE_OFFSET_X") < 1){
         cout << "can't find value of FACE_OFFSET_X." << endl;
         result = false;
@@ -134,36 +139,43 @@ bool CCharacterLayer::SetProperty(map<string, string> list)
     if (!LoadImage(list["BODY_PATH"].c_str(), _image, _sprite))
         return false;
 
-    _offset.x = atof(list["FACE_OFFSET_X"].c_str());
-    _offset.y = atof(list["FACE_OFFSET_Y"].c_str());
-
-    _AnimationControl._MaxFrames = atoi(list["TALK_MAX_FRAMES"].c_str());
-    _AnimationControl.SetFrameRate(atoi(list["TALK_FRAME_RATE"].c_str()));
-
-    _framesOfMouth.SetWidth(atoi(list["FACE_WIDTH"].c_str()));
-    _framesOfMouth.SetHeight(atoi(list["FACE_HEIGHT"].c_str()));
-
-    list.erase("BODY_PATH");
-    list.erase("FACE_OFFSET_X");
-    list.erase("FACE_OFFSET_Y");
-    list.erase("TALK_MAX_FRAMES");
-    list.erase("TALK_FRAME_RATE");
-    list.erase("FACE_WIDTH");
-    list.erase("FACE_HEIGHT");
-
     _faceList.clear();
-    _faceList.insert(list.begin(), list.end());
+
+    if (list["FACE_ENABLE"] != "0"){
+        _isFaceEnable= true;
+        _offset.x = atof(list["FACE_OFFSET_X"].c_str());
+        _offset.y = atof(list["FACE_OFFSET_Y"].c_str());
+        _AnimationControl._MaxFrames = atoi(list["TALK_MAX_FRAMES"].c_str());
+        _AnimationControl.SetFrameRate(atoi(list["TALK_FRAME_RATE"].c_str()));
+
+        _framesOfMouth.SetWidth(atoi(list["FACE_WIDTH"].c_str()));
+        _framesOfMouth.SetHeight(atoi(list["FACE_HEIGHT"].c_str()));
+
+        list.erase("BODY_PATH");
+        list.erase("FACE_OFFSET_X");
+        list.erase("FACE_OFFSET_Y");
+        list.erase("TALK_MAX_FRAMES");
+        list.erase("TALK_FRAME_RATE");
+        list.erase("FACE_WIDTH");
+        list.erase("FACE_HEIGHT");
+        list.erase("FACE_ENABLE");
+        _faceList.insert(list.begin(), list.end());
+    }
+    else
+        _isFaceEnable= false;
 
     return true;
 }
 
 bool CCharacterLayer::SetFace(string name)
 {
-    _isFaceEnable = false;
+    bool result = false;
     if (_faceList.count(name) > 0) {
-        _isFaceEnable = LoadImage(_faceList[name].c_str(), _framesOfMouth._image, _framesOfMouth._sprite);
-        
+        result = LoadImage(_faceList[name].c_str(), _framesOfMouth._image, _framesOfMouth._sprite);
+    }
+    else{
+        cout << "SetFace(): can't find face \"" << name << "\"." << endl;
     }
 
-    return _isFaceEnable;
+    return result;
 }

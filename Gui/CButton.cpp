@@ -31,7 +31,7 @@ bool CButton::OnLButtonDown(int x, int y)
             _isMouseDown = true;
             SetCurrentImageFrame(_AnimationControl._MaxFrames);
             _AnimationControl.SetCurrentFrame(_AnimationControl._MaxFrames-1);
-            //CSoundBank::SoundControl.PlaySE(SEName_MouseDown);
+            //CSoundBank::_SoundControl.PlaySE(SEName_MouseDown);
             return true;
         }
 

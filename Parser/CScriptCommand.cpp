@@ -623,7 +623,7 @@ bool Cmd_DelImg(vector<string> args)
 //
 bool Cmd_Say(const char* filename)
 {
-    return CSoundBank::SoundControl.Say(filename);
+    return CSoundBank::_SoundControl.Say(filename);
 }
 
 //bool Cmd_PlayBGM(const char* filename)
@@ -636,23 +636,29 @@ bool Cmd_PlayBGM(vector<string> args)
     }
 
     const char* filename = args[0].c_str();
-    if(!CSoundBank::SoundControl.OnLoadBGM(filename))
+    if(!CSoundBank::_SoundControl.OnLoadBGM(filename))
         return false;
 
-    CSoundBank::SoundControl.PlayBgm();
+    CSoundBank::_SoundControl.PlayBgm();
+    return true;
+}
+
+bool Cmd_getSE(vector<string> args)
+{
+    cout << "Pitch: " << CSoundBank::_SoundControl.GetSEPitch(args[0]) << endl;
     return true;
 }
 
 void Cmd_PauseBGM()
 {
-    if (CSoundBank::SoundControl.GetBgmStatus() == sf::Music::Playing)
-        CSoundBank::SoundControl.PauseBgm();
+    if (CSoundBank::_SoundControl.GetBgmStatus() == sf::Music::Playing)
+        CSoundBank::_SoundControl.PauseBgm();
 }
 
 void Cmd_ResumeBGM()
 {
-    if (CSoundBank::SoundControl.GetBgmStatus() == sf::Music::Paused)
-        CSoundBank::SoundControl.PlayBgm();
+    if (CSoundBank::_SoundControl.GetBgmStatus() == sf::Music::Paused)
+        CSoundBank::_SoundControl.PlayBgm();
 }
 
 //int Cmd_AddSE(const char* name, const char* filename)
@@ -667,7 +673,7 @@ bool Cmd_AddSE(vector<string> args)
     const char* name = args[0].c_str();
     const char* filename = args[1].c_str();
 
-    switch(CSoundBank::SoundControl.AddSE(name, filename))
+    switch(CSoundBank::_SoundControl.AddSE(name, filename))
     {
         case -1:
             cout << "Cmd_AddSE(): SE \"" << name << "\" has existed." <<endl;
@@ -693,7 +699,7 @@ bool Cmd_DelSE(vector<string> args)
 
     string name = args[0].c_str();
 
-    if (CSoundBank::SoundControl.DeleteSE(name))
+    if (CSoundBank::_SoundControl.DeleteSE(name))
         return true;
 
     cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
@@ -710,7 +716,7 @@ bool Cmd_PlaySE(vector<string> args)
     }
     string name = args[0].c_str();
 
-    if(CSoundBank::SoundControl.PlaySE(name))
+    if(CSoundBank::_SoundControl.PlaySE(name))
         return true;
 
     cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;

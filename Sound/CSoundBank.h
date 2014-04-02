@@ -12,6 +12,7 @@
 #include <SFML/Audio.hpp>
 #include <map>
 #include <string>
+#include <iostream>
 
 using namespace std;
 //==============================================================================
@@ -19,11 +20,11 @@ using namespace std;
 
 class CSoundBank {
     private:
-        map<char, pair<sf::SoundBuffer,sf::Sound> >     _VoiceList;
-        sf::Music                                       _BGM;
-        map<string, pair<sf::SoundBuffer,sf::Sound> >   _SEList;
+        map<char, pair<sf::SoundBuffer,sf::Sound> >     _voiceList;
+        sf::Music                                       _bgm;
+        map<string, pair<sf::SoundBuffer,sf::Sound> >   _seList;
     public:
-        static CSoundBank                               SoundControl;
+        static CSoundBank                               _SoundControl;
 
         CSoundBank();
 
@@ -35,13 +36,13 @@ class CSoundBank {
         int AddSE(string name, const char* FileName) ;
         bool PlaySE(string name);
         bool DeleteSE(string name);
-
+        unsigned int GetSEPitch(string name);
+        
         bool OnLoadBGM(const char* FileName);
         sf::Sound::Status GetBgmStatus();
         void PlayBgm();
         void PauseBgm();
 };
-
 
 //==============================================================================
 

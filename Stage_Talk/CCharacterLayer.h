@@ -23,7 +23,6 @@ class CCharacterLayer : public CImageBaseClass
   private:
         sf::Vector2f                _offset;
         sf::Texture                 _imageFace;
-        //sf::Sprite                  _spriteFace;
         map<string, string>         _faceList;
         bool                        _isFaceEnable;
         CSequenceOfFrames           _framesOfMouth;

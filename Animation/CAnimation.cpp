@@ -18,13 +18,14 @@ CAnimation::CAnimation()
     _frameRate = 100; //Milliseconds
     _oldTime = 0;
     _Type = Forward;
+    _enable = false;
 }
 
 //------------------------------------------------------------------------------
 void CAnimation::OnAnimate(unsigned long time) 
 {
-    if(_oldTime+_frameRate>time) 
-    return;
+    if(_oldTime+_frameRate>time || !_enable) 
+        return;
 
     _oldTime = time;
 
@@ -109,15 +110,36 @@ void CAnimation::SetCurrentFrame(int frame)
 }
 
 //------------------------------------------------------------------------------
-int CAnimation::GetCurrentFrame() 
+int CAnimation::GetCurrentFrame() const
 {
     return _currentFrame;
+}
+
+//------------------------------------------------------------------------------
+bool CAnimation::GetEnable() const
+{
+    return _enable;
 }
 
 //------------------------------------------------------------------------------
 void CAnimation::SetFrameInc(int inc) 
 {
     _frameInc = inc;
+}
+
+//------------------------------------------------------------------------------
+
+void CAnimation::TurnOn()
+{
+    _enable = true;
+}
+
+//------------------------------------------------------------------------------
+
+void CAnimation::TurnOff(int frame)
+{
+    _enable = false;
+    SetCurrentFrame(frame);
 }
 
 //==============================================================================

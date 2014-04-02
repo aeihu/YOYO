@@ -11,6 +11,7 @@
 //==============================================================================
 class CAnimation {
     private:
+        bool                    _enable;
         int                     _currentFrame;
         int                     _frameInc;
         int                     _frameRate; //Milliseconds
@@ -35,8 +36,11 @@ class CAnimation {
         void OnAnimate(unsigned long time);
         void SetFrameRate(int rate);
         void SetCurrentFrame(int frame);
-        int GetCurrentFrame();
+        int GetCurrentFrame() const;
+        bool GetEnable() const;
         void SetFrameInc(int inc);
+        void TurnOn();
+        void TurnOff(int frame = 0);
 };
 
 //==============================================================================
