@@ -643,12 +643,6 @@ bool Cmd_PlayBGM(vector<string> args)
     return true;
 }
 
-bool Cmd_getSE(vector<string> args)
-{
-    cout << "Pitch: " << CSoundBank::_SoundControl.GetSEPitch(args[0]) << endl;
-    return true;
-}
-
 void Cmd_PauseBGM()
 {
     if (CSoundBank::_SoundControl.GetBgmStatus() == sf::Music::Playing)
@@ -721,6 +715,32 @@ bool Cmd_PlaySE(vector<string> args)
 
     cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
     return false;
+}
+
+bool Cmd_AddVoice(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_AddVoice(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    const char* name = args[0].c_str();
+    const char* filename = args[1].c_str();
+
+    switch(CSoundBank::_SoundControl.AddSE(name, filename))
+    {
+        case -1:
+            cout << "Cmd_AddVoice(): Voice \"" << name << "\" has existed." <<endl;
+            return false;
+        break;
+        case -2:
+            cout << "Cmd_AddVoice(): failed to add Voice." <<endl;
+            return false;
+        break;
+    }
+
+    return true;
 }
 
 bool Cmd_AddButton(string name, const char* filename)

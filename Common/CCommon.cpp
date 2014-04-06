@@ -54,6 +54,8 @@ CCommon::CCommon()
     CHAR_SHADOW_COLOR_GREEN = 10;
     CHAR_SHADOW_COLOR_BLUE = 10;
     CHAR_SHADOW_COLOR_ALPHA = 120;
+    SOUND_POOL_NUM = 5;
+    VOICE_POOL_NUM = 3;
     FONT_PATH =  "C://WINDOWS//Fonts//MSGOTHIC.TTC";
     //</config>
 
@@ -209,6 +211,28 @@ void CCommon::SetValue(const char* name, const char* value)
             CHAR_COLOR_ALPHA = 255;
         else if (CHAR_COLOR_ALPHA < 0)
             CHAR_COLOR_ALPHA = 0;
+        return;
+    }
+    
+    if (strcmp(name,"SOUND_POOL_NUM") == 0)
+    {
+        SOUND_POOL_NUM = atoi(value);
+
+        if (SOUND_POOL_NUM > 50)
+            SOUND_POOL_NUM = 50;
+        else if (SOUND_POOL_NUM < 0)
+            SOUND_POOL_NUM = 5;
+        return;
+    }
+
+    if (strcmp(name,"VOICE_POOL_NUM") == 0)
+    {
+        VOICE_POOL_NUM = atoi(value);
+
+        if (VOICE_POOL_NUM > 50)
+            VOICE_POOL_NUM = 50;
+        else if (VOICE_POOL_NUM < 0)
+            VOICE_POOL_NUM = 3;
         return;
     }
 

@@ -58,7 +58,9 @@ bool Cmd_PlayBGM(vector<string>);//(const char* filename);
 bool Cmd_AddSE(vector<string>);//(vector<string>);//(const char* name, const char* filename);
 bool Cmd_DelSE(vector<string>);//(string name);
 bool Cmd_PlaySE(vector<string>);//(const char* name);
-bool Cmd_getSE(vector<string>);//(const char* name);
+
+bool Cmd_AddVoice(vector<string>);
+bool Cmd_DelVoice(vector<string>);
 ////
 //bool Cmd_AddButton(vector<string>);//(string name, const char* filename);
 //bool Cmd_DelButton(vector<string>);//(string name);

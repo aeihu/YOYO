@@ -11,33 +11,57 @@
 
 #include <SFML/Audio.hpp>
 #include <map>
+#include <list>
 #include <string>
 #include <iostream>
+#include "../Common/CCommon.h"
 
 using namespace std;
 //==============================================================================
 
-
 class CSoundBank {
     private:
-        map<char, pair<sf::SoundBuffer,sf::Sound> >     _voiceList;
+        class CVoiceStream : public sf::SoundStream
+        {
+            public:
+                string                  _VoiceName;
+
+                CVoiceStream(){ _VoiceName=""; }
+                void Load(const sf::SoundBuffer& buffer);
+            private:
+                vector<sf::Int16>       _m_samples;
+                size_t                  _m_currentSample;
+
+                virtual bool onGetData(Chunk& data);
+                virtual void onSeek(sf::Time timeOffset);
+        };
+
+        list<CVoiceStream*>                             _voicePool;
+        list<sf::Sound>                                 _soundPool;
         sf::Music                                       _bgm;
-        map<string, pair<sf::SoundBuffer,sf::Sound> >   _seList;
+        map<string, sf::SoundBuffer>                    _voiceList;
+        map<string, sf::SoundBuffer>                    _seList;
+
+        int AddBuffer(map<string, sf::SoundBuffer>& list, string name, const char* FileName);
+        bool DelBuffer(map<string, sf::SoundBuffer>& list, string name);
     public:
         static CSoundBank                               _SoundControl;
 
         CSoundBank();
 
+        bool OnInit();
         void OnLoop();
         void OnCleanup();
-
-        bool Say(const char* FileName);
 
         int AddSE(string name, const char* FileName) ;
         bool PlaySE(string name);
         bool DeleteSE(string name);
-        unsigned int GetSEPitch(string name);
-        
+
+        int AddVoice(string name, const char* FileName) ;
+        bool PlayVoice(string name);
+        bool DeleteVoice(string name);
+        bool GetVoiceStatus(string name);
+
         bool OnLoadBGM(const char* FileName);
         sf::Sound::Status GetBgmStatus();
         void PlayBgm();

@@ -63,6 +63,9 @@ class CCommon
         char   CHAR_SHADOW_COLOR_GREEN ;//10
         char   CHAR_SHADOW_COLOR_BLUE ;//10
         char   CHAR_SHADOW_COLOR_ALPHA ;//10
+        
+        unsigned char   SOUND_POOL_NUM ;//5
+        unsigned char   VOICE_POOL_NUM ;//3
         //</config>
 
         //<option>
