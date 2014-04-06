@@ -19,6 +19,7 @@ bool CApp::OnInit()
     }
 
     CParser::parser.SetRunning(&Running);
+    CSoundBank::_SoundControl.OnInit();
 
     sf_Display->create(
         sf::VideoMode(CCommon::common.WWIDTH, CCommon::common.WHEIGHT, 32), 
