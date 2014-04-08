@@ -9,9 +9,7 @@
 //==============================================================================
 #include "CSoundBank.h"
 
-//==============================================================================
 CSoundBank CSoundBank::_SoundControl;
-
 //==============================================================================
 CSoundBank::CSoundBank() {
     _voiceList.clear();
@@ -84,8 +82,24 @@ bool CSoundBank::PlaySE(string name)
     return true;
 }
 
-bool CSoundBank::PlayVoice(string name)
+bool CSoundBank::PlayVoice(string name, string voiceName)
 {
+    if (_voiceList.count(voiceName) < 1)
+        return false;
+    
+    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+        if ((*it)->getStatus() == sf::Sound::Stopped){
+            (*it)->Load(_voiceList[voiceName]);
+            (*it)->_Name = name;
+            (*it)->play();
+            return true;
+        }
+    }
+
+    _voicePool.push_back(new CVoiceStream());
+    _voicePool.back()->Load(_voiceList[voiceName]);
+    _voicePool.back()->_Name = name;
+    _voicePool.back()->play();
     return true;
 }
 
@@ -156,17 +170,28 @@ void CSoundBank::OnLoop()
 
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it)->getStatus() == sf::Sound::Stopped){
-            (*it)->_VoiceName = "";
+            (*it)->_Name = "";
         }
     }
 }
 
+bool CSoundBank::IsVoiceSilence(string name)
+{
+    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+        if ((*it)->_Name == name)
+            if (!((*it)->IsSilence()) && (*it)->getStatus() == CVoiceStream::Playing)
+                return false;
+            else
+                return true;
+    }
 
+    return true;   
+}
 
 bool CSoundBank::GetVoiceStatus(string name)
 {
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++)
-        if ((*it)->_VoiceName == name)
+        if ((*it)->_Name == name)
             if ((*it)->getStatus() == CVoiceStream::Playing)
                 return true;
             else
@@ -197,20 +222,32 @@ void CSoundBank::CVoiceStream::Load(const sf::SoundBuffer& buffer)
 
 bool CSoundBank::CVoiceStream::onGetData(Chunk& data)
 {
-    const int samplesToStream = 50000;
+    const int samplesToStream = 5000;
+    _isSilence = true;
 
     data.samples = &_m_samples[_m_currentSample];
 
     if (_m_currentSample + samplesToStream <= _m_samples.size())
     {
+        //cout << *(data.samples) << endl;
         data.sampleCount = samplesToStream;
         _m_currentSample += samplesToStream;
+
+        if (data.samples != NULL)
+            if (*(data.samples) < -100 || *(data.samples) > 100)
+                _isSilence = false;
+
         return true;
     }
     else
     {
         data.sampleCount = _m_samples.size() - _m_currentSample;
         _m_currentSample = _m_samples.size();
+
+        if (data.samples != NULL)
+            if (*(data.samples) < -100 || *(data.samples) > 100)
+                _isSilence = false;
+
         return false;
     }
 }
@@ -218,4 +255,9 @@ bool CSoundBank::CVoiceStream::onGetData(Chunk& data)
 void CSoundBank::CVoiceStream::onSeek(sf::Time timeOffset)
 {
     _m_currentSample = static_cast<std::size_t>(timeOffset.asSeconds() * getSampleRate() * getChannelCount());
+}
+
+bool CSoundBank::CVoiceStream::IsSilence() const
+{
+    return _isSilence;
 }

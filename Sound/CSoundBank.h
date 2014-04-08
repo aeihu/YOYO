@@ -21,14 +21,18 @@ using namespace std;
 
 class CSoundBank {
     private:
+        friend class        CResourceManager;
+
         class CVoiceStream : public sf::SoundStream
         {
             public:
-                string                  _VoiceName;
+                string                  _Name;
 
-                CVoiceStream(){ _VoiceName=""; }
+                CVoiceStream(){ _Name="", _isSilence = true; }
                 void Load(const sf::SoundBuffer& buffer);
+                bool IsSilence() const;
             private:
+                bool                    _isSilence;
                 vector<sf::Int16>       _m_samples;
                 size_t                  _m_currentSample;
 
@@ -46,7 +50,6 @@ class CSoundBank {
         bool DelBuffer(map<string, sf::SoundBuffer>& list, string name);
     public:
         static CSoundBank                               _SoundControl;
-
         CSoundBank();
 
         bool OnInit();
@@ -58,9 +61,10 @@ class CSoundBank {
         bool DeleteSE(string name);
 
         int AddVoice(string name, const char* FileName) ;
-        bool PlayVoice(string name);
+        bool PlayVoice(string name, string voiceName);
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
+        bool IsVoiceSilence(string name);
 
         bool OnLoadBGM(const char* FileName);
         sf::Sound::Status GetBgmStatus();

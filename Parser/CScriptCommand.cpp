@@ -235,16 +235,15 @@ bool Cmd_AddCharacterLayer(vector<string> args)
 
 bool Cmd_DelCharacterLayer(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelCharacterLayer(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    if (!CResourceManager::_CharacterLayerControl.DelCharacter(name)){
-        cout << "Cmd_DelCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
-        return false;
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CResourceManager::_CharacterLayerControl.DelCharacter(args[i]))
+            cout << "Cmd_DelCharacterLayer(): can't find character layer \""<< args[i] << "\"." <<endl;
     }
 
     return true;
@@ -360,7 +359,7 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
     if (CResourceManager::_CharacterLayerControl._CharacterList[name].SetFace(face))
         return true;
     else{
-        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< name << "\"." <<endl;
+        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< face << "\"." <<endl;
         return false;
     }
 }
@@ -447,21 +446,18 @@ bool Cmd_ShowBackground(vector<string> args)
 //bool Cmd_DelBackground(string name)
 bool Cmd_DelBackground(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelBackground(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CResourceManager::_BackgroundLayerControl.DelImage(args[i]))
+            cout << "Cmd_DelBackground(): Image \"" << args[i] << "\" has no existed." <<endl;
+    }
 
-    if (CResourceManager::_BackgroundLayerControl.DelImage(name)){
-        return true;
-    }
-    else{
-        cout << "Cmd_DelBackground(): Image \"" << name << "\" has no existed." <<endl;
-        return false;
-    }
+    return true;
 }
 
 //bool Cmd_HideBackground(string name, int inrc, bool pause)
@@ -579,21 +575,18 @@ bool Cmd_HideImg(vector<string> args)
 //bool Cmd_DelImg(string name)
 bool Cmd_DelImg(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelImg(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CResourceManager::_ImgLayerControl.DelImage(args[i]))
+            cout << "Cmd_DelImg(): Image \"" << args[i] << "\" has no existed." <<endl;
+    }
 
-    if (CResourceManager::_ImgLayerControl.DelImage(name)){
-        return true;
-    }
-    else{
-        cout << "Cmd_DelImg(): Image \"" << name << "\" has no existed." <<endl;
-        return false;
-    }
+    return true;
 }
 
 //
@@ -621,10 +614,10 @@ bool Cmd_DelImg(vector<string> args)
 //    CImgLayer::ImgLayerList["BLACKSCREEN"]->SetInterval(msec);
 //}
 //
-bool Cmd_Say(const char* filename)
-{
-    return CSoundBank::_SoundControl.Say(filename);
-}
+//bool Cmd_Say(const char* filename)
+//{
+//    return CSoundBank::_SoundControl.Say(filename);
+//}
 
 //bool Cmd_PlayBGM(const char* filename)
 bool Cmd_PlayBGM(vector<string> args)
@@ -685,19 +678,18 @@ bool Cmd_AddSE(vector<string> args)
 //bool Cmd_DelSE(string name)
 bool Cmd_DelSE(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelSE(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0].c_str();
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CSoundBank::_SoundControl.DeleteSE(args[i]))
+            cout << "Cmd_DelSE(): can't find SE \""<< args[i] << "\"." << endl;
+    }
 
-    if (CSoundBank::_SoundControl.DeleteSE(name))
-        return true;
-
-    cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
-    return false;
+    return true;
 }
 
 //bool Cmd_PlaySE(const char* name)
@@ -728,7 +720,7 @@ bool Cmd_AddVoice(vector<string> args)
     const char* name = args[0].c_str();
     const char* filename = args[1].c_str();
 
-    switch(CSoundBank::_SoundControl.AddSE(name, filename))
+    switch(CSoundBank::_SoundControl.AddVoice(name, filename))
     {
         case -1:
             cout << "Cmd_AddVoice(): Voice \"" << name << "\" has existed." <<endl;
@@ -738,6 +730,22 @@ bool Cmd_AddVoice(vector<string> args)
             cout << "Cmd_AddVoice(): failed to add Voice." <<endl;
             return false;
         break;
+    }
+
+    return true;
+}
+
+bool Cmd_DelVoice(vector<string> args)
+{
+    if (args.size() < 1){
+        cout << "Cmd_DelVoice(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CSoundBank::_SoundControl.DeleteVoice(args[i]))
+            cout << "Cmd_DelVoice(): can't find Voice \""<< args[i] << "\"." << endl;
     }
 
     return true;
@@ -848,7 +856,12 @@ bool Cmd_Message(vector<string> args)
 
     CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetText(__msg);
     CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
-    //__flags.push_back("-v");    //voice
+
+    if (__voice != ""){
+        if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
+            cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
+    }
+
     return true;
 }
 //
@@ -888,18 +901,18 @@ bool Cmd_AddMessageBox(vector<string> args)
 //bool Cmd_DelMessageBox(string name)
 bool Cmd_DelMessageBox(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelMessageBox(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    if (CResourceManager::_MessageBoxControl.DelMessageBox(name))
-        return true;
+    for (unsigned int i=0; i<args.size(); i++){
+        if (CResourceManager::_MessageBoxControl.DelMessageBox(args[i]))
+            cout << "Cmd_DelMessageBox(): can't find MessageBox \""<< args[i] << "\"." <<endl;
+    }
 
-    cout << "Cmd_DelMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
-    return false;
+    return true;
 }
 
 //bool Cmd_ShowMessageBox(string name, int incr, bool pause)

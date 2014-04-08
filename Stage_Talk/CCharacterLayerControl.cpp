@@ -117,6 +117,8 @@ bool CCharacterLayerControl::Show(string name, float x, float y, char type, floa
         break;
         default:
             SetVisibility(name, 255, __inc, pause);
+            _CharacterList[name]._Coordinate.x = __x;
+            _CharacterList[name]._Coordinate.y = __y;
             return true;
         break;
     }
@@ -213,7 +215,12 @@ void CCharacterLayerControl::OnLoop(bool &pause)
     for (map<string, CCharacterLayer>::iterator it=_CharacterList.begin();
         it!=_CharacterList.end();)
     {
-        if((*it).second.OnLoop()) 
+        if (!CSoundBank::_SoundControl.IsVoiceSilence((*it).first))
+            (*it).second._AnimationControl.TurnOn();
+        else
+            (*it).second._AnimationControl.TurnOff();
+
+        if ((*it).second.OnLoop()) 
             pause=true;
 
 //        if((*it).second._Alpha == 0){

@@ -13,6 +13,7 @@
 #include "../Stage_Talk/CCharacterLayerControl.h"
 #include "../GSM_Window/CMessageBoxControl.h"
 #include "../Gui/CButtonControl.h"
+#include "../Sound/CSoundBank.h"
 
 class CResourceManager
 {
@@ -20,11 +21,11 @@ class CResourceManager
         template<typename X>
         void static GetInfo(const char* resourcename, map<string, X> xlist);
     public:
-        static CCharacterLayerControl _CharacterLayerControl;
-        static CImgLayerControl    _ImgLayerControl;
-        static CImgLayerControl    _BackgroundLayerControl;
-        static CMessageBoxControl    _MessageBoxControl;
-        static CButtonControl _ButtonControl;
+        static CCharacterLayerControl   _CharacterLayerControl;
+        static CImgLayerControl         _ImgLayerControl;
+        static CImgLayerControl         _BackgroundLayerControl;
+        static CMessageBoxControl       _MessageBoxControl;
+        static CButtonControl           _ButtonControl;
         
         static void GetInfo();
 };

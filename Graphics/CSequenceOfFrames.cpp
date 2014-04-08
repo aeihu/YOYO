@@ -28,6 +28,9 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
     unsigned int TilesetWidth  = _image.getSize().x / _rect.width;
+
+    if (TilesetWidth == 0)
+        return;
     //int TilesetHeight  = _image.GetHeight() / _rect.GetHeight();
     unsigned int Width = _rect.width;
     unsigned int Height = _rect.height;

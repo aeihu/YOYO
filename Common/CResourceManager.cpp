@@ -37,4 +37,6 @@ void CResourceManager::GetInfo()
     GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._CharacterList);
     GetInfo("ButtonList", CResourceManager::_ButtonControl._ButtonList);
     GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._MessageBoxList);
+    GetInfo("VoiceList", CSoundBank::_SoundControl._voiceList);
+    GetInfo("SEList", CSoundBank::_SoundControl._seList);
 }

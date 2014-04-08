@@ -19,10 +19,10 @@ class CAdder
 {
     private:
     protected:
-        unsigned int       _interval;
-        unsigned long     _oldTime;
-        char                  _type;
-        bool                  _pause;
+        unsigned int            _interval;
+        unsigned long           _oldTime;
+        char                    _type;
+        bool                    _pause;
 
         virtual bool  Check()=0;
         virtual bool  Recursion()=0;
@@ -39,7 +39,7 @@ class CAdder
 class CiAdder : public CAdder
 {
     private:
-        friend class     CAdderControl;
+        friend class        CAdderControl;
         int*                _pValue;
         int                 _goal;
         int                 _value1;
@@ -57,7 +57,7 @@ class CiAdder : public CAdder
 class CfAdder : public CAdder
 {
     private:
-        friend class          CAdderControl;
+        friend class            CAdderControl;
         float*                  _pValue;
         float                   _goal;
         float                   _value1;
