@@ -239,13 +239,13 @@ void CCommon::SetValue(const char* name, const char* value)
     if (strcmp(name,"INCREMENT") == 0)
     {
         INCREMENT = atoi(value);
-        INCREMENT = INCREMENT  < 0 ? 0 : INCREMENT;
+        INCREMENT = INCREMENT  <= 0 ? 10 : INCREMENT;
         return;
     }
     if (strcmp(name,"INTERVAL") == 0)
     {
         INTERVAL = atoi(value);
-        INTERVAL = INTERVAL  < 0 ? 0 : INTERVAL;
+        INTERVAL = INTERVAL  < 0 ? 10 : INTERVAL;
         return;
     }
 

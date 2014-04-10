@@ -25,19 +25,24 @@
 #include <iostream>
 #include <algorithm>
 
+typedef enum{
+    FLAG_NECESSITY = 1,
+    FLAG_OPTIONAL,
+    FLAG_NONPARAMETRIC,
+}ENUM_FLAG;
 
-map<string, string> Cmd_ArgsToKV(string funcName, list<pair<string, bool> > flags, vector<string> args)
+bool Cmd_ArgsToKV(string funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, string>& result)
 {
-    map<string, string> __result;
-	list<pair<string, bool> >::iterator __it;
+    result.clear();
+	list<pair<string, ENUM_FLAG> >::iterator __it;
 
-    for(__it=flags.begin();__it!=flags.end();++__it){
+    for(__it=flags.begin(); __it!=flags.end(); ++__it){
         switch (std::count(args.begin(), args.end(), (*__it).first)){
             case 0:
-                if ((*__it).second){
+                if ((*__it).second == FLAG_NECESSITY){
                     cout << funcName << "(): flag \"" << (*__it).first << "\" must be need." << endl;
-                    __result.clear();
-                    return __result;
+                    result.clear();
+                    return false;
                 }
             break;
             case 1:
@@ -46,36 +51,41 @@ map<string, string> Cmd_ArgsToKV(string funcName, list<pair<string, bool> > flag
                     __itOfArgs = std::find (args.begin(), args.end(), (*__it).first);
 
                     if (__itOfArgs != args.end()){
-                        ++__itOfArgs;
-
-                        if (__itOfArgs != args.end())
-                            __result[(*__it).first] = *__itOfArgs;
+                        if ((*__it).second == FLAG_NONPARAMETRIC){
+                            result[(*__it).first] = "";
+                        }
                         else{
-                            cout << funcName << "(): flag \"" << (*__it).first << "\" has no argument." << endl;
-                            __result.clear();
-                            return __result;
+                            ++__itOfArgs;
+
+                            if (__itOfArgs != args.end())
+                                result[(*__it).first] = *__itOfArgs;
+                            else{
+                                cout << funcName << "(): flag \"" << (*__it).first << "\" has no argument." << endl;
+                                result.clear();
+                                return false;
+                            }
                         }
                     }
                 }
             break;
             default:
                 cout << funcName << "(): can't has same flag " << (*__it).first << "." << endl;
-                __result.clear();
-                return __result;
+                result.clear();
+                return false;
             break;
         }
     }
 
 #ifdef _DEBUG
-    for (map<string, string>::iterator it=__result.begin();
-        it!=__result.end();)
+    for (map<string, string>::iterator it=result.begin();
+        it!=result.end();)
     {
         cout << (*it).first << " : " << (*it).second << endl;
         it++;
     }
 #endif
 
-    return __result;
+    return true;
 }
 //
 //int Cmd_Move(const char* name, int x, int y, bool pause)
@@ -189,21 +199,23 @@ bool Cmd_AddPosition(vector<string> args)
     string name = args[0];
     float x = atof(args[1].c_str());
     float y = atof(args[2].c_str());
-    CResourceManager::_CharacterLayerControl.AddPosition(name, x, y);
+    CResourceManager::_PositionControl.AddPosition(name, x, y);
     return true;
 }
 
 //void Cmd_DelPosition(string name)
 bool Cmd_DelPosition(vector<string> args)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_DelPosition(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;     
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    CResourceManager::_CharacterLayerControl.DelPosition(name);
+    for (unsigned int i=0; i<args.size(); i++){
+        CResourceManager::_PositionControl.DelPosition(args[i]);
+    }
+
     return true;
 }
 
@@ -252,37 +264,50 @@ bool Cmd_DelCharacterLayer(vector<string> args)
 //bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
 bool Cmd_ShowCharacterLayer(vector<string> args)
 {
-    std::list<pair<string, bool> > __flags;
-    __flags.push_back(pair<string, bool>("-i", false));    //incr
-    __flags.push_back(pair<string, bool>("-n", true));    //name
-    __flags.push_back(pair<string, bool>("-p", false));    //pause
-    __flags.push_back(pair<string, bool>("-s", false));    //position
-    __flags.push_back(pair<string, bool>("-t", false));    //type
-    __flags.push_back(pair<string, bool>("-x", false));    //x
-    __flags.push_back(pair<string, bool>("-y", false));    //y
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
-    map<string,string> __values = Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args);
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
+        return false;
 
     float x = 0.0f;
     float y = 0.0f;
 
     if (__values.count("-s") > 1){
-        if (!CResourceManager::_CharacterLayerControl.GetPosition(__values["-s"],&x,&y)){
+        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&x,&y)){
             cout << "Cmd_ShowCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
             return false;
         }
     }
 
-    float incr = __values.count("-i") == 0 ? 0.0f : atof(__values["-i"].c_str());
+    int alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
+    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
     string name = __values.count("-n") == 0 ? "" : __values["-n"];
     char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
-    bool pause = __values.count("-p") == 0 ? false : (__values["-p"] == "T" ? true:false);
+    bool pause = __values.count("-p") == 0 ? false : true;
     x = __values.count("-x") == 0 ? x : atof(__values["-x"].c_str());
     y = __values.count("-y") == 0 ? y : atof(__values["-y"].c_str());
 
     if (CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
-        CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause);
-        return true;
+        switch (CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause, alpha)){
+            case -1:
+                cout << "Cmd_ShowCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
+            break;
+            case -2:
+                cout << "Cmd_ShowCharacterLayer(): character layer \""<< name << "\" has showed." <<endl;
+            break;
+            case 0:
+                return true;
+            break;
+        }
     }
 
     return false;
@@ -291,28 +316,34 @@ bool Cmd_ShowCharacterLayer(vector<string> args)
 //bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause)
 bool Cmd_MoveCharacterLayer(vector<string> args)
 {
-    if (args.size() != 4 && args.size() != 5){
-        cout << "Cmd_MoveCharacterLayer(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." << endl;
-        return false;
-    }
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
-    string name = args[0];
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
+        return false;
+
+    string name = __values.count("-n") == 0 ? "" : __values["-n"];
     float x = 0;
     float y = 0;
-    if (args.size() == 5){
-        x = atof(args[1].c_str());
-        y = atof(args[2].c_str());
-    }
-    else{
-        if (!CResourceManager::_CharacterLayerControl.GetPosition(args[1],&x,&y)){
-            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< args[1] << "\"." <<endl;
+
+    if (__values.count("-s") > 1){
+        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&x,&y)){
+            cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
             return false;
         }
     }
 
-    float incr = atof(args[3-(5-args.size())].c_str());
-    bool pause = args[4-(5-args.size())] == "T" ? true : false;
+    x = __values.count("-x") == 0 ? x : atof(__values["-x"].c_str());
+    y = __values.count("-y") == 0 ? y : atof(__values["-y"].c_str());
+
+    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    bool pause = __values.count("-p") == 0 ? false : true;
 
     if(!CResourceManager::_CharacterLayerControl.Move(name, x, y, incr, pause)){
         cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
@@ -324,19 +355,23 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
 //bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool pause)
 bool Cmd_HideCharacterLayer(vector<string> args)
 {
-    if (args.size() != 4){
-        cout << "Cmd_HideCharacterLayer(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." << endl;
-        return false;
-    }
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
 
-    string name = args[0];
-    char type = args[1].c_str()[0];
-    float incr = atof(args[2].c_str());
-    bool pause = args[3] == "T" ? true : false;
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
+        return false;
+
+    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    string name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool pause = __values.count("-p") == 0 ? false : true;
+    char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
 
     if (!CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
-        cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
+        cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< name << "\"." << endl;
         return false;
     }
 
@@ -636,16 +671,20 @@ bool Cmd_PlayBGM(vector<string> args)
     return true;
 }
 
-void Cmd_PauseBGM()
+bool Cmd_PauseBGM(vector<string> args)
 {
     if (CSoundBank::_SoundControl.GetBgmStatus() == sf::Music::Playing)
         CSoundBank::_SoundControl.PauseBgm();
+
+    return true;
 }
 
-void Cmd_ResumeBGM()
+bool Cmd_ResumeBGM(vector<string> args)
 {
     if (CSoundBank::_SoundControl.GetBgmStatus() == sf::Music::Paused)
         CSoundBank::_SoundControl.PlayBgm();
+
+    return true;
 }
 
 //int Cmd_AddSE(const char* name, const char* filename)
@@ -751,8 +790,18 @@ bool Cmd_DelVoice(vector<string> args)
     return true;
 }
 
-bool Cmd_AddButton(string name, const char* filename)
+//bool Cmd_AddButton(string name, const char* filename)
+bool Cmd_AddButton(vector<string> args)
 {
+    if (args.size() != 2){
+        cout << "Cmd_AddButton(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string name = args[0];
+    const char* filename = args[1].c_str();
+
     switch (CResourceManager::_ButtonControl.AddButton(name, filename))
     {
         case 0:
@@ -769,31 +818,41 @@ bool Cmd_AddButton(string name, const char* filename)
     return false;
 }
 //
-bool Cmd_DelButton(string name)
+//bool Cmd_DelButton(string name)
+bool Cmd_DelButton(vector<string> args)
 {
-    if (CResourceManager::_ButtonControl.DelButton(name))
-        return true;
-
-    cout << "Cmd_DelButton(): can't find Button \""<< name << "\"." <<endl;
-    return false;
-}
-
-bool Cmd_ShowButton(string name, int incr, bool pause)
-{
-    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 255, incr, pause)){
-        cout << "Cmd_ShowButton(): can't find Button \""<< name << "\"." <<endl;
+    if (args.size() < 1){
+        cout << "Cmd_DelVoice(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CResourceManager::_ButtonControl.DelButton(args[i]))
+            cout << "Cmd_DelButton(): can't find Button \""<< args[i] << "\"." <<endl;
     }
 
     return true;
 }
 
-bool Cmd_HideButton(string name, int incr, bool pause)
+//bool Cmd_ShowButton(string name, int incr, bool pause)
+bool Cmd_ShowButton(vector<string> args)
 {
-    if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 0, incr, pause)){
-        cout << "Cmd_HideButton(): can't find Button \""<< name << "\"." <<endl;
-        return false;
-    }
+    //if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 255, incr, pause)){
+    //    cout << "Cmd_ShowButton(): can't find Button \""<< name << "\"." <<endl;
+    //    return false;
+    //}
+
+    return true;
+}
+
+//bool Cmd_HideButton(string name, int incr, bool pause)
+bool Cmd_HideButton(vector<string> args)
+{
+    //if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 0, incr, pause)){
+    //    cout << "Cmd_HideButton(): can't find Button \""<< name << "\"." <<endl;
+    //    return false;
+    //}
 
     return true;
 }
@@ -825,16 +884,15 @@ bool Cmd_HideButton(string name, int incr, bool pause)
 //bool Cmd_Message(string name, string msg)
 bool Cmd_Message(vector<string> args)
 {
-    std::list<pair<string, bool> > __flags;
-    __flags.push_back(pair<string, bool>("-b", true));    //MessageBoxName
-    __flags.push_back(pair<string, bool>("-c", false));    //character
-    __flags.push_back(pair<string, bool>("-m", true));    //message
-    __flags.push_back(pair<string, bool>("-n", false));    //speakername
-    __flags.push_back(pair<string, bool>("-v", false));    //voice
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NECESSITY));    //MessageBoxName
+    __flags.push_back(pair<string, ENUM_FLAG>("-c", FLAG_OPTIONAL));    //character
+    __flags.push_back(pair<string, ENUM_FLAG>("-m", FLAG_NECESSITY));    //message
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_OPTIONAL));    //speakername
+    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //voice
     
-    map<string,string> __values = Cmd_ArgsToKV("Cmd_Message", __flags, args);
-
-    if (__values.size() < 1)
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_Message", __flags, args, __values))
         return false;
     
     string __msgBoxName = __values.count("-b") == 0 ? "" : __values["-b"];

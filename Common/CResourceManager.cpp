@@ -13,6 +13,7 @@ CImgLayerControl CResourceManager::_ImgLayerControl;
 CImgLayerControl CResourceManager::_BackgroundLayerControl;
 CMessageBoxControl CResourceManager::_MessageBoxControl;
 CButtonControl CResourceManager::_ButtonControl;
+CPosition CResourceManager::_PositionControl;
 
 template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
@@ -37,6 +38,7 @@ void CResourceManager::GetInfo()
     GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._CharacterList);
     GetInfo("ButtonList", CResourceManager::_ButtonControl._ButtonList);
     GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._MessageBoxList);
+    GetInfo("PositionList", CResourceManager::_PositionControl._positions);
     GetInfo("VoiceList", CSoundBank::_SoundControl._voiceList);
     GetInfo("SEList", CSoundBank::_SoundControl._seList);
 }

@@ -26,7 +26,7 @@ char CCharacterLayerControl::AddCharacter(string name, const char* filename)
     }
     else{
         _CharacterList[name] = CCharacterLayer();
-        _CharacterList[name]._Alpha = 1;
+        _CharacterList[name]._Alpha = 0;
         
         if (!_CharacterList[name].LoadChara(filename)){
             _CharacterList.erase(name);
@@ -46,18 +46,13 @@ bool CCharacterLayerControl::DelCharacter(string name)
     return true;
 }
 
-bool CCharacterLayerControl::Move(string name, string position, float increment, bool pause)
-{
-    if (_positions.count(name) < 1)
-        return false;
-    
-    return Move(name, _positions[position].x, _positions[position].y, increment, pause);
-}
-
 bool CCharacterLayerControl::Move(string name, float x, float y, float increment, bool pause)
 {
     if (_CharacterList.count(name) < 1)
         return false;
+
+    if (increment > -0.001f && increment < 0.001f)
+        increment = (float)CCommon::common.INCREMENT;
 
     if (abs(_CharacterList[name]._Coordinate.x-x) 
         > abs(_CharacterList[name]._Coordinate.y-y)){
@@ -86,13 +81,16 @@ bool CCharacterLayerControl::Move(string name, float x, float y, float increment
     return true;
 }
 
-bool CCharacterLayerControl::Show(string name, float x, float y, char type, float increment, bool pause)
+char CCharacterLayerControl::Show(string name, float x, float y, char type, float increment, bool pause, int alpha)
 {
     if (_CharacterList.count(name) < 1)
-        return false;
+        return -1;
 
-    if (_CharacterList[name]._Alpha == 255)
-        return false;
+    if (_CharacterList[name].GetVisible())
+        return -2;
+
+    if (increment > -0.001f && increment < 0.001f)
+        increment = (float)CCommon::common.INCREMENT;
 
     float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = x;
@@ -116,29 +114,21 @@ bool CCharacterLayerControl::Show(string name, float x, float y, char type, floa
             __x += buf;
         break;
         default:
-            SetVisibility(name, 255, __inc, pause);
+            SetVisibility(name, alpha, __inc, pause);
             _CharacterList[name]._Coordinate.x = __x;
             _CharacterList[name]._Coordinate.y = __y;
-            return true;
+            return 0;
         break;
     }
 
     _CharacterList[name]._Coordinate.x = __x;
     _CharacterList[name]._Coordinate.y = __y;
     if (Move(name, x, y, increment, pause)){
-        SetVisibility(name, 255, __inc, pause);
-        return true;
+        SetVisibility(name, alpha, __inc, pause);
+        return 0;
     }
 
-    return false;
-}
-
-bool CCharacterLayerControl::Show(string name, string position, char type, float increment, bool pause)
-{
-    if (_positions.count(position) < 1)
-        return false;
-
-    return Show(name, _positions[position].x, _positions[position].y, type, increment, pause);
+    return -1;
 }
 
 bool CCharacterLayerControl::Hide(string name, char type, float increment, bool pause)
@@ -146,9 +136,15 @@ bool CCharacterLayerControl::Hide(string name, char type, float increment, bool 
     if (_CharacterList.count(name) < 1)
         return false;
 
+    if (increment > -0.001f && increment < 0.001f)
+        increment = (float)CCommon::common.INCREMENT;
+
     float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = _CharacterList[name]._Coordinate.x;
     float __y = _CharacterList[name]._Coordinate.y;
+    int __inc = (int)increment;
+    __inc = ((int)buf)/(__inc == 0 ? 1:__inc);//???
+    __inc = __inc<=0?255:255/__inc;
 
     switch (type)
     {
@@ -165,7 +161,8 @@ bool CCharacterLayerControl::Hide(string name, char type, float increment, bool 
             __x -= buf;
         break;
         default:
-            SetVisibility(name, 0, (int)increment, pause);
+            SetVisibility(name, 0, __inc, pause);
+            //SetVisibility(name, 0, (int)increment, pause);
             return true;
         break;
     }
@@ -184,29 +181,10 @@ bool CCharacterLayerControl::SetVisibility(string name, int alpha, int increment
     if (_CharacterList.count(name) < 1)
         return false;
 
+    if (increment == 0)
+        increment = CCommon::common.INCREMENT;
+
     _CharacterList[name].Insert(0, alpha, pause, &_CharacterList[name]._Alpha, increment);
-    return true;
-}
-
-void CCharacterLayerControl::AddPosition(string name, float x, float y)
-{
-    _positions[name].x = x;
-    _positions[name].y = y;
-}
-
-void CCharacterLayerControl::DelPosition(string name)
-{
-    if (_positions.count(name)>0)
-        _positions.erase(name);
-}
-
-bool CCharacterLayerControl::GetPosition(string name, float* x, float* y)
-{
-    if (_positions.count(name)<1)
-        return false;
-
-    if (x != NULL) *x=_positions[name].x;
-    if (y != NULL) *y=_positions[name].y;
     return true;
 }
 

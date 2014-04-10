@@ -43,11 +43,16 @@ bool CBox::LoadBox(const char* FileName)
     if (!CSurface::OnLoad(_parameterList["TILESET_PATH"].c_str(), __tileset))
         return false;
 
-    if (!CGuiCommon::CreateBoxBackground(
-        &__dest, &__tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
-        return false;
+    if (atoi(_parameterList["TILE_ENABLE"].c_str()) != 0){
+        if (!CGuiCommon::CreateBoxBackground(
+            &__dest, &__tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
+            return false;
 
-    _image.loadFromImage(__dest);
+        _image.loadFromImage(__dest);
+    }
+    else
+        _image.loadFromImage(__tileset);
+
     _sprite.setTexture(_image);
 
     return Sub_OnLoad();
@@ -68,10 +73,16 @@ bool CBox::CheckList(map<string, string> list)
         __result = false;
     }
 
-    if (list.count("TILE_SIZE") < 1){
-        cout << "can't find value of TILE_SIZE." << endl;
+    if (list.count("TILE_ENABLE") < 1){
+        cout << "can't find value of TILE_ENABLE." << endl;
         __result = false;
     }
+
+    if (atoi(list["TILE_ENABLE"].c_str()) != 0)
+        if (list.count("TILE_SIZE") < 1){
+            cout << "can't find value of TILE_SIZE." << endl;
+            __result = false;
+        }
 
     if (list.count("X") < 1){
         cout << "can't find value of X." << endl;

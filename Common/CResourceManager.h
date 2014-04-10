@@ -14,6 +14,7 @@
 #include "../GSM_Window/CMessageBoxControl.h"
 #include "../Gui/CButtonControl.h"
 #include "../Sound/CSoundBank.h"
+#include "CPosition.h"
 
 class CResourceManager
 {
@@ -26,7 +27,8 @@ class CResourceManager
         static CImgLayerControl         _BackgroundLayerControl;
         static CMessageBoxControl       _MessageBoxControl;
         static CButtonControl           _ButtonControl;
-        
+        static CPosition                _PositionControl;
+
         static void GetInfo();
 };
 

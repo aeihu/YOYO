@@ -112,6 +112,7 @@ void CParser::ExecuteCmd(string cmd)
 
         else if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
         else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
+
         else if (__commandName == "@add_chara") _pFunc = &Cmd_AddCharacterLayer;
         else if (__commandName == "@del_chara") _pFunc = &Cmd_DelCharacterLayer;
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
@@ -141,6 +142,10 @@ void CParser::ExecuteCmd(string cmd)
 
         else if (__commandName == "@add_voice") _pFunc = &Cmd_AddVoice;
         else if (__commandName == "@del_voice") _pFunc = &Cmd_DelVoice;
+
+        else if (__commandName == "@play_bgm") _pFunc = &Cmd_PlayBGM;
+        else if (__commandName == "@pause_bgm") _pFunc = &Cmd_PauseBGM;
+        else if (__commandName == "@resume_bgm") _pFunc = &Cmd_ResumeBGM;
         else{
             cout << "unknown command." << endl;
             return;

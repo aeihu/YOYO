@@ -107,7 +107,6 @@ bool CMessageBox::OnLoop()
         CBox::_Coordinate.x + atof(_parameterList["MSG_OFFSET_X"].c_str()), 
         CBox::_Coordinate.y + atof(_parameterList["MSG_OFFSET_Y"].c_str()));
 
-
     if (IsTextAllShown() && !GetText().empty()){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::common.GetTicks());

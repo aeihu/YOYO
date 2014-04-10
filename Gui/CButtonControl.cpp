@@ -48,6 +48,9 @@ bool CButtonControl::DelButton(std::string name)
 
 bool CButtonControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
+    if (incr == 0)
+        incr = CCommon::common.INCREMENT;
+
     if (IsAlreadyExists(name)){
         _ButtonList[name].Insert(0,
             alpha, pause,

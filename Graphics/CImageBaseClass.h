@@ -38,6 +38,7 @@ class CImageBaseClass : virtual public CAdderControl
         virtual bool OnLoop();
 
         virtual bool LoadImg(const char* filename);
+        virtual bool GetVisible() const;
 };
 
 #endif

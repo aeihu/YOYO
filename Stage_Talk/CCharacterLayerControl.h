@@ -17,8 +17,6 @@
 
 class CCharacterLayerControl : public CControlBaseClass
 {
-    private:
-        map<string, sf::Vector2f>        _positions;
     public:
         map<string, CCharacterLayer>     _CharacterList;
 
@@ -27,16 +25,11 @@ class CCharacterLayerControl : public CControlBaseClass
         bool IsAlreadyExists(string name);
         char AddCharacter(string name, const char* filename);
         bool DelCharacter(string name);
-        bool Move(string name, string position, float increment, bool pause);
         bool Move(string name, float x, float y, float increment, bool pause);
-        bool Show(string name, string position, char type, float increment, bool pause);
-        bool Show(string name, float x, float y, char type, float increment, bool pause);
+        char Show(string name, float x, float y, char type, float increment, bool pause, int alpha=255);
         bool Hide(string name, char type, float increment, bool pause);
 
         bool SetVisibility(string name, int alpha, int increment, bool pause);
-        void AddPosition(string name, float x, float y);
-        void DelPosition(string name);
-        bool GetPosition(string name, float* x, float* y);
 
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);

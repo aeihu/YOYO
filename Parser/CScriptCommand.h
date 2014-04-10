@@ -52,8 +52,8 @@ bool Cmd_DelImg(vector<string>);//(string name);
 //bool Cmd_Say(vector<string>);//(const char* filename);
 //
 bool Cmd_PlayBGM(vector<string>);//(const char* filename);
-//bool Cmd_PauseBGM(vector<string>);//();
-//bool Cmd_ResumeBGM(vector<string>);//();
+bool Cmd_PauseBGM(vector<string>);//();
+bool Cmd_ResumeBGM(vector<string>);//();
 ////
 bool Cmd_AddSE(vector<string>);//(vector<string>);//(const char* name, const char* filename);
 bool Cmd_DelSE(vector<string>);//(string name);
@@ -62,10 +62,10 @@ bool Cmd_PlaySE(vector<string>);//(const char* name);
 bool Cmd_AddVoice(vector<string>);
 bool Cmd_DelVoice(vector<string>);
 ////
-//bool Cmd_AddButton(vector<string>);//(string name, const char* filename);
-//bool Cmd_DelButton(vector<string>);//(string name);
-//bool Cmd_ShowButton(vector<string>);//(string name, int incr, bool pause);
-//bool Cmd_HideButton(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_AddButton(vector<string>);//(string name, const char* filename);
+bool Cmd_DelButton(vector<string>);//(string name);
+bool Cmd_ShowButton(vector<string>);//(string name, int incr, bool pause);
+bool Cmd_HideButton(vector<string>);//(string name, int incr, bool pause);
 ////
 ////void Cmd_FullScreen();
 ////void Cmd_Window();

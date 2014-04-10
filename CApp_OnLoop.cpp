@@ -13,6 +13,13 @@
 #include <exception>
 //==============================================================================
 void CApp::OnLoop() {
+    //static unsigned long t = 0;
+    //int l = CCommon::common.GetTicks() - t;
+    //t = CCommon::common.GetTicks();
+    //sf::Text te;
+    //char buf[10];
+    //sprintf(buf, "%d", l);
+    //sf_Display->setTitle(buf);
     bool __isPause = false;
     //SDL_Delay(CCommon::common.LOOP_INTERVAL);
     //
