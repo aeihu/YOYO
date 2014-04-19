@@ -15,6 +15,7 @@ CParser::CParser()
 {
     _Delay = 0;
     _pRunning = NULL;
+    _pFunc = NULL;
 }
 
 void CParser::SetRunning(bool* running)
@@ -51,10 +52,8 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
 {
     list<string> __commands = Cio::LoadTxtFile(FileName, ";]", false);
 
-    if (Section != NULL)
-    {
-        if (!FindSection(__commands, Section))
-        {
+    if (Section != NULL){
+        if (!FindSection(__commands, Section)){
             cout << "LoadScript(): can't find section [" << Section << "]"<<endl;
             return false;
         }
@@ -67,14 +66,9 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
             break;
         }
 
-        try {
-            (*it).erase((*it).find_last_of(";"),1);
-            while ((*it).find_first_of("\n\r") != string::npos)
-                (*it).erase((*it).find_first_of("\n\r"),1);
-        }
-        catch (const std::out_of_range& oor) {
-            std::cerr << "Out of Range error: " << oor.what() << '\n';
-        }
+        (*it).erase((*it).find_last_of(";"),1);
+        while ((*it).find_first_of("\n\r") != string::npos)
+            (*it).erase((*it).find_first_of("\n\r"),1);
     }
     
     Commands.insert(Commands.begin(), __commands.begin(), __commands.end());

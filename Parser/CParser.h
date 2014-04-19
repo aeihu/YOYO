@@ -11,7 +11,6 @@
 
 #include <string>
 #include <list>
-#include <queue>
 #include <map>
 #include <iostream>
 #include <exception>
@@ -27,7 +26,7 @@ class CParser
 {
     private:        
         list<string>            _CmdList;
-        long                    _Delay;
+        unsigned long           _Delay;
         bool*                   _pRunning;
 
         bool FindSection(list<string> &Commands, const char* Section);

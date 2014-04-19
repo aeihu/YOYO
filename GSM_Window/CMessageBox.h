@@ -26,7 +26,7 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
         bool Sub_CheckList(map<string, string> list);
         bool Sub_OnLoad();
   protected:
-        CImageBaseClass::_visible;
+        using CImageBaseClass::_visible;
   public:
         CAnimation   _AnimationControl;
 

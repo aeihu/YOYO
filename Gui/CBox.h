@@ -19,7 +19,7 @@ class CBox : public CImageBaseClass
 {
     private:
     protected:
-        CImageBaseClass::_visible;
+        using CImageBaseClass::_visible;
         map<string, string>     _parameterList;
 
         bool CheckList(map<string, string> list);

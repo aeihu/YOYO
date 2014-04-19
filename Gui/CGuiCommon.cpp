@@ -58,7 +58,7 @@ bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, 
 
     unsigned int tileset_width = Surf_Src->getSize().x / Tile_Size;
 
-    for (int i=0; i<table.size(); i++){
+    for (unsigned int i=0; i<table.size(); i++){
         for (int j=0; j<table[i].size(); j++){
             CSurface::OnDraw(Surf_Dest, Surf_Src, 
                 j * Tile_Size, 

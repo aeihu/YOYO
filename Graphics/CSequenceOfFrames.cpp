@@ -32,8 +32,8 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
     if (TilesetWidth == 0)
         return;
     //int TilesetHeight  = _image.GetHeight() / _rect.GetHeight();
-    unsigned int Width = _rect.width;
-    unsigned int Height = _rect.height;
+    //unsigned int Width = _rect.width;
+    //unsigned int Height = _rect.height;
 
     _rect.left = (frame % TilesetWidth) * _rect.width;
     //_rect.Right = _rect.Left+Width;

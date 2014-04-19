@@ -178,11 +178,12 @@ void CSoundBank::OnLoop()
 bool CSoundBank::IsVoiceSilence(string name)
 {
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
-        if ((*it)->_Name == name)
+        if ((*it)->_Name == name){
             if (!((*it)->IsSilence()) && (*it)->getStatus() == CVoiceStream::Playing)
                 return false;
             else
                 return true;
+        }
     }
 
     return true;   
@@ -191,11 +192,12 @@ bool CSoundBank::IsVoiceSilence(string name)
 bool CSoundBank::GetVoiceStatus(string name)
 {
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++)
-        if ((*it)->_Name == name)
+        if ((*it)->_Name == name){
             if ((*it)->getStatus() == CVoiceStream::Playing)
                 return true;
             else
                 return false;
+        }
 
     return false;
 }

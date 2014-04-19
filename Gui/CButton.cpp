@@ -40,7 +40,7 @@ bool CButton::OnLButtonDown(int x, int y)
 
 bool CButton::OnLButtonUp(int x, int y)
 {
-    if (IsStandby())
+    if (IsStandby()){
         if(_isMouseOver){
             _isMouseDown = false;
             SetCurrentImageFrame(_AnimationControl._MaxFrames-1);
@@ -50,6 +50,7 @@ bool CButton::OnLButtonUp(int x, int y)
         else{
             SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         }
+    }
 
     return false;
 }
@@ -66,7 +67,7 @@ bool CButton::Subclass_Loop()
 
 void CButton::OnMouseMove(int x, int y)
 {
-    if (IsStandby())
+    if (IsStandby()){
         if(( x > GetPosition().x ) && ( x < GetPosition().x + GetWidth()) && 
             ( y > GetPosition().y ) && ( y < GetPosition().y + GetHeight())){
             if (!_isMouseOver)
@@ -78,6 +79,7 @@ void CButton::OnMouseMove(int x, int y)
             _isMouseDown = false;
             _AnimationControl._Type = CAnimation::Backward;
         }
+    }
 }
 
 bool CButton::LoadButton(const char* FileName)

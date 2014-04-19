@@ -7,21 +7,11 @@
 */
 
 #include "CScriptCommand.h"
-#include "../Stage_Action/CEntity.h"
 #include "../Stage_Talk/CCharacterLayer.h"
-#include "../Stage_Action/CPlayer.h"
 #include "../Parser/CParser.h"
 #include "../Sound/CSoundBank.h"
 #include "../Gui/CButton.h"
-#include "../GSM_Window/CMenuBox.h"
-#include "../GSM_Window/CObjectInfoBox.h"
-#include "../GSM_Window/CObjectListBox.h"
-#include "../Battlefield/CCharacterData.h"
-#include "../GSM_Window/CLoadObject.h"
-#include "../Stage_Action/CMapEventControl.h"
-#include "../Animation/CAnimationBank.h"
 #include "../Common/CResourceManager.h"
-#include "../GSM_Window/CLogBox.h"
 #include <iostream>
 #include <algorithm>
 
