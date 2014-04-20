@@ -875,20 +875,20 @@ bool Cmd_HideButton(vector<string> args)
 bool Cmd_Message(vector<string> args)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NECESSITY));    //MessageBoxName
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //MessageBoxName
     __flags.push_back(pair<string, ENUM_FLAG>("-c", FLAG_OPTIONAL));    //character
     __flags.push_back(pair<string, ENUM_FLAG>("-m", FLAG_NECESSITY));    //message
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_OPTIONAL));    //speakername
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //speakername
     __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //voice
     
     map<string,string> __values;
     if (!Cmd_ArgsToKV("Cmd_Message", __flags, args, __values))
         return false;
     
-    string __msgBoxName = __values.count("-b") == 0 ? "" : __values["-b"];
+    string __msgBoxName = __values.count("-n") == 0 ? "" : __values["-n"];
     string __character = __values.count("-c") == 0 ? "" : __values["-c"];
     string __msg = __values.count("-m") == 0 ? "" : __values["-m"];
-    string __speakerName = __values.count("-n") == 0 ? "" : __values["-n"];
+    string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"];
     string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
 
     if(CResourceManager::_MessageBoxControl._MessageBoxList.count(__msgBoxName) < 1){
@@ -966,17 +966,28 @@ bool Cmd_DelMessageBox(vector<string> args)
 //bool Cmd_ShowMessageBox(string name, int incr, bool pause)
 bool Cmd_ShowMessageBox(vector<string> args)
 {
-    if (args.size() != 3){
-        cout << "Cmd_HideMessageBox(): command invaild. can't set " << args.size()
+    if (args.size() < 1){
+        cout << "Cmd_ShowMessageBox(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    int incr = atoi(args[1].c_str()); 
-    bool pause = args[2] == "T" ? true : false;
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //MessageBoxName
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
 
-    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 255, incr, pause)){
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
+        return false;
+
+    int alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
+    string name = __values.count("-n") == 0 ? "" : __values["-n"];
+    int incr = __values.count("-i") == 0 ? CCommon::common.INCREMENT : atoi(__values["-i"].c_str());
+    bool pause = __values.count("-p") == 0 ? false : true;
+
+    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, alpha, incr, pause)){
         cout << "Cmd_ShowMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
         return false;
     }
@@ -984,7 +995,6 @@ bool Cmd_ShowMessageBox(vector<string> args)
     return true;
 }
 
-//bool Cmd_HideMessageBox(string name, int incr, bool pause)
 bool Cmd_HideMessageBox(vector<string> args)
 {
     if (args.size() != 3){
