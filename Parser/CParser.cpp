@@ -112,7 +112,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
-        else if (__commandName == "@set_face") _pFunc = &Cmd_SetFaceCharacterLayer;
+        else if (__commandName == "@face_chara") _pFunc = &Cmd_SetFaceCharacterLayer;
 
         else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;

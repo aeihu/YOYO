@@ -77,96 +77,7 @@ bool Cmd_ArgsToKV(string funcName, list<pair<string, ENUM_FLAG> > flags, vector<
 
     return true;
 }
-//
-//int Cmd_Move(const char* name, int x, int y, bool pause)
-//{
-//    int counter = 0;
-//    int v = CEntity::EntityList.size();
-//    for(int i = 0;i < v;i++) {
-//        if(strcmp(CEntity::EntityList[i]->Name.c_str(), name) == 0) 
-//        {
-//            if (pause)
-//                CEntity::EntityList[i]->SetDestination(x, y, &CParser::parser.Pause);
-//            else
-//                CEntity::EntityList[i]->SetDestination(x, y, NULL);
-//
-//            counter++;
-//        }
-//    }
-//
-//    return counter;
-//}
-//
-//bool Cmd_ViewPoint(const char* name)
-//{
-//    int v = CEntity::EntityList.size();
-//    for(int i = 0;i < v;i++) {
-//        if(strcmp(CEntity::EntityList[i]->Name.c_str(), name) == 0) 
-//        {
-//            CCamera::CameraControl.SetTarget(&CEntity::EntityList[i]->X, &CEntity::EntityList[i]->Y);
-//            CMapEventControl::MapEventControl.SetTarget(&CEntity::EntityList[i]->X, &CEntity::EntityList[i]->Y);
-//            return true;
-//        }
-//    }
-//
-//    return false;
-//}
-//
-//bool Cmd_ViewPointMove(int x, int y)
-//{
-//    //int v = CEntity::EntityList.size();
-// //   for(int i = 0;i < v;i++) {
-//    //    if(strcmp(CEntity::EntityList[i]->Name.c_str(), name) == 0) 
-//    //    {
-//    //        CCamera::CameraControl.SetTarget(&CEntity::EntityList[i]->X, &CEntity::EntityList[i]->Y);
-//    //        return true;
-//    //    }
-// //   }
-//    return true;
-//}
-//
-//int Cmd_DeleteCharacter(const char* name)
-//{
-//    int counter = 0;
-//    
-//    for(int i = CEntity::EntityList.size() - 1;i >= 0; i--) 
-//    {
-//        if(strcmp(CEntity::EntityList[i]->Name.c_str(), name) == 0) 
-//        {
-//            CEntity::EntityList[i]->OnCleanup();
-//            delete CEntity::EntityList[i];
-//            CEntity::EntityList.erase(CEntity::EntityList.begin() + i);
-//            counter++;
-//        }
-//    }
-//
-//    for(int i = CPlayerControl::PlayerList.size() - 1;i >= 0; i--) 
-//    {
-//        if(strcmp(CPlayerControl::PlayerList[i]->Name.c_str(), name) == 0) 
-//        {
-//            CPlayerControl::PlayerList.erase(CPlayerControl::PlayerList.begin() +i);
-//        }
-//    }
-//
-//    return counter;
-//}
-//
-//bool Cmd_CreateCharacter(const char* name, int x, int y, const char* filename, int width, int height, int maxframes, bool isNPC)
-//{
-//    CPlayer* temp = new CPlayer(name, x * CCommon::common.TILE_SIZE, y * CCommon::common.TILE_SIZE);
-//    if (!temp->OnLoad(filename, width, height ,maxframes))
-//    {
-//        delete temp;
-//        return false;
-//    }
-//
-//    CEntity::EntityList.push_back(temp);
-//    if (!isNPC && (CPlayerControl::PlayerList.size() < CCommon::common.MAX_PLAYER_NUM))
-//        CPlayerControl::PlayerList.push_back(temp);
-//
-//    return true;
-//}
-//
+
 bool Cmd_ShowInfo(vector<string> args)
 {
     CResourceManager::GetInfo();
@@ -318,25 +229,25 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     if (!Cmd_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
         return false;
 
-    string name = __values.count("-n") == 0 ? "" : __values["-n"];
-    float x = 0;
-    float y = 0;
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    float __x = 0;
+    float __y = 0;
 
     if (__values.count("-s") > 1){
-        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&x,&y)){
+        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&__x,&__y)){
             cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
             return false;
         }
     }
 
-    x = __values.count("-x") == 0 ? x : atof(__values["-x"].c_str());
-    y = __values.count("-y") == 0 ? y : atof(__values["-y"].c_str());
+    __x = __values.count("-x") == 0 ? __x : atof(__values["-x"].c_str());
+    __y = __values.count("-y") == 0 ? __y : atof(__values["-y"].c_str());
 
-    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
-    bool pause = __values.count("-p") == 0 ? false : true;
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if(!CResourceManager::_CharacterLayerControl.Move(name, x, y, incr, pause)){
-        cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
+    if(!CResourceManager::_CharacterLayerControl.Move(__name, __x, __y, __incr, __pause)){
+        cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
     return true;
@@ -355,17 +266,17 @@ bool Cmd_HideCharacterLayer(vector<string> args)
     if (!Cmd_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
         return false;
 
-    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
-    string name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool pause = __values.count("-p") == 0 ? false : true;
-    char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    char __type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
 
-    if (!CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
-        cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< name << "\"." << endl;
+    if (!CResourceManager::_CharacterLayerControl.IsAlreadyExists(__name)){
+        cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< __name << "\"." << endl;
         return false;
     }
 
-    CResourceManager::_CharacterLayerControl.Hide(name, type, incr, pause);
+    CResourceManager::_CharacterLayerControl.Hide(__name, __type, __incr, __pause);
     return true;
 }
 
@@ -378,13 +289,13 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
         return false;
     }
 
-    string name = args[0];
-    string face = args[1];
+    string __name = args[0];
+    string __face = args[1];
 
-    if (CResourceManager::_CharacterLayerControl._CharacterList[name].SetFace(face))
+    if (CResourceManager::_CharacterLayerControl._CharacterList[__name].SetFace(__face))
         return true;
     else{
-        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< face << "\"." <<endl;
+        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
         return false;
     }
 }
@@ -415,26 +326,16 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 //bool Cmd_AddBackground(string name, const char* filename, float x, float y)
 bool Cmd_AddBackground(vector<string> args)
 {
-    float x = 0.0f;
-    float y = 0.0f;
-
-    if (args.size() == 4){
-        x = atof(args[2].c_str());
-        y = atof(args[3].c_str());
-    }
-    else if (args.size() == 2){
-    
-    }
-    else{
+    if (args.size() != 2){
         cout << "Cmd_AddBackground(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    const char* filename = args[1].c_str();
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
 
-    if (CResourceManager::_BackgroundLayerControl.AddImage(name, filename)){
+    if (CResourceManager::_BackgroundLayerControl.AddImage(__name, __filename)){
         return true;
     }
     else{
@@ -446,25 +347,45 @@ bool Cmd_AddBackground(vector<string> args)
 //bool Cmd_ShowBackground(string name, int inrc, bool pause)
 bool Cmd_ShowBackground(vector<string> args)
 {
-    int inrc = 10;
-    if (args.size() == 2){
-        inrc = atoi(args[1].c_str());
-    }
-    else if (args.size() == 1){
-    }
-    else{
+    if (args.size() < 1){
         cout << "Cmd_ShowBackground(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_ShowBackground", __flags, args, __values))
+        return false;
+    
+    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
 
-    string name = args[0];
-    bool pause = false;
+    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(__name, __alpha, __inrc, __pause)){
+        float* __x = &CResourceManager::_BackgroundLayerControl._ImgLayerList[__name]._Coordinate.x;
+        float* __y = &CResourceManager::_BackgroundLayerControl._ImgLayerList[__name]._Coordinate.y;
 
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 255, inrc, pause))
+        if (__values.count("-s") > 1)
+            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
+                cout << "Cmd_ShowBackground(): can't find position \""<< __values["-s"] << "\"." <<endl;
+
+        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
+        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
+
         return true;
+    }
 
-    cout << "Cmd_ShowBackground(): can't find image \""<< name << "\"." << endl;
+    cout << "Cmd_ShowBackground(): can't find image \""<< __name << "\"." << endl;
     return false;
 }
 
@@ -488,25 +409,29 @@ bool Cmd_DelBackground(vector<string> args)
 //bool Cmd_HideBackground(string name, int inrc, bool pause)
 bool Cmd_HideBackground(vector<string> args)
 {
-    int inrc = 10;
-    if (args.size() == 2){
-        inrc = atoi(args[1].c_str());
-    }
-    else if (args.size() == 1){
-    }
-    else{
+    if (args.size() < 1){
         cout << "Cmd_HideBackground(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
 
-    string name = args[0];
-    bool pause = false;
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_HideBackground", __flags, args, __values))
+        return false;
 
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(name, 0, inrc, pause))
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+
+    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(__name, 0, __inrc, __pause))
         return true;
 
-    cout << "Cmd_HideBackground(): can't find image \""<< name << "\"." << endl;
+    cout << "Cmd_HideBackground(): can't find image \""<< __name << "\"." << endl;
     return false;
 }
 
@@ -519,26 +444,16 @@ bool Cmd_HideBackground(vector<string> args)
 */
 bool Cmd_AddImg(vector<string> args)
 {
-    float x = 0.0f;
-    float y = 0.0f;
-
-    if (args.size() == 4){
-        x = atof(args[2].c_str());
-        y = atof(args[3].c_str());
-    }
-    else if (args.size() == 2){
-    
-    }
-    else{
+    if (args.size() != 2){
         cout << "Cmd_AddImg(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    string name = args[0];
-    const char* filename = args[1].c_str();
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
 
-    if (CResourceManager::_ImgLayerControl.AddImage(name, filename, x, y)){
+    if (CResourceManager::_ImgLayerControl.AddImage(__name, __filename)){
         return true;
     }
     else{
@@ -550,50 +465,75 @@ bool Cmd_AddImg(vector<string> args)
 //bool Cmd_ShowImg(string name, int inrc, bool pause)
 bool Cmd_ShowImg(vector<string> args)
 {
-    int inrc = 10;
-    if (args.size() == 2){
-        inrc = atoi(args[1].c_str());
-    }
-    else if (args.size() == 1){
-    }
-    else{
+    if (args.size() < 1){
         cout << "Cmd_ShowImg(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_ShowImg", __flags, args, __values))
+        return false;
+    
+    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
 
-    string name = args[0];
-    bool pause = false;
+    if (CResourceManager::_ImgLayerControl.SetImageVisibility(__name, __alpha, __inrc, __pause)){
+        float* __x = &CResourceManager::_ImgLayerControl._ImgLayerList[__name]._Coordinate.x;
+        float* __y = &CResourceManager::_ImgLayerControl._ImgLayerList[__name]._Coordinate.y;
 
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 255, inrc, pause))
+        if (__values.count("-s") > 1)
+            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
+                cout << "Cmd_ShowImg(): can't find position \""<< __values["-s"] << "\"." <<endl;
+
+        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
+        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
+
         return true;
+    }
 
-    cout << "Cmd_ShowImg(): can't find image \""<< name << "\"." << endl;
+    cout << "Cmd_ShowImg(): can't find image \""<< __name << "\"." << endl;
     return false;
 }
 
 //bool Cmd_HideImg(string name, int inrc, bool pause)
 bool Cmd_HideImg(vector<string> args)
 {
-    int inrc = 10;
-    if (args.size() == 2){
-        inrc = atoi(args[1].c_str());
-    }
-    else if (args.size() == 1){
-    }
-    else{
+    if (args.size() < 1){
         cout << "Cmd_HideImg(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
 
-    string name = args[0];
-    bool pause = false;
+    map<string,string> __values;
+    if (!Cmd_ArgsToKV("Cmd_HideImg", __flags, args, __values))
+        return false;
 
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(name, 0, inrc, pause))
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+
+
+    if (CResourceManager::_ImgLayerControl.SetImageVisibility(__name, 0, __inrc, __pause))
         return true;
 
-    cout << "Cmd_HideImg(): can't find image \""<< name << "\"." << endl;
+    cout << "Cmd_HideImg(): can't find image \""<< __name << "\"." << endl;
     return false;
 }
 
@@ -897,10 +837,8 @@ bool Cmd_Message(vector<string> args)
     }
 
     if (__character != "")
-        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__character) < 1){
+        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__character) < 1)
             cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
-            //return false;
-        }
 
     CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetText(__msg);
     CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
@@ -912,12 +850,7 @@ bool Cmd_Message(vector<string> args)
 
     return true;
 }
-//
-//bool Cmd_SetMessageBoxSpeakerName(string name)
-//{
-//    return CMessageBox::messagebox.SetSpeakerName(name.c_str());
-//}
-//
+
 //bool Cmd_AddMessageBox(string name, const char* filename)
 bool Cmd_AddMessageBox(vector<string> args)
 {
