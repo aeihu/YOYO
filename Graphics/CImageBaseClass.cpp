@@ -67,10 +67,10 @@ bool CImageBaseClass::OnLoop()
     if (_Coordinate != _sprite.getPosition())
         _sprite.setPosition(_Coordinate);
 
-    //if (_sprite.getScale().x > 1.0f || _sprite.getScale().y > 1.0f)
-    //    _image.setSmooth(true);
-    //else
-    //    _image.setSmooth(false);
+    if (_sprite.getScale().x > 1.0f || _sprite.getScale().y > 1.0f)
+        _image.setSmooth(true);
+    else
+        _image.setSmooth(false);
 
     __result = Subclass_Loop() ? true : __result;
     return __result;

@@ -28,6 +28,7 @@ class CTextProcessing : protected CFont
         unsigned int        _rowWidth;
         unsigned int        _cursorPos;
         unsigned int        _index;
+        unsigned int        _length;
         sf::Color           _textColor;
         sf::Color           _shadowColor;
         unsigned long       _oldTime;
@@ -47,7 +48,7 @@ class CTextProcessing : protected CFont
         string GetText();
         float GetWidth();
         float GetHeight();
-        sf::Vector2f GetCharacterPos(unsigned int index); 
+        sf::Vector2f GetLastCharacterPos(); 
         sf::Vector2f GetPosition();
         void SetPosition(float x, float y);
 };

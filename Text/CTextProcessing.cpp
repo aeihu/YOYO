@@ -18,6 +18,7 @@ CTextProcessing::CTextProcessing()
     _rowWidth =
     _index=
     _oldTime =
+    _length =
     _cursorPos = 0;
 
     _textOfShown =
@@ -52,6 +53,7 @@ void CTextProcessing::Clear()
 {
     _textOfShown = "";
     _cursorPos =
+    _length =
     _index = 0;
     _text = "";
     _sfText.setString("");
@@ -67,6 +69,7 @@ void CTextProcessing::SetText(string msg, bool isAppend)
         _textOfShown = "";
 
     _cursorPos =
+    _length =
     _index = 0;
     _text = msg;
 }
@@ -108,10 +111,13 @@ void CTextProcessing::OnLoop()
 
             _textOfShown += __str + _text.substr(_index, __size);
 
-            if (__str == "\n") 
+            if (__str == "\n"){
                 _cursorPos=__size==1?__fontSize>>1:__fontSize;
+                _length++;
+            }
 
             _index += __size;
+            _length++;
 
             CFont::SetString(_sfText, _textOfShown);
         }
@@ -151,9 +157,9 @@ float CTextProcessing::GetHeight()
     return _sfText.getGlobalBounds().height;
 }
 
-sf::Vector2f CTextProcessing::GetCharacterPos(unsigned int index)
+sf::Vector2f CTextProcessing::GetLastCharacterPos()
 {
-    return _sfText.findCharacterPos(index);
+    return _sfText.findCharacterPos(_length);
 }
 
 sf::Vector2f CTextProcessing::GetPosition()

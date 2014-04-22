@@ -22,8 +22,7 @@ CMessageBox::CMessageBox()
 
 bool CMessageBox::Sub_OnLoad()
 {
-    if (!CTextProcessing::OnInit(
-        CBox::_sprite.getGlobalBounds().width - atof(_parameterList["MSG_OFFSET_X"].c_str()) * 2))
+    if (!CTextProcessing::OnInit(atoi(_parameterList["MSG_WIDTH"].c_str())))
         return false;
 
     _speakerName.setFont(CFont::_font);
@@ -50,6 +49,11 @@ bool CMessageBox::Sub_CheckList(map<string, string> list)
 
     if (list.count("MSG_OFFSET_Y") < 1){
         cout << "can't find value of MSG_OFFSET_X." << endl;
+        result = false;
+    }
+
+    if (list.count("MSG_WIDTH") < 1){
+        cout << "can't find value of MSG_WIDTH." << endl;
         result = false;
     }
 
@@ -112,11 +116,9 @@ bool CMessageBox::OnLoop()
         _AnimationControl.OnAnimate(CCommon::common.GetTicks());
 
         CSequenceOfFrames::_Coordinate = 
-            CTextProcessing::GetPosition()+
-            CTextProcessing::GetCharacterPos(GetText().length()-1)+
-            sf::Vector2f(2.0f, 5.0f);
-        //CSequenceOfFrames::_Coordinate.x = CTextProcessing::GetPosition()
-        //CSequenceOfFrames::_Coordinate.y = 
+            CTextProcessing::GetLastCharacterPos()+
+            sf::Vector2f(5.0f, 0.0f);
+
         CSequenceOfFrames::_Alpha = 255;
     }
     else

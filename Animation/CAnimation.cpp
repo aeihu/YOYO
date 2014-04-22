@@ -18,7 +18,7 @@ CAnimation::CAnimation()
     _frameRate = 100; //Milliseconds
     _oldTime = 0;
     _Type = Forward;
-    _enable = false;
+    _enable = true;
 }
 
 //------------------------------------------------------------------------------
