@@ -18,12 +18,15 @@
 class CCharacterLayerControl : public CControlOfImageBaseClass
 {
     private:
-        CImageBaseClass* GetObject(string name);
-    public:
-        map<string, CCharacterLayer>     _CharacterList;
+        friend class CResourceManager;
+        friend bool Cmd_SetFaceCharacterLayer(vector<string> args);
+        friend bool Cmd_Message(vector<string> args);
 
+        map<string, CCharacterLayer>     _characterList;
+    public:
         CCharacterLayerControl();
         
+        CImageBaseClass* GetObject(string name);
         bool IsAlreadyExists(string name);
         char AddCharacter(string name, const char* filename);
         bool DelCharacter(string name);
@@ -35,6 +38,7 @@ class CCharacterLayerControl : public CControlOfImageBaseClass
 
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

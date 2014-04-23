@@ -18,9 +18,11 @@
 class CImgLayerControl : public CControlOfImageBaseClass
 {
     private:
+        friend class CResourceManager;
+        
         CImageBaseClass* GetObject(std::string name);
+        std::map<std::string, CImgLayer>    _imgLayerList;
     public:
-        std::map<std::string, CImgLayer>    _ImgLayerList;
 
         bool IsAlreadyExists(std::string name);
         bool AddImage(std::string name, const char* filename, float x=0.0f, float y=0.0f);
@@ -28,6 +30,7 @@ class CImgLayerControl : public CControlOfImageBaseClass
         bool SetImageVisibility(std::string name, int alpha, int incr, bool pause);
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

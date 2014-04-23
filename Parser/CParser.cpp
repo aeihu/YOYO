@@ -145,6 +145,16 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
         else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
+        
+        else if (__commandName == "@Deplay"){
+            if (__listOfCmdPara.size() == 1)
+                SetDeplay(atoi(__listOfCmdPara[0].c_str()));
+            else
+                cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
+                    << " argument(s) in the command." <<endl;
+
+            return;
+        }
         else{
             cout << "unknown command." << endl;
             return;

@@ -33,11 +33,11 @@ void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
 
 void CResourceManager::GetInfo()
 {
-    GetInfo("ImageList", CResourceManager::_ImgLayerControl._ImgLayerList);
-    GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._ImgLayerList);
-    GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._CharacterList);
-    GetInfo("ButtonList", CResourceManager::_ButtonControl._ButtonList);
-    GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._MessageBoxList);
+    GetInfo("ImageList", CResourceManager::_ImgLayerControl._imgLayerList);
+    GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._imgLayerList);
+    GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._characterList);
+    GetInfo("ButtonList", CResourceManager::_ButtonControl._buttonList);
+    GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._messageBoxList);
     GetInfo("PositionList", CResourceManager::_PositionControl._positions);
     GetInfo("VoiceList", CSoundBank::_SoundControl._voiceList);
     GetInfo("SEList", CSoundBank::_SoundControl._seList);

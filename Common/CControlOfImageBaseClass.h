@@ -22,6 +22,7 @@ class CControlOfImageBaseClass
     public:
         inline void SetInterval(unsigned int interval) {_interval = interval;} // no used
         virtual bool SetImageVisibility(std::string name, int alpha, int incr, bool pause)=0;
+        virtual void OnCleanup()=0;
 };
 
 #endif

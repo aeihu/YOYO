@@ -10,25 +10,25 @@
 
 bool CImgLayerControl::IsAlreadyExists(std::string name)
 {
-    return _ImgLayerList.count(name) < 1 ? false : true;
+    return _imgLayerList.count(name) < 1 ? false : true;
 }
 
 bool CImgLayerControl::AddImage(std::string name, const char* filename, float x, float y)
 {
     if (!IsAlreadyExists(name)){
-        _ImgLayerList.insert(
+        _imgLayerList.insert(
             std::pair<std::string,CImgLayer>(name, CImgLayer(x, y)));
     }
     else
         return false;
 
-    if(_ImgLayerList[name].LoadImg(filename)){
-        _ImgLayerList[name]._Alpha = 0;
+    if(_imgLayerList[name].LoadImg(filename)){
+        _imgLayerList[name]._Alpha = 0;
 
         return true;
     }
     else{
-        _ImgLayerList.erase(name);
+        _imgLayerList.erase(name);
         return false;
     }
 }
@@ -36,7 +36,7 @@ bool CImgLayerControl::AddImage(std::string name, const char* filename, float x,
 bool CImgLayerControl::DelImage(std::string name)
 {
     if (IsAlreadyExists(name)){
-        _ImgLayerList.erase(name);
+        _imgLayerList.erase(name);
         return true;
     }
     else
@@ -49,9 +49,9 @@ bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr,
         incr = CCommon::common.INCREMENT;
 
     if (IsAlreadyExists(name)){
-        _ImgLayerList[name].Insert(0,
+        _imgLayerList[name].Insert(0,
             alpha, pause,
-            &_ImgLayerList[name]._Alpha,
+            &_imgLayerList[name]._Alpha,
             incr);
 
         return true;
@@ -61,8 +61,8 @@ bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr,
 
 void CImgLayerControl::OnLoop(bool &pause)
 {
-    for (std::map<std::string, CImgLayer>::iterator it=_ImgLayerList.begin(); 
-        it !=_ImgLayerList.end(); it++)
+    for (std::map<std::string, CImgLayer>::iterator it=_imgLayerList.begin(); 
+        it !=_imgLayerList.end(); it++)
     {
         if((*it).second.OnLoop()) 
             pause=true;
@@ -71,16 +71,21 @@ void CImgLayerControl::OnLoop(bool &pause)
 
 void CImgLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    for (std::map<std::string, CImgLayer>::iterator it=_ImgLayerList.begin(); 
-        it!=_ImgLayerList.end(); it++)
+    for (std::map<std::string, CImgLayer>::iterator it=_imgLayerList.begin(); 
+        it!=_imgLayerList.end(); it++)
         (*it).second.OnRender(Surf_Dest);
 }
 
 
 CImageBaseClass* CImgLayerControl::GetObject(std::string name)
 {
-    if (_ImgLayerList.count(name) < 1)
+    if (_imgLayerList.count(name) < 1)
         return NULL;
 
-    return &_ImgLayerList[name];
+    return &_imgLayerList[name];
+}
+
+void CImgLayerControl::OnCleanup()
+{
+    _imgLayerList.clear();
 }

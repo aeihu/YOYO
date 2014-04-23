@@ -12,17 +12,23 @@
 class CButtonControl : public CControlOfImageBaseClass
 {
     private:
+        friend class CResourceManager;
+
         bool IsAlreadyExists(string name);
         CImageBaseClass* GetObject(std::string name);
+        map<string, CButton>        _buttonList;
     public:
-        map<string, CButton>        _ButtonList;
 
         CButtonControl();
 
         char AddButton(string name, const char* filename);
         bool DelButton(string name);
         bool SetImageVisibility(string name, int alpha, int incr, bool pause);
-    
+
+        void OnMouseMove(int mX, int mY);
+        bool OnLButtonUp(int mX, int mY);
+        bool OnLButtonDown(int mX, int mY);
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };

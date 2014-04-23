@@ -17,18 +17,25 @@
 class CMessageBoxControl : public CControlOfImageBaseClass
 {
     private:
+        friend class CResourceManager;
+        friend bool Cmd_Message(vector<string> args);
+
+        map<string, CMessageBox>    _messageBoxList;
+
         bool IsAlreadyExists(std::string name);
         CImageBaseClass* GetObject(std::string name);
     public:
         CMessageBoxControl();
-        map<string, CMessageBox>    _MessageBoxList;
 
         char AddMessageBox(std::string name, const char* filename);
         bool DelMessageBox(std::string name);
         bool SetImageVisibility(std::string name, int alpha, int incr, bool pause);
-    
+        
+        bool OnLButtonUp(int mX, int mY);
+        bool OnLButtonDown(int mX, int mY);
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

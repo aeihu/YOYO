@@ -7,7 +7,7 @@
 */
 
 #include "CButton.h"
-//#include "CSoundBank.h"
+#include "../Sound/CSoundBank.h"
 
 CButton::CButton(float x, float y, int w, int h, int maxframes, int framerate):CSequenceOfFrames(x,y,0,0,w,h)
 {
@@ -31,7 +31,7 @@ bool CButton::OnLButtonDown(int x, int y)
             _isMouseDown = true;
             SetCurrentImageFrame(_AnimationControl._MaxFrames);
             _AnimationControl.SetCurrentFrame(_AnimationControl._MaxFrames-1);
-            //CSoundBank::_SoundControl.PlaySE(SEName_MouseDown);
+            CSoundBank::_SoundControl.PlaySE(_seNameOfMouseDown);
             return true;
         }
 

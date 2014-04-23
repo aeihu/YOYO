@@ -24,7 +24,7 @@ typedef enum{
 bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, string>& result)
 {
     result.clear();
-	list<pair<string, ENUM_FLAG> >::iterator __it;
+    list<pair<string, ENUM_FLAG> >::iterator __it;
 
     for(__it=flags.begin(); __it!=flags.end(); ++__it){
         switch (std::count(args.begin(), args.end(), (*__it).first)){
@@ -37,7 +37,7 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags,
             break;
             case 1:
                 {
-	                vector<string>::iterator __itOfArgs;
+                    vector<string>::iterator __itOfArgs;
                     __itOfArgs = std::find (args.begin(), args.end(), (*__it).first);
 
                     if (__itOfArgs != args.end()){
@@ -150,13 +150,17 @@ bool Common_FuncOfHide(string funcName, CControlOfImageBaseClass* controlBase, v
     return false;
 }
 
+/*==============================================================
+    commad of script
+===============================================================*/
+
 bool Cmd_ShowInfo(vector<string> args)
 {
     CResourceManager::GetInfo();
-    //CResourceManager::GetInfo("ImageList", CResourceManager::_ImgLayerControl._ImgLayerList);
-    //CResourceManager::GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._ImgLayerList);
-    //CResourceManager::GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._CharacterList);
-    //CResourceManager::GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._MessageBoxList);
+    //CResourceManager::GetInfo("ImageList", CResourceManager::_ImgLayerControl._imgLayerList);
+    //CResourceManager::GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._imgLayerList);
+    //CResourceManager::GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._characterList);
+    //CResourceManager::GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._messageBoxList);
     return true;
 }
 
@@ -234,7 +238,6 @@ bool Cmd_DelCharacterLayer(vector<string> args)
     return true;
 }
 
-//bool Cmd_ShowCharacterLayer(string name, const char* filename, float x, float y, char type, float buf, float incr, bool pause)
 bool Cmd_ShowCharacterLayer(vector<string> args)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
@@ -325,7 +328,6 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     return true;
 }
 
-//bool Cmd_HideCharacterLayer(string name, char type, float buf, float incr, bool pause)
 bool Cmd_HideCharacterLayer(vector<string> args)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
@@ -352,7 +354,6 @@ bool Cmd_HideCharacterLayer(vector<string> args)
     return true;
 }
 
-//void Cmd_SetFaceCharacterLayer(string name, string face)
 bool Cmd_SetFaceCharacterLayer(vector<string> args)
 {
     if (args.size() != 2){
@@ -364,7 +365,12 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
     string __name = args[0];
     string __face = args[1];
 
-    if (CResourceManager::_CharacterLayerControl._CharacterList[__name].SetFace(__face))
+    if (CResourceManager::_CharacterLayerControl._characterList.count(__name) < 1){
+        cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+        return false;
+    }
+
+    if (CResourceManager::_CharacterLayerControl._characterList[__name].SetFace(__face))
         return true;
     else{
         cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
@@ -374,11 +380,11 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 //
 //bool Cmd_AlphaCharacterLayer(char postion, int alpha)
 //{
-//    //for (int i = 0; i < CResourceManager::_CharacterLayerControl._CharacterList.size(); i++)
+//    //for (int i = 0; i < CResourceManager::_CharacterLayerControl._characterList.size(); i++)
 //    //{
-//    //    if(CResourceManager::_CharacterLayerControl._CharacterList[i]->Postion == postion)
+//    //    if(CResourceManager::_CharacterLayerControl._characterList[i]->Postion == postion)
 //    //    {
-//    //        CResourceManager::_CharacterLayerControl._CharacterList[i]->Alpha = alpha;
+//    //        CResourceManager::_CharacterLayerControl._characterList[i]->Alpha = alpha;
 //    //        return true;
 //    //    }
 //    //}
@@ -768,17 +774,17 @@ bool Cmd_Message(vector<string> args)
     string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"];
     string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
 
-    if(CResourceManager::_MessageBoxControl._MessageBoxList.count(__msgBoxName) < 1){
+    if(CResourceManager::_MessageBoxControl._messageBoxList.count(__msgBoxName) < 1){
         cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
         return false;
     }
 
     if (__character != "")
-        if(CResourceManager::_CharacterLayerControl._CharacterList.count(__character) < 1)
+        if(CResourceManager::_CharacterLayerControl._characterList.count(__character) < 1)
             cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
 
-    CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetText(__msg);
-    CResourceManager::_MessageBoxControl._MessageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
+    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetText(__msg);
+    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
 
     if (__voice != ""){
         if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))

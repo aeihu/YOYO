@@ -367,23 +367,8 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
 //------------------------------------------------------------------------------
 void CApp::OnLButtonDown(int mX, int mY)
 {
-    {
-        map<std::string, CButton>::iterator it;
-        for ( it=CResourceManager::_ButtonControl._ButtonList.begin();it!=CResourceManager::_ButtonControl._ButtonList.end(); it++ )
-        {
-            if ((*it).second.OnLButtonDown(mX,mY))
-                return;
-        }
-    }
-
-    {
-        map<string, CMessageBox>::iterator it;
-        for ( it=CResourceManager::_MessageBoxControl._MessageBoxList.begin(); it!=CResourceManager::_MessageBoxControl._MessageBoxList.end(); it++ )
-        {
-            if ((*it).second.OnLButtonDown(mX,mY))
-                return;
-        }
-    }
+    if (!CResourceManager::_ButtonControl.OnLButtonDown(mX, mY))
+        CResourceManager::_MessageBoxControl.OnLButtonDown(mX, mY);
 }
 
 void CApp::OnRButtonDown(int mX, int mY)
@@ -417,35 +402,15 @@ void CApp::OnRButtonUp(int mX, int mY)
 //------------------------------------------------------------------------------
 void CApp::OnLButtonUp(int mX, int mY)
 {
-    {
-        map<std::string, CButton>::iterator it;
-        for ( it=CResourceManager::_ButtonControl._ButtonList.begin();it!=CResourceManager::_ButtonControl._ButtonList.end(); it++ )
-        {
-            if ((*it).second.OnLButtonUp(mX,mY))
-                return;
-        }
-    }
-
-    {
-        map<string, CMessageBox>::iterator it;
-        for ( it=CResourceManager::_MessageBoxControl._MessageBoxList.begin(); it!=CResourceManager::_MessageBoxControl._MessageBoxList.end(); it++ )
-        {
-            if ((*it).second.OnLButtonUp(mX,mY))
-                return;
-        }
-    }
+    if (!CResourceManager::_ButtonControl.OnLButtonUp(mX,mY))
+        CResourceManager::_MessageBoxControl.OnLButtonUp(mX,mY);
 }
 
 
 //------------------------------------------------------------------------------
 void CApp::OnMouseMove(int mX, int mY)
 {
-    map<std::string, CButton>::iterator it;
-    for ( it=CResourceManager::_ButtonControl._ButtonList.begin();it!=CResourceManager::_ButtonControl._ButtonList.end(); it++ )
-    {
-        //cout<< mX << "," << mY <<endl;
-        (*it).second.OnMouseMove(mX,mY);
-    }
+    CResourceManager::_ButtonControl.OnMouseMove(mX,mY);
 }
 
 //------------------------------------------------------------------------------
