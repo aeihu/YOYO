@@ -114,7 +114,7 @@ char CCharacterLayerControl::Show(string name, float x, float y, char type, floa
             __x += buf;
         break;
         default:
-            SetVisibility(name, alpha, __inc, pause);
+            SetImageVisibility(name, alpha, __inc, pause);
             _CharacterList[name]._Coordinate.x = __x;
             _CharacterList[name]._Coordinate.y = __y;
             return 0;
@@ -124,7 +124,7 @@ char CCharacterLayerControl::Show(string name, float x, float y, char type, floa
     _CharacterList[name]._Coordinate.x = __x;
     _CharacterList[name]._Coordinate.y = __y;
     if (Move(name, x, y, increment, pause)){
-        SetVisibility(name, alpha, __inc, pause);
+        SetImageVisibility(name, alpha, __inc, pause);
         return 0;
     }
 
@@ -161,22 +161,22 @@ bool CCharacterLayerControl::Hide(string name, char type, float increment, bool 
             __x -= buf;
         break;
         default:
-            SetVisibility(name, 0, __inc, pause);
-            //SetVisibility(name, 0, (int)increment, pause);
+            SetImageVisibility(name, 0, __inc, pause);
+            //SetImageVisibility(name, 0, (int)increment, pause);
             return true;
         break;
     }
 
     if (Move(name, __x, __y, increment, pause)){
         int inc = 255/(((int)buf)/((int)increment));
-        SetVisibility(name, 0, inc<=0?1:inc, pause);
+        SetImageVisibility(name, 0, inc<=0?1:inc, pause);
         return true;
     }
 
     return false;
 }
 
-bool CCharacterLayerControl::SetVisibility(string name, int alpha, int increment, bool pause)
+bool CCharacterLayerControl::SetImageVisibility(string name, int alpha, int increment, bool pause)
 {
     if (_CharacterList.count(name) < 1)
         return false;
@@ -221,4 +221,12 @@ void CCharacterLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
     {
         (*it).second.OnRender(Surf_Dest);
     }
+}
+
+CImageBaseClass* CCharacterLayerControl::GetObject(std::string name)
+{
+    if (_CharacterList.count(name) < 1)
+        return NULL;
+    
+    return &_CharacterList[name];
 }

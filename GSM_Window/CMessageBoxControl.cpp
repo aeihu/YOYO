@@ -79,3 +79,12 @@ void CMessageBoxControl::OnRender(sf::RenderWindow* Surf_Dest)
     for ( it=_MessageBoxList.begin() ; it!=_MessageBoxList.end(); it++ )
         (*it).second.OnRender(Surf_Dest);
 }
+
+CImageBaseClass* CMessageBoxControl::GetObject(std::string name)
+{
+    if (_MessageBoxList.count(name) < 1)
+        return NULL;
+
+    CBox* __p = &_MessageBoxList[name];
+    return __p;
+}

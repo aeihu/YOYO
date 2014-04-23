@@ -10,14 +10,15 @@
     #define _CMESSAGEBOXCONTROL_H_
 
 #include "CMessageBox.h"
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CControlOfImageBaseClass.h"
 #include <map>
 #include <string>
 
-class CMessageBoxControl : public CControlBaseClass
+class CMessageBoxControl : public CControlOfImageBaseClass
 {
     private:
         bool IsAlreadyExists(std::string name);
+        CImageBaseClass* GetObject(std::string name);
     public:
         CMessageBoxControl();
         map<string, CMessageBox>    _MessageBoxList;

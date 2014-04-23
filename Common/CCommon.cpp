@@ -357,14 +357,11 @@ unsigned long CCommon::GetTicks(){
 
 unsigned int CCommon::SizeOfCharWithUTF8(char Char)
 {
-    if (Char < 0)
-    {
-        if((unsigned char)Char >= 0xE0)
-        {
+    if (Char < 0){
+        if((unsigned char)Char >= 0xE0){
             return 3;
         }
-        else if ((unsigned char)Char >= 0xC0 && (unsigned char)Char < 0xE0)
-        {
+        else if ((unsigned char)Char >= 0xC0 && (unsigned char)Char < 0xE0){
             return 2;
         }
     }

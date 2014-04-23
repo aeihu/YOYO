@@ -30,7 +30,7 @@ class CButton : public CSequenceOfFrames
         bool Subclass_Loop();
     public:
         CAnimation      _AnimationControl;
-        list<string>    _CmdList;
+        list<string>    _cmdList;
 
         CButton(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 

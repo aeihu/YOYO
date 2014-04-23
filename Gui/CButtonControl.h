@@ -7,12 +7,13 @@
 */
 
 #include "CButton.h"
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CControlOfImageBaseClass.h"
 
-class CButtonControl : public CControlBaseClass
+class CButtonControl : public CControlOfImageBaseClass
 {
     private:
         bool IsAlreadyExists(string name);
+        CImageBaseClass* GetObject(std::string name);
     public:
         map<string, CButton>        _ButtonList;
 

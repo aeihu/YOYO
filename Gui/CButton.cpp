@@ -44,7 +44,7 @@ bool CButton::OnLButtonUp(int x, int y)
         if(_isMouseOver){
             _isMouseDown = false;
             SetCurrentImageFrame(_AnimationControl._MaxFrames-1);
-            CParser::parser.InsertCmdList(_CmdList);
+            CParser::parser.InsertCmdList(_cmdList);
             return true;
         }
         else{
@@ -153,7 +153,7 @@ bool CButton::SetProperty(map<string, string> list)
         return false;
 
     if (!CParser::parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
-        list["SCRIPT_SECTION"].c_str(), _CmdList))
+        list["SCRIPT_SECTION"].c_str(), _cmdList))
         return false;
 
     _AnimationControl._MaxFrames = atoi(list["MAX_FRAMES"].c_str());

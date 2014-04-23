@@ -21,7 +21,7 @@ typedef enum{
     FLAG_NONPARAMETRIC,
 }ENUM_FLAG;
 
-bool Cmd_ArgsToKV(string funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, string>& result)
+bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, string>& result)
 {
     result.clear();
 	list<pair<string, ENUM_FLAG> >::iterator __it;
@@ -76,6 +76,78 @@ bool Cmd_ArgsToKV(string funcName, list<pair<string, ENUM_FLAG> > flags, vector<
 #endif
 
     return true;
+}
+
+bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args)
+{ 
+    if (args.size() < 1){
+        cout << funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    
+    map<string,string> __values;
+    if (!Common_ArgsToKV(funcName.c_str(), __flags, args, __values))
+        return false;
+    
+    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+
+    if (controlBase->SetImageVisibility(__name, __alpha, __inrc, __pause)){
+        float* __x = &controlBase->GetObject(__name)->_Coordinate.x;
+        float* __y = &controlBase->GetObject(__name)->_Coordinate.y;
+
+        if (__values.count("-s") > 1)
+            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
+                cout << funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
+
+        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
+        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
+
+        return true;
+    }
+
+    cout << funcName << "(): can't find \""<< __name << "\"." << endl;
+    return false;
+}
+
+bool Common_FuncOfHide(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args)
+{ 
+    if (args.size() < 1){
+        cout << funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+
+    map<string,string> __values;
+    if (!Common_ArgsToKV("Cmd_HideBackground", __flags, args, __values))
+        return false;
+
+    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+
+    if (controlBase->SetImageVisibility(__name, 0, __inrc, __pause))
+        return true;
+
+    cout << funcName << "(): can't find \""<< __name << "\"." << endl;
+    return false;
 }
 
 bool Cmd_ShowInfo(vector<string> args)
@@ -176,7 +248,7 @@ bool Cmd_ShowCharacterLayer(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
     map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
+    if (!Common_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
         return false;
 
     float x = 0.0f;
@@ -226,7 +298,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
     map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
+    if (!Common_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
         return false;
 
     string __name = __values.count("-n") == 0 ? "" : __values["-n"];
@@ -263,7 +335,7 @@ bool Cmd_HideCharacterLayer(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
 
     map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
+    if (!Common_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
         return false;
 
     float __incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
@@ -347,46 +419,7 @@ bool Cmd_AddBackground(vector<string> args)
 //bool Cmd_ShowBackground(string name, int inrc, bool pause)
 bool Cmd_ShowBackground(vector<string> args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_ShowBackground(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-    
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    
-    map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_ShowBackground", __flags, args, __values))
-        return false;
-    
-    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool __pause = __values.count("-p") == 0 ? false : true;
-
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(__name, __alpha, __inrc, __pause)){
-        float* __x = &CResourceManager::_BackgroundLayerControl._ImgLayerList[__name]._Coordinate.x;
-        float* __y = &CResourceManager::_BackgroundLayerControl._ImgLayerList[__name]._Coordinate.y;
-
-        if (__values.count("-s") > 1)
-            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
-                cout << "Cmd_ShowBackground(): can't find position \""<< __values["-s"] << "\"." <<endl;
-
-        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
-        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
-
-        return true;
-    }
-
-    cout << "Cmd_ShowBackground(): can't find image \""<< __name << "\"." << endl;
-    return false;
+    return Common_FuncOfShow("Cmd_ShowBackground", &CResourceManager::_BackgroundLayerControl, args);
 }
 
 //bool Cmd_DelBackground(string name)
@@ -409,30 +442,7 @@ bool Cmd_DelBackground(vector<string> args)
 //bool Cmd_HideBackground(string name, int inrc, bool pause)
 bool Cmd_HideBackground(vector<string> args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_HideBackground(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-    
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-
-    map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_HideBackground", __flags, args, __values))
-        return false;
-
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool __pause = __values.count("-p") == 0 ? false : true;
-
-    if (CResourceManager::_BackgroundLayerControl.SetImageVisibility(__name, 0, __inrc, __pause))
-        return true;
-
-    cout << "Cmd_HideBackground(): can't find image \""<< __name << "\"." << endl;
-    return false;
+    return Common_FuncOfHide("Cmd_HideBackground", &CResourceManager::_BackgroundLayerControl, args);
 }
 
 /*
@@ -465,76 +475,13 @@ bool Cmd_AddImg(vector<string> args)
 //bool Cmd_ShowImg(string name, int inrc, bool pause)
 bool Cmd_ShowImg(vector<string> args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_ShowImg(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-    
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    
-    map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_ShowImg", __flags, args, __values))
-        return false;
-    
-    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool __pause = __values.count("-p") == 0 ? false : true;
-
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(__name, __alpha, __inrc, __pause)){
-        float* __x = &CResourceManager::_ImgLayerControl._ImgLayerList[__name]._Coordinate.x;
-        float* __y = &CResourceManager::_ImgLayerControl._ImgLayerList[__name]._Coordinate.y;
-
-        if (__values.count("-s") > 1)
-            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
-                cout << "Cmd_ShowImg(): can't find position \""<< __values["-s"] << "\"." <<endl;
-
-        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
-        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
-
-        return true;
-    }
-
-    cout << "Cmd_ShowImg(): can't find image \""<< __name << "\"." << endl;
-    return false;
+    return Common_FuncOfShow("Cmd_ShowImg", &CResourceManager::_ImgLayerControl, args);
 }
 
 //bool Cmd_HideImg(string name, int inrc, bool pause)
 bool Cmd_HideImg(vector<string> args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_HideImg(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-    
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-
-    map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_HideImg", __flags, args, __values))
-        return false;
-
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool __pause = __values.count("-p") == 0 ? false : true;
-
-
-    if (CResourceManager::_ImgLayerControl.SetImageVisibility(__name, 0, __inrc, __pause))
-        return true;
-
-    cout << "Cmd_HideImg(): can't find image \""<< __name << "\"." << endl;
-    return false;
+    return Common_FuncOfHide("Cmd_HideImg", &CResourceManager::_ImgLayerControl, args);
 }
 
 //bool Cmd_DelImg(string name)
@@ -768,23 +715,13 @@ bool Cmd_DelButton(vector<string> args)
 //bool Cmd_ShowButton(string name, int incr, bool pause)
 bool Cmd_ShowButton(vector<string> args)
 {
-    //if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 255, incr, pause)){
-    //    cout << "Cmd_ShowButton(): can't find Button \""<< name << "\"." <<endl;
-    //    return false;
-    //}
-
-    return true;
+    return Common_FuncOfShow("Cmd_ShowButton", &CResourceManager::_ButtonControl, args);
 }
 
 //bool Cmd_HideButton(string name, int incr, bool pause)
 bool Cmd_HideButton(vector<string> args)
 {
-    //if (!CResourceManager::_ButtonControl.SetImageVisibility(name, 0, incr, pause)){
-    //    cout << "Cmd_HideButton(): can't find Button \""<< name << "\"." <<endl;
-    //    return false;
-    //}
-
-    return true;
+    return Common_FuncOfHide("Cmd_HideButton", &CResourceManager::_ButtonControl, args);
 }
 //
 //
@@ -822,7 +759,7 @@ bool Cmd_Message(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //voice
     
     map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_Message", __flags, args, __values))
+    if (!Common_ArgsToKV("Cmd_Message", __flags, args, __values))
         return false;
     
     string __msgBoxName = __values.count("-n") == 0 ? "" : __values["-n"];
@@ -860,16 +797,16 @@ bool Cmd_AddMessageBox(vector<string> args)
         return false;
     }
 
-    string name = args[0];
-    const char* filename = args[1].c_str();
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
 
-    switch (CResourceManager::_MessageBoxControl.AddMessageBox(name, filename))
+    switch (CResourceManager::_MessageBoxControl.AddMessageBox(__name, __filename))
     {
         case 0:
             return true;
         break;
         case -1:
-            cout << "Cmd_AddMessageBox(): MessageBox \"" << name << "\" has existed." <<endl;
+            cout << "Cmd_AddMessageBox(): MessageBox \"" << __name << "\" has existed." <<endl;
         break;
         case -2:
             cout << "Cmd_AddMessageBox(): failed to add MessageBox." << endl;
@@ -898,54 +835,13 @@ bool Cmd_DelMessageBox(vector<string> args)
 
 //bool Cmd_ShowMessageBox(string name, int incr, bool pause)
 bool Cmd_ShowMessageBox(vector<string> args)
-{
-    if (args.size() < 1){
-        cout << "Cmd_ShowMessageBox(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //MessageBoxName
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-
-    map<string,string> __values;
-    if (!Cmd_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
-        return false;
-
-    int alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    string name = __values.count("-n") == 0 ? "" : __values["-n"];
-    int incr = __values.count("-i") == 0 ? CCommon::common.INCREMENT : atoi(__values["-i"].c_str());
-    bool pause = __values.count("-p") == 0 ? false : true;
-
-    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, alpha, incr, pause)){
-        cout << "Cmd_ShowMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
-        return false;
-    }
-
-    return true;
+{   
+    return Common_FuncOfShow("Cmd_ShowMessageBox", &CResourceManager::_MessageBoxControl, args);
 }
 
 bool Cmd_HideMessageBox(vector<string> args)
 {
-    if (args.size() != 3){
-        cout << "Cmd_HideMessageBox(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string name = args[0];
-    int incr = atoi(args[1].c_str()); 
-    bool pause = args[2] == "T" ? true : false;
-
-    if (!CResourceManager::_MessageBoxControl.SetImageVisibility(name, 0, incr, pause)){
-        cout << "Cmd_HideMessageBox(): can't find MessageBox \""<< name << "\"." <<endl;
-        return false;
-    }
-
-    return true;
+    return Common_FuncOfHide("Cmd_HideMessageBox", &CResourceManager::_MessageBoxControl, args);
 }
 //
 //

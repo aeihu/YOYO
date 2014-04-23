@@ -13,7 +13,7 @@ CParser CParser::parser;
 
 CParser::CParser()
 {
-    _Delay = 0;
+    _delay = 0;
     _pRunning = NULL;
     _pFunc = NULL;
 }
@@ -25,12 +25,12 @@ void CParser::SetRunning(bool* running)
 
 void CParser::SetDeplay(int ms)
 {
-    _Delay =  ms + CCommon::common.GetTicks();
+    _delay =  ms + CCommon::common.GetTicks();
 }
 
 bool CParser::IsDeplaying()
 {
-    return (CCommon::common.GetTicks() < _Delay ? true : false);
+    return (CCommon::common.GetTicks() < _delay ? true : false);
 }
 
 bool CParser::FindSection(list<string> &Commands, const char* Section)
@@ -79,11 +79,11 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
 
 bool CParser::LoadScript(const char* FileName, const char* Section)
 {
-    return CParser::LoadScript(FileName, Section, _CmdList);
+    return CParser::LoadScript(FileName, Section, _cmdList);
 }
 
 void CParser::OnCleanup() {
-    _CmdList.clear();
+    _cmdList.clear();
     _pRunning = NULL;
 }
 
@@ -140,6 +140,11 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@play_bgm") _pFunc = &Cmd_PlayBGM;
         else if (__commandName == "@pause_bgm") _pFunc = &Cmd_PauseBGM;
         else if (__commandName == "@resume_bgm") _pFunc = &Cmd_ResumeBGM;
+
+        else if (__commandName == "@add_btn") _pFunc = &Cmd_AddButton;
+        else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
+        else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
+        else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
         else{
             cout << "unknown command." << endl;
             return;
@@ -153,10 +158,10 @@ void CParser::OnLoop()
 {
     try
     {
-        if (_CmdList.size() > 0)
+        if (_cmdList.size() > 0)
         {
-            string cmd = _CmdList.front();
-            _CmdList.erase(_CmdList.begin());
+            string cmd = _cmdList.front();
+            _cmdList.erase(_cmdList.begin());
             ExecuteCmd(cmd);
         }
     }
@@ -190,7 +195,7 @@ void CParser::ExecuteAllCmd(list<string> commands)
     while (commands.size() > 0)
     {
         string cmd = commands.front();
-        _CmdList.erase(commands.begin());
+        _cmdList.erase(commands.begin());
         ExecuteCmd(cmd);
     }
 }
@@ -199,7 +204,7 @@ void CParser::InsertCmdList(list<string> commands)
 {
     if (commands.size() > 0)
     {
-        _CmdList.insert(_CmdList.end(),commands.begin(),commands.end());
+        _cmdList.insert(_cmdList.end(),commands.begin(),commands.end());
         
         //Pause = false;
     }
@@ -208,7 +213,7 @@ void CParser::InsertCmdList(list<string> commands)
 
 void CParser::InsertCmd(string cmd)
 {
-    _CmdList.push_back(cmd);
+    _cmdList.push_back(cmd);
 }
 
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)

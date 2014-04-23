@@ -25,8 +25,8 @@ using namespace std;
 class CParser
 {
     private:        
-        list<string>            _CmdList;
-        unsigned long           _Delay;
+        list<string>            _cmdList;
+        unsigned long           _delay;
         bool*                   _pRunning;
 
         bool FindSection(list<string> &Commands, const char* Section);

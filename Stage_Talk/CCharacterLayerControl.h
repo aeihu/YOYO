@@ -10,13 +10,15 @@
     #define _CPOSITIONS_H_
 
 #include "CCharacterLayer.h"
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CControlOfImageBaseClass.h"
 #include "../Sound/CSoundBank.h"
 #include <map>
 #include <string>
 
-class CCharacterLayerControl : public CControlBaseClass
+class CCharacterLayerControl : public CControlOfImageBaseClass
 {
+    private:
+        CImageBaseClass* GetObject(string name);
     public:
         map<string, CCharacterLayer>     _CharacterList;
 
@@ -29,7 +31,7 @@ class CCharacterLayerControl : public CControlBaseClass
         char Show(string name, float x, float y, char type, float increment, bool pause, int alpha=255);
         bool Hide(string name, char type, float increment, bool pause);
 
-        bool SetVisibility(string name, int alpha, int increment, bool pause);
+        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
 
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);

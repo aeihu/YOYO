@@ -10,14 +10,15 @@
     #define _CIMGLAYERCONTROL_H_
 
 #include "CImgLayer.h"
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CControlOfImageBaseClass.h"
 #include "../Common/CAdder.h"
 #include <map>
 #include <string>
 
-class CImgLayerControl : public CControlBaseClass
+class CImgLayerControl : public CControlOfImageBaseClass
 {
     private:
+        CImageBaseClass* GetObject(std::string name);
     public:
         std::map<std::string, CImgLayer>    _ImgLayerList;
 

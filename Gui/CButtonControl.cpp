@@ -74,7 +74,14 @@ void CButtonControl::OnLoop(bool &pause)
 void CButtonControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     map<std::string, CButton>::iterator it;
-
     for (it=_ButtonList.begin();it!=_ButtonList.end();it++)
         (*it).second.CImageBaseClass::OnRender(Surf_Dest);
+}
+
+CImageBaseClass* CButtonControl::GetObject(std::string name)
+{
+    if (_ButtonList.count(name) < 1)
+        return NULL;
+
+    return &_ButtonList[name];
 }
