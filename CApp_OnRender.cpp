@@ -14,7 +14,7 @@ void CApp::OnRender() {
     sf_Display->clear();
     //SDL_FillRect(sf_Display, &Rect, 0);
     //
-    //if (CCommon::_Common.EventFocus != 99)
+    //if (CCommon::_Common._EventFocus != 99)
     //{
     //    CArea::AreaControl.OnRender(sf_Display, -CCamera::CameraControl.GetX(), -CCamera::CameraControl.GetY());
     //

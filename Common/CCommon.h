@@ -24,13 +24,13 @@ typedef enum {BUTTON_FOCUS, MAP_FOCUS, MESSAGEBOX_FOCUS, MENUBOX_FOCUS, LOGBOX_F
 class CCommon
 {
     private:
-        sf::Clock Clock;
+        sf::Clock __clock;
 
         void SetValue(const char* name, const char* value);
     public:
-        map<string, string>        PlayerVariableTable;
-        map<string, string>        SystemVariableTable;
-        eEventFocus                EventFocus;
+        map<string, string>        _PlayerVariableTable;
+        map<string, string>        _SystemVariableTable;
+        eEventFocus                _EventFocus;
 
         string CONFIG_PATH;
         string GAME_PATH;

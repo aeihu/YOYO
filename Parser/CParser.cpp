@@ -146,6 +146,10 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
         else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
         
+        else if (__commandName == "@add_var") _pFunc = &Cmd_AddVariable;
+        else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
+        else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;
+
         else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1)
                 SetDeplay(atoi(__listOfCmdPara[0].c_str()));
@@ -276,8 +280,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
     for (unsigned int i = 1; i < plist.size(); i++)
     {
         if(plist[i].at(0) == '$'){
-            if (CCommon::_Common.PlayerVariableTable.count(plist[i]) > 0){
-                plist[i] = CCommon::_Common.PlayerVariableTable[plist[i]];
+            if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
+                plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
             }
         }
     }
@@ -327,8 +331,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 //    //for (unsigned int i = 1; i < plist.size(); i++)
 //    //{
 //    //    if(plist[i].at(0) == '$'){
-//    //        if (CCommon::_Common.PlayerVariableTable.count(plist[i]) > 0){
-//    //            plist[i] = CCommon::_Common.PlayerVariableTable[plist[i]];
+//    //        if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
+//    //            plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
 //    //        }
 //    //    }
 //    //}

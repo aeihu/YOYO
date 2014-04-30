@@ -90,9 +90,9 @@ bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
 ////bool Cmd_ShowLogBox(bool pause);
 ////bool Cmd_HideLogBox(bool pause);
 ////
-////bool Cmd_AddVariable(string name, string val, map<string, string> &var_table);
-////bool Cmd_SetVariable(string name, string val, map<string, string> &var_table);
-////bool Cmd_DelVariable(string name, map<string, string> &var_table);
+bool Cmd_AddVariable(vector<string>);//(string name, string val, map<string, string> &var_table);
+bool Cmd_SetVariable(vector<string>);//(string name, string val, map<string, string> &var_table);
+bool Cmd_DelVariable(vector<string>);//(string name, map<string, string> &var_table);
 ////
 ////void Cmd_DelCommand(vector<string> &cmdlist, int num);
 ////bool Cmd_DelCommand(vector<string> &cmdlist, string flag);

@@ -12,6 +12,7 @@
 #include "../Sound/CSoundBank.h"
 #include "../Gui/CButton.h"
 #include "../Common/CResourceManager.h"
+#include "../Common/CCommon.h"
 #include <iostream>
 #include <algorithm>
 
@@ -156,7 +157,7 @@ bool Common_FuncOfHide(string objTypeName, CControlOfImageBaseClass* controlBase
     float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     string __name = __values.count("-n") == 0 ? "" : __values["-n"];
     bool __pause = __values.count("-p") == 0 ? false : true;
-    char __type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
+    char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
 
     switch (controlBase->Hide(__name, __type, __incr, __pause)){
         case -1:
@@ -187,7 +188,6 @@ bool Cmd_ShowInfo(vector<string> args)
     return true;
 }
 
-//void Cmd_AddPosition(string name, float x, float y)
 bool Cmd_AddPosition(vector<string> args)
 {
     if (args.size() != 3){
@@ -203,7 +203,6 @@ bool Cmd_AddPosition(vector<string> args)
     return true;
 }
 
-//void Cmd_DelPosition(string name)
 bool Cmd_DelPosition(vector<string> args)
 {
     if (args.size() < 1){
@@ -266,7 +265,6 @@ bool Cmd_ShowCharacterLayer(vector<string> args)
     return Common_FuncOfShow("CharacterLayer", &CResourceManager::_CharacterLayerControl, args);
 }
 
-//bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause)
 bool Cmd_MoveCharacterLayer(vector<string> args)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
@@ -357,7 +355,6 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 //    return CParser::_Parser.LoadScript(filename, Section);
 //}
 //
-//bool Cmd_AddBackground(string name, const char* filename, float x, float y)
 bool Cmd_AddBackground(vector<string> args)
 {
     if (args.size() != 2){
@@ -378,13 +375,11 @@ bool Cmd_AddBackground(vector<string> args)
     }
 }
 
-//bool Cmd_ShowBackground(string name, int inrc, bool pause)
 bool Cmd_ShowBackground(vector<string> args)
 {
     return Common_FuncOfShow("Background", &CResourceManager::_BackgroundLayerControl, args);
 }
 
-//bool Cmd_DelBackground(string name)
 bool Cmd_DelBackground(vector<string> args)
 {
     if (args.size() < 1){
@@ -401,7 +396,6 @@ bool Cmd_DelBackground(vector<string> args)
     return true;
 }
 
-//bool Cmd_HideBackground(string name, int inrc, bool pause)
 bool Cmd_HideBackground(vector<string> args)
 {
     return Common_FuncOfHide("Background", &CResourceManager::_BackgroundLayerControl, args);
@@ -434,19 +428,16 @@ bool Cmd_AddImg(vector<string> args)
     }
 }
 
-//bool Cmd_ShowImg(string name, int inrc, bool pause)
 bool Cmd_ShowImg(vector<string> args)
 {
     return Common_FuncOfShow("Img", &CResourceManager::_ImgLayerControl, args);
 }
 
-//bool Cmd_HideImg(string name, int inrc, bool pause)
 bool Cmd_HideImg(vector<string> args)
 {
     return Common_FuncOfHide("Cmd_HideImg", &CResourceManager::_ImgLayerControl, args);
 }
 
-//bool Cmd_DelImg(string name)
 bool Cmd_DelImg(vector<string> args)
 {
     if (args.size() < 1){
@@ -493,7 +484,6 @@ bool Cmd_DelImg(vector<string> args)
 //    return CSoundBank::_SoundControl.Say(filename);
 //}
 
-//bool Cmd_PlayBGM(const char* filename)
 bool Cmd_PlayBGM(vector<string> args)
 {
     if (args.size() != 1){
@@ -526,7 +516,6 @@ bool Cmd_ResumeBGM(vector<string> args)
     return true;
 }
 
-//int Cmd_AddSE(const char* name, const char* filename)
 bool Cmd_AddSE(vector<string> args)
 {
     if (args.size() != 2){
@@ -553,7 +542,6 @@ bool Cmd_AddSE(vector<string> args)
     return true;
 }
 
-//bool Cmd_DelSE(string name)
 bool Cmd_DelSE(vector<string> args)
 {
     if (args.size() < 1){
@@ -570,7 +558,6 @@ bool Cmd_DelSE(vector<string> args)
     return true;
 }
 
-//bool Cmd_PlaySE(const char* name)
 bool Cmd_PlaySE(vector<string> args)
 {
     if (args.size() != 1){
@@ -629,7 +616,6 @@ bool Cmd_DelVoice(vector<string> args)
     return true;
 }
 
-//bool Cmd_AddButton(string name, const char* filename)
 bool Cmd_AddButton(vector<string> args)
 {
     if (args.size() != 2){
@@ -656,8 +642,7 @@ bool Cmd_AddButton(vector<string> args)
 
     return false;
 }
-//
-//bool Cmd_DelButton(string name)
+
 bool Cmd_DelButton(vector<string> args)
 {
     if (args.size() < 1){
@@ -674,13 +659,11 @@ bool Cmd_DelButton(vector<string> args)
     return true;
 }
 
-//bool Cmd_ShowButton(string name, int incr, bool pause)
 bool Cmd_ShowButton(vector<string> args)
 {
     return Common_FuncOfShow("Button", &CResourceManager::_ButtonControl, args);
 }
 
-//bool Cmd_HideButton(string name, int incr, bool pause)
 bool Cmd_HideButton(vector<string> args)
 {
     return Common_FuncOfHide("Button", &CResourceManager::_ButtonControl, args);
@@ -710,7 +693,6 @@ bool Cmd_HideButton(vector<string> args)
 //    CCommon::_Common.FONT_SHADOW = b;
 //}
 //
-//bool Cmd_Message(string name, string msg)
 bool Cmd_Message(vector<string> args)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
@@ -750,7 +732,6 @@ bool Cmd_Message(vector<string> args)
     return true;
 }
 
-//bool Cmd_AddMessageBox(string name, const char* filename)
 bool Cmd_AddMessageBox(vector<string> args)
 {
     if (args.size() != 2){
@@ -778,7 +759,6 @@ bool Cmd_AddMessageBox(vector<string> args)
     return false;
 }
 
-//bool Cmd_DelMessageBox(string name)
 bool Cmd_DelMessageBox(vector<string> args)
 {
     if (args.size() < 1){
@@ -795,7 +775,6 @@ bool Cmd_DelMessageBox(vector<string> args)
     return true;
 }
 
-//bool Cmd_ShowMessageBox(string name, int incr, bool pause)
 bool Cmd_ShowMessageBox(vector<string> args)
 {   
     return Common_FuncOfShow("MessageBox", &CResourceManager::_MessageBoxControl, args);
@@ -917,34 +896,59 @@ bool Cmd_HideMessageBox(vector<string> args)
 //}
 //
 //bool Cmd_AddVariable(string name, string val, map<string, string> &var_table)
-//{
-//    name = "$" + name;
-//    if(var_table.count(name) > 0)
-//        return false;
-//
-//    var_table[name] = val;
-//    return true;
-//}
-//
-//bool Cmd_SetVariable(string name, string val, map<string, string> &var_table)
-//{
-//    name = "$" + name;
-//    if(var_table.count(name) < 1)
-//        return false;
-//    
-//    var_table[name] = val;
-//    return true;
-//}
-//
-//bool Cmd_DelVariable(string name, map<string, string> &var_table)
-//{
-//    name = "$" + name;
-//    if(var_table.count(name) < 1)
-//        return false;
-//
-//    var_table.erase(name);
-//    return true;
-//}
+bool Cmd_AddVariable(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_AddVariable(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string __name = args[0];
+    string __val = args[1];
+    __name = "$" + __name;
+    
+    if(CCommon::_Common._PlayerVariableTable.count(__name) > 0)
+        return false;
+
+    CCommon::_Common._PlayerVariableTable[__name] = __val;
+    return true;
+}
+
+bool Cmd_SetVariable(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_SetVariable(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string __name = args[0];
+    string __val = args[1];
+    __name = "$" + __name;
+
+    if(CCommon::_Common._PlayerVariableTable.count(__name) < 1)
+        return false;
+    
+    CCommon::_Common._PlayerVariableTable[__name] = __val;
+    return true;
+}
+
+bool Cmd_DelVariable(vector<string> args)
+{
+    if (args.size() < 1){
+        cout << "Cmd_DelVariable(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        if(CCommon::_Common._PlayerVariableTable.count("$"+args[i]) > 0)
+            CCommon::_Common._PlayerVariableTable.erase("$"+args[i]);
+    }
+
+    return true;
+}
 //
 //bool Cmd_EditEquipList(string id, int num)
 //{

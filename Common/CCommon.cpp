@@ -109,7 +109,7 @@ bool CCommon::OnInit()
         string __paraName = "";
         string __paraValue = "";
         if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            SystemVariableTable[__paraName] = __paraValue;
+            _SystemVariableTable[__paraName] = __paraValue;
     }
     
     return true;
@@ -352,7 +352,7 @@ void CCommon::SetValue(const char* name, const char* value)
 }
 
 unsigned long CCommon::GetTicks(){
-    return Clock.getElapsedTime().asMilliseconds();
+    return __clock.getElapsedTime().asMilliseconds();
 }
 
 unsigned int CCommon::SizeOfCharWithUTF8(char Char)
@@ -373,7 +373,7 @@ void CCommon::SaveSysData()
 {
     FILE* File = fopen(GAME_SYSDATA.c_str(), "w");
     map<string, string>::iterator it;
-    for ( it=SystemVariableTable.begin(); it != SystemVariableTable.end(); it++ )
+    for ( it=_SystemVariableTable.begin(); it != _SystemVariableTable.end(); it++ )
         fprintf (File, "%s = %s\n",(*it).first.c_str(),(*it).second.c_str());
 
     fclose (File);
@@ -381,8 +381,8 @@ void CCommon::SaveSysData()
 
 void CCommon::OnCleanup()
 {
-    PlayerVariableTable.clear();
-    SystemVariableTable.clear();
+    _PlayerVariableTable.clear();
+    _SystemVariableTable.clear();
 
     //for (int i = 0; i < LogList.size(); i++)
     //{
