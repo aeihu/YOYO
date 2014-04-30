@@ -17,8 +17,8 @@ CButton::CButton(float x, float y, int w, int h, int maxframes, int framerate):C
     _AnimationControl._Type = CAnimation::Backward;
     _isMouseDown = false;
     _isMouseOver = false;
-    _seNameOfMouseOver = CCommon::common.MOUSEOVER_SE;
-    _seNameOfMouseDown = CCommon::common.MOUSEDOWN_SE;
+    _seNameOfMouseOver = CCommon::_Common.MOUSEOVER_SE;
+    _seNameOfMouseDown = CCommon::_Common.MOUSEDOWN_SE;
     _Coordinate.x=x;
     _Coordinate.y=y;
 }
@@ -44,7 +44,7 @@ bool CButton::OnLButtonUp(int x, int y)
         if(_isMouseOver){
             _isMouseDown = false;
             SetCurrentImageFrame(_AnimationControl._MaxFrames-1);
-            CParser::parser.InsertCmdList(_cmdList);
+            CParser::_Parser.InsertCmdList(_cmdList);
             return true;
         }
         else{
@@ -59,7 +59,7 @@ bool CButton::Subclass_Loop()
 {
     if (!_isMouseDown){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-        _AnimationControl.OnAnimate(CCommon::common.GetTicks());
+        _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
     }
 
     return false;
@@ -152,7 +152,7 @@ bool CButton::SetProperty(map<string, string> list)
     if (!LoadImg(list["TILESET_PATH"].c_str()))
         return false;
 
-    if (!CParser::parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
+    if (!CParser::_Parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
         list["SCRIPT_SECTION"].c_str(), _cmdList))
         return false;
 

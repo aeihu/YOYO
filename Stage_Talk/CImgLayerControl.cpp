@@ -46,7 +46,7 @@ bool CImgLayerControl::DelImage(std::string name)
 bool CImgLayerControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
     if (incr == 0)
-        incr = CCommon::common.INCREMENT;
+        incr = CCommon::_Common.INCREMENT;
 
     if (IsAlreadyExists(name)){
         _imgLayerList[name].Insert(0,

@@ -39,7 +39,7 @@ bool CCharacterLayer::Subclass_Loop()
 
     if (_isFaceEnable && _AnimationControl.GetEnable()){
         _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-        _AnimationControl.OnAnimate(CCommon::common.GetTicks());
+        _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
     }
 
     return false;

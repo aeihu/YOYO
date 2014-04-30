@@ -52,7 +52,7 @@ bool CCharacterLayerControl::Move(string name, float x, float y, float increment
         return false;
 
     if (increment > -0.001f && increment < 0.001f)
-        increment = (float)CCommon::common.INCREMENT;
+        increment = (float)CCommon::_Common.INCREMENT;
 
     if (abs(_characterList[name]._Coordinate.x-x) 
         > abs(_characterList[name]._Coordinate.y-y)){
@@ -90,9 +90,9 @@ char CCharacterLayerControl::Show(string name, float x, float y, char type, floa
         return -2;
 
     if (increment > -0.001f && increment < 0.001f)
-        increment = (float)CCommon::common.INCREMENT;
+        increment = (float)CCommon::_Common.INCREMENT;
 
-    float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
+    float buf = CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = x;
     float __y = y;
     int __inc = (int)increment;
@@ -137,9 +137,9 @@ bool CCharacterLayerControl::Hide(string name, char type, float increment, bool 
         return false;
 
     if (increment > -0.001f && increment < 0.001f)
-        increment = (float)CCommon::common.INCREMENT;
+        increment = (float)CCommon::_Common.INCREMENT;
 
-    float buf = CCommon::common.CHARACTER_LAYER_MOVE_BUFFER;
+    float buf = CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
     float __x = _characterList[name]._Coordinate.x;
     float __y = _characterList[name]._Coordinate.y;
     int __inc = (int)increment;
@@ -182,7 +182,7 @@ bool CCharacterLayerControl::SetImageVisibility(string name, int alpha, int incr
         return false;
 
     if (increment == 0)
-        increment = CCommon::common.INCREMENT;
+        increment = CCommon::_Common.INCREMENT;
 
     _characterList[name].Insert(0, alpha, pause, &_characterList[name]._Alpha, increment);
     return true;

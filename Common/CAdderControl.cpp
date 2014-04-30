@@ -75,7 +75,7 @@ unsigned int CAdderControl::Count()
 
 int CAdderControl::OnLoop()
 {
-    unsigned long __time = CCommon::common.GetTicks();
+    unsigned long __time = CCommon::_Common.GetTicks();
     int __result = 0;
 
     for (list<CiAdder>::iterator it=_iAdderList.begin() ; it != _iAdderList.end();){

@@ -8,7 +8,7 @@
 
 #include "CCommon.h"
 
-CCommon CCommon::common;
+CCommon CCommon::_Common;
 
 CCommon::CCommon()
 {

@@ -9,7 +9,7 @@
 #include "CParser.h"
 #include  <cstring>
 
-CParser CParser::parser;
+CParser CParser::_Parser;
 
 CParser::CParser()
 {
@@ -25,12 +25,12 @@ void CParser::SetRunning(bool* running)
 
 void CParser::SetDeplay(int ms)
 {
-    _delay =  ms + CCommon::common.GetTicks();
+    _delay =  ms + CCommon::_Common.GetTicks();
 }
 
 bool CParser::IsDeplaying()
 {
-    return (CCommon::common.GetTicks() < _delay ? true : false);
+    return (CCommon::_Common.GetTicks() < _delay ? true : false);
 }
 
 bool CParser::FindSection(list<string> &Commands, const char* Section)
@@ -146,7 +146,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
         else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
         
-        else if (__commandName == "@Deplay"){
+        else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1)
                 SetDeplay(atoi(__listOfCmdPara[0].c_str()));
             else
@@ -154,6 +154,9 @@ void CParser::ExecuteCmd(string cmd)
                     << " argument(s) in the command." <<endl;
 
             return;
+        }
+        else if (__commandName == "@reload"){
+            
         }
         else{
             cout << "unknown command." << endl;
@@ -268,8 +271,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
     for (unsigned int i = 1; i < plist.size(); i++)
     {
         if(plist[i].at(0) == '$'){
-            if (CCommon::common.PlayerVariableTable.count(plist[i]) > 0){
-                plist[i] = CCommon::common.PlayerVariableTable[plist[i]];
+            if (CCommon::_Common.PlayerVariableTable.count(plist[i]) > 0){
+                plist[i] = CCommon::_Common.PlayerVariableTable[plist[i]];
             }
         }
     }
@@ -319,8 +322,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 //    //for (unsigned int i = 1; i < plist.size(); i++)
 //    //{
 //    //    if(plist[i].at(0) == '$'){
-//    //        if (CCommon::common.PlayerVariableTable.count(plist[i]) > 0){
-//    //            plist[i] = CCommon::common.PlayerVariableTable[plist[i]];
+//    //        if (CCommon::_Common.PlayerVariableTable.count(plist[i]) > 0){
+//    //            plist[i] = CCommon::_Common.PlayerVariableTable[plist[i]];
 //    //        }
 //    //    }
 //    //}

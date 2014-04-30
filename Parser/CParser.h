@@ -35,7 +35,7 @@ class CParser
 
         bool (*_pFunc)(vector<string>);
     public:
-        static CParser parser;
+        static CParser _Parser;
         CParser();
         bool LoadScript(const char* FileName, const char* Section);
         bool LoadScript(const char* FileName, const char* Section, list<string> &Commands);

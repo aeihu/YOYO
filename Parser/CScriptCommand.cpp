@@ -265,7 +265,7 @@ bool Cmd_ShowCharacterLayer(vector<string> args)
     }
 
     int alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    float incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    float incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     string name = __values.count("-n") == 0 ? "" : __values["-n"];
     char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
     bool pause = __values.count("-p") == 0 ? false : true;
@@ -318,7 +318,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     __x = __values.count("-x") == 0 ? __x : atof(__values["-x"].c_str());
     __y = __values.count("-y") == 0 ? __y : atof(__values["-y"].c_str());
 
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     bool __pause = __values.count("-p") == 0 ? false : true;
 
     if(!CResourceManager::_CharacterLayerControl.Move(__name, __x, __y, __incr, __pause)){
@@ -340,7 +340,7 @@ bool Cmd_HideCharacterLayer(vector<string> args)
     if (!Common_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
         return false;
 
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::common.INCREMENT : atof(__values["-i"].c_str());
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     string __name = __values.count("-n") == 0 ? "" : __values["-n"];
     bool __pause = __values.count("-p") == 0 ? false : true;
     char __type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
@@ -398,7 +398,7 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 //
 //bool Cmd_LoadScript(const char* filename, const char* Section)
 //{
-//    return CParser::parser.LoadScript(filename, Section);
+//    return CParser::_Parser.LoadScript(filename, Section);
 //}
 //
 //bool Cmd_AddBackground(string name, const char* filename, float x, float y)
@@ -516,7 +516,7 @@ bool Cmd_DelImg(vector<string> args)
 //    }
 //    
 //    CImgLayer::ImgLayerList["WHITESCREEN"]->SetColor(255,255,255,0);
-//    CImgLayer::ImgLayerList["WHITESCREEN"]->SetAlpha(255, &CParser::parser.Pause);
+//    CImgLayer::ImgLayerList["WHITESCREEN"]->SetAlpha(255, &CParser::_Parser.Pause);
 //    CImgLayer::ImgLayerList["WHITESCREEN"]->SetInterval(msec);
 //}
 //
@@ -528,7 +528,7 @@ bool Cmd_DelImg(vector<string> args)
 //    }
 //    
 //    CImgLayer::ImgLayerList["BLACKSCREEN"]->SetColor(0,0,0,0);
-//    CImgLayer::ImgLayerList["BLACKSCREEN"]->SetAlpha(255, &CParser::parser.Pause);
+//    CImgLayer::ImgLayerList["BLACKSCREEN"]->SetAlpha(255, &CParser::_Parser.Pause);
 //    CImgLayer::ImgLayerList["BLACKSCREEN"]->SetInterval(msec);
 //}
 //
@@ -751,7 +751,7 @@ bool Cmd_HideButton(vector<string> args)
 //
 //void Cmd_SetFontShadow(bool b)
 //{
-//    CCommon::common.FONT_SHADOW = b;
+//    CCommon::_Common.FONT_SHADOW = b;
 //}
 //
 //bool Cmd_Message(string name, string msg)
@@ -866,12 +866,12 @@ bool Cmd_HideMessageBox(vector<string> args)
 //    if (CMenuBox::menubox.Visible)
 //        return 0;
 //
-//    if(!CParser::parser.ExecuteAllCmd(filename, section))
+//    if(!CParser::_Parser.ExecuteAllCmd(filename, section))
 //        return -1;
 //
 //    CMenuBox::menubox.Refresh();
 //    if (pause)
-//        CMenuBox::menubox.Show(&CParser::parser.Pause);
+//        CMenuBox::menubox.Show(&CParser::_Parser.Pause);
 //    else
 //        CMenuBox::menubox.Show(NULL);
 //
@@ -885,7 +885,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //
 //    CMenuBox::menubox.ClearBtn();
 //    if (pause)
-//        CMenuBox::menubox.Hide(&CParser::parser.Pause);
+//        CMenuBox::menubox.Hide(&CParser::_Parser.Pause);
 //    else
 //        CMenuBox::menubox.Hide(NULL);
 //
@@ -898,7 +898,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //        return false;
 //
 //    if (pause)
-//        CObjectInfoBox::objectinfobox.Show(&CParser::parser.Pause);
+//        CObjectInfoBox::objectinfobox.Show(&CParser::_Parser.Pause);
 //    else
 //        CObjectInfoBox::objectinfobox.Show(NULL);
 //    
@@ -911,7 +911,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //        return false;
 //
 //    if (pause)
-//        CObjectInfoBox::objectinfobox.Hide(&CParser::parser.Pause);
+//        CObjectInfoBox::objectinfobox.Hide(&CParser::_Parser.Pause);
 //    else
 //        CObjectInfoBox::objectinfobox.Hide(NULL);
 //    
@@ -924,7 +924,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //        return false;
 //
 //    if (pause)
-//        CLogBox::logbox.Show(&CParser::parser.Pause);
+//        CLogBox::logbox.Show(&CParser::_Parser.Pause);
 //    else
 //        CLogBox::logbox.Show(NULL);
 //    
@@ -937,7 +937,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //        return false;
 //
 //    if (pause)
-//        CLogBox::logbox.Hide(&CParser::parser.Pause);
+//        CLogBox::logbox.Hide(&CParser::_Parser.Pause);
 //    else
 //        CLogBox::logbox.Hide(NULL);
 //    
@@ -1101,7 +1101,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 //
 //    vector<string> cmdlist;
 //
-//    if(CParser::parser.LoadScript(filename, section, cmdlist))
+//    if(CParser::_Parser.LoadScript(filename, section, cmdlist))
 //    {
 //        CMapEventControl::MapEventControl.MapEventList[name] = cmdlist;
 //        cmdlist.clear();

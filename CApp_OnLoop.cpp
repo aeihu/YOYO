@@ -14,8 +14,8 @@
 //==============================================================================
 void CApp::OnLoop() {
     //static unsigned long t = 0;
-    //int l = CCommon::common.GetTicks() - t;
-    //t = CCommon::common.GetTicks();
+    //int l = CCommon::_Common.GetTicks() - t;
+    //t = CCommon::_Common.GetTicks();
     //sf::Text te;
     //char buf[10];
     //sprintf(buf, "%d", l);
@@ -30,10 +30,10 @@ void CApp::OnLoop() {
 
     CSoundBank::_SoundControl.OnLoop();
 
-    if (CParser::parser.IsDeplaying() || __isPause)
+    if (CParser::_Parser.IsDeplaying() || __isPause)
         return;
     
-    CParser::parser.OnLoop();
+    CParser::_Parser.OnLoop();
 }
 
 //==============================================================================

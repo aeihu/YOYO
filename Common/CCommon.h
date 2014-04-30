@@ -80,7 +80,7 @@ class CCommon
 
         float CHARACTER_LAYER_MOVE_BUFFER;// 30
 
-        static CCommon common;
+        static CCommon _Common;
 
         CCommon();
 

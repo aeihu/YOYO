@@ -113,7 +113,7 @@ bool CMessageBox::OnLoop()
 
     if (IsTextAllShown() && !GetText().empty()){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-        _AnimationControl.OnAnimate(CCommon::common.GetTicks());
+        _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
 
         CSequenceOfFrames::_Coordinate = 
             CTextProcessing::GetLastCharacterPos()+

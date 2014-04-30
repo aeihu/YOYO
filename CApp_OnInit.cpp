@@ -14,24 +14,24 @@ bool CApp::OnInit()
 {
     sf_Display = new sf::RenderWindow();
 
-    if (!CCommon::common.OnInit()){
+    if (!CCommon::_Common.OnInit()){
         return false;
     }
 
-    CParser::parser.SetRunning(&Running);
+    CParser::_Parser.SetRunning(&Running);
     CSoundBank::_SoundControl.OnInit();
 
     sf_Display->create(
-        sf::VideoMode(CCommon::common.WWIDTH, CCommon::common.WHEIGHT, 32), 
-        CCommon::common.GAME_NAME);
+        sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 
+        CCommon::_Common.GAME_NAME);
 
-    sf_Display->setFramerateLimit(CCommon::common.MAX_FPS);
+    sf_Display->setFramerateLimit(CCommon::_Common.MAX_FPS);
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if (!CParser::parser.LoadScript(CCommon::common.GAME_PATH.c_str(), "init"))
+    if (!CParser::_Parser.LoadScript(CCommon::_Common.GAME_PATH.c_str(), "init"))
     {
-        cout << "CApp::OnInit(): can't find script file \"" << CCommon::common.GAME_PATH.c_str()
+        cout << "CApp::OnInit(): can't find script file \"" << CCommon::_Common.GAME_PATH.c_str()
             << "\" or section [init]." << endl;
         return false;
     }

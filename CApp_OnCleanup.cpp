@@ -17,6 +17,8 @@ void CApp::OnCleanup() {
     CResourceManager::_MessageBoxControl.OnCleanup();
     CResourceManager::_ButtonControl.OnCleanup();
     CSoundBank::_SoundControl.OnCleanup();
+    CParser::_Parser.OnCleanup();
+    CCommon::_Common.OnCleanup();
 }
 
 //==============================================================================

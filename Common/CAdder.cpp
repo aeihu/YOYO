@@ -12,7 +12,7 @@ CAdder::CAdder()
 {
     _type = 0;
     _oldTime = 0;
-    _interval = CCommon::common.INTERVAL;
+    _interval = CCommon::_Common.INTERVAL;
     _pause = false;
 }
 

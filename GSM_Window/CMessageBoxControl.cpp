@@ -49,7 +49,7 @@ bool CMessageBoxControl::DelMessageBox(std::string name)
 bool CMessageBoxControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
 {
     if (incr == 0)
-        incr = CCommon::common.INCREMENT;
+        incr = CCommon::_Common.INCREMENT;
 
     if (IsAlreadyExists(name)){
         _messageBoxList[name].Insert(0,

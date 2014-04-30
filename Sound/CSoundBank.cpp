@@ -141,12 +141,12 @@ void CSoundBank::PlayBgm()
 
 void CSoundBank::OnLoop()
 {
-    if (_soundPool.size() > CCommon::common.SOUND_POOL_NUM){
+    if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
         for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end();){
             if ((*it).getStatus() == sf::Sound::Stopped){
                 _soundPool.erase(it);
 
-                if (_soundPool.size() <= CCommon::common.SOUND_POOL_NUM)
+                if (_soundPool.size() <= CCommon::_Common.SOUND_POOL_NUM)
                     break;
             }
             else
@@ -154,13 +154,13 @@ void CSoundBank::OnLoop()
         }
     }
 
-    if (_voicePool.size() > CCommon::common.VOICE_POOL_NUM){
+    if (_voicePool.size() > CCommon::_Common.VOICE_POOL_NUM){
         for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); ){
             if ((*it)->getStatus() == sf::Sound::Stopped){
                 delete (*it);
                 _voicePool.erase(it);
 
-                if (_voicePool.size() <= CCommon::common.SOUND_POOL_NUM)
+                if (_voicePool.size() <= CCommon::_Common.SOUND_POOL_NUM)
                     break;
             }
             else
@@ -204,11 +204,11 @@ bool CSoundBank::GetVoiceStatus(string name)
 
 bool CSoundBank::OnInit()
 {
-    for (unsigned char i=0; i<CCommon::common.SOUND_POOL_NUM; i++){
+    for (unsigned char i=0; i<CCommon::_Common.SOUND_POOL_NUM; i++){
         _soundPool.push_back(sf::Sound());
     }
 
-    for (unsigned char i=0; i<CCommon::common.VOICE_POOL_NUM; i++){
+    for (unsigned char i=0; i<CCommon::_Common.VOICE_POOL_NUM; i++){
         _voicePool.push_back(new CVoiceStream());
     }
     

@@ -23,15 +23,15 @@ CTextProcessing::CTextProcessing()
 
     _textOfShown =
     _text = "";
-    _textColor.r = CCommon::common.CHAR_COLOR_RED;
-    _textColor.g = CCommon::common.CHAR_COLOR_GREEN;
-    _textColor.b = CCommon::common.CHAR_COLOR_BLUE;
-    _textColor.a = CCommon::common.CHAR_COLOR_ALPHA;
+    _textColor.r = CCommon::_Common.CHAR_COLOR_RED;
+    _textColor.g = CCommon::_Common.CHAR_COLOR_GREEN;
+    _textColor.b = CCommon::_Common.CHAR_COLOR_BLUE;
+    _textColor.a = CCommon::_Common.CHAR_COLOR_ALPHA;
     
-    _shadowColor.r = CCommon::common.CHAR_SHADOW_COLOR_RED;
-    _shadowColor.g = CCommon::common.CHAR_SHADOW_COLOR_GREEN;
-    _shadowColor.b = CCommon::common.CHAR_SHADOW_COLOR_BLUE;
-    _shadowColor.a = CCommon::common.CHAR_SHADOW_COLOR_ALPHA;
+    _shadowColor.r = CCommon::_Common.CHAR_SHADOW_COLOR_RED;
+    _shadowColor.g = CCommon::_Common.CHAR_SHADOW_COLOR_GREEN;
+    _shadowColor.b = CCommon::_Common.CHAR_SHADOW_COLOR_BLUE;
+    _shadowColor.a = CCommon::_Common.CHAR_SHADOW_COLOR_ALPHA;
 }
 
 bool CTextProcessing::isWordOrNumber(char c)
@@ -42,7 +42,7 @@ bool CTextProcessing::isWordOrNumber(char c)
 bool CTextProcessing::OnInit(unsigned int width, unsigned int height)
 {
     _rowWidth = width;
-    if (!CFont::LoadFont(CCommon::common.FONT_PATH.c_str()))
+    if (!CFont::LoadFont(CCommon::_Common.FONT_PATH.c_str()))
         return false; 
 
     _sfText.setFont(_font);
@@ -83,15 +83,15 @@ void CTextProcessing::OnLoop()
 {
     do {
         _sfText.setPosition(_coordinate);
-        if (_oldTime + CCommon::common.TEXT_FRAMERATE <= CCommon::common.GetTicks() || _isSkip){
-            _oldTime = CCommon::common.GetTicks();
+        if (_oldTime + CCommon::_Common.TEXT_FRAMERATE <= CCommon::_Common.GetTicks() || _isSkip){
+            _oldTime = CCommon::_Common.GetTicks();
         }
         else
             return;
 
         if (_index < _text.length()){
             unsigned int __fontSize = _sfText.getCharacterSize();
-            unsigned int __size = CCommon::common.SizeOfCharWithUTF8(_text[_index]);
+            unsigned int __size = CCommon::_Common.SizeOfCharWithUTF8(_text[_index]);
             string __str = "";
 
             _cursorPos += __size==1?__fontSize>>1:__fontSize;
