@@ -152,18 +152,23 @@ void CParser::ExecuteCmd(string cmd)
             else
                 cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
                     << " argument(s) in the command." <<endl;
-
-            return;
         }
         else if (__commandName == "@reload"){
             
+        }
+        else if (__commandName == "@exit"){
+            if (_pRunning != NULL)
+                *_pRunning = false;
         }
         else{
             cout << "unknown command." << endl;
             return;
         }
 
-        _pFunc(__listOfCmdPara);
+        if (_pFunc != NULL){
+            _pFunc(__listOfCmdPara);
+            _pFunc = NULL;
+        }
     }
 }
 

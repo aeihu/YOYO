@@ -29,7 +29,6 @@ class CMessageBoxControl : public CControlOfImageBaseClass
 
         char AddMessageBox(std::string name, const char* filename);
         bool DelMessageBox(std::string name);
-        bool SetImageVisibility(std::string name, int alpha, int incr, bool pause);
         
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);

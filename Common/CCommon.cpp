@@ -69,7 +69,7 @@ CCommon::CCommon()
     MOUSEDOWN_SE = "MOUSEDOWN";
     BOXCLOSED_SE = "BOXCLOSED";
 
-    CHARACTER_LAYER_MOVE_BUFFER = 30.0f;
+    CHARACTER_LAYER_MOVE_BUFFER = 300.0f;
 }
 
 bool CCommon::OnInit()

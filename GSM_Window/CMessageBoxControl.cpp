@@ -46,22 +46,6 @@ bool CMessageBoxControl::DelMessageBox(std::string name)
     return false;
 }
 
-bool CMessageBoxControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
-{
-    if (incr == 0)
-        incr = CCommon::_Common.INCREMENT;
-
-    if (IsAlreadyExists(name)){
-        _messageBoxList[name].Insert(0,
-            alpha, pause,
-            &_messageBoxList[name].CBox::_Alpha,
-            incr);
-
-        return true;
-    }
-    return false;
-}
-
 bool CMessageBoxControl::OnLButtonUp(int mX, int mY)
 {
     map<string, CMessageBox>::iterator it;

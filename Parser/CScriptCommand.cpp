@@ -78,75 +78,98 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags,
     return true;
 }
 
-bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args)
+bool Common_FuncOfShow(string objTypeName, CControlOfImageBaseClass* controlBase, vector<string> args)
 { 
+    string __funcName = "Cmd_Show" + objTypeName;
     if (args.size() < 1){
-        cout << funcName << "(): command invaild. can't set " << args.size()
+        cout << __funcName << "(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
-    
+
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    
+
     map<string,string> __values;
-    if (!Common_ArgsToKV(funcName.c_str(), __flags, args, __values))
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
-    
+
     int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if (controlBase->SetImageVisibility(__name, __alpha, __inrc, __pause)){
+    if (controlBase->IsExists(__name)){
         float* __x = &controlBase->GetObject(__name)->_Coordinate.x;
         float* __y = &controlBase->GetObject(__name)->_Coordinate.y;
 
-        if (__values.count("-s") > 1)
-            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
-                cout << funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
 
         *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
         *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
+        if (__values.count("-s") > 1)
+            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
+                cout << __funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
 
-        return true;
+        switch (controlBase->Show(__name, *__x, *__y, __type, __incr, __pause, __alpha)){
+            case -1:
+                cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
+            break;
+            case -2:
+                cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has showed." <<endl;
+            break;
+            case 0:
+                return true;
+            break;
+        }
     }
 
-    cout << funcName << "(): can't find \""<< __name << "\"." << endl;
     return false;
 }
 
-bool Common_FuncOfHide(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args)
+bool Common_FuncOfHide(string objTypeName, CControlOfImageBaseClass* controlBase, vector<string> args)
 { 
+    string __funcName = "Cmd_Hide" + objTypeName;
     if (args.size() < 1){
-        cout << funcName << "(): command invaild. can't set " << args.size()
+        cout << __funcName << "(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
     
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //Name
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
 
     map<string,string> __values;
-    if (!Common_ArgsToKV("Cmd_HideBackground", __flags, args, __values))
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
 
-    int __inrc = __values.count("-i") == 0 ? 0 : atoi(__values["-i"].c_str());
+    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     string __name = __values.count("-n") == 0 ? "" : __values["-n"];
     bool __pause = __values.count("-p") == 0 ? false : true;
+    char __type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
 
-    if (controlBase->SetImageVisibility(__name, 0, __inrc, __pause))
-        return true;
+    switch (controlBase->Hide(__name, __type, __incr, __pause)){
+        case -1:
+            cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
+        break;
+        case -2:
+            cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has hidden." <<endl;
+        break;
+        case 0:
+            return true;
+        break;
+    }
 
-    cout << funcName << "(): can't find \""<< __name << "\"." << endl;
     return false;
 }
 
@@ -240,53 +263,7 @@ bool Cmd_DelCharacterLayer(vector<string> args)
 
 bool Cmd_ShowCharacterLayer(vector<string> args)
 {
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
-    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-
-    map<string,string> __values;
-    if (!Common_ArgsToKV("Cmd_ShowCharacterLayer", __flags, args, __values))
-        return false;
-
-    float x = 0.0f;
-    float y = 0.0f;
-
-    if (__values.count("-s") > 1){
-        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&x,&y)){
-            cout << "Cmd_ShowCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
-            return false;
-        }
-    }
-
-    int alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    float incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
-    string name = __values.count("-n") == 0 ? "" : __values["-n"];
-    char type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
-    bool pause = __values.count("-p") == 0 ? false : true;
-    x = __values.count("-x") == 0 ? x : atof(__values["-x"].c_str());
-    y = __values.count("-y") == 0 ? y : atof(__values["-y"].c_str());
-
-    if (CResourceManager::_CharacterLayerControl.IsAlreadyExists(name)){
-        switch (CResourceManager::_CharacterLayerControl.Show(name, x, y, type, incr, pause, alpha)){
-            case -1:
-                cout << "Cmd_ShowCharacterLayer(): can't find character layer \""<< name << "\"." <<endl;
-            break;
-            case -2:
-                cout << "Cmd_ShowCharacterLayer(): character layer \""<< name << "\" has showed." <<endl;
-            break;
-            case 0:
-                return true;
-            break;
-        }
-    }
-
-    return false;
+    return Common_FuncOfShow("CharacterLayer", &CResourceManager::_CharacterLayerControl, args);
 }
 
 //bool Cmd_MoveCharacterLayer(string name, float x, float y, float incr, bool pause)
@@ -330,28 +307,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
 
 bool Cmd_HideCharacterLayer(vector<string> args)
 {
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
-
-    map<string,string> __values;
-    if (!Common_ArgsToKV("Cmd_HideCharacterLayer", __flags, args, __values))
-        return false;
-
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    bool __pause = __values.count("-p") == 0 ? false : true;
-    char __type = __values.count("-t") == 0 ? 'c' : atoi(__values["-t"].c_str());
-
-    if (!CResourceManager::_CharacterLayerControl.IsAlreadyExists(__name)){
-        cout << "Cmd_HideCharacterLayer(): can't find character layer \""<< __name << "\"." << endl;
-        return false;
-    }
-
-    CResourceManager::_CharacterLayerControl.Hide(__name, __type, __incr, __pause);
-    return true;
+    return Common_FuncOfHide("CharacterLayer", &CResourceManager::_CharacterLayerControl, args);
 }
 
 bool Cmd_SetFaceCharacterLayer(vector<string> args)
@@ -425,7 +381,7 @@ bool Cmd_AddBackground(vector<string> args)
 //bool Cmd_ShowBackground(string name, int inrc, bool pause)
 bool Cmd_ShowBackground(vector<string> args)
 {
-    return Common_FuncOfShow("Cmd_ShowBackground", &CResourceManager::_BackgroundLayerControl, args);
+    return Common_FuncOfShow("Background", &CResourceManager::_BackgroundLayerControl, args);
 }
 
 //bool Cmd_DelBackground(string name)
@@ -448,7 +404,7 @@ bool Cmd_DelBackground(vector<string> args)
 //bool Cmd_HideBackground(string name, int inrc, bool pause)
 bool Cmd_HideBackground(vector<string> args)
 {
-    return Common_FuncOfHide("Cmd_HideBackground", &CResourceManager::_BackgroundLayerControl, args);
+    return Common_FuncOfHide("Background", &CResourceManager::_BackgroundLayerControl, args);
 }
 
 /*
@@ -481,7 +437,7 @@ bool Cmd_AddImg(vector<string> args)
 //bool Cmd_ShowImg(string name, int inrc, bool pause)
 bool Cmd_ShowImg(vector<string> args)
 {
-    return Common_FuncOfShow("Cmd_ShowImg", &CResourceManager::_ImgLayerControl, args);
+    return Common_FuncOfShow("Img", &CResourceManager::_ImgLayerControl, args);
 }
 
 //bool Cmd_HideImg(string name, int inrc, bool pause)
@@ -721,13 +677,13 @@ bool Cmd_DelButton(vector<string> args)
 //bool Cmd_ShowButton(string name, int incr, bool pause)
 bool Cmd_ShowButton(vector<string> args)
 {
-    return Common_FuncOfShow("Cmd_ShowButton", &CResourceManager::_ButtonControl, args);
+    return Common_FuncOfShow("Button", &CResourceManager::_ButtonControl, args);
 }
 
 //bool Cmd_HideButton(string name, int incr, bool pause)
 bool Cmd_HideButton(vector<string> args)
 {
-    return Common_FuncOfHide("Cmd_HideButton", &CResourceManager::_ButtonControl, args);
+    return Common_FuncOfHide("Button", &CResourceManager::_ButtonControl, args);
 }
 //
 //
@@ -842,12 +798,12 @@ bool Cmd_DelMessageBox(vector<string> args)
 //bool Cmd_ShowMessageBox(string name, int incr, bool pause)
 bool Cmd_ShowMessageBox(vector<string> args)
 {   
-    return Common_FuncOfShow("Cmd_ShowMessageBox", &CResourceManager::_MessageBoxControl, args);
+    return Common_FuncOfShow("MessageBox", &CResourceManager::_MessageBoxControl, args);
 }
 
 bool Cmd_HideMessageBox(vector<string> args)
 {
-    return Common_FuncOfHide("Cmd_HideMessageBox", &CResourceManager::_MessageBoxControl, args);
+    return Common_FuncOfHide("MessageBox", &CResourceManager::_MessageBoxControl, args);
 }
 //
 //

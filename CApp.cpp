@@ -37,18 +37,17 @@ int CApp::OnExecute()
     sf::Event Event;
     sf::Thread  _threadOfStdin(&FuncOfStdin);
     _threadOfStdin.launch();
-    while(Running) {
-		while(sf_Display->isOpen()){
-			while(sf_Display->pollEvent(Event)) {
-				OnEvent(&Event);
-			}
-            
-			OnLoop();
-			OnRender();
+	while(sf_Display->isOpen() && Running){
+		while(sf_Display->pollEvent(Event)) {
+			OnEvent(&Event);
 		}
-    }
-
+        
+		OnLoop();
+		OnRender();
+	}
+    
     OnCleanup();
+    sf_Display->close();
     return 0;
 }
 

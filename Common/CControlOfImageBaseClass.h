@@ -10,6 +10,10 @@
     #define _CCONTROLBASECLASS_H_
 
 #include <string>
+#include "CCommon.h"
+#include "../Graphics/CImageBaseClass.h"
+
+using namespace std;
 
 class CControlOfImageBaseClass
 {
@@ -21,7 +25,11 @@ class CControlOfImageBaseClass
         virtual CImageBaseClass* GetObject(std::string name)=0;
     public:
         inline void SetInterval(unsigned int interval) {_interval = interval;} // no used
-        virtual bool SetImageVisibility(std::string name, int alpha, int incr, bool pause)=0;
+        bool IsExists(string name);
+        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
+        bool Move(string name, float x, float y, float incr, bool pause);
+        char Show(string name, float x, float y, char type, float incr, bool pause, int alpha=255);
+        char Hide(string name, char type, float incr, bool pause);
         virtual void OnCleanup()=0;
 };
 

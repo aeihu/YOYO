@@ -27,14 +27,8 @@ class CCharacterLayerControl : public CControlOfImageBaseClass
         CCharacterLayerControl();
         
         CImageBaseClass* GetObject(string name);
-        bool IsAlreadyExists(string name);
         char AddCharacter(string name, const char* filename);
         bool DelCharacter(string name);
-        bool Move(string name, float x, float y, float increment, bool pause);
-        char Show(string name, float x, float y, char type, float increment, bool pause, int alpha=255);
-        bool Hide(string name, char type, float increment, bool pause);
-
-        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
 
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);

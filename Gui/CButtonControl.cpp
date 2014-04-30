@@ -46,22 +46,6 @@ bool CButtonControl::DelButton(std::string name)
     return false;
 }
 
-bool CButtonControl::SetImageVisibility(std::string name, int alpha, int incr, bool pause)
-{
-    if (incr == 0)
-        incr = CCommon::_Common.INCREMENT;
-
-    if (IsAlreadyExists(name)){
-        _buttonList[name].Insert(0,
-            alpha, pause,
-            &_buttonList[name]._Alpha,
-            incr);
-
-        return true;
-    }
-    return false;
-}
-
 void CButtonControl::OnLoop(bool &pause)
 {
     map<string, CButton>::iterator it;

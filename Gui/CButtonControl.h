@@ -23,7 +23,6 @@ class CButtonControl : public CControlOfImageBaseClass
 
         char AddButton(string name, const char* filename);
         bool DelButton(string name);
-        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
 
         void OnMouseMove(int mX, int mY);
         bool OnLButtonUp(int mX, int mY);
