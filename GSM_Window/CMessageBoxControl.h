@@ -22,8 +22,7 @@ class CMessageBoxControl : public CControlOfImageBaseClass
 
         map<string, CMessageBox>    _messageBoxList;
 
-        bool IsAlreadyExists(std::string name);
-        CImageBaseClass* GetObject(std::string name);
+        CObject* GetObject(std::string name);
     public:
         CMessageBoxControl();
 

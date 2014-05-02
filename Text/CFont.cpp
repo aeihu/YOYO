@@ -10,31 +10,50 @@
 
 CFont::CFont()
 {
-    //_memFont = NULL;
-    //_menSize = 0;
+    _memFont = NULL;
 }
 
 CFont::~CFont()
 {
-    //Cio::ClearFileInMem(_memFont);
+    Cio::ClearFileInMem(_memFont);
 }
 
 
 bool CFont::LoadFont(string filename)
-{
-    unsigned long __menSize = 0;
-    char*         __memFont = NULL;
-
-    if (!Cio::LoadFileToMem(filename, __memFont, __menSize)){
-        cout << "CFont::LoadFont(): failed to load" << filename << "." << endl;
-        return false;
+{ 
+    if (filename.find("*") == string::npos){
+        if (!_font.loadFromFile(filename)){
+            cout << "CFont::LoadFont(): failed to load '" << filename << "'" << endl;
+            return false;
+        }
+        else
+            return true;
     }
+    else {
+        char* __mem = NULL;
+        unsigned long __size = 0;
+        CZlib::OpenFileInZip(filename, __mem, __size);
 
-    bool __result = _font.loadFromMemory(__memFont, __menSize);
-    if (!__result)
-        cout << "CFont::LoadFont(): failed to load."<< endl;
+        if (__mem != NULL){
+            if (_font.loadFromMemory(__mem, __size)){
 
-    return __result;
+                if (_memFont != NULL){
+                    CZlib::CloseFileInZip(__mem);
+                }
+                _memFont = __mem;
+                return true;
+            }
+            else{
+                CZlib::CloseFileInZip(__mem);
+                cout << "CFont::LoadFont(): failed to load '" << filename << "'" << endl;
+                return false;
+            }
+        }
+        else{
+            cout << "CFont::LoadFont(): failed to load '" << filename << "'" << endl;    
+            return false;
+        }
+    }
 }
 
 void CFont::SetString(sf::Text& text, std::string str)
@@ -44,17 +63,3 @@ void CFont::SetString(sf::Text& text, std::string str)
     text.setString(__uft32String);
     delete[] __uft32String;
 }
-
-//const sf::Font CFont::GetFont()
-//{
-//    return _font;
-//}
-
-//bool CFont::SetCharset(string charset)
-//{
-//    if (_memFont != NULL)
-//        return _Font.loadFromMemory(_memFont, _menSize);
-//
-//    cout << "CFont::SetCharset(): _memFont is NULL."<< endl;
-//    return false;
-//}

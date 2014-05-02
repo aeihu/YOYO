@@ -20,9 +20,9 @@ using namespace std;
 class CFont
 {
     private:
-//        friend void CText::SetFont(CFont& font);
+        char*           _memFont;
     protected:
-        sf::Font _font;
+        sf::Font        _font;
 
         void SetString(sf::Text& text, string str);
     public:
@@ -30,7 +30,6 @@ class CFont
         ~CFont();
 
         bool LoadFont(string filename);
-        //const sf::Font GetFont();
 };
 
 #endif

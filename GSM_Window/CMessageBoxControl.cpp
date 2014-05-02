@@ -11,14 +11,9 @@
 CMessageBoxControl::CMessageBoxControl()
 {}
 
-bool CMessageBoxControl::IsAlreadyExists(std::string name)
-{
-    return _messageBoxList.count(name) < 1 ? false : true;
-}
-
 char CMessageBoxControl::AddMessageBox(std::string name, const char* filename)
 {
-    if (!IsAlreadyExists(name)){
+    if (!IsExists(name)){
         _messageBoxList.insert(
             std::pair<std::string,CMessageBox>(name, CMessageBox()));
     }
@@ -38,7 +33,7 @@ char CMessageBoxControl::AddMessageBox(std::string name, const char* filename)
 
 bool CMessageBoxControl::DelMessageBox(std::string name)
 {
-    if (IsAlreadyExists(name)){
+    if (IsExists(name)){
         _messageBoxList.erase(name);
         return true;
     }
@@ -88,7 +83,7 @@ void CMessageBoxControl::OnRender(sf::RenderWindow* Surf_Dest)
         (*it).second.OnRender(Surf_Dest);
 }
 
-CImageBaseClass* CMessageBoxControl::GetObject(std::string name)
+CObject* CMessageBoxControl::GetObject(std::string name)
 {
     if (_messageBoxList.count(name) < 1)
         return NULL;

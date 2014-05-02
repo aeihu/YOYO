@@ -76,7 +76,7 @@ void CCharacterLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
     }
 }
 
-CImageBaseClass* CCharacterLayerControl::GetObject(std::string name)
+CObject* CCharacterLayerControl::GetObject(std::string name)
 {
     if (_characterList.count(name) < 1)
         return NULL;

@@ -109,8 +109,9 @@ bool Common_FuncOfShow(string objTypeName, CControlOfImageBaseClass* controlBase
     bool __pause = __values.count("-p") == 0 ? false : true;
 
     if (controlBase->IsExists(__name)){
-        float* __x = &controlBase->GetObject(__name)->_Coordinate.x;
-        float* __y = &controlBase->GetObject(__name)->_Coordinate.y;
+        CImageBaseClass* __obj = static_cast<CImageBaseClass*>(controlBase->GetObject(__name));
+        float* __x = &__obj->_Coordinate.x;
+        float* __y = &__obj->_Coordinate.y;
 
 
         *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());

@@ -26,7 +26,7 @@ class CCharacterLayerControl : public CControlOfImageBaseClass
     public:
         CCharacterLayerControl();
         
-        CImageBaseClass* GetObject(string name);
+        CObject* GetObject(string name);
         char AddCharacter(string name, const char* filename);
         bool DelCharacter(string name);
 

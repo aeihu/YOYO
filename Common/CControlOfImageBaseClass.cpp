@@ -5,7 +5,7 @@ bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, i
     if (incr == 0)
         incr = CCommon::_Common.INCREMENT;
 
-    CImageBaseClass* __obj = GetObject(name);
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
     if (__obj != NULL){
         __obj->Insert(0,
             alpha, pause,
@@ -20,7 +20,7 @@ bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, i
 
 bool CControlOfImageBaseClass::Move(string name, float x, float y, float incr, bool pause)
 {
-    CImageBaseClass* __obj = GetObject(name);
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
 
     if (__obj == NULL)
         return false;
@@ -57,7 +57,7 @@ bool CControlOfImageBaseClass::Move(string name, float x, float y, float incr, b
         
 char CControlOfImageBaseClass::Show(string name, float x, float y, char type, float incr, bool pause, int alpha)
 {
-    CImageBaseClass* __obj = GetObject(name);
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
 
     if (__obj == NULL)
         return -1;
@@ -112,7 +112,7 @@ char CControlOfImageBaseClass::Show(string name, float x, float y, char type, fl
         
 char CControlOfImageBaseClass::Hide(string name, char type, float incr, bool pause)
 {
-    CImageBaseClass* __obj = GetObject(name);
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
 
     if (__obj == NULL)
         return -1;
@@ -157,9 +157,4 @@ char CControlOfImageBaseClass::Hide(string name, char type, float incr, bool pau
     }
 
     return -1;
-}
-
-bool CControlOfImageBaseClass::IsExists(string name)
-{
-    return GetObject(name) == NULL ? false : true;
 }

@@ -12,9 +12,9 @@
 #include <SFML/Graphics.hpp>
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
+#include "../Common/CObject.h"
 
-
-class CImageBaseClass : virtual public CAdderControl
+class CImageBaseClass : virtual public CAdderControl, public CObject
 {
     private:
         using CAdderControl::OnLoop;

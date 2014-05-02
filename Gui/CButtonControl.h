@@ -15,7 +15,7 @@ class CButtonControl : public CControlOfImageBaseClass
         friend class CResourceManager;
 
         bool IsAlreadyExists(string name);
-        CImageBaseClass* GetObject(std::string name);
+        CObject* GetObject(std::string name);
         map<string, CButton>        _buttonList;
     public:
 

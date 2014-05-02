@@ -61,7 +61,7 @@ void CImgLayerControl::OnRender(sf::RenderWindow* Surf_Dest)
 }
 
 
-CImageBaseClass* CImgLayerControl::GetObject(std::string name)
+CObject* CImgLayerControl::GetObject(std::string name)
 {
     if (_imgLayerList.count(name) < 1)
         return NULL;

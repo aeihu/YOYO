@@ -62,7 +62,7 @@ void CButtonControl::OnRender(sf::RenderWindow* Surf_Dest)
         (*it).second.CImageBaseClass::OnRender(Surf_Dest);
 }
 
-CImageBaseClass* CButtonControl::GetObject(std::string name)
+CObject* CButtonControl::GetObject(std::string name)
 {
     if (_buttonList.count(name) < 1)
         return NULL;

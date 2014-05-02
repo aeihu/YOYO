@@ -20,7 +20,7 @@ class CImgLayerControl : public CControlOfImageBaseClass
     private:
         friend class CResourceManager;
         
-        CImageBaseClass* GetObject(std::string name);
+        CObject* GetObject(std::string name);
         std::map<std::string, CImgLayer>    _imgLayerList;
     public:
 
