@@ -27,8 +27,8 @@ class CCharacterLayer : public CImageBaseClass
         bool                        _isFaceEnable;
         CSequenceOfFrames           _framesOfMouth;
 
-        bool CheckList(map<string, string> list);
-        bool SetProperty(map<string, string> list);
+        bool CheckList(map<string, string>& list);
+        bool SetProperty(map<string, string>& list);
         bool LoadImage(const char* FileName, sf::Texture &image, sf::Sprite &sprite);
   public:
         CAnimation                  _AnimationControl;

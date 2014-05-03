@@ -16,7 +16,7 @@ void CApp::OnLoop() {
     //static unsigned long t = 0;
     //int l = CCommon::_Common.GetTicks() - t;
     //t = CCommon::_Common.GetTicks();
-    //sf::Text te;
+    //sf::Text _texture;
     //char buf[10];
     //sprintf(buf, "%d", l);
     //sf_Display->setTitle(buf);
@@ -25,6 +25,7 @@ void CApp::OnLoop() {
     CResourceManager::_BackgroundLayerControl.OnLoop(__isPause);
     CResourceManager::_CharacterLayerControl.OnLoop(__isPause);
     CResourceManager::_ImgLayerControl.OnLoop(__isPause);
+    CResourceManager::_ParticleSystemControl.OnLoop(__isPause);
     CResourceManager::_MessageBoxControl.OnLoop(__isPause);
     CResourceManager::_ButtonControl.OnLoop(__isPause);
 

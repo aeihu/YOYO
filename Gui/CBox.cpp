@@ -58,7 +58,7 @@ bool CBox::LoadBox(const char* FileName)
     return Sub_OnLoad();
 }
 
-bool CBox::CheckList(map<string, string> list)
+bool CBox::CheckList(map<string, string>& list)
 {
     bool __result = true;
     __result = Sub_CheckList(list);

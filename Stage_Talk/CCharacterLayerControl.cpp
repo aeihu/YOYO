@@ -53,15 +53,6 @@ void CCharacterLayerControl::OnLoop(bool &pause)
 
         if ((*it).second.OnLoop()) 
             pause=true;
-
-//        if((*it).second._Alpha == 0){
-//            (*it).second.Clear();
-//            it=_characterList.erase(it);
-//
-//            if (it == _characterList.end())
-//                break;
-//        }
-
         else
             it++;
     }

@@ -17,8 +17,13 @@ void CApp::OnCleanup() {
     CResourceManager::_MessageBoxControl.OnCleanup();
     CResourceManager::_ButtonControl.OnCleanup();
     CSoundBank::_SoundControl.OnCleanup();
+    CResourceManager::_ParticleSystemControl.OnCleanup();
     CParser::_Parser.OnCleanup();
     CCommon::_Common.OnCleanup();
+
+    sf_Display->close();
+    delete sf_Display;
+    sf_Display = NULL;
 }
 
 //==============================================================================

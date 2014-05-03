@@ -25,8 +25,8 @@ class CButton : public CSequenceOfFrames
         string          _seNameOfMouseOver;
         string          _seNameOfMouseDown;
 
-        bool CheckList(map<string, string> list);
-        bool SetProperty(map<string, string> list);
+        bool CheckList(map<string, string>& list);
+        bool SetProperty(map<string, string>& list);
         bool Subclass_Loop();
     public:
         CAnimation      _AnimationControl;

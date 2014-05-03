@@ -9,14 +9,24 @@
 #ifndef _CPARTICLESYSTEMCONTROL_H_
     #define _CPARTICLESYSTEMCONTROL_H_
 
-class CParticleSystemControl
+#include "../Common/CControlBaseClass.h"
+#include "CParticleSystem.h"
+#include <map>
+
+class CParticleSystemControl : public CControlBaseClass
 {
     private:
-        //friend class CResourceManager;
-        //friend bool Cmd_Message(vector<string> args);
+        friend class CResourceManager;
 
-        //map<string, CMessageBox>    _messageBoxList;
+        map<string, CParticleSystem>    _particleSystemList;
+        CObject* GetObject(std::string name);
+    public:
+        char AddParticleSystem(string name, const char* filename);
+        bool DelParticleSystem(string name);
 
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

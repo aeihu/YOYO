@@ -12,6 +12,7 @@
 #include "../Stage_Talk/CImgLayerControl.h"
 #include "../Stage_Talk/CCharacterLayerControl.h"
 #include "../GSM_Window/CMessageBoxControl.h"
+#include "../Effect/CParticleSystemControl.h"
 #include "../Gui/CButtonControl.h"
 #include "../Sound/CSoundBank.h"
 #include "CPosition.h"
@@ -22,6 +23,7 @@ class CResourceManager
         template<typename X>
         void static GetInfo(const char* resourcename, map<string, X> xlist);
     public:
+        static CParticleSystemControl   _ParticleSystemControl;
         static CCharacterLayerControl   _CharacterLayerControl;
         static CImgLayerControl         _ImgLayerControl;
         static CImgLayerControl         _BackgroundLayerControl;

@@ -104,7 +104,7 @@ bool CButton::LoadButton(const char* FileName)
     return true;
 }
 
-bool CButton::CheckList(map<string, string> list) 
+bool CButton::CheckList(map<string, string>& list) 
 {
     bool result = true;
     if (list.count("TILESET_PATH") < 1){
@@ -144,7 +144,7 @@ bool CButton::CheckList(map<string, string> list)
     return result;
 }
 
-bool CButton::SetProperty(map<string, string> list)
+bool CButton::SetProperty(map<string, string>& list)
 {    
 
     SetWidth(atoi(list["WIDTH"].c_str()));

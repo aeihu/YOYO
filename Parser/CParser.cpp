@@ -150,6 +150,9 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
         else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;
 
+        else if (__commandName == "@add_particle") _pFunc = &Cmd_AddParticleSystem;
+        else if (__commandName == "@del_particle") _pFunc = &Cmd_DelParticleSystem;
+
         else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1)
                 SetDeplay(atoi(__listOfCmdPara[0].c_str()));

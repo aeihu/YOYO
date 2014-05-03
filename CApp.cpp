@@ -47,7 +47,7 @@ int CApp::OnExecute()
 	}
     
     OnCleanup();
-    sf_Display->close();
+
     return 0;
 }
 

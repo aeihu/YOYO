@@ -22,7 +22,7 @@ class CBox : public CImageBaseClass
         using CImageBaseClass::_visible;
         map<string, string>     _parameterList;
 
-        bool CheckList(map<string, string> list);
+        bool CheckList(map<string, string>& list);
         virtual bool Sub_CheckList(map<string, string> list){ return true;}
         virtual bool Sub_OnLoad(){ return true;}
     public:

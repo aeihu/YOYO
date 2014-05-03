@@ -88,7 +88,7 @@ bool CCharacterLayer::LoadChara(const char* FileName)
     return true;
 }
 
-bool CCharacterLayer::CheckList(map<string, string> list) 
+bool CCharacterLayer::CheckList(map<string, string>& list) 
 {
     bool result = true;
     if (list.count("BODY_PATH") < 1){
@@ -134,7 +134,7 @@ bool CCharacterLayer::CheckList(map<string, string> list)
     return result;
 }
 
-bool CCharacterLayer::SetProperty(map<string, string> list)
+bool CCharacterLayer::SetProperty(map<string, string>& list)
 {
     if (!LoadImage(list["BODY_PATH"].c_str(), _image, _sprite))
         return false;

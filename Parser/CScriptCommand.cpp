@@ -785,6 +785,61 @@ bool Cmd_HideMessageBox(vector<string> args)
 {
     return Common_FuncOfHide("MessageBox", &CResourceManager::_MessageBoxControl, args);
 }
+
+bool Cmd_AddParticleSystem(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_AddParticleSystem(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
+
+    switch (CResourceManager::_ParticleSystemControl.AddParticleSystem(__name, __filename))
+    {
+        case 0:
+            return true;
+        break;
+        case -1:
+            cout << "Cmd_AddParticleSystem(): ParticleSystem \"" << __name << "\" has existed." <<endl;
+        break;
+        case -2:
+            cout << "Cmd_AddParticleSystem(): failed to add ParticleSystem." << endl;
+        break;
+    }
+    
+    return false;
+}
+
+bool Cmd_DelParticleSystem(vector<string> args)
+{
+    if (args.size() < 1){
+        cout << "Cmd_DelParticleSystem(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        if (CResourceManager::_ParticleSystemControl.DelParticleSystem(args[i]))
+            cout << "Cmd_DelParticleSystem(): can't find ParticleSystem \""<< args[i] << "\"." <<endl;
+    }
+
+    return true;
+}
+
+bool Cmd_ShowParticleSystem(vector<string> args)
+{
+    return true;
+}
+
+bool Cmd_HideParticleSystem(vector<string> args)
+{
+
+    return true;
+}
+
 //
 //
 //bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section)

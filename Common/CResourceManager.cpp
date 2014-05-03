@@ -14,6 +14,7 @@ CImgLayerControl CResourceManager::_BackgroundLayerControl;
 CMessageBoxControl CResourceManager::_MessageBoxControl;
 CButtonControl CResourceManager::_ButtonControl;
 CPosition CResourceManager::_PositionControl;
+CParticleSystemControl CResourceManager::_ParticleSystemControl;
 
 template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)

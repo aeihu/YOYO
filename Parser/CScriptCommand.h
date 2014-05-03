@@ -77,6 +77,11 @@ bool Cmd_AddMessageBox(vector<string>);//(string name, const char* filename);
 bool Cmd_DelMessageBox(vector<string>);//(string name);
 bool Cmd_ShowMessageBox(vector<string>);//(string name, int incr, bool pause);
 bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
+
+bool Cmd_AddParticleSystem(vector<string>);
+bool Cmd_DelParticleSystem(vector<string>);
+bool Cmd_ShowParticleSystem(vector<string>);
+bool Cmd_HideParticleSystem(vector<string>);
 ////
 ////bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section);
 ////bool Cmd_MenuBoxDelBtn(string name);
