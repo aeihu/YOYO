@@ -27,7 +27,10 @@ class CParticleSystem : public CObject
         std::vector<Particle>   _particles;
         sf::Time                _lifeTime;
         sf::Vector2f            _emitter;
+        sf::Vector2i            _emitterDeviation;
         sf::Texture             _texture;
+        float                   _rotation;
+        float                   _ratio;
 
         void resetParticle(std::size_t index);
         bool CheckList(map<string, string>& list);

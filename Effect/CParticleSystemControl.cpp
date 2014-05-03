@@ -42,6 +42,7 @@ void CParticleSystemControl::OnLoop(bool &pause)
     for ( it=_particleSystemList.begin(); it !=_particleSystemList.end(); it++ )
     {
         static sf::Clock clock;
+       // cout << clock.getElapsedTime().asMilliseconds() <<endl;
         (*it).second.Update(clock.restart());
     }
 }

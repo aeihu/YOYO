@@ -2,18 +2,27 @@
 
 CParticleSystem::CParticleSystem()
 {
+    _ratio = _rotation = 0.0f;
 }
 
 void CParticleSystem::resetParticle(std::size_t index)
 {
     // give a random _Velocity and _LifeTime to the particle
-    float angle = (std::rand() % 360) * 3.14f / 180.f;
+    float angle = 3.14f/2;//(std::rand() % 360) * 3.14f / 180.f;
     float speed = (std::rand() % 50) + 50.f;
     _particles[index]._Velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
-    _particles[index]._LifeTime = sf::milliseconds((std::rand() % 2000) + 1000);
+    _particles[index]._LifeTime = sf::milliseconds((std::rand() % _lifeTime.asMilliseconds()) + 1000);
 
     // reset the position of the corresponding vertex
-    _particles[index]._Rectangle.setPosition(_emitter);
+    float __x = _emitter.x;
+    float __y = _emitter.y;
+    if (_emitterDeviation.x != 0)
+        __x += _emitterDeviation.x /2 - (std::rand() % _emitterDeviation.x);
+
+    if (_emitterDeviation.y != 0)
+        __y += _emitterDeviation.y /2 - (std::rand() % _emitterDeviation.y);
+
+    _particles[index]._Rectangle.setPosition(__x, __y);
 }
 
 void CParticleSystem::SetEmitter(sf::Vector2f position)
@@ -23,6 +32,7 @@ void CParticleSystem::SetEmitter(sf::Vector2f position)
 
 void CParticleSystem::Update(sf::Time elapsed)
 {
+    //elapsed = sf::milliseconds(8);
     for (std::size_t i = 0; i < _particles.size(); ++i){
         // Update the particle _LifeTime
         Particle& p = _particles[i];
@@ -34,12 +44,13 @@ void CParticleSystem::Update(sf::Time elapsed)
 
         // Update the position of the corresponding vertex
         
+        //cout << elapsed.asSeconds() <<endl;
         _particles[i]._Rectangle.setPosition(_particles[i]._Rectangle.getPosition()+ p._Velocity * elapsed.asSeconds());
 
         // Update the alpha (transparency) of the particle according to its _LifeTime
-        float ratio = p._LifeTime.asSeconds() / _lifeTime.asSeconds();
-        _particles[i]._Rectangle.setRotation(ratio*1000);
-        _particles[i]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(ratio * 255)));
+        _ratio = p._LifeTime.asSeconds() / _lifeTime.asSeconds();
+        _particles[i]._Rectangle.setRotation(_ratio*_rotation*1000);
+        _particles[i]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(_ratio * 255)));
     }
 }
 
@@ -85,6 +96,7 @@ bool CParticleSystem::LoadParticle(const char* FileName)
 
     return true;
 }
+
 bool CParticleSystem::CheckList(map<string, string>& list)
 {
     bool result = true;
@@ -107,21 +119,11 @@ bool CParticleSystem::CheckList(map<string, string>& list)
         cout << "can't find value of LIFE_TIME." << endl;
         result = false;
     }
-
-    if (list.count("EMITTER_X") < 1){
-        cout << "can't find value of EMITTER_X." << endl;
+    
+    if (list.count("ROTATION_RATIO") < 1){
+        cout << "can't find value of ROTATION_RATIO." << endl;
         result = false;
     }
-    
-    if (list.count("EMITTER_Y") < 1){
-        cout << "can't find value of EMITTER_Y." << endl;
-        result = false;
-    }
-    
-    //if (list.count("TALK_MAX_FRAMES") < 1){
-    //    cout << "can't find value of TALK_MAX_FRAMES." << endl;
-    //    result = false;
-    //}
     //
     //if (list.count("TALK_FRAME_RATE") < 1){
     //    cout << "can't find value of TALK_FRAME_RATE." << endl;
@@ -151,9 +153,20 @@ bool CParticleSystem::SetProperty(map<string, string>& list)
             _particles[i]._Rectangle.setTexture(&_texture);
     }
 
-    _emitter.x = atof(list["EMITTER_X"].c_str());
-    _emitter.y = atof(list["EMITTER_Y"].c_str());
+    if (list.count("EMITTER_X") > 0)
+        _emitter.x = atof(list["EMITTER_X"].c_str());
+    
+    if (list.count("EMITTER_Y") > 0)
+        _emitter.y = atof(list["EMITTER_Y"].c_str());
+
+    if (list.count("EMITTER_X_DEVIATION") > 0)
+        _emitterDeviation.x = atoi(list["EMITTER_X_DEVIATION"].c_str());
+    
+    if (list.count("EMITTER_Y_DEVIATION") > 0)
+        _emitterDeviation.y = atoi(list["EMITTER_Y_DEVIATION"].c_str());
+    
     _lifeTime = sf::milliseconds(atoi(list["LIFE_TIME"].c_str()));
+    _rotation = atof(list["ROTATION_RATIO"].c_str());
 
     return true;
 }
