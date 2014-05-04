@@ -27,10 +27,19 @@ class CParticleSystem : public CObject
         std::vector<Particle>   _particles;
         sf::Time                _lifeTime;
         sf::Vector2f            _emitter;
+        sf::Vector2f            _origin;
         sf::Vector2i            _emitterDeviation;
+        int                     _angleMin;
+        int                     _angleOffet;
+        int                     _speedMin;
+        int                     _speedOffet;
+        int                     _number;
         sf::Texture             _texture;
         float                   _rotation;
         float                   _ratio;
+        float                   _width;
+        float                   _height;
+        bool                    _enable;
 
         void resetParticle(std::size_t index);
         bool CheckList(map<string, string>& list);
@@ -41,8 +50,10 @@ class CParticleSystem : public CObject
         bool LoadParticle(const char* FileName);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
-        void Update(sf::Time elapsed);
+        void OnLoop(sf::Time elapsed);
         void OnRender(sf::RenderWindow* Surf_Dest);
+        bool GetEnable() const;
+        void SetEnable(bool val);
 };
 
 #endif

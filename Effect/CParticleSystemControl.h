@@ -23,6 +23,8 @@ class CParticleSystemControl : public CControlBaseClass
     public:
         char AddParticleSystem(string name, const char* filename);
         bool DelParticleSystem(string name);
+        char ShowParticleSystem(string name);
+        char HideParticleSystem(string name);
 
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);

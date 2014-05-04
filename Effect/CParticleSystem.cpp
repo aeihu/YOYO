@@ -2,18 +2,28 @@
 
 CParticleSystem::CParticleSystem()
 {
-    _ratio = _rotation = 0.0f;
+    _width = _height = _ratio = _rotation = 0.0f;
+    _number = _speedMin = _speedOffet = _angleOffet = _angleMin = 0;
+    _enable = false;
+}
+
+bool CParticleSystem::GetEnable() const
+{
+    return _enable;
+}
+        
+void CParticleSystem::SetEnable(bool val)
+{
+    _enable = val;
 }
 
 void CParticleSystem::resetParticle(std::size_t index)
 {
-    // give a random _Velocity and _LifeTime to the particle
-    float angle = 3.14f/2;//(std::rand() % 360) * 3.14f / 180.f;
-    float speed = (std::rand() % 50) + 50.f;
-    _particles[index]._Velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
+    float __angle = (_angleOffet == 0 ? _angleMin : (std::rand() % _angleOffet) + _angleMin) * 3.14f / 180.f;
+    float __speed = _speedOffet == 0 ? _speedMin : (std::rand() % 50) + _speedMin;
+    _particles[index]._Velocity = sf::Vector2f(std::cos(__angle) * __speed, std::sin(__angle) * __speed);
     _particles[index]._LifeTime = sf::milliseconds((std::rand() % _lifeTime.asMilliseconds()) + 1000);
 
-    // reset the position of the corresponding vertex
     float __x = _emitter.x;
     float __y = _emitter.y;
     if (_emitterDeviation.x != 0)
@@ -30,27 +40,38 @@ void CParticleSystem::SetEmitter(sf::Vector2f position)
     _emitter = position;
 }
 
-void CParticleSystem::Update(sf::Time elapsed)
+void CParticleSystem::OnLoop(sf::Time elapsed)
 {
-    //elapsed = sf::milliseconds(8);
-    for (std::size_t i = 0; i < _particles.size(); ++i){
-        // Update the particle _LifeTime
-        Particle& p = _particles[i];
+    elapsed = sf::milliseconds(11);
+    if (_enable)
+        if (_particles.size() < _number){
+            int __i = _number / 50;
+            __i = __i == 0 ? _number : __i;
+            for (int i=0; i< __i; i++){
+                _particles.push_back(Particle());
+                _particles[_particles.size()-1]._Rectangle.setSize(sf::Vector2f(_width, _height));
+                _particles[_particles.size()-1]._Rectangle.setOrigin(_origin);
+                _particles[_particles.size()-1]._Rectangle.setTexture(&_texture);
+            }
+        }
+
+    for (std::size_t i = _particles.size(); i > 0; i--){
+        Particle& p = _particles[i-1];
         p._LifeTime -= elapsed;
 
-        // if the particle is dead, respawn it
         if (p._LifeTime <= sf::Time::Zero)
-            resetParticle(i);
+            if (_enable)
+                resetParticle(i-1);
+            else{
+                _particles.erase(_particles.begin()+(i-1));
+                continue;
+            }
 
-        // Update the position of the corresponding vertex
-        
-        //cout << elapsed.asSeconds() <<endl;
-        _particles[i]._Rectangle.setPosition(_particles[i]._Rectangle.getPosition()+ p._Velocity * elapsed.asSeconds());
+        _particles[i-1]._Rectangle.setPosition(_particles[i-1]._Rectangle.getPosition()+ p._Velocity * elapsed.asSeconds());
 
-        // Update the alpha (transparency) of the particle according to its _LifeTime
         _ratio = p._LifeTime.asSeconds() / _lifeTime.asSeconds();
-        _particles[i]._Rectangle.setRotation(_ratio*_rotation*1000);
-        _particles[i]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(_ratio * 255)));
+        _particles[i-1]._Rectangle.setRotation(_ratio*_rotation*1000);
+        _particles[i-1]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(_ratio * 255)));
     }
 }
 
@@ -124,34 +145,74 @@ bool CParticleSystem::CheckList(map<string, string>& list)
         cout << "can't find value of ROTATION_RATIO." << endl;
         result = false;
     }
-    //
-    //if (list.count("TALK_FRAME_RATE") < 1){
-    //    cout << "can't find value of TALK_FRAME_RATE." << endl;
-    //    result = false;
-    //}
+    
+    if (list.count("PARTICLE_ANGLE_MAX") < 1){
+        cout << "can't find value of PARTICLE_ANGLE_MAX." << endl;
+        result = false;
+    }
+    
+    if (list.count("PARTICLE_ANGLE_MIN") < 1){
+        cout << "can't find value of PARTICLE_ANGLE_MIN." << endl;
+        result = false;
+    }
+
+    if (list.count("PARTICLE_SPEED_MAX") < 1){
+        cout << "can't find value of PARTICLE_SPEED_MAX." << endl;
+        result = false;
+    }
+    
+    if (list.count("PARTICLE_SPEED_MIN") < 1){
+        cout << "can't find value of PARTICLE_SPEED_MIN." << endl;
+        result = false;
+    }
+
+    if (list.count("PARTICLE_ORIGIN_X") < 1){
+        cout << "can't find value of PARTICLE_ORIGIN_X." << endl;
+        result = false;
+    }
+
+    if (list.count("PARTICLE_ORIGIN_Y") < 1){
+        cout << "can't find value of PARTICLE_ORIGIN_Y." << endl;
+        result = false;
+    }
 
     return result;
 }
 
 bool CParticleSystem::SetProperty(map<string, string>& list)
 {
-    if (list.count("TEXTURE") > 0){
-        if (!CSurface::OnLoad(list["TEXTURE"], _texture))
+    if (list.count("PARTICLE_TEXTURE") > 0){
+        if (!CSurface::OnLoad(list["PARTICLE_TEXTURE"], _texture))
             return false;
     }
 
-    int __num = atoi(list["PARTICLE_NUM"].c_str());
-    float __w = atof(list["PARTICLE_WIDTH"].c_str());
-    float __h = atof(list["PARTICLE_HEIGHT"].c_str());
+    _angleMin = atoi(list["PARTICLE_ANGLE_MIN"].c_str());
+    int _angleMax = atoi(list["PARTICLE_ANGLE_MAX"].c_str());
+
+    if (_angleMax - _angleMin < 0){
+        cout << "PARTICLE_ANGLE_MIN can't be greater than PARTICLE_ANGLE_MAX." << endl;
+        return false;
+    }
+    _angleOffet = _angleMax - _angleMin;
+
+    _speedMin = atoi(list["PARTICLE_SPEED_MIN"].c_str());
+    int _speedMax = atoi(list["PARTICLE_SPEED_MAX"].c_str());
+
+    if (_angleMax - _speedMin <= 0){
+        cout << "PARTICLE_SPEED_MIN can't be greater than PARTICLE_SPEED_MAX." << endl;
+        return false;
+    }
+    _speedOffet = _speedMax - _speedMin;
+
+    _number = atoi(list["PARTICLE_NUM"].c_str());
+    _number = _number <= 0 ? 1 : _number; 
+
+    _width = atof(list["PARTICLE_WIDTH"].c_str());
+    _height = atof(list["PARTICLE_HEIGHT"].c_str());
+    _origin.x = atof(list["PARTICLE_ORIGIN_X"].c_str());
+    _origin.y = atof(list["PARTICLE_ORIGIN_Y"].c_str());
 
     _particles.clear();
-    for (int i=0; i<__num; i++){
-        _particles.push_back(Particle());
-        _particles[i]._Rectangle.setSize(sf::Vector2f(__w, __h));
-        _particles[i]._Rectangle.setOrigin(15,15);
-        if (list.count("TEXTURE") > 0)
-            _particles[i]._Rectangle.setTexture(&_texture);
-    }
 
     if (list.count("EMITTER_X") > 0)
         _emitter.x = atof(list["EMITTER_X"].c_str());

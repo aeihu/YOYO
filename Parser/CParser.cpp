@@ -152,6 +152,8 @@ void CParser::ExecuteCmd(string cmd)
 
         else if (__commandName == "@add_particle") _pFunc = &Cmd_AddParticleSystem;
         else if (__commandName == "@del_particle") _pFunc = &Cmd_DelParticleSystem;
+        else if (__commandName == "@show_particle") _pFunc = &Cmd_ShowParticleSystem;
+        else if (__commandName == "@hide_particle") _pFunc = &Cmd_HideParticleSystem;
 
         else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1)

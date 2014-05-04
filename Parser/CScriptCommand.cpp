@@ -769,7 +769,7 @@ bool Cmd_DelMessageBox(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (CResourceManager::_MessageBoxControl.DelMessageBox(args[i]))
+        if (!CResourceManager::_MessageBoxControl.DelMessageBox(args[i]))
             cout << "Cmd_DelMessageBox(): can't find MessageBox \""<< args[i] << "\"." <<endl;
     }
 
@@ -822,7 +822,7 @@ bool Cmd_DelParticleSystem(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (CResourceManager::_ParticleSystemControl.DelParticleSystem(args[i]))
+        if (!CResourceManager::_ParticleSystemControl.DelParticleSystem(args[i]))
             cout << "Cmd_DelParticleSystem(): can't find ParticleSystem \""<< args[i] << "\"." <<endl;
     }
 
@@ -831,11 +831,50 @@ bool Cmd_DelParticleSystem(vector<string> args)
 
 bool Cmd_ShowParticleSystem(vector<string> args)
 {
+    if (args.size() < 1){
+        cout << "Cmd_ShowParticleSystem(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        switch (CResourceManager::_ParticleSystemControl.ShowParticleSystem(args[i]))
+        {
+            case 0:
+            break;
+            case -1:
+                cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
+            break;
+            case -2:
+                cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
+            break;
+        }
+    }
+
     return true;
 }
 
 bool Cmd_HideParticleSystem(vector<string> args)
 {
+    if (args.size() < 1){
+        cout << "Cmd_HideParticleSystem(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){   
+        switch (CResourceManager::_ParticleSystemControl.HideParticleSystem(args[i]))
+        {
+            case 0:
+            break;
+            case -1:
+                cout << "Cmd_HideParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
+            break;
+            case -2:
+                cout << "Cmd_HideParticleSystem(): ParticleSystem \"" << args[i] << "\" has hidden." << endl;
+            break;
+        }
+    }
 
     return true;
 }

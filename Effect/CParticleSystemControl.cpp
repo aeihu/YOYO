@@ -8,9 +8,33 @@ CObject* CParticleSystemControl::GetObject(std::string name)
     return &_particleSystemList[name];
 }
 
+char CParticleSystemControl::ShowParticleSystem(string name)
+{
+    if (_particleSystemList.count(name) == 0)
+        return -1;
+
+    if (_particleSystemList[name].GetEnable())
+        return -2;
+
+    _particleSystemList[name].SetEnable(true);
+    return 0;
+}
+
+char CParticleSystemControl::HideParticleSystem(string name)
+{
+    if (_particleSystemList.count(name) == 0)
+        return -1;
+
+    if (!_particleSystemList[name].GetEnable())
+        return -2;
+
+    _particleSystemList[name].SetEnable(false);
+    return 0;
+}
+
 char CParticleSystemControl::AddParticleSystem(string name, const char* filename)
 {
-    if (!IsExists(name)){
+    if (_particleSystemList.count(name) == 0){
         _particleSystemList.insert(
             std::pair<std::string,CParticleSystem>(name, CParticleSystem()));
     }
@@ -43,7 +67,7 @@ void CParticleSystemControl::OnLoop(bool &pause)
     {
         static sf::Clock clock;
        // cout << clock.getElapsedTime().asMilliseconds() <<endl;
-        (*it).second.Update(clock.restart());
+        (*it).second.OnLoop(clock.restart());
     }
 }
 
