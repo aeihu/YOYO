@@ -21,10 +21,10 @@ class CControlOfImageBaseClass : public CControlBaseClass
     protected:
         friend bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args);
 
-        unsigned int _interval; // no used
-        inline CControlOfImageBaseClass() {_interval = 10;} // no used
+        unsigned int _interval;
+        inline CControlOfImageBaseClass() {_interval = 10;}
     public:
-        inline void SetInterval(unsigned int interval) {_interval = interval;} // no used
+        inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
         bool Move(string name, float x, float y, unsigned int elapsed, bool pause);
         char Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha=255);

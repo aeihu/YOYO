@@ -35,25 +35,6 @@ class CAdder
         bool IsPause();
 };
 
-
-//class CiAdder : public CAdder
-//{
-//    private:
-//        friend class        CAdderControl;
-//        int*                _pValue;
-//        int                 _goal;
-//        int                 _value1;
-//        int                 _value2;
-//        int                 _value3;
-//        int                 _value4;
-//
-//        bool Check();
-//        bool Recursion();
-//        bool DecreaseRecursion();
-//    public:
-//        CiAdder(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0);
-//};
-
 class CfAdder : public CAdder
 {
     private:
@@ -81,7 +62,6 @@ class CfAdder : public CAdder
 class CAdderControl
 {
     private:
-        //std::list<CiAdder> _iAdderList;
         std::list<CfAdder> _fAdderList;
 
         bool IsAlreadyExists(int* pval);
