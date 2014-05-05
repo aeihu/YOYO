@@ -36,48 +36,52 @@ class CAdder
 };
 
 
-class CiAdder : public CAdder
-{
-    private:
-        friend class        CAdderControl;
-        int*                _pValue;
-        int                 _goal;
-        int                 _value1;
-        int                 _value2;
-        int                 _value3;
-        int                 _value4;
-
-        bool Check();
-        bool Recursion();
-        bool DecreaseRecursion();
-    public:
-        CiAdder(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0);
-};
+//class CiAdder : public CAdder
+//{
+//    private:
+//        friend class        CAdderControl;
+//        int*                _pValue;
+//        int                 _goal;
+//        int                 _value1;
+//        int                 _value2;
+//        int                 _value3;
+//        int                 _value4;
+//
+//        bool Check();
+//        bool Recursion();
+//        bool DecreaseRecursion();
+//    public:
+//        CiAdder(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0);
+//};
 
 class CfAdder : public CAdder
 {
     private:
         friend class            CAdderControl;
-        float*                  _pValue;
+        float*                  _pFloat;
+        int*                    _pInt;
+        float                   _value;
         float                   _goal;
-        float                   _value1;
-        float                   _value2;
-        float                   _value3;
-        float                   _value4;
+        float                   _par1;
+        float                   _par2;
+        float                   _par3;
+        float                   _par4;
 
+        void SetValue(float val);
         bool Check();
         bool Recursion();
         bool DecreaseRecursion();
         bool Oscillate();
     public:
         CfAdder(char type, float goal, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f);
+        CfAdder(char type, float goal, bool pause, int* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f);
 };
 
 
 class CAdderControl
 {
     private:
-        std::list<CiAdder> _iAdderList;
+        //std::list<CiAdder> _iAdderList;
         std::list<CfAdder> _fAdderList;
 
         bool IsAlreadyExists(int* pval);
@@ -88,7 +92,7 @@ class CAdderControl
         int OnLoop();
         unsigned int Count();
     public:
-        void Insert(char type, int goal, bool pause, int* val, int val1, int val2=0, int val3=0, int val4=0, bool isGoFinish=true);
+        void Insert(char type, float goal, bool pause, int* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);
         void Insert(char type, float goal, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);
         void Clear();
 };

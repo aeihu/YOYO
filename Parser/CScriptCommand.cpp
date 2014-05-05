@@ -294,7 +294,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     __x = __values.count("-x") == 0 ? __x : atof(__values["-x"].c_str());
     __y = __values.count("-y") == 0 ? __y : atof(__values["-y"].c_str());
 
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
+    unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     bool __pause = __values.count("-p") == 0 ? false : true;
 
     if(!CResourceManager::_CharacterLayerControl.Move(__name, __x, __y, __incr, __pause)){

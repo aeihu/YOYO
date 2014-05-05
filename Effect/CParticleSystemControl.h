@@ -27,7 +27,7 @@ class CParticleSystemControl : public CControlBaseClass
         char HideParticleSystem(string name);
 
         void OnLoop(bool &pause);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest, char layer);
         void OnCleanup();
 };
 

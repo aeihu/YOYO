@@ -21,6 +21,7 @@ void CApp::OnLoop() {
     //sprintf(buf, "%d", l);
     //sf_Display->setTitle(buf);
     bool __isPause = false;
+    _clock.restart();
 
     CResourceManager::_BackgroundLayerControl.OnLoop(__isPause);
     CResourceManager::_CharacterLayerControl.OnLoop(__isPause);

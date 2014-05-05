@@ -11,37 +11,66 @@
 CfAdder::CfAdder(char type, float goal, bool pause, float* val, float val1, float val2, float val3, float val4)
 {
     _type = type;
-    _pValue = val;
-    _value1 = val1;
-    _value2 = val2;
-    _value3 = val3;
-    _value4 = val4;
+    _pFloat = val;
+    _value = *val;
+    _par1 = val1;
+    _par2 = val2;
+    _par3 = val3;
+    _par4 = val4;
     _goal = goal;
     _oldTime = 0;
     _pause = pause;
+    _pInt = NULL;
+}
+
+CfAdder::CfAdder(char type, float goal, bool pause, int* val, float val1, float val2, float val3, float val4)
+{
+    _type = type;
+    _pInt = val;
+    _value = static_cast<float>(*val);
+    _par1 = val1;
+    _par2 = val2;
+    _par3 = val3;
+    _par4 = val4;
+    _goal = goal;
+    _oldTime = 0;
+    _pause = pause;
+    _pFloat = NULL;
 }
 
 bool CfAdder::Check()
 {
-    if (_pValue == 0){
+    if (_pFloat == NULL && _pInt == NULL){
         return false;
     }
     return true;
 }
 
+void CfAdder::SetValue(float val)
+{
+    _value = val;
+    if (_pFloat){
+        *_pFloat = val;
+        return;
+    }
+
+    if (_pInt)
+        *_pInt = static_cast<int>(val);
+}
+
 bool CfAdder::Recursion()
 {
-    if (*_pValue < _goal){
-        *_pValue += _value1;
-        if (*_pValue >= _goal){
-            *_pValue = _goal;
+    if (_value < _goal){
+        SetValue(_value+_par1);
+        if (_value >= _goal){
+            SetValue(_goal);
             return true;
         }
     }
-    else if (*_pValue > _goal){
-        *_pValue -= _value1;
-        if (*_pValue <= _goal){
-            *_pValue = _goal;
+    else if (_value > _goal){
+        SetValue(_value-_par1);
+        if (_value <= _goal){
+            SetValue(_goal);
             return true;
         }
     }
@@ -50,17 +79,17 @@ bool CfAdder::Recursion()
 
 bool CfAdder::DecreaseRecursion()
 {
-    if (*_pValue < _goal){
-        *_pValue += (_goal - *_pValue)/_value1 + _value2;
-        if (*_pValue>=_goal){
-            *_pValue = _goal;
+    if (_value < _goal){
+        SetValue(_value + (_goal - _value)/_par1 + _par2);
+        if (_value>=_goal){
+            SetValue(_goal);
             return true;
         }
     }
-    else if (*_pValue > _goal){
-        *_pValue -= (*_pValue - _goal)/_value1 + _value2;
-        if (*_pValue<=_goal){
-            *_pValue = _goal;
+    else if (_value > _goal){
+        SetValue(_value - (_value - _goal)/_par1 + _par2);
+        if (_value<=_goal){
+            SetValue(_goal);
             return true;
         }
     }
@@ -69,28 +98,28 @@ bool CfAdder::DecreaseRecursion()
 
 bool CfAdder::Oscillate()
 {
-    if (_value1<_goal){
-        *_pValue = _value2*sin(_value1/360*2*PI);
-        _value1+=_value3;
+    if (_par1<_goal){
+        SetValue(_par2*sin(_par1/360*2*PI));
+        _par1+=_par3;
 
-        if (_value1>=_goal)
-            *_pValue = _goal;
+        if (_par1>=_goal)
+            SetValue(_goal);
         else
             return false;
     }
-    else if (_value1>_goal){
-        *_pValue = _value2*sin(_value1/360*2*PI);
-        _value1-=_value3;
+    else if (_par1>_goal){
+        SetValue(_par2*sin(_par1/360*2*PI));
+        _par1-=_par3;
 
-        if (_value1<=_goal)
-            *_pValue = _goal;
+        if (_par1<=_goal)
+            SetValue(_goal);
         else
             return false;
     }
 
-    _value4--;
-    if (_value4>0.0f){
-        _value1=0.0f;
+    _par4--;
+    if (_par4>0.0f){
+        _par1=0.0f;
         return false;
     }
     return true;

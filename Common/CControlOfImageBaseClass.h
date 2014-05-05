@@ -25,10 +25,10 @@ class CControlOfImageBaseClass : public CControlBaseClass
         inline CControlOfImageBaseClass() {_interval = 10;} // no used
     public:
         inline void SetInterval(unsigned int interval) {_interval = interval;} // no used
-        bool SetImageVisibility(string name, int alpha, int incr, bool pause);
-        bool Move(string name, float x, float y, float incr, bool pause);
-        char Show(string name, float x, float y, char type, float incr, bool pause, int alpha=255);
-        char Hide(string name, char type, float incr, bool pause);
+        bool SetImageVisibility(string name, int alpha, float incr, bool pause);
+        bool Move(string name, float x, float y, unsigned int elapsed, bool pause);
+        char Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha=255);
+        char Hide(string name, char type, unsigned int elapsed, bool pause);
         virtual void OnCleanup()=0;
 };
 

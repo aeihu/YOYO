@@ -36,9 +36,10 @@ void CApp::OnRender() {
     
 
     CResourceManager::_BackgroundLayerControl.OnRender(sf_Display);
+    CResourceManager::_ParticleSystemControl.OnRender(sf_Display, 0);
     CResourceManager::_CharacterLayerControl.OnRender(sf_Display);
+    CResourceManager::_ParticleSystemControl.OnRender(sf_Display, 1);
     CResourceManager::_ImgLayerControl.OnRender(sf_Display);
-    CResourceManager::_ParticleSystemControl.OnRender(sf_Display);
     CResourceManager::_MessageBoxControl.OnRender(sf_Display);
     CResourceManager::_ButtonControl.OnRender(sf_Display);
 

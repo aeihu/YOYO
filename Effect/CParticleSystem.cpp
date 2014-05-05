@@ -33,6 +33,7 @@ void CParticleSystem::resetParticle(std::size_t index)
         __y += _emitterDeviation.y /2 - (std::rand() % _emitterDeviation.y);
 
     _particles[index]._Rectangle.setPosition(__x, __y);
+    _particles[index]._Layer = std::rand() % 2;
 }
 
 void CParticleSystem::SetEmitter(sf::Vector2f position)
@@ -75,10 +76,11 @@ void CParticleSystem::OnLoop(sf::Time elapsed)
     }
 }
 
-void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest)
+void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest, char layer)
 {
     for (std::size_t i = 0; i < _particles.size(); ++i){
-        Surf_Dest->draw(_particles[i]._Rectangle);
+        if (_particles[i]._Layer == layer)
+            Surf_Dest->draw(_particles[i]._Rectangle);
     }
 }
 

@@ -66,16 +66,17 @@ void CParticleSystemControl::OnLoop(bool &pause)
     for ( it=_particleSystemList.begin(); it !=_particleSystemList.end(); it++ )
     {
         static sf::Clock clock;
-       // cout << clock.getElapsedTime().asMilliseconds() <<endl;
+        //cout << clock.restart().asMilliseconds() <<endl;
+        
         (*it).second.OnLoop(clock.restart());
     }
 }
 
-void CParticleSystemControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CParticleSystemControl::OnRender(sf::RenderWindow* Surf_Dest, char layer)
 {
     std::map<std::string, CParticleSystem>::iterator it;
     for ( it=_particleSystemList.begin(); it !=_particleSystemList.end(); it++ )
-        (*it).second.OnRender(Surf_Dest);
+        (*it).second.OnRender(Surf_Dest, layer);
 }
 
 void CParticleSystemControl::OnCleanup()

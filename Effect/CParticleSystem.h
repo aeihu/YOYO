@@ -22,6 +22,7 @@ class CParticleSystem : public CObject
             sf::Vector2f        _Velocity;
             sf::Time            _LifeTime;
             sf::RectangleShape  _Rectangle;
+            char                _Layer;
         };
 
         std::vector<Particle>   _particles;
@@ -51,7 +52,7 @@ class CParticleSystem : public CObject
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
         void OnLoop(sf::Time elapsed);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest, char layer);
         bool GetEnable() const;
         void SetEnable(bool val);
 };

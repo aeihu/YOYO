@@ -30,11 +30,13 @@
 
 class CApp : public CEvent {
     private:
-        bool                          Running;
+        bool                        Running;
 
-        sf::RenderWindow*    sf_Display;
+        sf::RenderWindow*           sf_Display;
 
-        bool                          FullScreen;
+        bool                        FullScreen;
+
+        sf::Clock                   _clock;
     public:
         CApp();
 
