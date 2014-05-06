@@ -6,6 +6,9 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
+#ifndef _CBUTTONCONTROL_H_
+    #define _CBUTTONCONTROL_H_
+
 #include "CButton.h"
 #include "../Common/CControlOfImageBaseClass.h"
 
@@ -31,3 +34,5 @@ class CButtonControl : public CControlOfImageBaseClass
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
 };
+
+#endif

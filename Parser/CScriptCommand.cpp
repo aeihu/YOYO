@@ -747,6 +747,9 @@ bool Cmd_AddMessageBox(vector<string> args)
     switch (CResourceManager::_MessageBoxControl.AddMessageBox(__name, __filename))
     {
         case 0:
+            CResourceManager::_MessageBoxControl._messageBoxList[__name].SetFont(
+                CResourceManager::_FontControl._fontList["__main"].GetFont());
+            
             return true;
         break;
         case -1:

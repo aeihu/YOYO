@@ -35,8 +35,6 @@ class CApp : public CEvent {
         sf::RenderWindow*           sf_Display;
 
         bool                        FullScreen;
-
-        sf::Clock                   _clock;
     public:
         CApp();
 

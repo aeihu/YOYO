@@ -6,8 +6,8 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CPOSITIONS_H_
-    #define _CPOSITIONS_H_
+#ifndef _CCHARACTERLAYERCONTROL_H_
+    #define _CCHARACTERLAYERCONTROL_H_
 
 #include "CCharacterLayer.h"
 #include "../Common/CControlOfImageBaseClass.h"

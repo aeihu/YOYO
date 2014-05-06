@@ -3,7 +3,7 @@
 bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
 {
     if (incr == 0)
-        incr = CCommon::_Common.INCREMENT;
+        incr = static_cast<float>(CCommon::_Common.INCREMENT);
 
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
     if (__obj != NULL){

@@ -15,6 +15,7 @@ CMessageBoxControl CResourceManager::_MessageBoxControl;
 CButtonControl CResourceManager::_ButtonControl;
 CPosition CResourceManager::_PositionControl;
 CParticleSystemControl CResourceManager::_ParticleSystemControl;
+CFontControl CResourceManager::_FontControl;
 
 template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)

@@ -20,12 +20,15 @@ CMessageBox::CMessageBox()
     _isPaused = false;
 }
 
+void CMessageBox::SetFont(sf::Font& font)
+{
+    CTextProcessing::SetFont(font);
+    _speakerName.setFont(font);
+}
+
 bool CMessageBox::Sub_OnLoad()
 {
-    if (!CTextProcessing::OnInit(atoi(_parameterList["MSG_WIDTH"].c_str())))
-        return false;
-
-    _speakerName.setFont(CFont::_font);
+    CTextProcessing::SetRowWidth(atoi(_parameterList["MSG_WIDTH"].c_str()));
 
 //=================Init cursor==================================
     if (!CSequenceOfFrames::LoadImg(_parameterList["CURSOR_PATH"].c_str()))
@@ -141,7 +144,7 @@ void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CMessageBox::SetSpeakerName(string name)
 {
-    CFont::SetString(_speakerName, name.c_str());
+    CTextFunction::SetString(_speakerName, name.c_str());
 }
 
 void CMessageBox::SetText(string msg)

@@ -33,6 +33,7 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
         CMessageBox();
 
         void SetText(string msg);
+        void SetFont(sf::Font& font);
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);

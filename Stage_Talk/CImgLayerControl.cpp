@@ -8,14 +8,9 @@
 
 #include "CImgLayerControl.h"
 
-bool CImgLayerControl::IsAlreadyExists(std::string name)
-{
-    return _imgLayerList.count(name) < 1 ? false : true;
-}
-
 bool CImgLayerControl::AddImage(std::string name, const char* filename, float x, float y)
 {
-    if (!IsAlreadyExists(name)){
+    if (!IsExists(name)){
         _imgLayerList.insert(
             std::pair<std::string,CImgLayer>(name, CImgLayer(x, y)));
     }
@@ -35,7 +30,7 @@ bool CImgLayerControl::AddImage(std::string name, const char* filename, float x,
 
 bool CImgLayerControl::DelImage(std::string name)
 {
-    if (IsAlreadyExists(name)){
+    if (IsExists(name)){
         _imgLayerList.erase(name);
         return true;
     }

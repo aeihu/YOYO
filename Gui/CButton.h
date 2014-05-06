@@ -16,7 +16,7 @@
 #include "../Graphics/CSequenceOfFrames.h"
 
 using namespace std;
-//The button
+
 class CButton : public CSequenceOfFrames
 {
     private:

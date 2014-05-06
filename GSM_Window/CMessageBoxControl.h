@@ -18,6 +18,7 @@ class CMessageBoxControl : public CControlOfImageBaseClass
 {
     private:
         friend class CResourceManager;
+        friend bool Cmd_AddMessageBox(vector<string> args);
         friend bool Cmd_Message(vector<string> args);
 
         map<string, CMessageBox>    _messageBoxList;

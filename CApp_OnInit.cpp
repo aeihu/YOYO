@@ -14,12 +14,14 @@ bool CApp::OnInit()
 {
     sf_Display = new sf::RenderWindow();
 
-    if (!CCommon::_Common.OnInit()){
+    if (!CCommon::_Common.OnInit())
         return false;
-    }
 
     CParser::_Parser.SetRunning(&Running);
     CSoundBank::_SoundControl.OnInit();
+
+    if (!CResourceManager::_FontControl.AddCFont("__main", CCommon::_Common.FONT_PATH.c_str()))
+        return false;
 
     sf_Display->create(
         sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 

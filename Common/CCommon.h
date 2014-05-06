@@ -84,7 +84,6 @@ class CCommon
 
         CCommon();
 
-        unsigned int SizeOfCharWithUTF8(char Char);
         void SaveSysData();
         unsigned long GetTicks();
 

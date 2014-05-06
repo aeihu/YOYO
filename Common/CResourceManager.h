@@ -14,6 +14,7 @@
 #include "../GSM_Window/CMessageBoxControl.h"
 #include "../Effect/CParticleSystemControl.h"
 #include "../Gui/CButtonControl.h"
+#include "../Text/CFontControl.h"
 #include "../Sound/CSoundBank.h"
 #include "CPosition.h"
 
@@ -30,6 +31,7 @@ class CResourceManager
         static CMessageBoxControl       _MessageBoxControl;
         static CButtonControl           _ButtonControl;
         static CPosition                _PositionControl;
+        static CFontControl             _FontControl;
 
         static void GetInfo();
 };

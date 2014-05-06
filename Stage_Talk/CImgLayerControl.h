@@ -23,8 +23,6 @@ class CImgLayerControl : public CControlOfImageBaseClass
         CObject* GetObject(std::string name);
         std::map<std::string, CImgLayer>    _imgLayerList;
     public:
-
-        bool IsAlreadyExists(std::string name);
         bool AddImage(std::string name, const char* filename, float x=0.0f, float y=0.0f);
         bool DelImage(std::string name);
 

@@ -32,7 +32,7 @@ CCommon::CCommon()
 //    ANIMATION_EFFECTS_MOVE_RANGE = 30;
 //    ANIMATION_EFFECTS_MOVE_INCREMENT = 2;
 
-    INCREMENT = 10;
+    INCREMENT = 500;
     INTERVAL = 15;
 
     //MAP_WIDTH    = 20;
@@ -239,7 +239,7 @@ void CCommon::SetValue(const char* name, const char* value)
     if (strcmp(name,"INCREMENT") == 0)
     {
         INCREMENT = atoi(value);
-        INCREMENT = INCREMENT  <= 0 ? 10 : INCREMENT;
+        INCREMENT = INCREMENT  <= 0 ? 500 : INCREMENT;
         return;
     }
     if (strcmp(name,"INTERVAL") == 0)
@@ -353,20 +353,6 @@ void CCommon::SetValue(const char* name, const char* value)
 
 unsigned long CCommon::GetTicks(){
     return __clock.getElapsedTime().asMilliseconds();
-}
-
-unsigned int CCommon::SizeOfCharWithUTF8(char Char)
-{
-    if (Char < 0){
-        if((unsigned char)Char >= 0xE0){
-            return 3;
-        }
-        else if ((unsigned char)Char >= 0xC0 && (unsigned char)Char < 0xE0){
-            return 2;
-        }
-    }
-
-    return 1;
 }
 
 void CCommon::SaveSysData()

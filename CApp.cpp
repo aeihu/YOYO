@@ -32,7 +32,8 @@ void FuncOfStdin()
 int CApp::OnExecute() 
 {
     if(OnInit() == false) {
-	  return -1;
+        OnCleanup();
+        return -1;
     }
     sf::Event Event;
     sf::Thread  _threadOfStdin(&FuncOfStdin);

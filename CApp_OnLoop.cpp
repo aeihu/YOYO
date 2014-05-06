@@ -13,15 +13,7 @@
 #include <exception>
 //==============================================================================
 void CApp::OnLoop() {
-    //static unsigned long t = 0;
-    //int l = CCommon::_Common.GetTicks() - t;
-    //t = CCommon::_Common.GetTicks();
-    //sf::Text _texture;
-    //char buf[10];
-    //sprintf(buf, "%d", l);
-    //sf_Display->setTitle(buf);
     bool __isPause = false;
-    _clock.restart();
 
     CResourceManager::_BackgroundLayerControl.OnLoop(__isPause);
     CResourceManager::_CharacterLayerControl.OnLoop(__isPause);
