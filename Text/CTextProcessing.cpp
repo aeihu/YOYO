@@ -39,14 +39,14 @@ bool CTextProcessing::isWordOrNumber(char c)
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 121) || (c >= 43 && c <= 58);
 }
 
-bool CTextProcessing::OnInit(unsigned int width, unsigned int height)
+void CTextProcessing::SetRowWidth(unsigned int width)
 {
     _rowWidth = width;
-    if (!CFont::LoadFont(CCommon::_Common.FONT_PATH.c_str()))
-        return false; 
+}
 
-    _sfText.setFont(_font);
-    return true;
+void CTextProcessing::SetFont(sf::Font& font)
+{
+    _sfText.setFont(font);
 }
 
 void CTextProcessing::Clear()
@@ -91,7 +91,7 @@ void CTextProcessing::OnLoop()
 
         if (_index < _text.length()){
             unsigned int __fontSize = _sfText.getCharacterSize();
-            unsigned int __size = CCommon::_Common.SizeOfCharWithUTF8(_text[_index]);
+            unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
             string __str = "";
 
             _cursorPos += __size==1?__fontSize>>1:__fontSize;
@@ -119,7 +119,7 @@ void CTextProcessing::OnLoop()
             _index += __size;
             _length++;
 
-            CFont::SetString(_sfText, _textOfShown);
+            CTextFunction::SetString(_sfText, _textOfShown);
         }
         else
             _isSkip = false;

@@ -15,7 +15,6 @@ CFont::CFont()
 
 CFont::~CFont()
 {
-    Cio::ClearFileInMem(_memFont);
 }
 
 
@@ -56,10 +55,12 @@ bool CFont::LoadFont(string filename)
     }
 }
 
-void CFont::SetString(sf::Text& text, std::string str)
+sf::Font& CFont::GetFont()
 {
-    sf::Uint32* __uft32String = new sf::Uint32[str.length()];
-    sf::Utf8::toUtf32(str.begin(), str.end(), __uft32String);
-    text.setString(__uft32String);
-    delete[] __uft32String;
+    return _font;
+}
+
+void CFont::OnCleanup()
+{
+    Cio::ClearFileInMem(_memFont);
 }

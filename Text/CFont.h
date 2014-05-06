@@ -13,23 +13,22 @@
 #include <string>
 #include <iostream>
 #include "../Common/Cio.h"
-//#include "../Graphics/CText.h"
+#include "../Common/CObject.h"
 
 using namespace std;
 
-class CFont
+class CFont : public CObject
 {
     private:
         char*           _memFont;
-    protected:
         sf::Font        _font;
-
-        void SetString(sf::Text& text, string str);
     public:
         CFont();
         ~CFont();
 
         bool LoadFont(string filename);
+        sf::Font& GetFont();
+        void OnCleanup();
 };
 
 #endif

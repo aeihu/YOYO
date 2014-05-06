@@ -11,13 +11,14 @@
 
 #include <SFML/Graphics.hpp>
 #include "CFont.h"
+#include "CTextFunction.h"
 #include <string>
 #include <map>
 #include "../Graphics/CSurface.h"
 #include "../Common/CCommon.h"
 
 
-class CTextProcessing : protected CFont
+class CTextProcessing
 {
     private:
         sf::Vector2f        _coordinate;
@@ -37,7 +38,8 @@ class CTextProcessing : protected CFont
     public:
         CTextProcessing();
 
-        bool OnInit(unsigned int width, unsigned int height=0);
+        void SetRowWidth(unsigned int width);
+        virtual void SetFont(sf::Font& font);
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         void Skip();
