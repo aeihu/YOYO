@@ -9,35 +9,18 @@
 #ifndef _CBUTTON_H_
     #define _CBUTTON_H_
 
-#include <string>
-#include <map>
-#include "../Animation/CAnimation.h"
-#include "../Parser/CParser.h"
-#include "../Graphics/CSequenceOfFrames.h"
+#include "CButtonBase.h"
 
 using namespace std;
 
-class CButton : public CSequenceOfFrames
+class CButton : public CButtonBase
 {
     private:
-        bool            _isMouseOver;
-        bool            _isMouseDown;
-        string          _seNameOfMouseOver;
-        string          _seNameOfMouseDown;
-
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
-        bool Subclass_Loop();
+        void Exec(void* data=NULL);
+        bool Subclass_CheckList(map<string, string>& list);
+        bool Subclass_SetProperty(map<string, string>& list);
     public:
-        CAnimation      _AnimationControl;
         list<string>    _cmdList;
-
-        CButton(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
-
-        bool LoadButton(const char* FileName);
-        void OnMouseMove(int x, int y);
-        bool OnLButtonDown(int x, int y);
-        bool OnLButtonUp(int x, int y);
 };
 
 #endif

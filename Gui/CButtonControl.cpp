@@ -11,14 +11,9 @@
 CButtonControl::CButtonControl()
 {}
 
-bool CButtonControl::IsAlreadyExists(string name)
-{
-    return _buttonList.count(name) < 1 ? false : true;
-}
-
 char CButtonControl::AddButton(std::string name, const char* filename)
 {
-    if (!IsAlreadyExists(name)){
+    if (!IsExists(name)){
         _buttonList.insert(
             std::pair<string,CButton>(name, CButton()));
     }
@@ -38,7 +33,7 @@ char CButtonControl::AddButton(std::string name, const char* filename)
 
 bool CButtonControl::DelButton(std::string name)
 {
-    if (IsAlreadyExists(name)){
+    if (IsExists(name)){
         _buttonList.erase(name);
         return true;
     }
