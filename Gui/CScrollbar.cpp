@@ -25,10 +25,10 @@ void CScrollbar::OnLoop()
     if (_maxValue < 1)
         return;
 
-    if (_value > _maxValue)
-        _value = _maxValue;
-    else if (_value < 1)
-        _value = 1;
+    if (_value >= _maxValue)
+        _value = _maxValue-1;
+    else if (_value < 0)
+        _value = 0;
 
     _btnArrowUp.SetPosition(_coordinate.x, _coordinate.y);
     _btnArrowDown.SetPosition(_coordinate.x, _coordinate.y + _height - _btnArrowDown.GetHeight());
@@ -74,25 +74,32 @@ void CScrollbar::OnMouseMove(int x, int y)
         else
             _btnBar.SetPosition(_btnBar.GetPosition().x, y);
 
-        _value += static_cast<int>((__tmp - _btnBar.GetPosition().y)/__cell);
+        _value += static_cast<int>((__tmp - _btnBar.GetPosition().y)/(__cell == 0.0f ? 1.0f : __cell));
     }
 }
 
-void CScrollbar::OnLButtonDown(int x, int y)
+bool CScrollbar::OnLButtonDown(int x, int y)
 {
     if (_maxValue < 1)
-        return;
+        return false;
 
     if(!_btnBar.OnLButtonDown(x, y))
         if(!_btnArrowUp.OnLButtonDown(x, y))
-            _btnArrowDown.OnLButtonDown(x, y);
+            return _btnArrowDown.OnLButtonDown(x, y);
+    
+    return true;
 }
 
-void CScrollbar::OnLButtonUp(int x, int y)
+bool CScrollbar::OnLButtonUp(int x, int y)
 {
+    if (_maxValue < 1)
+        return false;
+
     if(!_btnBar.OnLButtonUp(x, y))
         if(!_btnArrowUp.OnLButtonUp(x, y))
-            _btnArrowDown.OnLButtonUp(x, y);
+            return _btnArrowDown.OnLButtonUp(x, y);
+
+    return true;
 }
 
 void CScrollbar::CArrowUpButton::Exec(void *data)

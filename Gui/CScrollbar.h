@@ -42,13 +42,11 @@ class CScrollbar
         sf::Vector2f            _coordinate;
 
         void OnMouseMove(int x, int y);
-        void OnLButtonDown(int x, int y);
-        void OnLButtonUp(int x, int y);
+        bool OnLButtonDown(int x, int y);
+        bool OnLButtonUp(int x, int y);
         bool SetMaxValue(int value);
         int GetValue() const;
     public:
-        //int                    Value;
-
         CScrollbar();
 
         void OnLoop();

@@ -58,6 +58,7 @@ class CSoundBank {
 
         int AddSE(string name, const char* FileName) ;
         bool PlaySE(string name);
+        void PlaySE(sf::SoundBuffer sound);
         bool DeleteSE(string name);
 
         int AddVoice(string name, const char* FileName) ;

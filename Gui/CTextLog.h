@@ -10,22 +10,28 @@
     #define _CTEXTLOG_H_
 
 #include "CButtonBase.h"
-#include "../Text/CTextFunction.h"
+#include "../Sound/CSoundBank.h"
 
 class CTextLog
 {
-    private:
+    private: 
         class CVoiceButton : public CButtonBase
         {
             void Exec(void* data=NULL);
-        }               _btnVoice;
+        }                   _btnVoice;
 
-        sf::Text        _text;
+        sf::Text            _text;
+        sf::SoundBuffer*    _voice;
     public:
         CTextLog();
 
-        void SetTextLog(string text);
+        void SetTextLog(sf::Text text, sf::SoundBuffer* voice);
+
+        void OnMouseMove(int x, int y);
+        bool OnLButtonDown(int x, int y);
+        bool OnLButtonUp(int x, int y);
         void OnLoop();
+        void OnCleanup();
         void OnRender(sf::RenderWindow* Surf_Dest);
 };
 
