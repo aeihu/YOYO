@@ -65,7 +65,7 @@ bool CLogBoxControl::OnLButtonUp(int mX, int mY)
 
 bool CLogBoxControl::OnLButtonDown(int mX, int mY)
 {
-    map<string, CMessageBox>::iterator it;
+    map<string, CLogBox>::iterator it;
     for ( it=_logBoxList.begin(); it!=_logBoxList.end(); it++ ){
         if ((*it).second.OnLButtonDown(mX,mY)){
             cout << "LogBox \"" << (*it).first << "\" Left-ButtonDown event has actived." << endl;
@@ -78,11 +78,9 @@ bool CLogBoxControl::OnLButtonDown(int mX, int mY)
 
 void CLogBoxControl::OnLoop(bool &pause)
 {
-    std::map<std::string, CMessageBox>::iterator it;
+    std::map<std::string, CLogBox>::iterator it;
     for ( it=_logBoxList.begin(); it !=_logBoxList.end(); it++ )
-    {
         if((*it).second.OnLoop()) pause=true;
-    }
 }
 
 
@@ -90,7 +88,6 @@ void CLogBoxControl::OnLoop(bool &pause)
 void CLogBoxControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     std::map<std::string, CLogBox>::iterator it;
-    
     for ( it=_logBoxList.begin() ; it!=_logBoxList.end(); it++ )
         (*it).second.OnRender(Surf_Dest);
 }
