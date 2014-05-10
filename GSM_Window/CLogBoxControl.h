@@ -21,6 +21,18 @@ class CLogBoxControl : public CControlOfImageBaseClass
 
         CObject* GetObject(std::string name);
     public:
+    
+        CLogBoxControl();
+
+        char AddLogBox(std::string name, const char* filename);
+        bool DelLogBox(std::string name);
+        
+        bool OnLButtonUp(int mX, int mY);
+        bool OnLButtonDown(int mX, int mY);
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
+
 };
 
 #endif
