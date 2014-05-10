@@ -130,6 +130,11 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@del_msgbox") _pFunc = &Cmd_DelMessageBox;
         else if (__commandName == "@msg") _pFunc = &Cmd_Message;
 
+        else if (__commandName == "@add_logbox") _pFunc = &Cmd_AddLogBox;
+        else if (__commandName == "@show_logbox") _pFunc = &Cmd_ShowLogBox;
+        else if (__commandName == "@hide_logbox") _pFunc = &Cmd_HideLogBox;
+        else if (__commandName == "@del_logbox") _pFunc = &Cmd_DelLogBox;
+
         else if (__commandName == "@add_se") _pFunc = &Cmd_AddSE;
         else if (__commandName == "@del_se") _pFunc = &Cmd_DelSE;
         else if (__commandName == "@play_se") _pFunc = &Cmd_PlaySE;
