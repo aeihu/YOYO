@@ -19,8 +19,6 @@ using namespace std;
 
 class Cio
 {
-    private:
-        //static string LoadTxtFile(string filename);
     public:
         static bool IsOneWord(string &str, string valid_characters);
         static bool IsNested(string &str, char first_symbol, char last_symbol);

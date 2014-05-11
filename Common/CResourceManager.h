@@ -12,11 +12,12 @@
 #include "../Stage_Talk/CImgLayerControl.h"
 #include "../Stage_Talk/CCharacterLayerControl.h"
 #include "../GSM_Window/CMessageBoxControl.h"
+#include "../GSM_Window/CLogBoxControl.h"
 #include "../Effect/CParticleSystemControl.h"
 #include "../Gui/CButtonControl.h"
 #include "../Text/CFontControl.h"
 #include "../Sound/CSoundBank.h"
-#include "CPosition.h"
+#include "CPositionControl.h"
 
 class CResourceManager
 {
@@ -30,8 +31,9 @@ class CResourceManager
         static CImgLayerControl         _BackgroundLayerControl;
         static CMessageBoxControl       _MessageBoxControl;
         static CButtonControl           _ButtonControl;
-        static CPosition                _PositionControl;
+        static CPositionControl         _PositionControl;
         static CFontControl             _FontControl;
+        static CLogBoxControl           _LogBoxControl;
 
         static void GetInfo();
 };

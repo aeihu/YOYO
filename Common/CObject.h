@@ -19,7 +19,7 @@ class CObject
         string      _fullFileName;
     public:
         inline CObject() {_fullFileName="";}
-        inline string GetFullFileName() {return _fullFileName;}
+        inline string GetFullFileName() const {return _fullFileName;}
 };
 
 #endif
