@@ -43,14 +43,19 @@ void CLogBox::OnRender(sf::RenderWindow* Surf_Dest)
     CScrollbar::OnRender(Surf_Dest);
 }
 
-void CLogBox::Subclass_Cleanup()
+void CLogBox::OnCleanup()
 {
-    for (unsigned int __i=0; __i<_logList.size(); __i){
+    for (unsigned int __i=0; __i<_logList.size(); __i++){
         _logList[__i]->OnCleanup();
         delete _logList[__i];
     }
 
     _logList.clear();
+}
+
+bool CLogBox::Sub_OnLoad()
+{
+    return true;
 }
 
 void CLogBox::AddLog(sf::Text text, sf::SoundBuffer* voice)
@@ -62,7 +67,7 @@ void CLogBox::AddLog(sf::Text text, sf::SoundBuffer* voice)
         _logList.pop_front();
     }
     
-   _logList.back()->SetTextLog(text, voice);
+    _logList.back()->SetTextLog(text, voice);
 }
 
 void CLogBox::OnMouseMove(int x, int y)

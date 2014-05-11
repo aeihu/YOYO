@@ -20,7 +20,6 @@ class CButtonControl : public CControlOfImageBaseClass
         CObject* GetObject(std::string name);
         map<string, CButton>        _buttonList;
     public:
-
         CButtonControl();
 
         char AddButton(string name, const char* filename);

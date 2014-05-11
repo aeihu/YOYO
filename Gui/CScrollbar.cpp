@@ -16,10 +16,6 @@ CScrollbar::CScrollbar()
     _maxValue = 0;
 }
 
-void CScrollbar::OnCleanup()
-{
-}
-
 void CScrollbar::OnLoop()
 {
     if (_maxValue < 1)

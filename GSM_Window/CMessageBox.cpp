@@ -41,7 +41,7 @@ bool CMessageBox::Sub_OnLoad()
     return true;
 }
 
-bool CMessageBox::Sub_CheckList(map<string, string> list)
+bool CMessageBox::Subclass_CheckList(map<string, string> list)
 {
     bool result = true;
 

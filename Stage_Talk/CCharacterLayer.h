@@ -38,7 +38,7 @@ class CCharacterLayer : public CImageBaseClass
         bool LoadChara(const char* FileName);
         bool SetFace(string name);
 
-        bool Subclass_Loop();
-        void Subclass_Render(sf::RenderWindow* Surf_Dest);
+        bool OnLoop();
+        void OnRender(sf::RenderWindow* Surf_Dest);
 };
 #endif

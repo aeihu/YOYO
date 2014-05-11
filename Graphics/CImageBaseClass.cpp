@@ -46,14 +46,13 @@ bool CImageBaseClass::LoadImg(const char* fileName)
 
 void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (!_visible) return;
-    Surf_Dest->draw(_sprite);
-    Subclass_Render(Surf_Dest);
+    if (_visible)
+        Surf_Dest->draw(_sprite);
 }
 
 bool CImageBaseClass::OnLoop()
 {
-    bool __result = CAdderControl::OnLoop()>0?true:false;
+    bool __result = CAdderControl::OnLoop()>0 ? true : false;
     _visible = _Alpha > 0 ? true : false;
 
     if (_Alpha > 255)
@@ -72,6 +71,5 @@ bool CImageBaseClass::OnLoop()
     else
         _image.setSmooth(false);
 
-    __result = Subclass_Loop() ? true : __result;
     return __result;
 }

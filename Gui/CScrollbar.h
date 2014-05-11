@@ -51,9 +51,7 @@ class CScrollbar
 
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
-        void OnCleanup();
 
-        //virtual void RefOffset(int value)=0;
         void SetCoordinate(int x, int y);
 };
 

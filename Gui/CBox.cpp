@@ -61,7 +61,7 @@ bool CBox::LoadBox(const char* FileName)
 bool CBox::CheckList(map<string, string>& list)
 {
     bool __result = true;
-    __result = Sub_CheckList(list);
+    __result = Subclass_CheckList(list);
 
     if (list.count("TILESET_PATH") < 1){
         cout << "can't find value of TILESET_PATH." << endl;

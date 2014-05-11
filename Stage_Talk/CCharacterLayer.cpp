@@ -18,8 +18,10 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _AnimationControl._Type = CAnimation::Oscillate;
 }
 
-bool CCharacterLayer::Subclass_Loop()
+bool CCharacterLayer::OnLoop()
 {
+    bool __result = CImageBaseClass::OnLoop();
+
     if (_framesOfMouth._sprite.getColor().a != _Alpha)
         _framesOfMouth._sprite.setColor(sf::Color(255,255,255,_Alpha));
 
@@ -42,13 +44,17 @@ bool CCharacterLayer::Subclass_Loop()
         _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
     }
 
-    return false;
+    return __result;
 }
 
-void CCharacterLayer::Subclass_Render(sf::RenderWindow* Surf_Dest)
+void CCharacterLayer::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_isFaceEnable)
-        Surf_Dest->draw(_framesOfMouth._sprite);
+    if (_visible){
+        CImageBaseClass::OnRender(Surf_Dest);
+
+        if (_isFaceEnable)
+            Surf_Dest->draw(_framesOfMouth._sprite);
+    }
 }
 
 bool CCharacterLayer::LoadImage(const char* fileName, sf::Texture &image, sf::Sprite &sprite)

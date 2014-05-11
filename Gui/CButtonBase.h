@@ -30,7 +30,6 @@ class CButtonBase : public CSequenceOfFrames
         bool SetProperty(map<string, string>& list);
         virtual bool Subclass_SetProperty(map<string, string>& list){return true;}
 
-        bool Subclass_Loop();
         virtual void Exec(void* data=NULL)=0;
     public:
         CAnimation      _AnimationControl;
@@ -38,6 +37,7 @@ class CButtonBase : public CSequenceOfFrames
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 
         bool LoadButton(const char* FileName);
+        bool OnLoop();
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);

@@ -78,6 +78,11 @@ bool Cmd_DelMessageBox(vector<string>);//(string name);
 bool Cmd_ShowMessageBox(vector<string>);//(string name, int incr, bool pause);
 bool Cmd_HideMessageBox(vector<string>);//(string name, int incr, bool pause);
 
+bool Cmd_AddLogBox(vector<string>);
+bool Cmd_ShowLogBox(vector<string>);
+bool Cmd_HideLogBox(vector<string>);
+bool Cmd_DelLogBox(vector<string>);
+
 bool Cmd_AddParticleSystem(vector<string>);
 bool Cmd_DelParticleSystem(vector<string>);
 bool Cmd_ShowParticleSystem(vector<string>);

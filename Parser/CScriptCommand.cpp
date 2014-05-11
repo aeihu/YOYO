@@ -789,6 +789,59 @@ bool Cmd_HideMessageBox(vector<string> args)
     return Common_FuncOfHide("MessageBox", &CResourceManager::_MessageBoxControl, args);
 }
 
+bool Cmd_AddLogBox(vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_AddLogBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
+
+    switch (CResourceManager::_LogBoxControl.AddLogBox(__name, __filename))
+    {
+        case 0:
+            return true;
+        break;
+        case -1:
+            cout << "Cmd_AddLogBox(): LogBox \"" << __name << "\" has existed." <<endl;
+        break;
+        case -2:
+            cout << "Cmd_AddLogBox(): failed to add LogBox." << endl;
+        break;
+    }
+
+    return false;
+}
+
+bool Cmd_ShowLogBox(vector<string> args)
+{
+    return Common_FuncOfShow("LogBox", &CResourceManager::_LogBoxControl, args);
+}
+
+bool Cmd_HideLogBox(vector<string> args)
+{
+    return Common_FuncOfHide("LogBox", &CResourceManager::_LogBoxControl, args);
+}
+
+bool Cmd_DelLogBox(vector<string> args)
+{
+    if (args.size() < 1){
+        cout << "Cmd_DelLogBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    for (unsigned int i=0; i<args.size(); i++){
+        if (!CResourceManager::_LogBoxControl.DelLogBox(args[i]))
+            cout << "Cmd_DelLogBox(): can't find LogBox \""<< args[i] << "\"." <<endl;
+    }
+
+    return true;
+}
+
 bool Cmd_AddParticleSystem(vector<string> args)
 {
     if (args.size() != 2){

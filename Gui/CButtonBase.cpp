@@ -55,14 +55,16 @@ bool CButtonBase::OnLButtonUp(int x, int y)
     return false;
 }
 
-bool CButtonBase::Subclass_Loop()
+bool CButtonBase::OnLoop()
 {
+    bool __result = CImageBaseClass::OnLoop();
+
     if (!_isMouseDown){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
     }
 
-    return false;
+    return __result;
 }
 
 bool CButtonBase::IsMouseOver() const

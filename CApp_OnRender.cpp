@@ -42,6 +42,7 @@ void CApp::OnRender() {
     CResourceManager::_ImgLayerControl.OnRender(sf_Display);
     CResourceManager::_MessageBoxControl.OnRender(sf_Display);
     CResourceManager::_ButtonControl.OnRender(sf_Display);
+    CResourceManager::_LogBoxControl.OnRender(sf_Display);
 
     sf_Display->display();
 }

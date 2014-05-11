@@ -21,6 +21,7 @@ void CApp::OnLoop() {
     CResourceManager::_ParticleSystemControl.OnLoop(__isPause);
     CResourceManager::_MessageBoxControl.OnLoop(__isPause);
     CResourceManager::_ButtonControl.OnLoop(__isPause);
+    CResourceManager::_LogBoxControl.OnLoop(__isPause);
 
     CSoundBank::_SoundControl.OnLoop();
 

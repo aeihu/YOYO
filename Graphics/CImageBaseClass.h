@@ -24,8 +24,6 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         sf::Sprite          _sprite;
         bool                _visible;
 
-        virtual bool Subclass_Loop(){return false;};
-        virtual void Subclass_Render(sf::RenderWindow* Surf_Dest){};
         bool IsStandby();
     public:
         sf::Vector2f        _Coordinate;

@@ -8,6 +8,11 @@
 
 #include "CLogBoxControl.h"
 
+CLogBoxControl::CLogBoxControl()
+{
+
+}
+
 CObject* CLogBoxControl::GetObject(std::string name)
 {
     if (_logBoxList.count(name) < 1)
@@ -26,11 +31,8 @@ char CLogBoxControl::AddLogBox(std::string name, const char* filename)
     else
         return -1;
 
-
     if(_logBoxList[name].LoadBox(filename)){
         _logBoxList[name].CBox::_Alpha = 0;
-
-
         return 0;
     }
     else{
@@ -41,12 +43,11 @@ char CLogBoxControl::AddLogBox(std::string name, const char* filename)
 
 bool CLogBoxControl::DelLogBox(std::string name)
 {
-    
     if (IsExists(name)){
+        _logBoxList[name];
         _logBoxList.erase(name);
         return true;
     }
-
 
     return false;
 }
@@ -75,7 +76,6 @@ bool CLogBoxControl::OnLButtonDown(int mX, int mY)
     return false;
 }
 
-
 void CLogBoxControl::OnLoop(bool &pause)
 {
     std::map<std::string, CLogBox>::iterator it;
@@ -83,11 +83,16 @@ void CLogBoxControl::OnLoop(bool &pause)
         if((*it).second.OnLoop()) pause=true;
 }
 
-
-
 void CLogBoxControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     std::map<std::string, CLogBox>::iterator it;
     for ( it=_logBoxList.begin() ; it!=_logBoxList.end(); it++ )
         (*it).second.OnRender(Surf_Dest);
+}
+
+void CLogBoxControl::OnCleanup()
+{
+    std::map<std::string, CLogBox>::iterator it;
+    for ( it=_logBoxList.begin() ; it!=_logBoxList.end(); it++ )
+        (*it).second.OnCleanup();
 }
