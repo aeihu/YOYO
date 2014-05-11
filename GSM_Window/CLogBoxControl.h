@@ -10,7 +10,7 @@
     #define _CLOGBOXCONTROL_H_
 
 #include "CLogBox.h"
-#include "CControlOfImageBaseClass.h"
+#include "../Common/CControlOfImageBaseClass.h"
 
 class CLogBoxControl : public CControlOfImageBaseClass
 {
