@@ -17,8 +17,8 @@ class CButton : public CButtonBase
 {
     private:
         void Exec(void* data=NULL);
-        bool Subclass_CheckList(map<string, string>& list);
-        bool Subclass_SetProperty(map<string, string>& list);
+        bool CheckList(map<string, string>& list);
+        bool SetProperty(map<string, string>& list);
     public:
         list<string>    _cmdList;
 };

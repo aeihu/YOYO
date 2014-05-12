@@ -12,6 +12,7 @@
 #include "../Gui/CBox.h"
 #include "../Gui/CTextLog.h"
 #include "../Gui/CScrollbar.h"
+#include "../Common/CConfigFile.h"
 #include <deque>
 
 using namespace std;
@@ -24,7 +25,8 @@ class CLogBox : public CBox, public CScrollbar
         string                      _fontName;
         deque<CTextLog*>            _logList;
     protected:
-        bool Sub_OnLoad();
+        bool CheckList(map<string, string>& list);
+        bool SetProperty(map<string, string>& list);
     public:
         CLogBox();
 

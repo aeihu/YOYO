@@ -41,7 +41,7 @@ char CParticleSystemControl::AddParticleSystem(string name, const char* filename
     else
         return -1;
 
-    if(_particleSystemList[name].LoadParticle(filename)){
+    if(_particleSystemList[name].LoadConfigFile(filename)){
         return 0;
     }
     else{

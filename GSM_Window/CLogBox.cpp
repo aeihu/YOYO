@@ -53,9 +53,15 @@ void CLogBox::OnCleanup()
     _logList.clear();
 }
 
-bool CLogBox::Sub_OnLoad()
+bool CLogBox::CheckList(map<string, string>& list)
 {
-    return true;
+    bool __result = CBox::CheckList(list);
+    return __result;
+}
+
+bool CLogBox::SetProperty(map<string, string>& list)
+{
+    return CBox::SetProperty(list);
 }
 
 void CLogBox::AddLog(sf::Text text, sf::SoundBuffer* voice)

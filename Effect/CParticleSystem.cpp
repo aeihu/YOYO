@@ -17,7 +17,7 @@ void CParticleSystem::SetEnable(bool val)
     _enable = val;
 }
 
-void CParticleSystem::resetParticle(std::size_t index)
+void CParticleSystem::ResetParticle(std::size_t index)
 {
     float __angle = (_angleOffet == 0 ? _angleMin : (std::rand() % _angleOffet) + _angleMin) * 3.14f / 180.f;
     float __speed = _speedOffet == 0 ? _speedMin : (std::rand() % 50) + _speedMin;
@@ -62,7 +62,7 @@ void CParticleSystem::OnLoop(sf::Time elapsed)
 
         if (p._LifeTime <= sf::Time::Zero)
             if (_enable)
-                resetParticle(i-1);
+                ResetParticle(i-1);
             else{
                 _particles.erase(_particles.begin()+(i-1));
                 continue;
@@ -94,28 +94,6 @@ bool CParticleSystem::SetTexture(string filename)
     for (std::size_t i = 0; i < _particles.size(); ++i){
         _particles[i]._Rectangle.setTexture(&_texture);
     }
-
-    return true;
-}
-
-bool CParticleSystem::LoadParticle(const char* FileName)
-{
-    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-    map<string, string> __valueList;
-
-    for (list<string>::iterator it=__expressions.begin();
-        it!=__expressions.end(); it++){
-        string __paraName = "";
-        string __paraValue = "";
-        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            __valueList[__paraName] = __paraValue;
-    }
-
-    if (!CheckList(__valueList))
-        return false;
-
-    if (!SetProperty(__valueList))
-        return false;
 
     return true;
 }

@@ -10,58 +10,15 @@
 
 CBox::CBox(float x, float y):CImageBaseClass(x,y)
 {
-    _parameterList.clear();
 }
 
 CBox::~CBox()
 {
-	_parameterList.clear();
-}
-
-bool CBox::LoadBox(const char* FileName)
-{    
-    //char BOM[3] = {0xEF,0xBB,0xBF};
-    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-    //map<string, string> __valueList;
-    _parameterList.clear();
-
-    for (list<string>::iterator it=__expressions.begin();
-        it!=__expressions.end(); it++){
-        string __paraName = "";
-        string __paraValue = "";
-        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            _parameterList[__paraName] = __paraValue;
-    }
-
-    if (!CheckList(_parameterList))
-        return false;
-
-    _Coordinate.x = atof(_parameterList["X"].c_str());
-    _Coordinate.y = atof(_parameterList["Y"].c_str());
-
-    sf::Image __tileset, __dest;
-    if (!CSurface::OnLoad(_parameterList["TILESET_PATH"].c_str(), __tileset))
-        return false;
-
-    if (atoi(_parameterList["TILE_ENABLE"].c_str()) != 0){
-        if (!CGuiCommon::CreateBoxBackground(
-            &__dest, &__tileset, _parameterList["MAP_PATH"].c_str(), atoi(_parameterList["TILE_SIZE"].c_str())))
-            return false;
-
-        _image.loadFromImage(__dest);
-    }
-    else
-        _image.loadFromImage(__tileset);
-
-    _sprite.setTexture(_image);
-
-    return Sub_OnLoad();
 }
 
 bool CBox::CheckList(map<string, string>& list)
 {
     bool __result = true;
-    __result = Subclass_CheckList(list);
 
     if (list.count("TILESET_PATH") < 1){
         cout << "can't find value of TILESET_PATH." << endl;
@@ -95,4 +52,28 @@ bool CBox::CheckList(map<string, string>& list)
     }
 
     return __result;
+}
+
+bool CBox::SetProperty(map<string, string>& list)
+{
+    _Coordinate.x = atof(list["X"].c_str());
+    _Coordinate.y = atof(list["Y"].c_str());
+
+    sf::Image __tileset, __dest;
+    if (!CSurface::OnLoad(list["TILESET_PATH"].c_str(), __tileset))
+        return false;
+
+    if (atoi(list["TILE_ENABLE"].c_str()) != 0){
+        if (!CGuiCommon::CreateBoxBackground(
+            &__dest, &__tileset, list["MAP_PATH"].c_str(), atoi(list["TILE_SIZE"].c_str())))
+            return false;
+
+        _image.loadFromImage(__dest);
+    }
+    else
+        _image.loadFromImage(__tileset);
+
+    _sprite.setTexture(_image);
+
+    return true;
 }

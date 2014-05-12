@@ -59,15 +59,14 @@ void CTextProcessing::Clear()
     _sfText.setString("");
 }
 
-void CTextProcessing::SetText(string msg, bool isAppend)
+void CTextProcessing::SetText(string msg)
 {
-    if (isAppend){
-        if (!_textOfShown.empty())
-            _textOfShown += "\n\n";
-    }
-    else
-        _textOfShown = "";
-
+    //if (isAppend){
+    //    if (!_textOfShown.empty())
+    //        _textOfShown += "\n\n";
+    //}
+    //else
+    _textOfShown = "";
     _cursorPos =
     _length =
     _index = 0;

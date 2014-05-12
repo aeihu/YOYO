@@ -19,15 +19,17 @@
 
 class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFrames
 {        
-  private:
+    private:
+        sf::Vector2f    _speakerNameOffset;
+        sf::Vector2f    _msgOffset;
         sf::Text        _speakerName;
         bool            _isPaused;
 
-        bool Subclass_CheckList(map<string, string> list);
-        bool Sub_OnLoad();
-  protected:
+        bool CheckList(map<string, string>& list);
+        bool SetProperty(map<string, string>& list);
+    protected:
         using CImageBaseClass::_visible;
-  public:
+    public:
         CAnimation   _AnimationControl;
 
         CMessageBox();

@@ -20,7 +20,7 @@ char CMessageBoxControl::AddMessageBox(std::string name, const char* filename)
     else
         return -1;
 
-    if(_messageBoxList[name].LoadBox(filename)){
+    if(_messageBoxList[name].LoadConfigFile(filename)){
         _messageBoxList[name].CBox::_Alpha = 0;
 
         return 0;

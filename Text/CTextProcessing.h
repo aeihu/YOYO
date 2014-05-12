@@ -46,7 +46,7 @@ class CTextProcessing
         void Clear();
         bool IsTextAllShown();
 
-        virtual void SetText(string msg, bool isAppend=false);
+        virtual void SetText(string msg);
         string GetText();
         float GetWidth();
         float GetHeight();

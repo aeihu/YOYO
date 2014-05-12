@@ -13,9 +13,10 @@ void CButton::Exec(void* data)
     CParser::_Parser.InsertCmdList(_cmdList);
 }
 
-bool CButton::Subclass_CheckList(map<string, string>& list)
+bool CButton::CheckList(map<string, string>& list)
 {
-    bool result = true;
+    bool result = CButtonBase::CheckList(list);
+
     if (list.count("SCRIPT_PATH") < 1){
         cout << "can't find value of SCRIPT_PATH." << endl;
         result = false;
@@ -28,8 +29,8 @@ bool CButton::Subclass_CheckList(map<string, string>& list)
     return result;
 }
 
-bool CButton::Subclass_SetProperty(map<string, string>& list)
+bool CButton::SetProperty(map<string, string>& list)
 {
     return CParser::_Parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
-        list["SCRIPT_SECTION"].c_str(), _cmdList);
+        list["SCRIPT_SECTION"].c_str(), _cmdList) && CButtonBase::SetProperty(list);
 }

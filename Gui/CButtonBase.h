@@ -14,29 +14,26 @@
 #include "../Animation/CAnimation.h"
 #include "../Parser/CParser.h"
 #include "../Graphics/CSequenceOfFrames.h"
+#include "../Common/CConfigFile.h"
 
 using namespace std;
 
-class CButtonBase : public CSequenceOfFrames
+class CButtonBase : public CSequenceOfFrames , public CConfigFile
 {
     private:
         bool            _isMouseOver;
         bool            _isMouseDown;
         string          _seNameOfMouseOver;
         string          _seNameOfMouseDown;
-
-        bool CheckList(map<string, string>& list);
-        virtual bool Subclass_CheckList(map<string, string>& list){return true;}
-        bool SetProperty(map<string, string>& list);
-        virtual bool Subclass_SetProperty(map<string, string>& list){return true;}
-
+    protected:
+        virtual bool CheckList(map<string, string>& list);
+        virtual bool SetProperty(map<string, string>& list);
         virtual void Exec(void* data=NULL)=0;
     public:
         CAnimation      _AnimationControl;
 
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 
-        bool LoadButton(const char* FileName);
         bool OnLoop();
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);

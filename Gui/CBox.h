@@ -13,22 +13,18 @@
 #include "../Graphics/CImageBaseClass.h"
 #include "../Common/CCommon.h"
 #include "CGuiCommon.h"
-#include "../Common/Cio.h"
+#include "../Common/CConfigFile.h"
 
-class CBox : public CImageBaseClass
+class CBox : public CImageBaseClass, public CConfigFile
 {
     private:
     protected:
         using CImageBaseClass::_visible;
-        map<string, string>     _parameterList;
 
-        bool CheckList(map<string, string>& list);
-        virtual bool Subclass_CheckList(map<string, string>& list){ return true;}
-        virtual bool Sub_OnLoad(){ return true;}
+        virtual bool CheckList(map<string, string>& list);
+        virtual bool SetProperty(map<string, string>& list);
     public:
         CBox(float x=0.0f, float y=0.0f);
         ~CBox();
-
-        bool LoadBox(const char* FileName);
 };
 #endif

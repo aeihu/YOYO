@@ -94,28 +94,6 @@ void CButtonBase::OnMouseMove(int x, int y)
     }
 }
 
-bool CButtonBase::LoadButton(const char* FileName)
-{
-    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-    map<string, string> __valueList;
-
-    for (list<string>::iterator it=__expressions.begin();
-        it!=__expressions.end(); it++){
-        string __paraName = "";
-        string __paraValue = "";
-        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            __valueList[__paraName] = __paraValue;
-    }
-
-    if (!CheckList(__valueList))
-        return false;
-
-    if (!SetProperty(__valueList))
-        return false;
-
-    return true;
-}
-
 bool CButtonBase::CheckList(map<string, string>& list) 
 {
     bool result = true;
@@ -144,9 +122,6 @@ bool CButtonBase::CheckList(map<string, string>& list)
         result = false;
     }
 
-    if (!Subclass_CheckList(list))
-        result = false;
-
     return result;
 }
 
@@ -167,5 +142,5 @@ bool CButtonBase::SetProperty(map<string, string>& list)
         _Coordinate.y=atof(list["Y"].c_str());
     }
 
-    return Subclass_SetProperty(list);
+    return true;
 }

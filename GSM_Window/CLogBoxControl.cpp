@@ -31,7 +31,7 @@ char CLogBoxControl::AddLogBox(std::string name, const char* filename)
     else
         return -1;
 
-    if(_logBoxList[name].LoadBox(filename)){
+    if(_logBoxList[name].LoadConfigFile(filename)){
         _logBoxList[name].CBox::_Alpha = 0;
         return 0;
     }

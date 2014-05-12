@@ -26,24 +26,29 @@ void CMessageBox::SetFont(sf::Font& font)
     _speakerName.setFont(font);
 }
 
-bool CMessageBox::Sub_OnLoad()
+bool CMessageBox::SetProperty(map<string, string>& list)
 {
-    CTextProcessing::SetRowWidth(atoi(_parameterList["MSG_WIDTH"].c_str()));
+    CTextProcessing::SetRowWidth(atoi(list["MSG_WIDTH"].c_str()));
 
 //=================Init cursor==================================
-    if (!CSequenceOfFrames::LoadImg(_parameterList["CURSOR_PATH"].c_str()))
+    if (!CSequenceOfFrames::LoadImg(list["CURSOR_PATH"].c_str()))
         return false;
 
-    SetWidth(atoi(_parameterList["CURSOR_WIDTH"].c_str()));
-    SetHeight(atoi(_parameterList["CURSOR_HEIGHT"].c_str()));
-    _AnimationControl._MaxFrames = atoi(_parameterList["CURSOR_MAX_FRAMES"].c_str());
-    _AnimationControl.SetFrameRate(atoi(_parameterList["CURSOR_FRAME_RATE"].c_str()));
-    return true;
+    SetWidth(atoi(list["CURSOR_WIDTH"].c_str()));
+    SetHeight(atoi(list["CURSOR_HEIGHT"].c_str()));
+    _AnimationControl._MaxFrames = atoi(list["CURSOR_MAX_FRAMES"].c_str());
+    _AnimationControl.SetFrameRate(atoi(list["CURSOR_FRAME_RATE"].c_str()));
+
+    _speakerNameOffset.x = atof(list["SPEAKER_OFFSET_X"].c_str());
+    _speakerNameOffset.y = atof(list["SPEAKER_OFFSET_Y"].c_str());
+    _msgOffset.x = atof(list["MSG_OFFSET_X"].c_str());
+    _msgOffset.y = atof(list["MSG_OFFSET_Y"].c_str());
+    return CBox::SetProperty(list);
 }
 
-bool CMessageBox::Subclass_CheckList(map<string, string> list)
+bool CMessageBox::CheckList(map<string, string>& list)
 {
-    bool result = true;
+    bool result = CBox::CheckList(list);
 
     if (list.count("MSG_OFFSET_X") < 1){
         cout << "can't find value of MSG_OFFSET_X." << endl;
@@ -60,10 +65,10 @@ bool CMessageBox::Subclass_CheckList(map<string, string> list)
         result = false;
     }
 
-    if (list.count("MSG_APPEND") < 1){
-        cout << "can't find value of MSG_APPEND." << endl;
-        result = false;
-    }
+    //if (list.count("MSG_APPEND") < 1){
+    //    cout << "can't find value of MSG_APPEND." << endl;
+    //    result = false;
+    //}
 
     if (list.count("CURSOR_PATH") < 1){
         cout << "can't find value of CURSOR_PATH." << endl;
@@ -107,12 +112,11 @@ bool CMessageBox::OnLoop()
 {
     bool __result = CBox::OnLoop();
 
-    _speakerName.setPosition(CBox::_Coordinate.x + atof(_parameterList["SPEAKER_OFFSET_X"].c_str()), 
-        CBox::_Coordinate.y + atof(_parameterList["SPEAKER_OFFSET_Y"].c_str()));
+    _speakerName.setPosition(CBox::_Coordinate + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
-        CBox::_Coordinate.x + atof(_parameterList["MSG_OFFSET_X"].c_str()), 
-        CBox::_Coordinate.y + atof(_parameterList["MSG_OFFSET_Y"].c_str()));
+        CBox::_Coordinate.x + _msgOffset.x, 
+        CBox::_Coordinate.y + _msgOffset.y);
 
     if (IsTextAllShown() && !GetText().empty()){
         SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
@@ -150,7 +154,7 @@ void CMessageBox::SetSpeakerName(string name)
 void CMessageBox::SetText(string msg)
 {
     _isPaused = true;
-    CTextProcessing::SetText(msg, atoi(_parameterList["MSG_APPEND"].c_str()));
+    CTextProcessing::SetText(msg);
 }
 
 bool CMessageBox::OnLButtonDown(int x, int y)

@@ -20,7 +20,7 @@ char CButtonControl::AddButton(std::string name, const char* filename)
     else
         return -1;
 
-    if(_buttonList[name].LoadButton(filename)){
+    if(_buttonList[name].LoadConfigFile(filename)){
         _buttonList[name]._Alpha = 0;
 
         return 0;

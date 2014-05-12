@@ -12,9 +12,10 @@
 #include <cmath>
 #include "../Common/Cio.h"
 #include "../Common/CObject.h"
+#include "../Common/CConfigFile.h"
 #include "../Graphics/CSurface.h"
 
-class CParticleSystem : public CObject
+class CParticleSystem : public CObject, public CConfigFile
 {
     private:
         struct Particle
@@ -42,13 +43,12 @@ class CParticleSystem : public CObject
         float                   _height;
         bool                    _enable;
 
-        void resetParticle(std::size_t index);
+        void ResetParticle(std::size_t index);
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);
     public:
         CParticleSystem();
 
-        bool LoadParticle(const char* FileName);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
         void OnLoop(sf::Time elapsed);
