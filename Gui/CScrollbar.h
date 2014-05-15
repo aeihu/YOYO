@@ -13,7 +13,12 @@
 
 class CScrollbar
 {
-    private:   
+    private:
+        bool                    _isMouseDown;
+        bool                    _isMouseOver;
+        int                     _maxValue;
+
+    protected:
         class CArrowUpButton : public CButtonBase
         {
             private:
@@ -32,12 +37,8 @@ class CScrollbar
                 void Exec(void* data=NULL);
         }                       _btnBar;
 
-        bool                    _isMouseDown;
-        bool                    _isMouseOver;
-        int                     _maxValue;
-
-    protected:
         int                     _value;
+        int                     _alpha;
         float                   _height;
         sf::Vector2f            _coordinate;
 
@@ -46,13 +47,15 @@ class CScrollbar
         bool OnLButtonUp(int x, int y);
         bool SetMaxValue(int value);
         int GetValue() const;
+        
+        virtual bool CheckList(map<string, string>& list);
+        virtual bool SetProperty(map<string, string>& list);
     public:
         CScrollbar();
 
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
-
-        void SetCoordinate(int x, int y);
+        void SetPosition(float x, float y);
 };
 
 #endif

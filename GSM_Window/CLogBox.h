@@ -22,7 +22,8 @@ class CLogBox : public CBox, public CScrollbar
     private:
         unsigned int                _logMax;
         unsigned int                _visNum;
-        string                      _fontName;
+        sf::Vector2f                _logOffset;
+        sf::Vector2f                _scrollbarOffset;
         deque<CTextLog*>            _logList;
     protected:
         bool CheckList(map<string, string>& list);
@@ -39,7 +40,7 @@ class CLogBox : public CBox, public CScrollbar
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
 
-        void AddLog(sf::Text text, sf::SoundBuffer* voice);
+        void AddLog(string text, sf::SoundBuffer* voice, sf::Font& font);
 };
 
 #endif

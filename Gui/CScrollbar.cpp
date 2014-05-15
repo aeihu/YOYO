@@ -12,6 +12,7 @@ CScrollbar::CScrollbar()
 {
     _isMouseDown =
     _isMouseOver = false;
+    _alpha =
     _value =
     _maxValue = 0;
 }
@@ -25,6 +26,8 @@ void CScrollbar::OnLoop()
         _value = _maxValue-1;
     else if (_value < 0)
         _value = 0;
+
+    _btnBar._Alpha = _btnArrowDown._Alpha = _btnArrowUp._Alpha = _alpha;
 
     _btnArrowUp.SetPosition(_coordinate.x, _coordinate.y);
     _btnArrowDown.SetPosition(_coordinate.x, _coordinate.y + _height - _btnArrowDown.GetHeight());
@@ -127,7 +130,7 @@ bool CScrollbar::SetMaxValue(int value)
     return true;
 }
 
-void CScrollbar::SetCoordinate(int x, int y)
+void CScrollbar::SetPosition(float x, float y)
 {
     _coordinate.x = x;
     _coordinate.y = y;
@@ -136,4 +139,47 @@ void CScrollbar::SetCoordinate(int x, int y)
 int CScrollbar::GetValue() const
 {
     return _value;
+}
+
+bool CScrollbar::CheckList(map<string, string>& list)
+{
+    bool __result = true;
+
+    if (list.count("SCROLLBAR_HEIGHT") < 1){
+        cout << "can't find value of SCROLLBAR_HEIGHT." << endl;
+        __result = false;
+    }
+
+    if (list.count("BUTTON_ARROW_DOWN_PATH") < 1){
+        cout << "can't find value of BUTTON_ARROW_DOWN_PATH." << endl;
+        __result = false;
+    }
+
+    if (list.count("BUTTON_ARROW_UP_PATH") < 1){
+        cout << "can't find value of BUTTON_ARROW_UP_PATH." << endl;
+        __result = false;
+    }
+
+    if (list.count("BUTTON_BAR_PATH") < 1){
+        cout << "can't find value of BUTTON_BAR_PATH." << endl;
+        __result = false;
+    }
+
+    return __result;
+}
+
+bool CScrollbar::SetProperty(map<string, string>& list)
+{
+    _height = atof(list["SCROLLBAR_HEIGHT"].c_str());
+
+    if (!_btnArrowUp.LoadConfigFile(list["BUTTON_ARROW_UP_PATH"].c_str()))
+        return false;
+
+    if (!_btnArrowDown.LoadConfigFile(list["BUTTON_ARROW_DOWN_PATH"].c_str()))
+        return false;
+
+    if (!_btnBar.LoadConfigFile(list["BUTTON_BAR_PATH"].c_str()))
+        return false;
+
+    return true;
 }

@@ -21,6 +21,7 @@ class CFontControl : public CControlBaseClass
     private:
         friend class CResourceManager;
         friend bool Cmd_AddMessageBox(vector<string> args);
+        friend bool Cmd_Message(vector<string> args);
         
         map<string, CFont>          _fontList;
 

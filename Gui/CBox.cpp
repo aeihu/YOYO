@@ -25,21 +25,22 @@ bool CBox::CheckList(map<string, string>& list)
         __result = false;
     }
 
-    if (list.count("MAP_PATH") < 1){
-        cout << "can't find value of MAP_PATH." << endl;
-        __result = false;
-    }
-
     if (list.count("TILE_ENABLE") < 1){
         cout << "can't find value of TILE_ENABLE." << endl;
         __result = false;
     }
 
-    if (atoi(list["TILE_ENABLE"].c_str()) != 0)
+    if (atoi(list["TILE_ENABLE"].c_str()) != 0){
         if (list.count("TILE_SIZE") < 1){
             cout << "can't find value of TILE_SIZE." << endl;
             __result = false;
         }
+
+        if (list.count("MAP_PATH") < 1){
+            cout << "can't find value of MAP_PATH." << endl;
+            __result = false;
+        }
+    }
 
     if (list.count("X") < 1){
         cout << "can't find value of X." << endl;

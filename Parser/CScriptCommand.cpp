@@ -730,6 +730,10 @@ bool Cmd_Message(vector<string> args)
             cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
     }
 
+    CResourceManager::_LogBoxControl._logBoxList["log"].AddLog(
+        CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].GetText(), 
+        NULL,
+        CResourceManager::_FontControl._fontList["__main"].GetFont());
     return true;
 }
 

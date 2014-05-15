@@ -17,6 +17,7 @@ class CLogBoxControl : public CControlOfImageBaseClass
     private:
         friend class CResourceManager;
         friend bool Cmd_AddLogBox(vector<string>);
+        friend bool Cmd_Message(vector<string> args);
 
         map<string, CLogBox>    _logBoxList;
 

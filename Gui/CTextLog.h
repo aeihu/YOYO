@@ -22,10 +22,15 @@ class CTextLog
 
         sf::Text            _text;
         sf::SoundBuffer*    _voice;
+        int                 _alpha;
+        sf::Vector2f        _coordinate;
     public:
         CTextLog();
 
-        void SetTextLog(sf::Text text, sf::SoundBuffer* voice);
+        void SetTextLog(string text, sf::SoundBuffer* voice, sf::Font& font);
+        void SetTextLog(string text, sf::SoundBuffer* voice);
+        void SetAlpha(int alpha);
+        void SetPosition(float x, float y);
 
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);

@@ -36,6 +36,8 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
 
         void SetText(string msg);
         void SetFont(sf::Font& font);
+        void SetSpeakerName(string name);
+
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
@@ -43,7 +45,5 @@ class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFram
         bool OnRButtonUp(int x, int y);
         bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
-
-        void SetSpeakerName(string name);
 };
 #endif
