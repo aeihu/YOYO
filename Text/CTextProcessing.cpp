@@ -18,8 +18,7 @@ CTextProcessing::CTextProcessing()
     _rowWidth =
     _index=
     _oldTime =
-    _length =
-    _cursorPos = 0;
+    _length = 0;
 
     _textOfShown =
     _text = "";
@@ -52,7 +51,6 @@ void CTextProcessing::SetFont(sf::Font& font)
 void CTextProcessing::Clear()
 {
     _textOfShown = "";
-    _cursorPos =
     _length =
     _index = 0;
     _text = "";
@@ -67,10 +65,10 @@ void CTextProcessing::SetText(string msg)
     //}
     //else
     _textOfShown = "";
-    _cursorPos =
     _length =
     _index = 0;
     _text = msg;
+    Process();
 }
 
 string CTextProcessing::GetText()
@@ -78,51 +76,67 @@ string CTextProcessing::GetText()
     return _text;
 }
 
+void CTextProcessing::Process()
+{
+    unsigned int __index = 0;
+    unsigned int __cursorPos = 0;
+    unsigned int __fontSize = _sfText.getCharacterSize();
+
+    while (__index < _text.length()){
+        unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[__index]);
+        string __str = "";
+
+        __cursorPos += __size==1?__fontSize>>1:__fontSize;
+
+        if (__size == 1 && __index > 0){
+            if (!isWordOrNumber(_text[__index-1]))
+                for (unsigned int i=__index; i<_text.length(); i++){
+                    if (!isWordOrNumber(_text[i])){
+                        if (__cursorPos+(i-__index)*(__fontSize>>1) > _rowWidth)
+                            __str = "\n";
+                        break;
+                    }
+                }
+        }
+        else if (__cursorPos > _rowWidth)
+            __str = "\n";
+
+        _textOfShown += __str + _text.substr(__index, __size);
+
+        if (__str == "\n"){
+            __cursorPos=__size==1?__fontSize>>1:__fontSize;
+            _length++;
+        }
+
+        __index += __size;
+        _length++;
+    }
+
+    _text = _textOfShown;
+    _textOfShown = "";
+}
+
 void CTextProcessing::OnLoop()
 {
-    do {
-        _sfText.setPosition(_coordinate);
-        if (_oldTime + CCommon::_Common.TEXT_FRAMERATE <= CCommon::_Common.GetTicks() || _isSkip){
-            _oldTime = CCommon::_Common.GetTicks();
-        }
-        else
-            return;
+    _sfText.setPosition(_coordinate);
+    if (_oldTime + CCommon::_Common.TEXT_FRAMERATE <= CCommon::_Common.GetTicks() || _isSkip){
+        _oldTime = CCommon::_Common.GetTicks();
+    }
+    else
+        return;
 
-        if (_index < _text.length()){
-            unsigned int __fontSize = _sfText.getCharacterSize();
+    if (_index < _text.length()){
+        if (_isSkip){
+            _textOfShown = _text;
+            _index = _text.length();
+        }
+        else{
             unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
-            string __str = "";
-
-            _cursorPos += __size==1?__fontSize>>1:__fontSize;
-
-            if (__size == 1 && _index > 0){
-                if (!isWordOrNumber(_text[_index-1]))
-                    for (unsigned int i=_index; i<_text.length(); i++){
-                        if (!isWordOrNumber(_text[i])){
-                            if (_cursorPos+(i-_index)*(__fontSize>>1) > _rowWidth)
-                                __str = "\n";
-                            break;
-                        }
-                    }
-            }
-            else if (_cursorPos > _rowWidth)
-                __str = "\n";
-
-            _textOfShown += __str + _text.substr(_index, __size);
-
-            if (__str == "\n"){
-                _cursorPos=__size==1?__fontSize>>1:__fontSize;
-                _length++;
-            }
-
+            _textOfShown += _text.substr(_index, __size);
             _index += __size;
-            _length++;
-
-            CTextFunction::SetString(_sfText, _textOfShown);
         }
-        else
-            _isSkip = false;
-    }while (_isSkip);
+        CTextFunction::SetString(_sfText, _textOfShown);
+    }
 }
 
 void CTextProcessing::Skip()

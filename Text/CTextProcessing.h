@@ -27,7 +27,6 @@ class CTextProcessing
         string              _textOfShown;
         sf::Text            _sfText;
         unsigned int        _rowWidth;
-        unsigned int        _cursorPos;
         unsigned int        _index;
         unsigned int        _length;
         sf::Color           _textColor;
@@ -35,6 +34,7 @@ class CTextProcessing
         unsigned long       _oldTime;
 
         bool isWordOrNumber(char c);
+        void Process();
     public:
         CTextProcessing();
 
