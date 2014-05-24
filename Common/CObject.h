@@ -18,8 +18,9 @@ class CObject
     protected:
         string      _fullFileName;
     public:
-        inline CObject() {_fullFileName="";}
-        inline string GetFullFileName() const {return _fullFileName;}
+        CObject() {_fullFileName="";}
+        virtual CObject* Create(const char* filename)=0;
+        string GetFullFileName() const;
 };
 
 #endif

@@ -22,11 +22,13 @@ class CFont : public CObject
     private:
         char*           _memFont;
         sf::Font        _font;
+
+        bool LoadFont(string filename);
     public:
         CFont();
         ~CFont();
 
-        bool LoadFont(string filename);
+        CObject* Create(const char* filename);
         sf::Font& GetFont();
         void OnCleanup();
 };

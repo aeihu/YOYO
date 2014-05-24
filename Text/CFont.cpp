@@ -60,6 +60,16 @@ sf::Font& CFont::GetFont()
     return _font;
 }
 
+CObject* CFont::Create(const char* filename)
+{
+    CFont* fnt = new CFont();
+    if (fnt->LoadFont(filename))
+        return fnt;
+    
+    delete fnt;
+    return NULL;
+}
+
 void CFont::OnCleanup()
 {
     Cio::ClearFileInMem(_memFont);

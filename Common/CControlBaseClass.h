@@ -10,13 +10,21 @@
     #define _CCONTROLBASECLASS_H_
 
 #include "CObject.h"
+#include <map>
+
+using namespace std;
 
 class CControlBaseClass
 {
     protected:
-        virtual CObject* GetObject(std::string name)=0;
+        map<string, CObject*>          _objectList;
     public:
+        virtual bool AddObject(string name, CObject* obj);
+        virtual bool DelObject(string name);
+        void OnCleanup();
+
         bool IsExists(string name);
+        virtual CObject* GetObject(string name);
 };
 
 #endif
