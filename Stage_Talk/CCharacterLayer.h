@@ -11,6 +11,7 @@
 
 #include "../Graphics/CImageBaseClass.h"
 #include "../Common/CCommon.h"
+#include "../Common/CConfigFile.h"
 #include "../Animation/CAnimation.h"
 #include "../Graphics/CSequenceOfFrames.h"
 #include <map>

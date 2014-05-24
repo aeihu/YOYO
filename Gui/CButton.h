@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class CButton : protected CButtonBase
+class CButton : public CButtonBase
 {
     private:
         void Exec(void* data=NULL);

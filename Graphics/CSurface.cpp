@@ -39,6 +39,7 @@ bool CSurface::OnLoad(std::string File, sf::Image &Img)
             }
         }
         else{
+            CZlib::CloseFileInZip(__image);
             cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
             return false;
         }
@@ -71,6 +72,7 @@ bool CSurface::OnLoad(string File,  sf::Texture &Img) {
             }
         }
         else{
+            CZlib::CloseFileInZip(__image);
             cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
             return false;
         }
