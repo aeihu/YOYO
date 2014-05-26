@@ -25,13 +25,13 @@ bool CFontControl::AddCFont(string name, const char* filename)
     else
         return false;
 
-    if(_fontList[name].LoadFont(filename)){
-        return true;
-    }
-    else{
-        _fontList.erase(name);
-        return false;
-    }
+    //if(_fontList[name].LoadFont(filename)){
+    //    return true;
+    //}
+    //else{
+    //    _fontList.erase(name);
+    //    return false;
+    //}
 }
 
 bool CFontControl::DelCFont(string name)

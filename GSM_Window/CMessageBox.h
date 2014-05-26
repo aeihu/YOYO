@@ -17,23 +17,25 @@
 #include "../Animation/CAnimation.h"
 #include "../Graphics/CSequenceOfFrames.h"
 
-class CMessageBox : public CBox , public CTextProcessing, public CSequenceOfFrames
+class CMessageBox : public CBox , public CTextProcessing
 {        
     private:
-        sf::Vector2f    _speakerNameOffset;
-        sf::Vector2f    _msgOffset;
-        sf::Text        _speakerName;
-        bool            _isPaused;
+        sf::Vector2f        _speakerNameOffset;
+        sf::Vector2f        _msgOffset;
+        sf::Text            _speakerName;
+        CSequenceOfFrames   _frames;
+        bool                _isPaused;
 
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);
     protected:
-        using CImageBaseClass::_visible;
+        using CBox::_visible;
     public:
         CAnimation   _AnimationControl;
 
         CMessageBox();
-
+        
+        virtual CObject* Create(const char* filename);
         void SetText(string msg);
         void SetFont(sf::Font& font);
         void SetSpeakerName(string name);

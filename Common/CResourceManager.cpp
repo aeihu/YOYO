@@ -8,15 +8,15 @@
 
 #include "CResourceManager.h"
 
-CCharacterLayerControl CResourceManager::_CharacterLayerControl;
-CImgLayerControl CResourceManager::_ImgLayerControl;
-CImgLayerControl CResourceManager::_BackgroundLayerControl;
-CMessageBoxControl CResourceManager::_MessageBoxControl;
-CButtonControl CResourceManager::_ButtonControl;
+//CCharacterLayerControl CResourceManager::_CharacterLayerControl;
+//CImgLayerControl CResourceManager::_ImgLayerControl;
+//CImgLayerControl CResourceManager::_BackgroundLayerControl;
+//CMessageBoxControl CResourceManager::_MessageBoxControl;
+//CButtonControl CResourceManager::_ButtonControl;
 CPositionControl CResourceManager::_PositionControl;
-CParticleSystemControl CResourceManager::_ParticleSystemControl;
-CFontControl CResourceManager::_FontControl;
-CLogBoxControl CResourceManager::_LogBoxControl;
+///CParticleSystemControl CResourceManager::_ParticleSystemControl;
+//CFontControl CResourceManager::_FontControl;
+//CLogBoxControl CResourceManager::_LogBoxControl;
 
 template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
@@ -36,11 +36,11 @@ void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
 
 void CResourceManager::GetInfo()
 {
-    GetInfo("ImageList", CResourceManager::_ImgLayerControl._imgLayerList);
-    GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._imgLayerList);
-    GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._characterList);
-    GetInfo("ButtonList", CResourceManager::_ButtonControl._buttonList);
-    GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._messageBoxList);
+    //GetInfo("ImageList", CResourceManager::_ImgLayerControl._imgLayerList);
+    //GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._imgLayerList);
+    //GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._characterList);
+    //GetInfo("ButtonList", CResourceManager::_ButtonControl._buttonList);
+    //GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._messageBoxList);
     GetInfo("PositionList", CResourceManager::_PositionControl._positionList);
     GetInfo("VoiceList", CSoundBank::_SoundControl._voiceList);
     GetInfo("SEList", CSoundBank::_SoundControl._seList);

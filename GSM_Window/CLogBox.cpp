@@ -13,6 +13,16 @@ CLogBox::CLogBox()
     _logMax = _visNum = 0;
 }
 
+CObject* Create(const char* filename)
+{
+    CLogBox* __logBox = new CLogBox();
+    if (__logBox->LoadConfigFile(filename))
+        return __logBox;
+    
+    delete __logBox;
+    return NULL;
+}
+
 bool CLogBox::OnLoop()
 {
     for (unsigned int __i = 0; __i < _visNum; __i++){

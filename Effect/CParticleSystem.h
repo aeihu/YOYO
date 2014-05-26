@@ -49,6 +49,7 @@ class CParticleSystem : public CObject, public CConfigFile
     public:
         CParticleSystem();
 
+        virtual CObject* Create(const char* filename);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
         void OnLoop(sf::Time elapsed);

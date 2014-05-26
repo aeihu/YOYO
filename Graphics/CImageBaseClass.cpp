@@ -21,6 +21,16 @@ CImageBaseClass::CImageBaseClass(float x, float y)
 CImageBaseClass::~CImageBaseClass()
 {}
 
+CObject* CImageBaseClass::Create(const char* filename)
+{
+    CImageBaseClass* __img = new CImageBaseClass();
+    if (__img->LoadImg(filename))
+        return __img;
+    
+    delete __img;
+    return NULL;
+}
+
 bool CImageBaseClass::GetVisible() const
 {
     return _visible;

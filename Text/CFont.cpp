@@ -62,11 +62,11 @@ sf::Font& CFont::GetFont()
 
 CObject* CFont::Create(const char* filename)
 {
-    CFont* fnt = new CFont();
-    if (fnt->LoadFont(filename))
-        return fnt;
+    CFont* __fnt = new CFont();
+    if (__fnt->LoadFont(filename))
+        return __fnt;
     
-    delete fnt;
+    delete __fnt;
     return NULL;
 }
 

@@ -21,9 +21,9 @@ class CControlBaseClass
     public:
         virtual bool AddObject(string name, CObject* obj);
         virtual bool DelObject(string name);
-        void OnCleanup();
+        virtual void OnCleanup();
 
-        bool IsExists(string name);
+        virtual bool IsExists(string name);
         virtual CObject* GetObject(string name);
 };
 

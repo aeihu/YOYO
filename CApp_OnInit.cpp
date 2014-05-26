@@ -20,8 +20,8 @@ bool CApp::OnInit()
     CParser::_Parser.SetRunning(&Running);
     CSoundBank::_SoundControl.OnInit();
 
-    if (!CResourceManager::_FontControl.AddCFont("__main", CCommon::_Common.FONT_PATH.c_str()))
-        return false;
+    //if (!CResourceManager::_FontControl.AddCFont("__main", CCommon::_Common.FONT_PATH.c_str()))
+    //    return false;
 
     sf_Display->create(
         sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 

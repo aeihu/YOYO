@@ -18,6 +18,16 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _AnimationControl._Type = CAnimation::Oscillate;
 }
 
+CObject* CCharacterLayer::Create(const char* filename)
+{    
+    CCharacterLayer* __chr = new CCharacterLayer();
+    if (__chr->LoadConfigFile(filename))
+        return __chr;
+    
+    delete __chr;
+    return NULL;
+}
+
 bool CCharacterLayer::OnLoop()
 {
     bool __result = CImageBaseClass::OnLoop();
@@ -71,28 +81,28 @@ bool CCharacterLayer::LoadImage(const char* fileName, sf::Texture &image, sf::Sp
     return true;
 }
 
-bool CCharacterLayer::LoadChara(const char* FileName)
-{
-    //char BOM[3] = {0xEF,0xBB,0xBF};
-    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-    map<string, string> __valueList;
-
-    for (list<string>::iterator it=__expressions.begin();
-        it!=__expressions.end(); it++){
-        string __paraName = "";
-        string __paraValue = "";
-        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            __valueList[__paraName] = __paraValue;
-    }
-
-    if (!CheckList(__valueList))
-        return false;
-
-    if (!SetProperty(__valueList))
-        return false;
-
-    return true;
-}
+//bool CCharacterLayer::LoadChara(const char* FileName)
+//{
+//    //char BOM[3] = {0xEF,0xBB,0xBF};
+//    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
+//    map<string, string> __valueList;
+//
+//    for (list<string>::iterator it=__expressions.begin();
+//        it!=__expressions.end(); it++){
+//        string __paraName = "";
+//        string __paraValue = "";
+//        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
+//            __valueList[__paraName] = __paraValue;
+//    }
+//
+//    if (!CheckList(__valueList))
+//        return false;
+//
+//    if (!SetProperty(__valueList))
+//        return false;
+//
+//    return true;
+//}
 
 bool CCharacterLayer::CheckList(map<string, string>& list) 
 {

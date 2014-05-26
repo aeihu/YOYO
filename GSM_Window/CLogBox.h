@@ -30,7 +30,8 @@ class CLogBox : public CBox, public CScrollbar
         bool SetProperty(map<string, string>& list);
     public:
         CLogBox();
-
+        
+        virtual CObject* Create(const char* filename);
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);

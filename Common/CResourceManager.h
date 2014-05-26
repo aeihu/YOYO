@@ -25,15 +25,15 @@ class CResourceManager
         template<typename X>
         void static GetInfo(const char* resourcename, map<string, X> xlist);
     public:
-        static CParticleSystemControl   _ParticleSystemControl;
-        static CCharacterLayerControl   _CharacterLayerControl;
-        static CImgLayerControl         _ImgLayerControl;
-        static CImgLayerControl         _BackgroundLayerControl;
-        static CMessageBoxControl       _MessageBoxControl;
-        static CButtonControl           _ButtonControl;
+        //static CParticleSystemControl   _ParticleSystemControl;
+        //static CCharacterLayerControl   _CharacterLayerControl;
+        //static CImgLayerControl         _ImgLayerControl;
+        //static CImgLayerControl         _BackgroundLayerControl;
+        //static CMessageBoxControl       _MessageBoxControl;
+        //static CButtonControl           _ButtonControl;
         static CPositionControl         _PositionControl;
-        static CFontControl             _FontControl;
-        static CLogBoxControl           _LogBoxControl;
+        //static CFontControl             _FontControl;
+        //static CLogBoxControl           _LogBoxControl;
 
         static void GetInfo();
 };

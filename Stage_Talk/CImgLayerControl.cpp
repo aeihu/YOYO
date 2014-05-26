@@ -17,15 +17,15 @@ bool CImgLayerControl::AddImage(std::string name, const char* filename, float x,
     else
         return false;
 
-    if(_imgLayerList[name].LoadImg(filename)){
-        _imgLayerList[name]._Alpha = 0;
+    //if(_imgLayerList[name].LoadImg(filename)){
+    //    _imgLayerList[name]._Alpha = 0;
 
-        return true;
-    }
-    else{
-        _imgLayerList.erase(name);
-        return false;
-    }
+    //    return true;
+    //}
+    //else{
+    //    _imgLayerList.erase(name);
+    //    return false;
+    //}
 }
 
 bool CImgLayerControl::DelImage(std::string name)

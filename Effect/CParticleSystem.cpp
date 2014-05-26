@@ -7,6 +7,16 @@ CParticleSystem::CParticleSystem()
     _enable = false;
 }
 
+CObject* CParticleSystem::Create(const char* filename)
+{
+    CParticleSystem* __ptc = new CParticleSystem();
+    if (__ptc->LoadConfigFile(filename))
+        return __ptc;
+    
+    delete __ptc;
+    return NULL;
+}
+
 bool CParticleSystem::GetEnable() const
 {
     return _enable;

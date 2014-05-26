@@ -20,6 +20,16 @@ CMessageBox::CMessageBox()
     _isPaused = false;
 }
 
+CObject* Create(const char* filename)
+{
+    CMessageBox* __msgbox = new CMessageBox();
+    if (__msgbox->LoadConfigFile(filename))
+        return __msgbox;
+    
+    delete __msgbox;
+    return NULL;
+}
+
 void CMessageBox::SetFont(sf::Font& font)
 {
     CTextProcessing::SetFont(font);
@@ -31,11 +41,11 @@ bool CMessageBox::SetProperty(map<string, string>& list)
     CTextProcessing::SetRowWidth(atoi(list["MSG_WIDTH"].c_str()));
 
 //=================Init cursor==================================
-    if (!CSequenceOfFrames::LoadImg(list["CURSOR_PATH"].c_str()))
+    if (!_frames.LoadImg(list["CURSOR_PATH"].c_str()))
         return false;
 
-    SetWidth(atoi(list["CURSOR_WIDTH"].c_str()));
-    SetHeight(atoi(list["CURSOR_HEIGHT"].c_str()));
+    _frames.SetWidth(atoi(list["CURSOR_WIDTH"].c_str()));
+    _frames.SetHeight(atoi(list["CURSOR_HEIGHT"].c_str()));
     _AnimationControl._MaxFrames = atoi(list["CURSOR_MAX_FRAMES"].c_str());
     _AnimationControl.SetFrameRate(atoi(list["CURSOR_FRAME_RATE"].c_str()));
 
@@ -119,19 +129,19 @@ bool CMessageBox::OnLoop()
         CBox::_Coordinate.y + _msgOffset.y);
 
     if (IsTextAllShown() && !GetText().empty()){
-        SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
+        _frames.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
 
-        CSequenceOfFrames::_Coordinate = 
+        _frames._Coordinate = 
             CTextProcessing::GetLastCharacterPos()+
             sf::Vector2f(5.0f, 0.0f);
 
-        CSequenceOfFrames::_Alpha = 255;
+        _frames._Alpha = 255;
     }
     else
-        CSequenceOfFrames::_Alpha = 0;
+        _frames._Alpha = 0;
 
-    CSequenceOfFrames::OnLoop();
+    _frames.OnLoop();
     CTextProcessing::OnLoop();
     return _isPaused || !IsTextAllShown() || __result;
 }
@@ -142,7 +152,7 @@ void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
         CBox::OnRender(Surf_Dest);
         Surf_Dest->draw(_speakerName);
         CTextProcessing::OnRender(Surf_Dest);
-        CSequenceOfFrames::OnRender(Surf_Dest);
+        _frames.OnRender(Surf_Dest);
     }
 }
 

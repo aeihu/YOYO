@@ -23,10 +23,10 @@ char CCharacterLayerControl::AddCharacter(string name, const char* filename)
         _characterList[name] = CCharacterLayer();
         _characterList[name]._Alpha = 0;
         
-        if (!_characterList[name].LoadChara(filename)){
-            _characterList.erase(name);
-            return 2;
-        }
+        //if (!_characterList[name].LoadChara(filename)){
+        //    _characterList.erase(name);
+        //    return 2;
+        //}
     }
     return 0;
 }

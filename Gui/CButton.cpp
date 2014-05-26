@@ -34,3 +34,13 @@ bool CButton::SetProperty(map<string, string>& list)
     return CParser::_Parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
         list["SCRIPT_SECTION"].c_str(), _cmdList) && CButtonBase::SetProperty(list);
 }
+
+CObject* Create(const char* filename)
+{
+    CButton* __btn = new CButton();
+    if (__btn->LoadConfigFile(filename))
+        return __btn;
+    
+    delete __btn;
+    return NULL;
+}

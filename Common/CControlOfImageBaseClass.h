@@ -22,14 +22,26 @@ class CControlOfImageBaseClass : public CControlBaseClass
         friend bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args);
 
         unsigned int _interval;
+        map<string, CImageBaseClass*>          _drawableObjectList;
+
         inline CControlOfImageBaseClass() {_interval = 10;}
     public:
+        static CControlOfImageBaseClass        _ResourceManager;
+
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
+
+        bool AddDrawableObject(string name, CImageBaseClass* obj);
+        bool DelDrawableObject(string name);
+        CImageBaseClass* GetDrawableObject(string name);
+
         bool Move(string name, float x, float y, unsigned int elapsed, bool pause);
         char Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha=255);
         char Hide(string name, char type, unsigned int elapsed, bool pause);
-        virtual void OnCleanup()=0;
+        
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

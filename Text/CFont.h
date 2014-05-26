@@ -28,7 +28,7 @@ class CFont : public CObject
         CFont();
         ~CFont();
 
-        CObject* Create(const char* filename);
+        virtual CObject* Create(const char* filename);
         sf::Font& GetFont();
         void OnCleanup();
 };

@@ -34,20 +34,20 @@ char CParticleSystemControl::HideParticleSystem(string name)
 
 char CParticleSystemControl::AddParticleSystem(string name, const char* filename)
 {
-    if (_particleSystemList.count(name) == 0){
-        _particleSystemList.insert(
-            std::pair<std::string,CParticleSystem>(name, CParticleSystem()));
-    }
-    else
-        return -1;
+    //if (_particleSystemList.count(name) == 0){
+    //    _particleSystemList.insert(
+    //        std::pair<std::string,CParticleSystem>(name, CParticleSystem()));
+    //}
+    //else
+    //    return -1;
 
-    if(_particleSystemList[name].LoadConfigFile(filename)){
-        return 0;
-    }
-    else{
-        _particleSystemList.erase(name);
+    //if(_particleSystemList[name].LoadConfigFile(filename)){
+    //    return 0;
+    //}
+    //else{
+    //    _particleSystemList.erase(name);
         return -2;
-    }
+    //}
 }
 
 bool CParticleSystemControl::DelParticleSystem(string name)

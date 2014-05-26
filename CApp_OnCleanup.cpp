@@ -11,15 +11,15 @@
 
 //==============================================================================
 void CApp::OnCleanup() {
-    CResourceManager::_BackgroundLayerControl.OnCleanup();
-    CResourceManager::_CharacterLayerControl.OnCleanup();
-    CResourceManager::_ImgLayerControl.OnCleanup();
-    CResourceManager::_MessageBoxControl.OnCleanup();
-    CResourceManager::_ButtonControl.OnCleanup();
-    CResourceManager::_FontControl.OnCleanup();
-    CSoundBank::_SoundControl.OnCleanup();
-    CResourceManager::_ParticleSystemControl.OnCleanup();
-    CParser::_Parser.OnCleanup();
+    //CResourceManager::_BackgroundLayerControl.OnCleanup();
+    //CResourceManager::_CharacterLayerControl.OnCleanup();
+    //CResourceManager::_ImgLayerControl.OnCleanup();
+    //CResourceManager::_MessageBoxControl.OnCleanup();
+    //CResourceManager::_ButtonControl.OnCleanup();
+    //CResourceManager::_FontControl.OnCleanup();
+    //CSoundBank::_SoundControl.OnCleanup();
+    //CResourceManager::_ParticleSystemControl.OnCleanup();
+    //CParser::_Parser.OnCleanup();
     CCommon::_Common.OnCleanup();
 
     sf_Display->close();

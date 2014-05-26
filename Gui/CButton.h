@@ -21,6 +21,8 @@ class CButton : public CButtonBase
         bool SetProperty(map<string, string>& list);
     public:
         list<string>    _cmdList;
+
+        CObject* Create(const char* filename);
 };
 
 #endif

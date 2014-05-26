@@ -14,8 +14,8 @@ CButtonControl::CButtonControl()
 char CButtonControl::AddButton(std::string name, const char* filename)
 {
     if (!IsExists(name)){
-        _buttonList.insert(
-            std::pair<string,CButton>(name, CButton()));
+        //_buttonList.insert(
+        //    std::pair<string,CButton>(name, CButton()));
     }
     else
         return -1;

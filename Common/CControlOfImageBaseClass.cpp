@@ -1,11 +1,48 @@
 #include "CControlOfImageBaseClass.h"
 
+CControlOfImageBaseClass  CControlOfImageBaseClass::_ResourceManager;
+
+bool CControlOfImageBaseClass::AddDrawableObject(string name, CImageBaseClass* obj)
+{
+    if (obj == NULL)
+        return false;
+
+    if (_drawableObjectList.count(name) > 0){
+        delete obj;
+        return false;
+    }
+
+    _drawableObjectList[name] = obj;
+    return true;
+}
+
+bool CControlOfImageBaseClass::DelDrawableObject(string name)
+{
+    if (_drawableObjectList.count(name) < 1)
+        return false;
+
+    if (_drawableObjectList[name] != NULL)
+        delete _drawableObjectList[name];
+
+    _drawableObjectList.erase(name);
+
+    return true;
+}
+
+CImageBaseClass* CControlOfImageBaseClass::GetDrawableObject(string name)
+{
+    if (_drawableObjectList.count(name) < 1)
+        return NULL;
+
+    return _drawableObjectList[name];
+}
+
 bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
 {
     if (incr == 0)
         incr = static_cast<float>(CCommon::_Common.INCREMENT);
 
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
     if (__obj != NULL){
         __obj->Insert(0,
             alpha, pause,
@@ -20,7 +57,7 @@ bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, f
 
 bool CControlOfImageBaseClass::Move(string name, float x, float y, unsigned int elapsed, bool pause)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return false;
@@ -38,7 +75,7 @@ bool CControlOfImageBaseClass::Move(string name, float x, float y, unsigned int 
         
 char CControlOfImageBaseClass::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return -1;
@@ -78,7 +115,7 @@ char CControlOfImageBaseClass::Show(string name, float x, float y, char type, un
         
 char CControlOfImageBaseClass::Hide(string name, char type, unsigned int elapsed, bool pause)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetObject(name));
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return -1;
@@ -112,4 +149,26 @@ char CControlOfImageBaseClass::Hide(string name, char type, unsigned int elapsed
     }
 
     return -1;
+}
+
+void CControlOfImageBaseClass::OnLoop(bool &pause)
+{
+    map<string, CImageBaseClass*>::iterator it;
+    for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
+    {
+        if((*it).second->OnLoop()) 
+            pause=true;
+    }
+}
+
+void CControlOfImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
+{
+    for (map<string, CImageBaseClass*>::iterator it=_drawableObjectList.begin(); 
+        it!=_drawableObjectList.end(); it++)
+        (*it).second->OnRender(Surf_Dest);
+}
+
+void CControlOfImageBaseClass::OnCleanup()
+{
+    //???
 }

@@ -25,6 +25,7 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         bool                _visible;
 
         bool IsStandby();
+        virtual bool LoadImg(const char* filename);
     public:
         sf::Vector2f        _Coordinate;
         int                 _Alpha;
@@ -32,10 +33,10 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
 
+        virtual CObject* Create(const char* filename);
         virtual void OnRender(sf::RenderWindow* Surf_Dest);
         virtual bool OnLoop();
 
-        virtual bool LoadImg(const char* filename);
         virtual bool GetVisible() const;
 };
 

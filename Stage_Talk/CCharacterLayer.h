@@ -27,7 +27,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         map<string, string>         _faceList;
         bool                        _isFaceEnable;
         CSequenceOfFrames           _framesOfMouth;
-
+        
+        //bool LoadChara(const char* FileName);
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);
         bool LoadImage(const char* FileName, sf::Texture &image, sf::Sprite &sprite);
@@ -36,7 +37,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
 
         CCharacterLayer(float x=0.0f, float y=0.0f);
 
-        bool LoadChara(const char* FileName);
+        virtual CObject* Create(const char* filename);
         bool SetFace(string name);
 
         bool OnLoop();

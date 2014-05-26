@@ -39,3 +39,14 @@ bool CControlBaseClass::DelObject(string name)
 
     return true;
 }   
+        
+void CControlBaseClass::OnCleanup()
+{
+    std::map<std::string, CObject*>::iterator it;
+    for ( it=_objectList.begin(); it !=_objectList.end(); it++ ){
+        if ((*it).second != NULL)
+            delete (*it).second;
+    }
+
+    _objectList.clear();
+}

@@ -13,6 +13,7 @@
 #include "../Gui/CButton.h"
 #include "../Common/CResourceManager.h"
 #include "../Common/CCommon.h"
+#include "../Stage_Talk/CCharacterLayer.h"
 #include <iostream>
 #include <algorithm>
 
@@ -175,6 +176,11 @@ bool Common_FuncOfHide(string objTypeName, CControlOfImageBaseClass* controlBase
     return false;
 }
 
+bool Common_FuncOfDelete(string objTypeName, CControlOfImageBaseClass* controlBase, vector<string> args)
+{ 
+
+}
+
 /*==============================================================
     commad of script
 ===============================================================*/
@@ -230,17 +236,27 @@ bool Cmd_AddCharacterLayer(vector<string> args)
     string name = args[0];
     const char* filename = args[1].c_str();
 
-    switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename)){
-        case 0:
+    CCharacterLayer* __chr = new CCharacterLayer();
+    if (__chr->LoadConfigFile(filename)){
+        if (!CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(name, __chr)){
             return true;
-        break;
-        case 1:
+        }
+        else
             cout << "Cmd_AddCharacterLayer(): character layer \""<< name << "\" has existed." <<endl;
-        break;
-        case 2:
-            cout << "Cmd_AddCharacterLayer(): failed to create character layer." <<endl;
-        break;
     }
+    else{
+        cout << __FUNCTION__ << "(): failed to create character layer." <<endl;
+    }
+
+    //switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename)){
+    //    case 0:
+    //        return true;
+    //    break;
+    //    case 1:
+    //    break;
+    //    case 2:
+    //    break;
+    //}
 
     return false;
 }
@@ -254,7 +270,7 @@ bool Cmd_DelCharacterLayer(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (!CResourceManager::_CharacterLayerControl.DelCharacter(args[i]))
+        if (!CControlOfImageBaseClass::_ResourceManager.DelDrawableObject(args[i]))
             cout << "Cmd_DelCharacterLayer(): can't find character layer \""<< args[i] << "\"." <<endl;
     }
 
@@ -297,7 +313,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if(!CResourceManager::_CharacterLayerControl.Move(__name, __x, __y, __incr, __pause)){
+    if(!CControlOfImageBaseClass::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
         cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
@@ -628,18 +644,16 @@ bool Cmd_AddButton(vector<string> args)
     string name = args[0];
     const char* filename = args[1].c_str();
 
-    switch (CResourceManager::_ButtonControl.AddButton(name, filename))
-    {
-        case 0:
+    CButton* __btn = new CButton();
+    if (__btn->LoadConfigFile(filename)){
+        if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(name, __btn)){
             return true;
-        break;
-        case -1:
+        }
+        else
             cout << "Cmd_AddButton(): Button \"" << name << "\" has existed." <<endl;
-        break;
-        case -2:
-            cout << "Cmd_AddButton(): failed to add Button." << endl;
-        break;
     }
+    else
+        cout << "Cmd_AddButton(): failed to add Button." << endl;
 
     return false;
 }
@@ -647,13 +661,13 @@ bool Cmd_AddButton(vector<string> args)
 bool Cmd_DelButton(vector<string> args)
 {
     if (args.size() < 1){
-        cout << "Cmd_DelVoice(): command invaild. can't set " << args.size()
+        cout << "Cmd_DelButton(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (!CResourceManager::_ButtonControl.DelButton(args[i]))
+        if (!CControlOfImageBaseClass::_ResourceManager.DelButton(args[i]))
             cout << "Cmd_DelButton(): can't find Button \""<< args[i] << "\"." <<endl;
     }
 
