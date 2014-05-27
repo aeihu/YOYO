@@ -110,8 +110,8 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if (controlBase->IsExists(__name)){
-        CImageBaseClass* __obj = static_cast<CImageBaseClass*>(controlBase->GetObject(__name));
+    if (CControlOfImageBaseClass::_ResourceManager.IsExists(__name)){
+        CImageBaseClass* __obj = CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(__name);
         float* __x = &__obj->_Coordinate.x;
         float* __y = &__obj->_Coordinate.y;
 
@@ -333,7 +333,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
 
 bool Cmd_HideCharacterLayer(vector<string> args)
 {
-    return Common_FuncOfHide("CharacterLayer", &CResourceManager::_CharacterLayerControl, args);
+    return Common_FuncOfHide("CharacterLayer", args);
 }
 
 bool Cmd_SetFaceCharacterLayer(vector<string> args)
@@ -394,7 +394,8 @@ bool Cmd_AddBackground(vector<string> args)
     string __name = args[0];
     const char* __filename = args[1].c_str();
 
-    if (CResourceManager::_BackgroundLayerControl.AddImage(__name, __filename)){
+    CImageBaseClass* __img= new CImageBaseClass();
+    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __img)){
         return true;
     }
     else{
@@ -435,8 +436,9 @@ bool Cmd_AddImg(vector<string> args)
 
     string __name = args[0];
     const char* __filename = args[1].c_str();
-
-    if (CResourceManager::_ImgLayerControl.AddImage(__name, __filename)){
+    
+    CImageBaseClass* __img= new CImageBaseClass();
+    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __img)){
         return true;
     }
     else{
@@ -739,22 +741,16 @@ bool Cmd_AddMessageBox(vector<string> args)
 
     string __name = args[0];
     const char* __filename = args[1].c_str();
-
-    switch (CResourceManager::_MessageBoxControl.AddMessageBox(__name, __filename))
-    {
-        case 0:
-            CResourceManager::_MessageBoxControl._messageBoxList[__name].SetFont(
-                CResourceManager::_FontControl._fontList["__main"].GetFont());
+    
+    CMessageBox* __msgBox= new CMessageBox();
+    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __msgBox)){
+        __msgBox->SetFont(
+            CResourceManager::_FontControl._fontList["__main"].GetFont());
             
-            return true;
-        break;
-        case -1:
-            cout << "Cmd_AddMessageBox(): MessageBox \"" << __name << "\" has existed." <<endl;
-        break;
-        case -2:
-            cout << "Cmd_AddMessageBox(): failed to add MessageBox." << endl;
-        break;
+        return true;
     }
+    else
+        cout << "Cmd_AddMessageBox(): failed to add MessageBox." << endl;
 
     return false;
 }
@@ -784,20 +780,12 @@ bool Cmd_AddLogBox(vector<string> args)
 
     string __name = args[0];
     const char* __filename = args[1].c_str();
-
-    switch (CResourceManager::_LogBoxControl.AddLogBox(__name, __filename))
-    {
-        case 0:
-            return true;
-        break;
-        case -1:
-            cout << "Cmd_AddLogBox(): LogBox \"" << __name << "\" has existed." <<endl;
-        break;
-        case -2:
-            cout << "Cmd_AddLogBox(): failed to add LogBox." << endl;
-        break;
-    }
-
+    
+    CLogBox* __logBox = new CLogBox();
+    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __logBox))
+        return true;
+    
+    cout << "Cmd_AddLogBox(): LogBox \"" << __name << "\" has existed." <<endl;
     return false;
 }
 
@@ -857,16 +845,16 @@ bool Cmd_ShowParticleSystem(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        switch (CResourceManager::_ParticleSystemControl.ShowParticleSystem(args[i]))
-        {
-            case 0:
-            break;
-            case -1:
-                cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
-            break;
-            case -2:
+        if (CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(args[i]) == NULL){
+            cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
+        }
+        else{
+            CParticleSystem* __par = static_cast<CParticleSystem*>(CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(args[i]));
+            
+            if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
-            break;
+            else
+                __par->SetEnable(true);
         }
     }
 
@@ -880,18 +868,18 @@ bool Cmd_HideParticleSystem(vector<string> args)
             << " argument(s) in the command." <<endl;
         return false;
     }
-
-    for (unsigned int i=0; i<args.size(); i++){   
-        switch (CResourceManager::_ParticleSystemControl.HideParticleSystem(args[i]))
-        {
-            case 0:
-            break;
-            case -1:
-                cout << "Cmd_HideParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
-            break;
-            case -2:
-                cout << "Cmd_HideParticleSystem(): ParticleSystem \"" << args[i] << "\" has hidden." << endl;
-            break;
+    
+    for (unsigned int i=0; i<args.size(); i++){
+        if (CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(args[i]) == NULL){
+            cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
+        }
+        else{
+            CParticleSystem* __par = static_cast<CParticleSystem*>(CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(args[i]));
+            
+            if (__par->GetEnable())
+                cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
+            else
+                __par->SetEnable(false);
         }
     }
 
