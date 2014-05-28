@@ -16,12 +16,23 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _Alpha = 0;
     _visible = false;
     _image.setSmooth(true);
+    _layerOrder = 0;
 }
 
 CImageBaseClass::~CImageBaseClass()
 {}
 
-CObject* CImageBaseClass::Create(const char* filename)
+void CImageBaseClass::SetLayerOrder(char order)
+{
+    _layerOrder = order;
+}
+
+char CImageBaseClass::GetLayerOrder() const
+{
+    return _layerOrder;
+}
+
+CImageBaseClass* CImageBaseClass::Create(const char* filename)
 {
     CImageBaseClass* __img = new CImageBaseClass();
     if (__img->LoadImg(filename))

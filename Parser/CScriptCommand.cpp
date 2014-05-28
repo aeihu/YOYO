@@ -110,8 +110,8 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if (CControlOfImageBaseClass::_ResourceManager.IsExists(__name)){
-        CImageBaseClass* __obj = CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(__name);
+    if (CControlOfImageBaseClass::_ResourceManager.IsExists(objTypeName+":"+__name)){
+        CImageBaseClass* __obj = CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
         float* __x = &__obj->_Coordinate.x;
         float* __y = &__obj->_Coordinate.y;
 
@@ -122,7 +122,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
             if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
                 cout << __funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
 
-        switch (CControlOfImageBaseClass::_ResourceManager.Show(__name, *__x, *__y, __type, __incr, __pause, __alpha)){
+        switch (CControlOfImageBaseClass::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
             case -1:
                 cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
             break;
@@ -163,7 +163,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string> args)
     char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     
     
-    switch (CControlOfImageBaseClass::_ResourceManager.Hide(__name, __type, __incr, __pause)){
+    switch (CControlOfImageBaseClass::_ResourceManager.Hide(objTypeName+":"+__name, __type, __incr, __pause)){
         case -1:
             cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
         break;
@@ -174,6 +174,42 @@ bool Common_FuncOfHide(string objTypeName, vector<string> args)
             return true;
         break;
     }
+
+    return false;
+}
+
+bool Common_FuncOfAdd(string objTypeName, vector<string> args)
+{
+    if (args.size() != 2){
+        cout << "Cmd_Add" << objTypeName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    string __name = args[0];
+    const char* __filename = args[1].c_str();
+
+    CImageBaseClass* __obj = NULL;
+
+    if (objTypeName == "Img") __obj = CImageBaseClass::Create(__filename);
+    else if (objTypeName == "Button") __obj = CButton::Create(__filename);
+    else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(__filename);
+    else if (objTypeName == "LogBox") __obj = CLogBox::Create(__filename);
+    else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(__filename);
+    else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(__filename);
+    
+    if (__obj != NULL){
+        if (!CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
+            
+            //__msgBox->SetFont(
+            //    static_cast<CFont*>(CControlOfImageBaseClass::_ResourceManager.GetObject("__main"))->GetFont());
+            return true;
+        }
+        else
+            cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
+    }
+    else
+        cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
 
     return false;
 }
@@ -189,13 +225,13 @@ bool Common_FuncOfDelete(string objTypeName, vector<string> args)
     
     if (true) {
         for (unsigned int i=0; i<args.size(); i++){
-            if (!CControlOfImageBaseClass::_ResourceManager.DelDrawableObject(args[i]))
+            if (!CControlOfImageBaseClass::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
     }
     else{
         for (unsigned int i=0; i<args.size(); i++){
-            if (!CControlOfImageBaseClass::_ResourceManager.DelObject(args[i]))
+            if (!CControlOfImageBaseClass::_ResourceManager.DelObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
     }
@@ -249,43 +285,12 @@ bool Cmd_DelPosition(vector<string> args)
 
 bool Cmd_AddCharacterLayer(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddCharacterLayer(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string name = args[0];
-    const char* filename = args[1].c_str();
-
-    CCharacterLayer* __chr = new CCharacterLayer();
-    if (__chr->LoadConfigFile(filename)){
-        if (!CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(name, __chr)){
-            return true;
-        }
-        else
-            cout << "Cmd_AddCharacterLayer(): character layer \""<< name << "\" has existed." <<endl;
-    }
-    else{
-        cout << __FUNCTION__ << "(): failed to create character layer." <<endl;
-    }
-
-    //switch (CResourceManager::_CharacterLayerControl.AddCharacter(name, filename)){
-    //    case 0:
-    //        return true;
-    //    break;
-    //    case 1:
-    //    break;
-    //    case 2:
-    //    break;
-    //}
-
-    return false;
+    return Common_FuncOfAdd("CharacterLayer", args);
 }
 
 bool Cmd_DelCharacterLayer(vector<string> args)
 {
-    return Common_FuncOfDelete("CharacterLayer_", args);
+    return Common_FuncOfDelete("CharacterLayer", args);
 }
 
 bool Cmd_ShowCharacterLayer(vector<string> args)
@@ -347,12 +352,13 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
     string __name = args[0];
     string __face = args[1];
 
-    if (CResourceManager::_CharacterLayerControl._characterList.count(__name) < 1){
+    if (!CControlOfImageBaseClass::_ResourceManager.IsExists(__name)){
         cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
 
-    if (CResourceManager::_CharacterLayerControl._characterList[__name].SetFace(__face))
+    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(CControlOfImageBaseClass::_ResourceManager.GetDrawableObject(__name));
+    if (__chara->SetFace(__face))
         return true;
     else{
         cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
@@ -385,23 +391,7 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
 //
 bool Cmd_AddBackground(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddBackground(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string __name = args[0];
-    const char* __filename = args[1].c_str();
-
-    CImageBaseClass* __img= new CImageBaseClass();
-    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __img)){
-        return true;
-    }
-    else{
-        cout << "Cmd_AddBackground(): failed to load image." <<endl;
-        return false;
-    }
+    return Common_FuncOfAdd("Background", args);
 }
 
 bool Cmd_ShowBackground(vector<string> args)
@@ -411,7 +401,7 @@ bool Cmd_ShowBackground(vector<string> args)
 
 bool Cmd_DelBackground(vector<string> args)
 {
-    return Common_FuncOfDelete("Background_", args);
+    return Common_FuncOfDelete("Background", args);
 }
 
 bool Cmd_HideBackground(vector<string> args)
@@ -428,23 +418,7 @@ bool Cmd_HideBackground(vector<string> args)
 */
 bool Cmd_AddImg(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddImg(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string __name = args[0];
-    const char* __filename = args[1].c_str();
-    
-    CImageBaseClass* __img= new CImageBaseClass();
-    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __img)){
-        return true;
-    }
-    else{
-        cout << "Cmd_AddImg(): failed to load image." <<endl;
-        return false;
-    }
+    return Common_FuncOfAdd("Img", args);
 }
 
 bool Cmd_ShowImg(vector<string> args)
@@ -454,12 +428,12 @@ bool Cmd_ShowImg(vector<string> args)
 
 bool Cmd_HideImg(vector<string> args)
 {
-    return Common_FuncOfHide("Cmd_HideImg", args);
+    return Common_FuncOfHide("Img", args);
 }
 
 bool Cmd_DelImg(vector<string> args)
 {
-    return Common_FuncOfDelete("Img_", args);
+    return Common_FuncOfDelete("Img", args);
 }
 
 //
@@ -626,42 +600,22 @@ bool Cmd_DelVoice(vector<string> args)
 
 bool Cmd_AddButton(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddButton(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string name = args[0];
-    const char* filename = args[1].c_str();
-
-    CButton* __btn = new CButton();
-    if (__btn->LoadConfigFile(filename)){
-        if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(name, __btn)){
-            return true;
-        }
-        else
-            cout << "Cmd_AddButton(): Button \"" << name << "\" has existed." <<endl;
-    }
-    else
-        cout << "Cmd_AddButton(): failed to add Button." << endl;
-
-    return false;
+    return Common_FuncOfAdd("Button", args);
 }
 
 bool Cmd_DelButton(vector<string> args)
 {
-    return Common_FuncOfDelete("Button_", args);
+    return Common_FuncOfDelete("Button", args);
 }
 
 bool Cmd_ShowButton(vector<string> args)
 {
-    return Common_FuncOfShow("Button", &CResourceManager::_ButtonControl, args);
+    return Common_FuncOfShow("Button", args);
 }
 
 bool Cmd_HideButton(vector<string> args)
 {
-    return Common_FuncOfHide("Button", &CResourceManager::_ButtonControl, args);
+    return Common_FuncOfHide("Button", args);
 }
 //
 //
@@ -707,57 +661,38 @@ bool Cmd_Message(vector<string> args)
     string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"];
     string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
 
-    if(CResourceManager::_MessageBoxControl._messageBoxList.count(__msgBoxName) < 1){
-        cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
-        return false;
-    }
+    //if(CResourceManager::_MessageBoxControl._messageBoxList.count(__msgBoxName) < 1){
+    //    cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
+    //    return false;
+    //}
 
-    if (__character != "")
-        if(CResourceManager::_CharacterLayerControl._characterList.count(__character) < 1)
-            cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
+    //if (__character != "")
+    //    if(CResourceManager::_CharacterLayerControl._characterList.count(__character) < 1)
+    //        cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
 
-    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetText(__msg);
-    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
+    //CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetText(__msg);
+    //CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
 
-    if (__voice != ""){
-        if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
-            cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
-    }
+    //if (__voice != ""){
+    //    if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
+    //        cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
+    //}
 
-    CResourceManager::_LogBoxControl._logBoxList["log"].AddLog(
-        CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].GetText(), 
-        NULL,
-        CResourceManager::_FontControl._fontList["__main"].GetFont());
+    //CResourceManager::_LogBoxControl._logBoxList["log"].AddLog(
+    //    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].GetText(), 
+    //    NULL,
+    //    CResourceManager::_FontControl._fontList["__main"].GetFont());
     return true;
 }
 
 bool Cmd_AddMessageBox(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddMessageBox(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string __name = args[0];
-    const char* __filename = args[1].c_str();
-    
-    CMessageBox* __msgBox= new CMessageBox();
-    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __msgBox)){
-        __msgBox->SetFont(
-            CResourceManager::_FontControl._fontList["__main"].GetFont());
-            
-        return true;
-    }
-    else
-        cout << "Cmd_AddMessageBox(): failed to add MessageBox." << endl;
-
-    return false;
+    return Common_FuncOfAdd("MessageBox", args);
 }
 
 bool Cmd_DelMessageBox(vector<string> args)
 {
-    return Common_FuncOfDelete("MessageBox_", args);
+    return Common_FuncOfDelete("MessageBox", args);
 }
 
 bool Cmd_ShowMessageBox(vector<string> args)
@@ -772,21 +707,7 @@ bool Cmd_HideMessageBox(vector<string> args)
 
 bool Cmd_AddLogBox(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddLogBox(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string __name = args[0];
-    const char* __filename = args[1].c_str();
-    
-    CLogBox* __logBox = new CLogBox();
-    if (CControlOfImageBaseClass::_ResourceManager.AddDrawableObject(__name, __logBox))
-        return true;
-    
-    cout << "Cmd_AddLogBox(): LogBox \"" << __name << "\" has existed." <<endl;
-    return false;
+    return Common_FuncOfAdd("LogBox", args);
 }
 
 bool Cmd_ShowLogBox(vector<string> args)
@@ -801,39 +722,17 @@ bool Cmd_HideLogBox(vector<string> args)
 
 bool Cmd_DelLogBox(vector<string> args)
 {
-    return Common_FuncOfDelete("LogBox_", args);
+    return Common_FuncOfDelete("LogBox", args);
 }
 
 bool Cmd_AddParticleSystem(vector<string> args)
 {
-    if (args.size() != 2){
-        cout << "Cmd_AddParticleSystem(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    string __name = args[0];
-    const char* __filename = args[1].c_str();
-
-    switch (CResourceManager::_ParticleSystemControl.AddParticleSystem(__name, __filename))
-    {
-        case 0:
-            return true;
-        break;
-        case -1:
-            cout << "Cmd_AddParticleSystem(): ParticleSystem \"" << __name << "\" has existed." <<endl;
-        break;
-        case -2:
-            cout << "Cmd_AddParticleSystem(): failed to add ParticleSystem." << endl;
-        break;
-    }
-    
-    return false;
+    return Common_FuncOfAdd("ParticleSystem", args);
 }
 
 bool Cmd_DelParticleSystem(vector<string> args)
 {
-    return Common_FuncOfDelete("ParticleSystem_", args);
+    return Common_FuncOfDelete("ParticleSystem", args);
 }
 
 bool Cmd_ShowParticleSystem(vector<string> args)

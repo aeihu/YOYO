@@ -35,7 +35,7 @@ bool CButton::SetProperty(map<string, string>& list)
         list["SCRIPT_SECTION"].c_str(), _cmdList) && CButtonBase::SetProperty(list);
 }
 
-CObject* Create(const char* filename)
+CButton* CButton::Create(const char* filename)
 {
     CButton* __btn = new CButton();
     if (__btn->LoadConfigFile(filename))

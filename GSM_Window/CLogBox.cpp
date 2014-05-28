@@ -13,7 +13,7 @@ CLogBox::CLogBox()
     _logMax = _visNum = 0;
 }
 
-CObject* Create(const char* filename)
+CLogBox* CLogBox::Create(const char* filename)
 {
     CLogBox* __logBox = new CLogBox();
     if (__logBox->LoadConfigFile(filename))

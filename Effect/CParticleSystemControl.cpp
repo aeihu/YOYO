@@ -1,12 +1,12 @@
 #include "CParticleSystemControl.h"
-
-CObject* CParticleSystemControl::GetObject(std::string name)
-{
-    if (_particleSystemList.count(name) < 1)
-        return NULL;
-
-    return &_particleSystemList[name];
-}
+//
+//CObject* CParticleSystemControl::GetObject(std::string name)
+//{
+//    if (_particleSystemList.count(name) < 1)
+//        return NULL;
+//
+//    return &_particleSystemList[name];
+//}
 
 char CParticleSystemControl::ShowParticleSystem(string name)
 {
@@ -76,7 +76,7 @@ void CParticleSystemControl::OnRender(sf::RenderWindow* Surf_Dest, char layer)
 {
     std::map<std::string, CParticleSystem>::iterator it;
     for ( it=_particleSystemList.begin(); it !=_particleSystemList.end(); it++ )
-        (*it).second.OnRender(Surf_Dest, layer);
+        (*it).second.OnRender(Surf_Dest);
 }
 
 void CParticleSystemControl::OnCleanup()

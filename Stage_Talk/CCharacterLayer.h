@@ -36,8 +36,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         CAnimation                  _AnimationControl;
 
         CCharacterLayer(float x=0.0f, float y=0.0f);
-
-        virtual CObject* Create(const char* filename);
+        
+        static CCharacterLayer* Create(const char* filename);
         bool SetFace(string name);
 
         bool OnLoop();

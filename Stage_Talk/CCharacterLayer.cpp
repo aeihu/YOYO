@@ -18,7 +18,7 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _AnimationControl._Type = CAnimation::Oscillate;
 }
 
-CObject* CCharacterLayer::Create(const char* filename)
+CCharacterLayer* CCharacterLayer::Create(const char* filename)
 {    
     CCharacterLayer* __chr = new CCharacterLayer();
     if (__chr->LoadConfigFile(filename))

@@ -1,4 +1,5 @@
 #include "CControlOfImageBaseClass.h"
+#include <algorithm>
 
 CControlOfImageBaseClass  CControlOfImageBaseClass::_ResourceManager;
 
@@ -170,5 +171,15 @@ void CControlOfImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CControlOfImageBaseClass::OnCleanup()
 {
-    //???
+    for (map<string, CImageBaseClass*>::iterator it=_drawableObjectList.begin(); 
+        it!=_drawableObjectList.end(); it++){
+            delete (*it).second;
+    }
+
+    _drawableObjectList.clear();
+}
+
+bool CControlOfImageBaseClass::IsExists(string name)
+{
+    return _drawableObjectList.count(name) > 0 || _objectList.count(name) > 0;
 }

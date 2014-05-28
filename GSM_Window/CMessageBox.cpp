@@ -20,7 +20,7 @@ CMessageBox::CMessageBox()
     _isPaused = false;
 }
 
-CObject* Create(const char* filename)
+CMessageBox* CMessageBox::Create(const char* filename)
 {
     CMessageBox* __msgbox = new CMessageBox();
     if (__msgbox->LoadConfigFile(filename))

@@ -14,8 +14,9 @@
 #include "../Common/CObject.h"
 #include "../Common/CConfigFile.h"
 #include "../Graphics/CSurface.h"
+#include "../Graphics/CImageBaseClass.h"
 
-class CParticleSystem : public CObject, public CConfigFile
+class CParticleSystem : public CImageBaseClass, public CConfigFile
 {
     private:
         struct Particle
@@ -23,7 +24,7 @@ class CParticleSystem : public CObject, public CConfigFile
             sf::Vector2f        _Velocity;
             sf::Time            _LifeTime;
             sf::RectangleShape  _Rectangle;
-            char                _Layer;
+            //char                _Layer;
         };
 
         std::vector<Particle>   _particles;
@@ -49,11 +50,11 @@ class CParticleSystem : public CObject, public CConfigFile
     public:
         CParticleSystem();
 
-        virtual CObject* Create(const char* filename);
+        static CParticleSystem* Create(const char* filename);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
         void OnLoop(sf::Time elapsed);
-        void OnRender(sf::RenderWindow* Surf_Dest, char layer);
+        void OnRender(sf::RenderWindow* Surf_Dest);
         bool GetEnable() const;
         void SetEnable(bool val);
 };

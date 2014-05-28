@@ -35,7 +35,7 @@ class CMessageBox : public CBox , public CTextProcessing
 
         CMessageBox();
         
-        virtual CObject* Create(const char* filename);
+        static CMessageBox* Create(const char* filename);
         void SetText(string msg);
         void SetFont(sf::Font& font);
         void SetSpeakerName(string name);

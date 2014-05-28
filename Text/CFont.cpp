@@ -60,7 +60,7 @@ sf::Font& CFont::GetFont()
     return _font;
 }
 
-CObject* CFont::Create(const char* filename)
+CFont* CFont::Create(const char* filename)
 {
     CFont* __fnt = new CFont();
     if (__fnt->LoadFont(filename))

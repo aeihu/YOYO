@@ -19,6 +19,8 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
     private:
         using CAdderControl::OnLoop;
         using CAdderControl::Count;
+
+        char                _layerOrder;
     protected:
         sf::Texture         _image;
         sf::Sprite          _sprite;
@@ -32,8 +34,10 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
 
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
-
-        virtual CObject* Create(const char* filename);
+        
+        void SetLayerOrder(char order);
+        char GetLayerOrder() const;
+        static CImageBaseClass* Create(const char* filename);
         virtual void OnRender(sf::RenderWindow* Surf_Dest);
         virtual bool OnLoop();
 

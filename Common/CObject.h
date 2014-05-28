@@ -19,7 +19,7 @@ class CObject
         string      _fullFileName;
     public:
         CObject() {_fullFileName="";}
-        virtual CObject* Create(const char* filename)=0;
+        //virtual CObject* Create(const char* filename)=0;
         string GetFullFileName() const;
 };
 

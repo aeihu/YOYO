@@ -31,7 +31,7 @@ class CLogBox : public CBox, public CScrollbar
     public:
         CLogBox();
         
-        virtual CObject* Create(const char* filename);
+        static CLogBox* Create(const char* filename);
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);

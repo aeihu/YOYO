@@ -7,7 +7,7 @@ CParticleSystem::CParticleSystem()
     _enable = false;
 }
 
-CObject* CParticleSystem::Create(const char* filename)
+CParticleSystem* CParticleSystem::Create(const char* filename)
 {
     CParticleSystem* __ptc = new CParticleSystem();
     if (__ptc->LoadConfigFile(filename))
@@ -43,7 +43,7 @@ void CParticleSystem::ResetParticle(std::size_t index)
         __y += _emitterDeviation.y /2 - (std::rand() % _emitterDeviation.y);
 
     _particles[index]._Rectangle.setPosition(__x, __y);
-    _particles[index]._Layer = std::rand() % 2;
+    //_particles[index]._Layer = std::rand() % 2;
 }
 
 void CParticleSystem::SetEmitter(sf::Vector2f position)
@@ -86,11 +86,11 @@ void CParticleSystem::OnLoop(sf::Time elapsed)
     }
 }
 
-void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest, char layer)
+void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest)
 {
     for (std::size_t i = 0; i < _particles.size(); ++i){
-        if (_particles[i]._Layer == layer)
-            Surf_Dest->draw(_particles[i]._Rectangle);
+//        if (_particles[i]._Layer == layer)
+        Surf_Dest->draw(_particles[i]._Rectangle);
     }
 }
 
