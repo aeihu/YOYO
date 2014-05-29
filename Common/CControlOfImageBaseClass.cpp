@@ -3,39 +3,47 @@
 
 CControlOfImageBaseClass  CControlOfImageBaseClass::_ResourceManager;
 
+bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
+{
+    return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
+}
+
 bool CControlOfImageBaseClass::AddDrawableObject(string name, CImageBaseClass* obj)
 {
     if (obj == NULL)
         return false;
 
-    if (_drawableObjectList.count(name) > 0){
+    if (IsExists(name) > 0){
         delete obj;
         return false;
     }
 
-    _drawableObjectList[name] = obj;
+    _drawableObjectList.push_back(make_pair(name, obj));
+    std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
     return true;
 }
 
 bool CControlOfImageBaseClass::DelDrawableObject(string name)
 {
-    if (_drawableObjectList.count(name) < 1)
-        return false;
-
-    if (_drawableObjectList[name] != NULL)
-        delete _drawableObjectList[name];
-
-    _drawableObjectList.erase(name);
+    for (int i=0; i<_drawableObjectList.size(); i++){
+        if (_drawableObjectList[i].first == name){
+            delete _drawableObjectList[i].second;
+            _drawableObjectList.erase(_drawableObjectList.begin()+i);
+            return true;
+        }
+    }
 
     return true;
 }
 
 CImageBaseClass* CControlOfImageBaseClass::GetDrawableObject(string name)
 {
-    if (_drawableObjectList.count(name) < 1)
-        return NULL;
+    for (int i=0; i<_drawableObjectList.size(); i++){
+        if (_drawableObjectList[i].first == name)
+            return _drawableObjectList[i].second;
+    }
 
-    return _drawableObjectList[name];
+    return NULL;
 }
 
 bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
@@ -154,7 +162,7 @@ char CControlOfImageBaseClass::Hide(string name, char type, unsigned int elapsed
 
 void CControlOfImageBaseClass::OnLoop(bool &pause)
 {
-    map<string, CImageBaseClass*>::iterator it;
+    vector<pair<string, CImageBaseClass*> >::iterator it;
     for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
     {
         if((*it).second->OnLoop()) 
@@ -164,14 +172,14 @@ void CControlOfImageBaseClass::OnLoop(bool &pause)
 
 void CControlOfImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    for (map<string, CImageBaseClass*>::iterator it=_drawableObjectList.begin(); 
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++)
         (*it).second->OnRender(Surf_Dest);
 }
 
 void CControlOfImageBaseClass::OnCleanup()
 {
-    for (map<string, CImageBaseClass*>::iterator it=_drawableObjectList.begin(); 
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
             delete (*it).second;
     }
@@ -181,5 +189,10 @@ void CControlOfImageBaseClass::OnCleanup()
 
 bool CControlOfImageBaseClass::IsExists(string name)
 {
-    return _drawableObjectList.count(name) > 0 || _objectList.count(name) > 0;
+    for (int i=0; i<_drawableObjectList.size(); i++){
+        if (_drawableObjectList[i].first == name)
+            return true;
+    }
+
+    return _objectList.count(name) > 0;
 }

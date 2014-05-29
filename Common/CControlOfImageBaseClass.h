@@ -22,7 +22,8 @@ class CControlOfImageBaseClass : public CControlBaseClass
         friend bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args);
 
         unsigned int                            _interval;
-        map<string, CImageBaseClass*>           _drawableObjectList;
+        vector<pair<string, CImageBaseClass*>>  _drawableObjectList;
+        //map<string, CImageBaseClass*>           _drawableObjectList;
 
         inline CControlOfImageBaseClass() {_interval = 10;}
     public:
