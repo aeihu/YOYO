@@ -6,28 +6,28 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CCONTROLOFIMAGEBASECLASS_H_
-    #define _CCONTROLOFIMAGEBASECLASS_H_
+#ifndef _CDrawableObjectControl_H_
+    #define _CDrawableObjectControl_H_
 
 #include <string>
 #include "CCommon.h"
 #include "../Graphics/CImageBaseClass.h"
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CObjectControl.h"
 
 using namespace std;
 
-class CControlOfImageBaseClass : public CControlBaseClass
+class CDrawableObjectControl : public CObjectControl
 {
     protected:
-        friend bool Common_FuncOfShow(string funcName, CControlOfImageBaseClass* controlBase, vector<string> args);
+        friend bool Common_FuncOfShow(string funcName, CDrawableObjectControl* controlBase, vector<string> args);
 
         unsigned int                            _interval;
         vector<pair<string, CImageBaseClass*>>  _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
 
-        inline CControlOfImageBaseClass() {_interval = 10;}
+        inline CDrawableObjectControl() {_interval = 10;}
     public:
-        static CControlOfImageBaseClass         _ResourceManager;
+        static CDrawableObjectControl         _ResourceManager;
 
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);

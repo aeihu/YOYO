@@ -10,13 +10,13 @@
     #define _CFONTCONTROL_H_
 
 #include <string>
-#include "../Common/CControlBaseClass.h"
+#include "../Common/CObjectControl.h"
 #include "CFont.h"
 #include <map>
 
 using namespace std;
 
-class CFontControl : public CControlBaseClass
+class CFontControl : public CObjectControl
 {
     private:
         friend class CResourceManager;

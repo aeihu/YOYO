@@ -1,11 +1,11 @@
-#include "CControlBaseClass.h"
+#include "CObjectControl.h"
 
-bool CControlBaseClass::IsExists(string name)
+bool CObjectControl::IsExists(string name)
 {
     return _objectList.count(name) > 0;
 }
 
-bool CControlBaseClass::AddObject(string name, CObject* obj)
+bool CObjectControl::AddObject(string name, CObject* obj)
 {
     if (obj == NULL)
         return false;
@@ -19,7 +19,7 @@ bool CControlBaseClass::AddObject(string name, CObject* obj)
     return true;
 }
 
-CObject* CControlBaseClass::GetObject(string name)
+CObject* CObjectControl::GetObject(string name)
 {
     if (_objectList.count(name) < 1)
         return NULL;
@@ -27,7 +27,7 @@ CObject* CControlBaseClass::GetObject(string name)
     return _objectList[name];
 }
 
-bool CControlBaseClass::DelObject(string name)
+bool CObjectControl::DelObject(string name)
 {
     if (_objectList.count(name) < 1)
         return false;
@@ -40,7 +40,7 @@ bool CControlBaseClass::DelObject(string name)
     return true;
 }   
         
-void CControlBaseClass::OnCleanup()
+void CObjectControl::OnCleanup()
 {
     std::map<std::string, CObject*>::iterator it;
     for ( it=_objectList.begin(); it !=_objectList.end(); it++ ){

@@ -25,6 +25,7 @@
 #include "Gui/CButton.h"
 #include "Effect/CParticleSystem.h"
 #include "Common/CResourceManager.h"
+#include "Common/CDrawableObjectControl.h"
 
 //==============================================================================
 

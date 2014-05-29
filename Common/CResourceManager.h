@@ -9,12 +9,12 @@
 #ifndef _CRESOURCEMANAGER_H_
     #define _CRESOURCEMANAGER_H_
 
-#include "../Stage_Talk/CImgLayerControl.h"
-#include "../Stage_Talk/CCharacterLayerControl.h"
-#include "../GSM_Window/CMessageBoxControl.h"
-#include "../GSM_Window/CLogBoxControl.h"
-#include "../Effect/CParticleSystemControl.h"
-#include "../Gui/CButtonControl.h"
+//#include "../Stage_Talk/CImgLayerControl.h"
+//#include "../Stage_Talk/CCharacterLayerControl.h"
+//#include "../GSM_Window/CMessageBoxControl.h"
+//#include "../GSM_Window/CLogBoxControl.h"
+//#include "../Effect/CParticleSystemControl.h"
+//#include "../Gui/CButtonControl.h"
 #include "../Text/CFontControl.h"
 #include "../Sound/CSoundBank.h"
 #include "CPositionControl.h"

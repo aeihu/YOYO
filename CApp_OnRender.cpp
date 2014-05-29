@@ -43,7 +43,7 @@ void CApp::OnRender() {
     //CResourceManager::_MessageBoxControl.OnRender(sf_Display);
     //CResourceManager::_ButtonControl.OnRender(sf_Display);
     //CResourceManager::_LogBoxControl.OnRender(sf_Display);
-    CControlOfImageBaseClass::_ResourceManager.OnRender(sf_Display);
+    CDrawableObjectControl::_ResourceManager.OnRender(sf_Display);
     sf_Display->display();
 }
 

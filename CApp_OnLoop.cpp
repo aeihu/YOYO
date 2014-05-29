@@ -23,7 +23,7 @@ void CApp::OnLoop() {
     //CResourceManager::_ButtonControl.OnLoop(__isPause);
     //CResourceManager::_LogBoxControl.OnLoop(__isPause);
 
-    CControlOfImageBaseClass::_ResourceManager.OnLoop(__isPause);
+    CDrawableObjectControl::_ResourceManager.OnLoop(__isPause);
     CSoundBank::_SoundControl.OnLoop();
 
     if (CParser::_Parser.IsDeplaying() || __isPause)

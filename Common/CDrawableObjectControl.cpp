@@ -1,14 +1,14 @@
-#include "CControlOfImageBaseClass.h"
+#include "CDrawableObjectControl.h"
 #include <algorithm>
 
-CControlOfImageBaseClass  CControlOfImageBaseClass::_ResourceManager;
+CDrawableObjectControl  CDrawableObjectControl::_ResourceManager;
 
 bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
 {
     return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
 }
 
-bool CControlOfImageBaseClass::AddDrawableObject(string name, CImageBaseClass* obj)
+bool CDrawableObjectControl::AddDrawableObject(string name, CImageBaseClass* obj)
 {
     if (obj == NULL)
         return false;
@@ -23,7 +23,7 @@ bool CControlOfImageBaseClass::AddDrawableObject(string name, CImageBaseClass* o
     return true;
 }
 
-bool CControlOfImageBaseClass::DelDrawableObject(string name)
+bool CDrawableObjectControl::DelDrawableObject(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
@@ -36,7 +36,7 @@ bool CControlOfImageBaseClass::DelDrawableObject(string name)
     return true;
 }
 
-CImageBaseClass* CControlOfImageBaseClass::GetDrawableObject(string name)
+CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)
@@ -46,7 +46,7 @@ CImageBaseClass* CControlOfImageBaseClass::GetDrawableObject(string name)
     return NULL;
 }
 
-bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
+bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
 {
     if (incr == 0)
         incr = static_cast<float>(CCommon::_Common.INCREMENT);
@@ -64,7 +64,7 @@ bool CControlOfImageBaseClass::SetImageVisibility(std::string name, int alpha, f
     return false;
 }
 
-bool CControlOfImageBaseClass::Move(string name, float x, float y, unsigned int elapsed, bool pause)
+bool CDrawableObjectControl::Move(string name, float x, float y, unsigned int elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -82,7 +82,7 @@ bool CControlOfImageBaseClass::Move(string name, float x, float y, unsigned int 
     return true;
 }
         
-char CControlOfImageBaseClass::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
+char CDrawableObjectControl::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -122,7 +122,7 @@ char CControlOfImageBaseClass::Show(string name, float x, float y, char type, un
     return -1;
 }
         
-char CControlOfImageBaseClass::Hide(string name, char type, unsigned int elapsed, bool pause)
+char CDrawableObjectControl::Hide(string name, char type, unsigned int elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -160,7 +160,7 @@ char CControlOfImageBaseClass::Hide(string name, char type, unsigned int elapsed
     return -1;
 }
 
-void CControlOfImageBaseClass::OnLoop(bool &pause)
+void CDrawableObjectControl::OnLoop(bool &pause)
 {
     vector<pair<string, CImageBaseClass*> >::iterator it;
     for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
@@ -170,14 +170,14 @@ void CControlOfImageBaseClass::OnLoop(bool &pause)
     }
 }
 
-void CControlOfImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
+void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++)
         (*it).second->OnRender(Surf_Dest);
 }
 
-void CControlOfImageBaseClass::OnCleanup()
+void CDrawableObjectControl::OnCleanup()
 {
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
@@ -187,7 +187,7 @@ void CControlOfImageBaseClass::OnCleanup()
     _drawableObjectList.clear();
 }
 
-bool CControlOfImageBaseClass::IsExists(string name)
+bool CDrawableObjectControl::IsExists(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)

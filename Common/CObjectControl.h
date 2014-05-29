@@ -6,15 +6,15 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CCONTROLBASECLASS_H_
-    #define _CCONTROLBASECLASS_H_
+#ifndef _CObjectControl_H_
+    #define _CObjectControl_H_
 
 #include "CObject.h"
 #include <map>
 
 using namespace std;
 
-class CControlBaseClass
+class CObjectControl
 {
     protected:
         map<string, CObject*>          _objectList;
