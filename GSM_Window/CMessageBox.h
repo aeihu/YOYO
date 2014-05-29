@@ -16,6 +16,7 @@
 #include "../Common/CCommon.h"
 #include "../Animation/CAnimation.h"
 #include "../Graphics/CSequenceOfFrames.h"
+#include "../Common/CResourceControl.h"
 
 class CMessageBox : public CBox , public CTextProcessing
 {        

@@ -20,7 +20,7 @@ bool CApp::OnInit()
     CParser::_Parser.SetRunning(&Running);
     CSoundBank::_SoundControl.OnInit();
 
-    //if (!CResourceManager::_FontControl.AddCFont("__main", CCommon::_Common.FONT_PATH.c_str()))
+    //if (!CResourceControl::_ResourceManager.AddObjcet("Font:__main", CCommon::_Common.FONT_PATH.c_str()))
     //    return false;
 
     sf_Display->create(

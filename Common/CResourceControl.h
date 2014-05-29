@@ -16,19 +16,19 @@
 
 using namespace std;
 
-class CDrawableObjectControl : public CObjectControl
+class CResourceControl : public CObjectControl
 {
     protected:
-        friend bool Common_FuncOfShow(string funcName, CDrawableObjectControl* controlBase, vector<string> args);
+        friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
 
         unsigned int                            _interval;
         bool                                    _isNeedSort;
         vector<pair<string, CImageBaseClass*>>  _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
 
-        inline CDrawableObjectControl() {_interval = 10; _isNeedSort = false;}
+        inline CResourceControl() {_interval = 10; _isNeedSort = false;}
     public:
-        static CDrawableObjectControl         _ResourceManager;
+        static CResourceControl         _ResourceManager;
 
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);

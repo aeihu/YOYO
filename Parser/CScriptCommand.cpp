@@ -12,7 +12,7 @@
 #include "../Sound/CSoundBank.h"
 #include "../Gui/CButton.h"
 #include "../Common/CResourceManager.h"
-#include "../Common/CDrawableObjectControl.h"
+#include "../Common/CResourceControl.h"
 #include "../Common/CCommon.h"
 #include "../Stage_Talk/CCharacterLayer.h"
 #include "../Effect/CParticleSystem.h"
@@ -113,11 +113,11 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if (CDrawableObjectControl::_ResourceManager.IsExists(objTypeName+":"+__name)){
-        CImageBaseClass* __obj = CDrawableObjectControl::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
+    if (CResourceControl::_ResourceManager.IsExists(objTypeName+":"+__name)){
+        CImageBaseClass* __obj = CResourceControl::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
         
         if (__values.count("-l") > 0)
-            CDrawableObjectControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, atoi(__values["-l"].c_str()));
+            CResourceControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, atoi(__values["-l"].c_str()));
 
         float* __x = &__obj->_Coordinate.x;
         float* __y = &__obj->_Coordinate.y;
@@ -129,7 +129,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
             if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
                 cout << __funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
 
-        switch (CDrawableObjectControl::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
+        switch (CResourceControl::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
             case -1:
             break;
             case -2:
@@ -171,7 +171,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string> args)
     char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
     
     
-    switch (CDrawableObjectControl::_ResourceManager.Hide(objTypeName+":"+__name, __type, __incr, __pause)){
+    switch (CResourceControl::_ResourceManager.Hide(objTypeName+":"+__name, __type, __incr, __pause)){
         case -1:
             cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
         break;
@@ -203,7 +203,7 @@ bool Common_FuncOfAdd(string objTypeName, vector<string> args)
         if (objTypeName == "Font") __obj = CFont::Create(__filename);
 
         if (__obj != NULL){
-            if (CDrawableObjectControl::_ResourceManager.AddObject(objTypeName+":"+__name, __obj))
+            if (CResourceControl::_ResourceManager.AddObject(objTypeName+":"+__name, __obj))
                 return true;
             else
                 cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
@@ -223,10 +223,10 @@ bool Common_FuncOfAdd(string objTypeName, vector<string> args)
         else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(__filename);
         
         if (__obj != NULL){
-            if (CDrawableObjectControl::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
+            if (CResourceControl::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
                 
                 //__msgBox->SetFont(
-                //    static_cast<CFont*>(CDrawableObjectControl::_ResourceManager.GetObject("__main"))->GetFont());
+                //    static_cast<CFont*>(CResourceControl::_ResourceManager.GetObject("__main"))->GetFont());
                 return true;
             }
             else
@@ -250,13 +250,13 @@ bool Common_FuncOfDelete(string objTypeName, vector<string> args)
     
     if (objTypeName != "Font") {
         for (unsigned int i=0; i<args.size(); i++){
-            if (!CDrawableObjectControl::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
+            if (!CResourceControl::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
     }
     else{
         for (unsigned int i=0; i<args.size(); i++){
-            if (!CDrawableObjectControl::_ResourceManager.DelObject(objTypeName+":"+args[i]))
+            if (!CResourceControl::_ResourceManager.DelObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
     }
@@ -354,7 +354,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    if(!CDrawableObjectControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
+    if(!CResourceControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
         cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
@@ -377,12 +377,12 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
     string __name = args[0];
     string __face = args[1];
 
-    if (!CDrawableObjectControl::_ResourceManager.IsExists(__name)){
+    if (!CResourceControl::_ResourceManager.IsExists(__name)){
         cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
 
-    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(CDrawableObjectControl::_ResourceManager.GetDrawableObject(__name));
+    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(CResourceControl::_ResourceManager.GetDrawableObject(__name));
     if (__chara->SetFace(__face))
         return true;
     else{
@@ -686,22 +686,27 @@ bool Cmd_Message(vector<string> args)
     string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"];
     string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
 
-    //if(CResourceManager::_MessageBoxControl._messageBoxList.count(__msgBoxName) < 1){
-    //    cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
-    //    return false;
-    //}
+    CImageBaseClass* __obj = CResourceControl::_ResourceManager.GetDrawableObject("MessageBox:"+__msgBoxName);
+    if(__obj == NULL){
+        cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
+        return false;
+    }
+    
+    CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
 
-    //if (__character != "")
-    //    if(CResourceManager::_CharacterLayerControl._characterList.count(__character) < 1)
-    //        cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
+    if (__character != ""){
+        __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__character);
+        if(__obj == NULL)
+            cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
+    }
 
-    //CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetText(__msg);
-    //CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].SetSpeakerName(__speakerName);
+    __msgbox->SetText(__msg);
+    __msgbox->SetSpeakerName(__speakerName);
 
-    //if (__voice != ""){
-    //    if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
-    //        cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
-    //}
+    if (__voice != ""){
+        if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
+            cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
+    }
 
     //CResourceManager::_LogBoxControl._logBoxList["log"].AddLog(
     //    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].GetText(), 
@@ -769,11 +774,11 @@ bool Cmd_ShowParticleSystem(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (CDrawableObjectControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]) == NULL){
+        if (CResourceControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]) == NULL){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
         else{
-            CParticleSystem* __par = static_cast<CParticleSystem*>(CDrawableObjectControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]));
+            CParticleSystem* __par = static_cast<CParticleSystem*>(CResourceControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]));
             
             if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
@@ -794,11 +799,11 @@ bool Cmd_HideParticleSystem(vector<string> args)
     }
     
     for (unsigned int i=0; i<args.size(); i++){
-        if (CDrawableObjectControl::_ResourceManager.GetDrawableObject(args[i]) == NULL){
+        if (CResourceControl::_ResourceManager.GetDrawableObject(args[i]) == NULL){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
         else{
-            CParticleSystem* __par = static_cast<CParticleSystem*>(CDrawableObjectControl::_ResourceManager.GetDrawableObject(args[i]));
+            CParticleSystem* __par = static_cast<CParticleSystem*>(CResourceControl::_ResourceManager.GetDrawableObject(args[i]));
             
             if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;

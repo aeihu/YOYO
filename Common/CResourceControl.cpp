@@ -1,14 +1,14 @@
-#include "CDrawableObjectControl.h"
+#include "CResourceControl.h"
 #include <algorithm>
 
-CDrawableObjectControl  CDrawableObjectControl::_ResourceManager;
+CResourceControl  CResourceControl::_ResourceManager;
 
 bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
 {
     return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
 }
 
-bool CDrawableObjectControl::AddDrawableObject(string name, CImageBaseClass* obj)
+bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
 {
     if (obj == NULL)
         return false;
@@ -23,7 +23,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, CImageBaseClass* obj
     return true;
 }
 
-bool CDrawableObjectControl::DelDrawableObject(string name)
+bool CResourceControl::DelDrawableObject(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
@@ -36,7 +36,7 @@ bool CDrawableObjectControl::DelDrawableObject(string name)
     return true;
 }
 
-CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
+CImageBaseClass* CResourceControl::GetDrawableObject(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)
@@ -46,7 +46,7 @@ CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
     return NULL;
 }
 
-void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
+void CResourceControl::SetDrawableObjectLayerOrder(string name, char layer)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
@@ -57,7 +57,7 @@ void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer
     }
 }
 
-bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
+bool CResourceControl::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
 {
     if (incr == 0)
         incr = static_cast<float>(CCommon::_Common.INCREMENT);
@@ -75,7 +75,7 @@ bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, flo
     return false;
 }
 
-bool CDrawableObjectControl::Move(string name, float x, float y, unsigned int elapsed, bool pause)
+bool CResourceControl::Move(string name, float x, float y, unsigned int elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -93,7 +93,7 @@ bool CDrawableObjectControl::Move(string name, float x, float y, unsigned int el
     return true;
 }
         
-char CDrawableObjectControl::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
+char CResourceControl::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -133,7 +133,7 @@ char CDrawableObjectControl::Show(string name, float x, float y, char type, unsi
     return -1;
 }
         
-char CDrawableObjectControl::Hide(string name, char type, unsigned int elapsed, bool pause)
+char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -171,7 +171,7 @@ char CDrawableObjectControl::Hide(string name, char type, unsigned int elapsed, 
     return -1;
 }
 
-void CDrawableObjectControl::OnLoop(bool &pause)
+void CResourceControl::OnLoop(bool &pause)
 {
     if (_isNeedSort)
         std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
@@ -184,14 +184,14 @@ void CDrawableObjectControl::OnLoop(bool &pause)
     }
 }
 
-void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++)
         (*it).second->OnRender(Surf_Dest);
 }
 
-void CDrawableObjectControl::OnCleanup()
+void CResourceControl::OnCleanup()
 {
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
@@ -201,7 +201,7 @@ void CDrawableObjectControl::OnCleanup()
     _drawableObjectList.clear();
 }
 
-bool CDrawableObjectControl::IsExists(string name)
+bool CResourceControl::IsExists(string name)
 {
     for (int i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)

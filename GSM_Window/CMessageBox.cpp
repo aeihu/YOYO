@@ -55,6 +55,19 @@ bool CMessageBox::SetProperty(map<string, string>& list)
     _speakerNameOffset.y = atof(list["SPEAKER_OFFSET_Y"].c_str());
     _msgOffset.x = atof(list["MSG_OFFSET_X"].c_str());
     _msgOffset.y = atof(list["MSG_OFFSET_Y"].c_str());
+
+    CFont* __fnt = NULL;
+    CObject* __obj = list.count("MSG_FONT") < 1 ? 
+        CResourceControl::_ResourceManager.GetObject("Font:__main") : 
+        CResourceControl::_ResourceManager.GetObject(list["MSG_FONT"]);
+   
+    if (__obj != NULL){
+        __fnt = static_cast<CFont*>(__obj);
+        SetFont(__fnt->GetFont());
+    }
+    else
+        return false;
+
     return CBox::SetProperty(list);
 }
 
