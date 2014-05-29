@@ -155,6 +155,9 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
         else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;
 
+        else if (__commandName == "@add_font") _pFunc = &Cmd_AddFont;
+        else if (__commandName == "@del_font") _pFunc = &Cmd_DelFont;
+
         else if (__commandName == "@add_particle") _pFunc = &Cmd_AddParticleSystem;
         else if (__commandName == "@del_particle") _pFunc = &Cmd_DelParticleSystem;
         else if (__commandName == "@show_particle") _pFunc = &Cmd_ShowParticleSystem;

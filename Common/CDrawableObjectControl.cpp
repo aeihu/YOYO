@@ -19,7 +19,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, CImageBaseClass* obj
     }
 
     _drawableObjectList.push_back(make_pair(name, obj));
-    std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
+    _isNeedSort = true;
     return true;
 }
 
@@ -44,6 +44,17 @@ CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
     }
 
     return NULL;
+}
+
+void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
+{
+    for (int i=0; i<_drawableObjectList.size(); i++){
+        if (_drawableObjectList[i].first == name){
+            _drawableObjectList[i].second->SetLayerOrder(layer);
+            _isNeedSort = true;
+            return;
+        }
+    }
 }
 
 bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, float incr, bool pause)
@@ -162,6 +173,9 @@ char CDrawableObjectControl::Hide(string name, char type, unsigned int elapsed, 
 
 void CDrawableObjectControl::OnLoop(bool &pause)
 {
+    if (_isNeedSort)
+        std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
+
     vector<pair<string, CImageBaseClass*> >::iterator it;
     for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
     {

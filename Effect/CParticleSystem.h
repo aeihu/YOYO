@@ -53,7 +53,7 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         static CParticleSystem* Create(const char* filename);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
-        void OnLoop(sf::Time elapsed);
+        bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         bool GetEnable() const;
         void SetEnable(bool val);

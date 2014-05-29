@@ -15,7 +15,7 @@
 //#include "../GSM_Window/CLogBoxControl.h"
 //#include "../Effect/CParticleSystemControl.h"
 //#include "../Gui/CButtonControl.h"
-#include "../Text/CFontControl.h"
+//#include "../Text/CFontControl.h"
 #include "../Sound/CSoundBank.h"
 #include "CPositionControl.h"
 

@@ -22,10 +22,11 @@ class CDrawableObjectControl : public CObjectControl
         friend bool Common_FuncOfShow(string funcName, CDrawableObjectControl* controlBase, vector<string> args);
 
         unsigned int                            _interval;
+        bool                                    _isNeedSort;
         vector<pair<string, CImageBaseClass*>>  _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
 
-        inline CDrawableObjectControl() {_interval = 10;}
+        inline CDrawableObjectControl() {_interval = 10; _isNeedSort = false;}
     public:
         static CDrawableObjectControl         _ResourceManager;
 
@@ -35,6 +36,7 @@ class CDrawableObjectControl : public CObjectControl
         bool AddDrawableObject(string name, CImageBaseClass* obj);
         bool DelDrawableObject(string name);
         CImageBaseClass* GetDrawableObject(string name);
+        void SetDrawableObjectLayerOrder(string name, char layer);
         
         bool IsExists(string name);
         bool Move(string name, float x, float y, unsigned int elapsed, bool pause);

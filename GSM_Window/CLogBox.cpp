@@ -16,8 +16,10 @@ CLogBox::CLogBox()
 CLogBox* CLogBox::Create(const char* filename)
 {
     CLogBox* __logBox = new CLogBox();
-    if (__logBox->LoadConfigFile(filename))
+    if (__logBox->LoadConfigFile(filename)){
+        __logBox->SetLayerOrder(7);
         return __logBox;
+    }
     
     delete __logBox;
     return NULL;

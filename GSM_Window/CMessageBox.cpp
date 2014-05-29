@@ -23,8 +23,10 @@ CMessageBox::CMessageBox()
 CMessageBox* CMessageBox::Create(const char* filename)
 {
     CMessageBox* __msgbox = new CMessageBox();
-    if (__msgbox->LoadConfigFile(filename))
+    if (__msgbox->LoadConfigFile(filename)){
+        __msgbox->SetLayerOrder(4);
         return __msgbox;
+    }
     
     delete __msgbox;
     return NULL;

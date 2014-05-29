@@ -10,8 +10,10 @@ CParticleSystem::CParticleSystem()
 CParticleSystem* CParticleSystem::Create(const char* filename)
 {
     CParticleSystem* __ptc = new CParticleSystem();
-    if (__ptc->LoadConfigFile(filename))
+    if (__ptc->LoadConfigFile(filename)){
+        __ptc->SetLayerOrder(1);
         return __ptc;
+    }
     
     delete __ptc;
     return NULL;
@@ -51,9 +53,9 @@ void CParticleSystem::SetEmitter(sf::Vector2f position)
     _emitter = position;
 }
 
-void CParticleSystem::OnLoop(sf::Time elapsed)
+bool CParticleSystem::OnLoop()
 {
-    elapsed = sf::milliseconds(11);
+    sf::Time elapsed = sf::milliseconds(11);
     if (_enable)
         if (_particles.size() < _number){
             int __i = _number / 50;
@@ -84,6 +86,8 @@ void CParticleSystem::OnLoop(sf::Time elapsed)
         _particles[i-1]._Rectangle.setRotation(_ratio*_rotation*1000);
         _particles[i-1]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(_ratio * 255)));
     }
+
+    return false;
 }
 
 void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest)

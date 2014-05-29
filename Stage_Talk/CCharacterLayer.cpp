@@ -21,8 +21,10 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 CCharacterLayer* CCharacterLayer::Create(const char* filename)
 {    
     CCharacterLayer* __chr = new CCharacterLayer();
-    if (__chr->LoadConfigFile(filename))
+    if (__chr->LoadConfigFile(filename)){
+        __chr->SetLayerOrder(2);
         return __chr;
+    }
     
     delete __chr;
     return NULL;

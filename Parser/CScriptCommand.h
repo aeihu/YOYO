@@ -87,6 +87,9 @@ bool Cmd_AddParticleSystem(vector<string>);
 bool Cmd_DelParticleSystem(vector<string>);
 bool Cmd_ShowParticleSystem(vector<string>);
 bool Cmd_HideParticleSystem(vector<string>);
+
+bool Cmd_AddFont(vector<string>);
+bool Cmd_DelFont(vector<string>);
 ////
 ////bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section);
 ////bool Cmd_MenuBoxDelBtn(string name);

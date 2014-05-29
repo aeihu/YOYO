@@ -95,6 +95,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alpha
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_OPTIONAL));    //layer
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
@@ -114,6 +115,10 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
 
     if (CDrawableObjectControl::_ResourceManager.IsExists(objTypeName+":"+__name)){
         CImageBaseClass* __obj = CDrawableObjectControl::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
+        
+        if (__values.count("-l") > 0)
+            CDrawableObjectControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, atoi(__values["-l"].c_str()));
+
         float* __x = &__obj->_Coordinate.x;
         float* __y = &__obj->_Coordinate.y;
 
@@ -126,10 +131,10 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
 
         switch (CDrawableObjectControl::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
             case -1:
-                cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
             break;
             case -2:
                 cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has showed." <<endl;
+                return false;
             break;
             case 0:
                 return true;
@@ -137,6 +142,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
         }
     }
 
+    cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
     return false;
 }
 
@@ -191,27 +197,44 @@ bool Common_FuncOfAdd(string objTypeName, vector<string> args)
     string __name = args[0];
     const char* __filename = args[1].c_str();
 
-    CImageBaseClass* __obj = NULL;
+    if (objTypeName == "Font"){
+        CObject* __obj = NULL;
 
-    if (objTypeName == "Img") __obj = CImageBaseClass::Create(__filename);
-    else if (objTypeName == "Button") __obj = CButton::Create(__filename);
-    else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(__filename);
-    else if (objTypeName == "LogBox") __obj = CLogBox::Create(__filename);
-    else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(__filename);
-    else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(__filename);
-    
-    if (__obj != NULL){
-        if (!CDrawableObjectControl::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
-            
-            //__msgBox->SetFont(
-            //    static_cast<CFont*>(CDrawableObjectControl::_ResourceManager.GetObject("__main"))->GetFont());
-            return true;
+        if (objTypeName == "Font") __obj = CFont::Create(__filename);
+
+        if (__obj != NULL){
+            if (CDrawableObjectControl::_ResourceManager.AddObject(objTypeName+":"+__name, __obj))
+                return true;
+            else
+                cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
         }
         else
-            cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
+            cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
     }
-    else
-        cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
+    else{
+        CImageBaseClass* __obj = NULL;
+
+        if (objTypeName == "Img") __obj = CImageBaseClass::Create(__filename);
+        else if (objTypeName == "Background") __obj = CImageBaseClass::Create(__filename);
+        else if (objTypeName == "Button") __obj = CButton::Create(__filename);
+        else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(__filename);
+        else if (objTypeName == "LogBox") __obj = CLogBox::Create(__filename);
+        else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(__filename);
+        else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(__filename);
+        
+        if (__obj != NULL){
+            if (CDrawableObjectControl::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
+                
+                //__msgBox->SetFont(
+                //    static_cast<CFont*>(CDrawableObjectControl::_ResourceManager.GetObject("__main"))->GetFont());
+                return true;
+            }
+            else
+                cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
+        }
+        else
+            cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
+    }
 
     return false;
 }
@@ -225,7 +248,7 @@ bool Common_FuncOfDelete(string objTypeName, vector<string> args)
         return false;
     }
     
-    if (true) {
+    if (objTypeName != "Font") {
         for (unsigned int i=0; i<args.size(); i++){
             if (!CDrawableObjectControl::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
@@ -746,11 +769,11 @@ bool Cmd_ShowParticleSystem(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if (CDrawableObjectControl::_ResourceManager.GetDrawableObject(args[i]) == NULL){
+        if (CDrawableObjectControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]) == NULL){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
         else{
-            CParticleSystem* __par = static_cast<CParticleSystem*>(CDrawableObjectControl::_ResourceManager.GetDrawableObject(args[i]));
+            CParticleSystem* __par = static_cast<CParticleSystem*>(CDrawableObjectControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]));
             
             if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
@@ -787,6 +810,15 @@ bool Cmd_HideParticleSystem(vector<string> args)
     return true;
 }
 
+bool Cmd_AddFont(vector<string> args)
+{
+    return Common_FuncOfAdd("Font", args);
+}
+
+bool Cmd_DelFont(vector<string> args)
+{
+    return Common_FuncOfDelete("Font", args);
+}
 //
 //
 //bool Cmd_MenuBoxAddBtn(string name, const char* filename, const char* section)

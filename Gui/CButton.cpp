@@ -38,8 +38,10 @@ bool CButton::SetProperty(map<string, string>& list)
 CButton* CButton::Create(const char* filename)
 {
     CButton* __btn = new CButton();
-    if (__btn->LoadConfigFile(filename))
+    if (__btn->LoadConfigFile(filename)){
+        __btn->SetLayerOrder(6);
         return __btn;
+    }
     
     delete __btn;
     return NULL;
