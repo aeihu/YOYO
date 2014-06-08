@@ -11,6 +11,10 @@
 CLogBox::CLogBox()
 {
     _logMax = _visNum = 0;
+    _childrenList.push_back(&_scrollbar);
+    //_spriteList.push_back(make_pair(&_btnArrowUp._sprite, &_btnArrowUp.GetPosition()));
+    //_spriteList.push_back(make_pair(&_btnArrowDown._sprite, &_btnArrowDown.GetPosition()));
+    //_spriteList.push_back(make_pair(&_btnBar._sprite, &_btnBar.GetPosition()));
 }
 
 CLogBox* CLogBox::Create(const char* filename)
@@ -27,23 +31,19 @@ CLogBox* CLogBox::Create(const char* filename)
 
 bool CLogBox::OnLoop()
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
-        if (_value+__i < _logList.size()){
-            _logList[_value+__i]->SetPosition(_Coordinate.x+_logOffset.x, _Coordinate.y+_logOffset.y);
-            _logList[_value+__i]->SetAlpha(CBox::_Alpha);
-            _logList[_value+__i]->OnLoop();
-        }
-        else
-            break;
-    }
+    //for (unsigned int __i = 0; __i < _visNum; __i++){
+    //    if (_scrollbar.GetValue()+__i < _logList.size()){
+    //        _logList[_scrollbar.GetValue()+__i]->SetPosition(_Coordinate.x+_logOffset.x, _Coordinate.y+_logOffset.y);
+    //        _logList[_scrollbar.GetValue()+__i]->SetAlpha(CBox::GetAlpha());
+    //        _logList[_scrollbar.GetValue()+__i]->OnLoop();
+    //    }
+    //    else
+    //        break;
+    //}
 
     bool __result = CBox::OnLoop();
 
-    CScrollbar::_alpha = CBox::_Alpha;
-    CScrollbar::SetPosition(_Coordinate.x+_scrollbarOffset.x, _Coordinate.y+_scrollbarOffset.y);
-    CScrollbar::OnLoop();
-
-    return __result;
+    return __result && _scrollbar.OnLoop();
 }
 
 void CLogBox::OnRender(sf::RenderWindow* Surf_Dest)
@@ -52,14 +52,14 @@ void CLogBox::OnRender(sf::RenderWindow* Surf_Dest)
         CBox::OnRender(Surf_Dest);
         
         for (unsigned int __i = 0; __i < _visNum; __i++){
-            if (_value+__i < _logList.size()){
-                _logList[_value+__i]->OnRender(Surf_Dest);
+            if (_scrollbar.GetValue()+__i < _logList.size()){
+                _logList[_scrollbar.GetValue()+__i]->OnRender(Surf_Dest);
             }
             else
                 break;
         }
 
-        CScrollbar::OnRender(Surf_Dest);
+        _scrollbar.OnRender(Surf_Dest);
     }
 }
 
@@ -77,7 +77,7 @@ bool CLogBox::CheckList(map<string, string>& list)
 {
     bool __result = CBox::CheckList(list);
 
-    if (!CScrollbar::CheckList(list))
+    if (!_scrollbar.CheckList(list))
         __result = false;
 
     if (list.count("LOG_OFFSET_X") < 1){
@@ -119,10 +119,9 @@ bool CLogBox::SetProperty(map<string, string>& list)
     _visNum = atoi(list["LOG_VISIBLE_NUM"].c_str());
     _logOffset.x = atof(list["LOG_OFFSET_X"].c_str());
     _logOffset.y = atof(list["LOG_OFFSET_Y"].c_str());
-    _scrollbarOffset.x = atof(list["SCROLLBAR_OFFSET_X"].c_str());
-    _scrollbarOffset.y = atof(list["SCROLLBAR_OFFSET_Y"].c_str());
+    _scrollbar.SetOffset(atof(list["SCROLLBAR_OFFSET_X"].c_str()), atof(list["SCROLLBAR_OFFSET_Y"].c_str()));
 
-    if (!CScrollbar::SetProperty(list))
+    if (!_scrollbar.SetProperty(list))
         return false;
 
     return CBox::SetProperty(list);
@@ -143,40 +142,40 @@ void CLogBox::AddLog(string text, sf::SoundBuffer* voice, sf::Font& font)
 void CLogBox::OnMouseMove(int x, int y)
 {
     for (unsigned int __i = 0; __i < _visNum; __i++){
-        if (_value+__i < _logList.size()){
-            _logList[_value+__i]->OnMouseMove(x, y);
+        if (_scrollbar.GetValue()+__i < _logList.size()){
+            _logList[_scrollbar.GetValue()+__i]->OnMouseMove(x, y);
         }
         else
             break;
     }
 
-    CScrollbar::OnMouseMove(x, y);
+    _scrollbar.OnMouseMove(x, y);
 }
 
 bool CLogBox::OnLButtonDown(int x, int y)
 {
     for (unsigned int __i = 0; __i < _visNum; __i++){
-        if (_value+__i < _logList.size()){
-            if (_logList[_value+__i]->OnLButtonDown(x, y))
+        if (_scrollbar.GetValue()+__i < _logList.size()){
+            if (_logList[_scrollbar.GetValue()+__i]->OnLButtonDown(x, y))
                 return true;
         }
         else
             break;
     }
 
-    return CScrollbar::OnLButtonDown(x, y);
+    return _scrollbar.OnLButtonDown(x, y);
 }
 
 bool CLogBox::OnLButtonUp(int x, int y)
 {
     for (unsigned int __i = 0; __i < _visNum; __i++){
-        if (_value+__i < _logList.size()){
-            if (_logList[_value+__i]->OnLButtonUp(x, y))
+        if (_scrollbar.GetValue()+__i < _logList.size()){
+            if (_logList[_scrollbar.GetValue()+__i]->OnLButtonUp(x, y))
                 return true;
         }
         else
             break;
     }
 
-    return CScrollbar::OnLButtonUp(x, y);
+    return _scrollbar.OnLButtonUp(x, y);
 }

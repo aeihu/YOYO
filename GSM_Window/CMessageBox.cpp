@@ -16,7 +16,8 @@ CMessageBox::CMessageBox()
     _AnimationControl.SetFrameRate(10);
     _AnimationControl.SetCurrentFrame(0);
     _AnimationControl._Type = CAnimation::Oscillate;
-
+    _childrenList.push_back(&_frames);
+    _frames.SetFlag(FLAG_SCALE);
     _isPaused = false;
 }
 
@@ -137,26 +138,25 @@ bool CMessageBox::OnLoop()
 {
     bool __result = CBox::OnLoop();
 
-    _speakerName.setPosition(CBox::_Coordinate + _speakerNameOffset);
+    _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
-        CBox::_Coordinate.x + _msgOffset.x, 
-        CBox::_Coordinate.y + _msgOffset.y);
+        CBox::GetPosition().x + _msgOffset.x, 
+        CBox::GetPosition().y + _msgOffset.y);
 
     if (IsTextAllShown() && !GetText().empty()){
         _frames.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
+        
+        _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f,  
+            CTextProcessing::GetLastCharacterPos().y);
 
-        _frames._Coordinate = 
-            CTextProcessing::GetLastCharacterPos()+
-            sf::Vector2f(5.0f, 0.0f);
-
-        _frames._Alpha = 255;
+        _frames.SetAlpha(255);
     }
     else
-        _frames._Alpha = 0;
+        _frames.SetAlpha(0);
 
-    _frames.OnLoop();
+    __result = __result && _frames.OnLoop();
     CTextProcessing::OnLoop();
     return _isPaused || !IsTextAllShown() || __result;
 }

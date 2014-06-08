@@ -12,33 +12,25 @@ CScrollbar::CScrollbar()
 {
     _isMouseDown =
     _isMouseOver = false;
-    _alpha =
-    _value =
     _maxValue = 0;
+    _childrenList.push_back(&_btnArrowUp);
+    _childrenList.push_back(&_btnArrowDown);
+    _childrenList.push_back(&_btnBar);
 }
 
-void CScrollbar::OnLoop()
+bool CScrollbar::OnLoop()
 {
     if (_maxValue < 1)
-        return;
+        return true;
 
-    if (_value >= _maxValue)
-        _value = _maxValue-1;
-    else if (_value < 0)
-        _value = 0;
-
-    _btnBar._Alpha = _btnArrowDown._Alpha = _btnArrowUp._Alpha = _alpha;
-
-    _btnArrowUp.SetPosition(_coordinate.x, _coordinate.y);
-    _btnArrowDown.SetPosition(_coordinate.x, _coordinate.y + _height - _btnArrowDown.GetHeight());
-    _btnBar.SetPosition(_coordinate.x, 
-        _coordinate.y + _btnArrowDown.GetHeight() + 
+    _btnArrowDown.SetOffset(0.0f, _height - _btnArrowDown.GetHeight());
+    _btnBar.SetOffset(0.0f, 
+        _btnArrowDown.GetHeight() + 
         ((_height - _btnArrowDown.GetHeight() - _btnArrowUp.GetHeight() - _btnBar.GetHeight())/
         (_maxValue < 1 ? 1.0f : _maxValue)*_value));
 
-    _btnArrowUp.OnLoop();
-    _btnArrowDown.OnLoop();
-    _btnBar.OnLoop();
+    bool __result = CBox::OnLoop();
+    return __result && _btnBar.OnLoop() && _btnArrowDown.OnLoop() && _btnArrowUp.OnLoop();
 }
 
 
@@ -63,17 +55,17 @@ void CScrollbar::OnMouseMove(int x, int y)
 
     if (_btnBar.IsMouseDown())
     {
-        float __tmp = _btnBar.GetPosition().y;
-        float __cell = (_height - _btnArrowDown.GetHeight() - _btnArrowUp.GetHeight())/(_maxValue < 1 ? 1.0f : _maxValue);
+        //float __tmp = _btnBar.GetPosition().y;
+        //float __cell = (_height - _btnArrowDown.GetHeight() - _btnArrowUp.GetHeight())/(_maxValue < 1 ? 1.0f : _maxValue);
 
-        if (y < _coordinate.y + _btnArrowUp.GetHeight())
-            _btnBar.SetPosition(_btnBar.GetPosition().x, _coordinate.y + _btnArrowUp.GetHeight());
-        else if (y > _btnArrowDown.GetPosition().y - _btnBar.GetHeight())
-            _btnBar.SetPosition(_btnBar.GetPosition().x, _btnArrowDown.GetPosition().y - _btnBar.GetHeight());
-        else
-            _btnBar.SetPosition(_btnBar.GetPosition().x, y);
+        //if (y < _coordinate.y + _btnArrowUp.GetHeight())
+        //    _btnBar.SetPosition(_btnBar.GetPosition().x, _coordinate.y + _btnArrowUp.GetHeight());
+        //else if (y > _btnArrowDown.GetPosition().y - _btnBar.GetHeight())
+        //    _btnBar.SetPosition(_btnBar.GetPosition().x, _btnArrowDown.GetPosition().y - _btnBar.GetHeight());
+        //else
+        //    _btnBar.SetPosition(_btnBar.GetPosition().x, y);
 
-        _value += static_cast<int>((__tmp - _btnBar.GetPosition().y)/(__cell == 0.0f ? 1.0f : __cell));
+        //_value += static_cast<int>((__tmp - _btnBar.GetPosition().y)/(__cell == 0.0f ? 1.0f : __cell));
     }
 }
 
@@ -130,10 +122,12 @@ bool CScrollbar::SetMaxValue(int value)
     return true;
 }
 
-void CScrollbar::SetPosition(float x, float y)
+void CScrollbar::SetValue(int val)
 {
-    _coordinate.x = x;
-    _coordinate.y = y;
+    if (_value >= _maxValue)
+        _value = _maxValue-1;
+    else if (_value < 0)
+        _value = 0;
 }
 
 int CScrollbar::GetValue() const

@@ -68,9 +68,8 @@ int CSequenceOfFrames::GetHeight()
     return _rect.height;
 }
 
-void CSequenceOfFrames::SetPosition(float x, float y)
-{
-    _Coordinate.x = x;
-    _Coordinate.y = y;
-    _sprite.setPosition(x,y);
-}
+//void CSequenceOfFrames::SetPosition(float x, float y)
+//{
+//    SetPosition(x, y);
+//    _sprite.setPosition(x,y);
+//}

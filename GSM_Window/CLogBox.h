@@ -17,14 +17,14 @@
 
 using namespace std;
 
-class CLogBox : public CBox, public CScrollbar
+class CLogBox : public CBox
 {
     private:
         unsigned int                _logMax;
         unsigned int                _visNum;
         sf::Vector2f                _logOffset;
-        sf::Vector2f                _scrollbarOffset;
         deque<CTextLog*>            _logList;
+        CScrollbar                  _scrollbar;
     protected:
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);

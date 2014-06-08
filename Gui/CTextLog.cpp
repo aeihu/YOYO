@@ -41,7 +41,7 @@ void CTextLog::OnLoop()
     _btnVoice.SetPosition(_coordinate.x, _coordinate.y);
 
     if (_voice != NULL){
-        _btnVoice._Alpha = _alpha;
+        _btnVoice.SetAlpha(_alpha);
         _btnVoice.OnLoop();
     }
 }

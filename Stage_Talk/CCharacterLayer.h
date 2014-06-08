@@ -22,7 +22,6 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass, public CConfigFile
 {
   private:
-        sf::Vector2f                _offset;
         sf::Texture                 _imageFace;
         map<string, string>         _faceList;
         bool                        _isFaceEnable;

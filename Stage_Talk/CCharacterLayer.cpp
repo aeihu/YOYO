@@ -12,10 +12,9 @@
 
 CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 {
-    _offset.x = 
-    _offset.y = 0;
     _isFaceEnable = false;
     _AnimationControl._Type = CAnimation::Oscillate;
+    _childrenList.push_back(&_framesOfMouth);
 }
 
 CCharacterLayer* CCharacterLayer::Create(const char* filename)
@@ -33,23 +32,23 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
 bool CCharacterLayer::OnLoop()
 {
     bool __result = CImageBaseClass::OnLoop();
+    __result = __result && _framesOfMouth.OnLoop();
+    //if (_framesOfMouth._sprite.getColor().a != GetAlpha())
+    //    _framesOfMouth._sprite.setColor(sf::Color(255,255,255,GetAlpha()));
 
-    if (_framesOfMouth._sprite.getColor().a != _Alpha)
-        _framesOfMouth._sprite.setColor(sf::Color(255,255,255,_Alpha));
+    //if (_Coordinate+_offset != _framesOfMouth._sprite.getPosition())
+    //    _framesOfMouth._sprite.setPosition(_Coordinate+_offset);
 
-    if (_Coordinate+_offset != _framesOfMouth._sprite.getPosition())
-        _framesOfMouth._sprite.setPosition(_Coordinate+_offset);
+    //if (_framesOfMouth._sprite.getScale() != _sprite.getScale())
+    //    _framesOfMouth._sprite.setScale(_sprite.getScale());
 
-    if (_framesOfMouth._sprite.getScale() != _sprite.getScale())
-        _framesOfMouth._sprite.setScale(_sprite.getScale());
+    //if (_framesOfMouth._sprite.getRotation() != _sprite.getRotation())
+    //    _framesOfMouth._sprite.setRotation(_sprite.getRotation());
 
-    if (_framesOfMouth._sprite.getRotation() != _sprite.getRotation())
-        _framesOfMouth._sprite.setRotation(_sprite.getRotation());
-
-    if (_framesOfMouth._sprite.getScale().x > 1.0f || _framesOfMouth._sprite.getScale().y > 1.0f)
-        _imageFace.setSmooth(true);
-    else
-        _imageFace.setSmooth(false);
+    //if (_framesOfMouth._sprite.getScale().x > 1.0f || _framesOfMouth._sprite.getScale().y > 1.0f)
+    //    _imageFace.setSmooth(true);
+    //else
+    //    _imageFace.setSmooth(false);
 
     if (_isFaceEnable && _AnimationControl.GetEnable()){
         _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
@@ -82,29 +81,6 @@ bool CCharacterLayer::LoadImage(const char* fileName, sf::Texture &image, sf::Sp
 
     return true;
 }
-
-//bool CCharacterLayer::LoadChara(const char* FileName)
-//{
-//    //char BOM[3] = {0xEF,0xBB,0xBF};
-//    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-//    map<string, string> __valueList;
-//
-//    for (list<string>::iterator it=__expressions.begin();
-//        it!=__expressions.end(); it++){
-//        string __paraName = "";
-//        string __paraValue = "";
-//        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-//            __valueList[__paraName] = __paraValue;
-//    }
-//
-//    if (!CheckList(__valueList))
-//        return false;
-//
-//    if (!SetProperty(__valueList))
-//        return false;
-//
-//    return true;
-//}
 
 bool CCharacterLayer::CheckList(map<string, string>& list) 
 {
@@ -161,8 +137,7 @@ bool CCharacterLayer::SetProperty(map<string, string>& list)
 
     if (list["FACE_ENABLE"] != "0"){
         _isFaceEnable= true;
-        _offset.x = atof(list["FACE_OFFSET_X"].c_str());
-        _offset.y = atof(list["FACE_OFFSET_Y"].c_str());
+        _framesOfMouth.SetOffset(atof(list["FACE_OFFSET_X"].c_str()), atof(list["FACE_OFFSET_Y"].c_str()));
         _AnimationControl._MaxFrames = atoi(list["TALK_MAX_FRAMES"].c_str());
         _AnimationControl.SetFrameRate(atoi(list["TALK_FRAME_RATE"].c_str()));
 

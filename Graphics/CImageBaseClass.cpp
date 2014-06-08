@@ -10,21 +10,98 @@
 
 CImageBaseClass::CImageBaseClass(float x, float y)
 {
+    _scale.x =
+    _scale.y = 1.0f;
     _sprite.setPosition(x,y);
-    _Coordinate.x = x;
-    _Coordinate.y = y;
-    _Alpha = 0;
+    _coordinate.x = x;
+    _coordinate.y = y;
+    _alpha = 0;
     _visible = false;
     _image.setSmooth(true);
     _layerOrder = 0;
+    _flag = FLAG_POSITION | FLAG_ALPHA | FLAG_SCALE;
 }
 
 CImageBaseClass::~CImageBaseClass()
 {}
 
+void CImageBaseClass::SetFlag(char flag)
+{
+    _flag = flag;
+}
+
+char CImageBaseClass::GetFlag() const
+{
+    return _flag;
+}
+
+sf::Vector2f& CImageBaseClass::GetPosition() 
+{
+    return _coordinate;
+}
+
+void CImageBaseClass::SetPosition(float x, float y)
+{
+    _coordinate.x = x;
+    _coordinate.y = y;
+}
+
+sf::Vector2f& CImageBaseClass::GetOffset()
+{
+    return _offset;
+}
+
+void CImageBaseClass::SetOffset(float x, float y)
+{
+    _offset.x = x;
+    _offset.y = y;
+}
+
 void CImageBaseClass::SetLayerOrder(char order)
 {
     _layerOrder = order;
+}
+
+void CImageBaseClass::SetAlpha(int alpha)
+{
+    if (alpha > 255)
+        alpha = 255;
+    else if (_alpha < 0)
+        alpha = 0;
+
+    _alpha = alpha;
+}
+
+void CImageBaseClass::SetScale(float x, float y)
+{
+    _scale.x = x;
+    _scale.y = y;
+
+    if (x > 1.0f || y > 1.0f)
+        _image.setSmooth(true);
+    else
+        _image.setSmooth(false);
+}
+
+void CImageBaseClass::SetScaleX(float x)
+{
+    SetScale(x, _scale.y);
+    _scale.x = x;
+}
+
+void CImageBaseClass::SetScaleY(float y)
+{
+    SetScale(_scale.x, y);
+}
+        
+sf::Vector2f& CImageBaseClass::GetScale()
+{
+    return _scale;
+}
+
+int& CImageBaseClass::GetAlpha() 
+{
+    return _alpha;
 }
 
 char CImageBaseClass::GetLayerOrder() const
@@ -74,23 +151,31 @@ void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 bool CImageBaseClass::OnLoop()
 {
     bool __result = CAdderControl::OnLoop()>0 ? true : false;
-    _visible = _Alpha > 0 ? true : false;
+    _visible = _alpha > 0 ? true : false;
 
-    if (_Alpha > 255)
-        _Alpha = 255;
-    else if (_Alpha < 0)
-        _Alpha = 0;
+    if (_sprite.getColor().a != _alpha)
+        _sprite.setColor(sf::Color(255,255,255,_alpha));
 
-    if (_sprite.getColor().a != _Alpha)
-        _sprite.setColor(sf::Color(255,255,255,_Alpha));
+    if (_visible){
+        if (_coordinate != _sprite.getPosition())
+            _sprite.setPosition(_coordinate);
+        
+        if (_scale != _sprite.getScale())
+            _sprite.setScale(_scale);
+    }
 
-    if (_Coordinate != _sprite.getPosition())
-        _sprite.setPosition(_Coordinate);
+    list<CImageBaseClass*>::iterator it;
+    for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
+        if ((*it)->GetFlag() | FLAG_ALPHA)
+            (*it)->SetAlpha(_alpha);
 
-    if (_sprite.getScale().x > 1.0f || _sprite.getScale().y > 1.0f)
-        _image.setSmooth(true);
-    else
-        _image.setSmooth(false);
+        if ((*it)->GetFlag() | FLAG_POSITION)
+            (*it)->SetPosition(_coordinate.x + (*it)->GetOffset().x ,
+                _coordinate.y + (*it)->GetOffset().y);
+
+        if ((*it)->GetFlag() | FLAG_SCALE)
+            (*it)->SetScale(_scale.x, _scale.y);
+    }
 
     return __result;
 }

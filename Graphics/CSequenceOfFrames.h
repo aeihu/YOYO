@@ -23,7 +23,6 @@ class CSequenceOfFrames : public CImageBaseClass
         void SetCurrentImageFrame(int frame);
         void SetWidth(int w);
         void SetHeight(int h);
-        void SetPosition(float x, float y);
         bool LoadImg(const char* filename);
 
         sf::Vector2f GetPosition();

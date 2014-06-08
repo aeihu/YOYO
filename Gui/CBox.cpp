@@ -57,8 +57,7 @@ bool CBox::CheckList(map<string, string>& list)
 
 bool CBox::SetProperty(map<string, string>& list)
 {
-    _Coordinate.x = atof(list["X"].c_str());
-    _Coordinate.y = atof(list["Y"].c_str());
+    SetPosition(atof(list["X"].c_str()), atof(list["Y"].c_str()));
 
     sf::Image __tileset, __dest;
     if (!CSurface::OnLoad(list["TILESET_PATH"].c_str(), __tileset))

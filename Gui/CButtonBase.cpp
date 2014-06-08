@@ -19,8 +19,7 @@ CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int fram
     _isMouseOver = false;
     _seNameOfMouseOver = CCommon::_Common.MOUSEOVER_SE;
     _seNameOfMouseDown = CCommon::_Common.MOUSEDOWN_SE;
-    _Coordinate.x=x;
-    _Coordinate.y=y;
+    SetPosition(x, y);
 }
 
 bool CButtonBase::OnLButtonDown(int x, int y)
@@ -122,6 +121,16 @@ bool CButtonBase::CheckList(map<string, string>& list)
         result = false;
     }
 
+    if (list.count("X") < 1){
+        cout << "can't find value of X." << endl;
+        result = false;
+    }
+
+    if (list.count("Y") < 1){
+        cout << "can't find value of Y." << endl;
+        result = false;
+    }
+
     return result;
 }
 
@@ -134,13 +143,7 @@ bool CButtonBase::SetProperty(map<string, string>& list)
 
     _AnimationControl._MaxFrames = atoi(list["MAX_FRAMES"].c_str());
     _AnimationControl.SetFrameRate(atoi(list["FRAME_RATE"].c_str()));
-    if (list.count("X") > 0){
-        _Coordinate.x=atof(list["X"].c_str());
-    }
-
-    if (list.count("Y") > 0){
-        _Coordinate.y=atof(list["Y"].c_str());
-    }
+    SetPosition(atof(list["X"].c_str()), atof(list["Y"].c_str()));
 
     return true;
 }

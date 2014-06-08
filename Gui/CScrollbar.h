@@ -11,12 +11,14 @@
 
 #include "CButtonBase.h"
 
-class CScrollbar
+class CScrollbar : public CBox
 {
     private:
         bool                    _isMouseDown;
         bool                    _isMouseOver;
         int                     _maxValue;
+        int                     _value;
+        float                   _height;
 
     protected:
         class CArrowUpButton : public CButtonBase
@@ -37,25 +39,21 @@ class CScrollbar
                 void Exec(void* data=NULL);
         }                       _btnBar;
 
-        int                     _value;
-        int                     _alpha;
-        float                   _height;
-        sf::Vector2f            _coordinate;
+    public:
+        CScrollbar();
 
         void OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
-        bool SetMaxValue(int value);
-        int GetValue() const;
         
         virtual bool CheckList(map<string, string>& list);
         virtual bool SetProperty(map<string, string>& list);
-    public:
-        CScrollbar();
-
-        void OnLoop();
+        bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
-        void SetPosition(float x, float y);
+
+        bool SetMaxValue(int value);
+        int GetValue() const;
+        void SetValue(int val);
 };
 
 #endif

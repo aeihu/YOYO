@@ -119,8 +119,8 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
         if (__values.count("-l") > 0)
             CResourceControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, atoi(__values["-l"].c_str()));
 
-        float* __x = &__obj->_Coordinate.x;
-        float* __y = &__obj->_Coordinate.y;
+        float* __x = &__obj->GetPosition().x;
+        float* __y = &__obj->GetPosition().y;
 
 
         *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
@@ -697,7 +697,7 @@ bool Cmd_Message(vector<string> args)
     if (__character != ""){
         __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__character);
         if(__obj == NULL)
-            cout << "Cmd_Message(): Character \"" << __character << "\" has no existed." <<endl;
+            cout << "Cmd_Message(): CharacterLayer \"" << __character << "\" has no existed." <<endl;
     }
 
     __msgbox->SetText(__msg);

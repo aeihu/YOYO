@@ -66,7 +66,7 @@ bool CResourceControl::SetImageVisibility(std::string name, int alpha, float inc
     if (__obj != NULL){
         __obj->Insert(0,
             alpha, pause,
-            &__obj->_Alpha,
+            &__obj->GetAlpha(),
             incr);
 
         return true;
@@ -83,12 +83,12 @@ bool CResourceControl::Move(string name, float x, float y, unsigned int elapsed,
         return false;
 
     unsigned int __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
-    if (x - __obj->_Coordinate.x < -0.001f || x - __obj->_Coordinate.x > 0.001f){
-        __obj->Insert(0, x, pause, &__obj->_Coordinate.x, abs((x - __obj->_Coordinate.x) / __i));
+    if (x - __obj->GetPosition().x < -0.001f || x - __obj->GetPosition().x > 0.001f){
+        __obj->Insert(0, x, pause, &__obj->GetPosition().x, abs((x - __obj->GetPosition().x) / __i));
     }
 
-    if (y - __obj->_Coordinate.y < -0.001f || y - __obj->_Coordinate.y > 0.001f){
-        __obj->Insert(0, y, pause, &__obj->_Coordinate.y, abs((y - __obj->_Coordinate.y) / __i));
+    if (y - __obj->GetPosition().y < -0.001f || y - __obj->GetPosition().y > 0.001f){
+        __obj->Insert(0, y, pause, &__obj->GetPosition().y, abs((y - __obj->GetPosition().y) / __i));
     }
     return true;
 }
@@ -123,8 +123,8 @@ char CResourceControl::Show(string name, float x, float y, char type, unsigned i
         break;
     }
 
-    __obj->_Coordinate.x = __x;
-    __obj->_Coordinate.y = __y;
+    __obj->GetPosition().x = __x;
+    __obj->GetPosition().y = __y;
     if (Move(name, x, y, elapsed, pause)){
         SetImageVisibility(name, alpha, 255/__i, pause);
         return 0;
@@ -143,8 +143,8 @@ char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool p
     if (!__obj->GetVisible())
         return -2;
 
-    float __x = __obj->_Coordinate.x;
-    float __y = __obj->_Coordinate.y;
+    float __x = __obj->GetPosition().x;
+    float __y = __obj->GetPosition().y;
     float __i = elapsed == 0 ? 1 : elapsed / _interval;
 
     switch (type)
@@ -164,7 +164,7 @@ char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool p
     }
 
     if (Move(name, __x, __y, elapsed, pause)){
-        SetImageVisibility(name, 0, __obj->_Alpha / __i, pause);
+        SetImageVisibility(name, 0, __obj->GetAlpha() / __i, pause);
         return 0;
     }
 
@@ -173,8 +173,10 @@ char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool p
 
 void CResourceControl::OnLoop(bool &pause)
 {
-    if (_isNeedSort)
+    if (_isNeedSort){
         std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
+        _isNeedSort = false;
+    }
 
     vector<pair<string, CImageBaseClass*> >::iterator it;
     for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
