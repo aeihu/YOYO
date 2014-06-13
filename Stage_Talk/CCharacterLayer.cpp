@@ -15,6 +15,7 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _isFaceEnable = false;
     _AnimationControl._Type = CAnimation::Oscillate;
     _childrenList.push_back(&_framesOfMouth);
+    _childrenList.push_back(&_framesOfEyes);
 }
 
 CCharacterLayer* CCharacterLayer::Create(const char* filename)
@@ -32,18 +33,7 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
 bool CCharacterLayer::OnLoop()
 {
     bool __result = CImageBaseClass::OnLoop();
-    __result = __result && _framesOfMouth.OnLoop();
-    //if (_framesOfMouth._sprite.getColor().a != GetAlpha())
-    //    _framesOfMouth._sprite.setColor(sf::Color(255,255,255,GetAlpha()));
-
-    //if (_Coordinate+_offset != _framesOfMouth._sprite.getPosition())
-    //    _framesOfMouth._sprite.setPosition(_Coordinate+_offset);
-
-    //if (_framesOfMouth._sprite.getScale() != _sprite.getScale())
-    //    _framesOfMouth._sprite.setScale(_sprite.getScale());
-
-    //if (_framesOfMouth._sprite.getRotation() != _sprite.getRotation())
-    //    _framesOfMouth._sprite.setRotation(_sprite.getRotation());
+    __result = __result || _framesOfMouth.OnLoop() || _framesOfEyes.OnLoop();
 
     //if (_framesOfMouth._sprite.getScale().x > 1.0f || _framesOfMouth._sprite.getScale().y > 1.0f)
     //    _imageFace.setSmooth(true);
@@ -51,6 +41,7 @@ bool CCharacterLayer::OnLoop()
     //    _imageFace.setSmooth(false);
 
     if (_isFaceEnable && _AnimationControl.GetEnable()){
+        _AnimationControl.TurnOn();
         _framesOfMouth.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
         _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
     }
@@ -64,6 +55,7 @@ void CCharacterLayer::OnRender(sf::RenderWindow* Surf_Dest)
         CImageBaseClass::OnRender(Surf_Dest);
 
         if (_isFaceEnable)
+            Surf_Dest->draw(_framesOfEyes._sprite);
             Surf_Dest->draw(_framesOfMouth._sprite);
     }
 }

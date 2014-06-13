@@ -26,6 +26,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         map<string, string>         _faceList;
         bool                        _isFaceEnable;
         CSequenceOfFrames           _framesOfMouth;
+        CSequenceOfFrames           _framesOfEyes;
         
         //bool LoadChara(const char* FileName);
         bool CheckList(map<string, string>& list);

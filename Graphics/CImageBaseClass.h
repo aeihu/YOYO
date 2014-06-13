@@ -22,7 +22,7 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
             FLAG_POSITION = 1,
             FLAG_ALPHA = 2,
             FLAG_SCALE = 4,
-          //  FLAG_ALPHA = 2,
+            FLAG_ROTATION = 8,
         };
 
     private:
@@ -34,6 +34,7 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         sf::Vector2f                      _scale;
         sf::Vector2f                      _coordinate;
         sf::Vector2f                      _offset;
+        float                             _rotation;
         char                              _flag;
     protected:
         sf::Texture                       _image;
@@ -47,6 +48,8 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
         
+        float& GetRotation();
+        void SetRotation(float r);
         sf::Vector2f& GetPosition();
         void SetPosition(float x, float y);
         sf::Vector2f& GetOffset();

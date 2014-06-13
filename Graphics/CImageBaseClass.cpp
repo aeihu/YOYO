@@ -13,13 +13,14 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _scale.x =
     _scale.y = 1.0f;
     _sprite.setPosition(x,y);
+    _rotation = 0.0f;
     _coordinate.x = x;
     _coordinate.y = y;
     _alpha = 0;
     _visible = false;
     _image.setSmooth(true);
     _layerOrder = 0;
-    _flag = FLAG_POSITION | FLAG_ALPHA | FLAG_SCALE;
+    _flag = FLAG_POSITION | FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
 
 CImageBaseClass::~CImageBaseClass()
@@ -33,6 +34,16 @@ void CImageBaseClass::SetFlag(char flag)
 char CImageBaseClass::GetFlag() const
 {
     return _flag;
+}
+
+float& CImageBaseClass::GetRotation()
+{
+    return _rotation;
+}
+
+void CImageBaseClass::SetRotation(float r)
+{
+    _rotation = r;
 }
 
 sf::Vector2f& CImageBaseClass::GetPosition() 
@@ -162,6 +173,9 @@ bool CImageBaseClass::OnLoop()
         
         if (_scale != _sprite.getScale())
             _sprite.setScale(_scale);
+
+        if (_rotation != _sprite.getRotation())
+            _sprite.setRotation(_rotation);
     }
 
     list<CImageBaseClass*>::iterator it;
@@ -175,6 +189,9 @@ bool CImageBaseClass::OnLoop()
 
         if ((*it)->GetFlag() | FLAG_SCALE)
             (*it)->SetScale(_scale.x, _scale.y);
+
+        if ((*it)->GetFlag() | FLAG_ROTATION)
+            (*it)->SetRotation(_rotation);
     }
 
     return __result;

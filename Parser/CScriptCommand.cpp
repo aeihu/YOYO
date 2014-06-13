@@ -315,7 +315,7 @@ bool Cmd_AddCharacterLayer(vector<string> args)
 
 bool Cmd_DelCharacterLayer(vector<string> args)
 {
-    return Common_FuncOfDelete("CharacterLayer", args);
+    return Common_FuncOfDelete("FACE1", args);
 }
 
 bool Cmd_ShowCharacterLayer(vector<string> args)
@@ -377,12 +377,12 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
     string __name = args[0];
     string __face = args[1];
 
-    if (!CResourceControl::_ResourceManager.IsExists(__name)){
+    if (!CResourceControl::_ResourceManager.IsExists("CharacterLayer:"+__name)){
         cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
 
-    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(CResourceControl::_ResourceManager.GetDrawableObject(__name));
+    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__name));
     if (__chara->SetFace(__face))
         return true;
     else{
