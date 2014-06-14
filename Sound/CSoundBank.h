@@ -49,6 +49,12 @@ class CSoundBank {
         int AddBuffer(map<string, sf::SoundBuffer>& list, string name, const char* FileName);
         bool DelBuffer(map<string, sf::SoundBuffer>& list, string name);
     public:
+        enum EVoiceFlag{
+            VOICE_STOPPED = 1,
+            VOICE_SILENCE,
+            VOICE_PLAYING,
+        };
+
         static CSoundBank                               _SoundControl;
         CSoundBank();
 
@@ -62,10 +68,10 @@ class CSoundBank {
         bool DeleteSE(string name);
 
         int AddVoice(string name, const char* FileName) ;
-        bool PlayVoice(string name, string voiceName);
+        bool PlayVoice(string name);
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
-        bool IsVoiceSilence(string name);
+        char IsVoiceSilence(string name);
 
         bool OnLoadBGM(const char* FileName);
         sf::Sound::Status GetBgmStatus();

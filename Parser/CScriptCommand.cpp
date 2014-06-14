@@ -315,7 +315,7 @@ bool Cmd_AddCharacterLayer(vector<string> args)
 
 bool Cmd_DelCharacterLayer(vector<string> args)
 {
-    return Common_FuncOfDelete("FACE1", args);
+    return Common_FuncOfDelete("CharacterLayer", args);
 }
 
 bool Cmd_ShowCharacterLayer(vector<string> args)
@@ -698,13 +698,17 @@ bool Cmd_Message(vector<string> args)
         __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__character);
         if(__obj == NULL)
             cout << "Cmd_Message(): CharacterLayer \"" << __character << "\" has no existed." <<endl;
+        else{
+            CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__obj);
+            __chara->SetVoice(__voice);
+        }
     }
 
     __msgbox->SetText(__msg);
     __msgbox->SetSpeakerName(__speakerName);
 
     if (__voice != ""){
-        if (!CSoundBank::_SoundControl.PlayVoice(__character, __voice))
+        if (!CSoundBank::_SoundControl.PlayVoice(__voice))
             cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
     }
 

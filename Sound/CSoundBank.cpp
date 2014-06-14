@@ -87,14 +87,14 @@ void CSoundBank::PlaySE(sf::SoundBuffer sound)
     _soundPool.back().play();
 }
 
-bool CSoundBank::PlayVoice(string name, string voiceName)
+bool CSoundBank::PlayVoice(string name)
 {
-    if (_voiceList.count(voiceName) < 1)
+    if (_voiceList.count(name) < 1)
         return false;
     
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it)->getStatus() == sf::Sound::Stopped){
-            (*it)->Load(_voiceList[voiceName]);
+            (*it)->Load(_voiceList[name]);
             (*it)->_Name = name;
             (*it)->play();
             return true;
@@ -102,7 +102,7 @@ bool CSoundBank::PlayVoice(string name, string voiceName)
     }
 
     _voicePool.push_back(new CVoiceStream());
-    _voicePool.back()->Load(_voiceList[voiceName]);
+    _voicePool.back()->Load(_voiceList[name]);
     _voicePool.back()->_Name = name;
     _voicePool.back()->play();
     return true;
@@ -165,7 +165,7 @@ void CSoundBank::OnLoop()
                 delete (*it);
                 _voicePool.erase(it);
 
-                if (_voicePool.size() <= CCommon::_Common.SOUND_POOL_NUM)
+                if (_voicePool.size() <= CCommon::_Common.VOICE_POOL_NUM)
                     break;
             }
             else
@@ -180,18 +180,22 @@ void CSoundBank::OnLoop()
     }
 }
 
-bool CSoundBank::IsVoiceSilence(string name)
+char CSoundBank::IsVoiceSilence(string name)
 {
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it)->_Name == name){
-            if (!((*it)->IsSilence()) && (*it)->getStatus() == CVoiceStream::Playing)
-                return false;
+            if ((*it)->getStatus() == CVoiceStream::Playing){
+                if ((*it)->IsSilence())
+                    return VOICE_SILENCE;
+                else
+                    return VOICE_PLAYING;
+            }
             else
-                return true;
+                return VOICE_STOPPED;   
         }
     }
 
-    return true;   
+    return VOICE_STOPPED;   
 }
 
 bool CSoundBank::GetVoiceStatus(string name)

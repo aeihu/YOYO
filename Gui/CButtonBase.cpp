@@ -9,11 +9,11 @@
 #include "CButtonBase.h"
 #include "../Sound/CSoundBank.h"
 
-CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int framerate):CSequenceOfFrames(x,y,0,0,w,h)
+CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int framerate):CSequenceOfSprite(x,y,0,0,w,h)
 {
-    _AnimationControl._MaxFrames = maxframes;
-    _AnimationControl.SetFrameRate(framerate);
-    _AnimationControl.SetCurrentFrame(0);
+    SetMaxFrames(maxframes);
+    SetFrameRate(framerate);
+    SetCurrentFrame(0);
     _AnimationControl._Type = CAnimation::Backward;
     _isMouseDown = false;
     _isMouseOver = false;
@@ -28,8 +28,8 @@ bool CButtonBase::OnLButtonDown(int x, int y)
         if (_isMouseOver)
         {
             _isMouseDown = true;
-            SetCurrentImageFrame(_AnimationControl._MaxFrames);
-            _AnimationControl.SetCurrentFrame(_AnimationControl._MaxFrames-1);
+            SetCurrentImageFrame(GetMaxFrames());
+            _AnimationControl.SetCurrentFrame(GetMaxFrames()-1);
             CSoundBank::_SoundControl.PlaySE(_seNameOfMouseDown);
             return true;
         }
@@ -42,7 +42,7 @@ bool CButtonBase::OnLButtonUp(int x, int y)
     if (IsStandby()){
         if(_isMouseOver){
             _isMouseDown = false;
-            SetCurrentImageFrame(_AnimationControl._MaxFrames-1);
+            SetCurrentImageFrame(GetMaxFrames()-1);
             Exec();
             return true;
         }
@@ -59,8 +59,7 @@ bool CButtonBase::OnLoop()
     bool __result = CImageBaseClass::OnLoop();
 
     if (!_isMouseDown){
-        SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-        _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
+        __result = __result && CSequenceOfSprite::OnLoop();
     }
 
     return __result;
@@ -141,8 +140,8 @@ bool CButtonBase::SetProperty(map<string, string>& list)
     if (!LoadImg(list["TILESET_PATH"].c_str()))
         return false;
 
-    _AnimationControl._MaxFrames = atoi(list["MAX_FRAMES"].c_str());
-    _AnimationControl.SetFrameRate(atoi(list["FRAME_RATE"].c_str()));
+    SetMaxFrames(atoi(list["MAX_FRAMES"].c_str()));
+    SetFrameRate(atoi(list["FRAME_RATE"].c_str()));
     SetPosition(atof(list["X"].c_str()), atof(list["Y"].c_str()));
 
     return true;

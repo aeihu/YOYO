@@ -8,6 +8,7 @@
 #ifndef _CANIMATION_H_
   #define _CANIMATION_H_
 
+#include "../Common/CCommon.h"
 //==============================================================================
 class CAnimation {
     private:
@@ -16,6 +17,7 @@ class CAnimation {
         int                     _frameInc;
         int                     _frameRate; //Milliseconds
         unsigned long           _oldTime;
+        int                     _maxFrames;
 
         void                    OnOscillate();
         void                    OnALoop();
@@ -30,7 +32,6 @@ class CAnimation {
         } eAnimationType;
 
         eAnimationType          _Type;
-        int                     _MaxFrames;
 
         CAnimation();
         void OnAnimate(unsigned long time);
@@ -39,8 +40,10 @@ class CAnimation {
         int GetCurrentFrame() const;
         bool GetEnable() const;
         void SetFrameInc(int inc);
-        void TurnOn();
-        void TurnOff(int frame = 0);
+        virtual void TurnOn();
+        virtual void TurnOff(int frame = 0);
+        void SetMaxFrames(int frame);
+        int GetMaxFrames() const;
 };
 
 //==============================================================================

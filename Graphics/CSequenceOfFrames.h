@@ -9,25 +9,31 @@
     #define _CSEQUENCEOFFRAMES_H_
 
 #include "CImageBaseClass.h"
+#include "../Animation/CAnimation.h"
 
-
-class CSequenceOfFrames : public CImageBaseClass
+class CSequenceOfFrames : public CAnimation
 {
     private:
-        sf::IntRect        _rect;
+        sf::IntRect         _rect;
+        sf::Image           _image;
+        sf::Image           _tile;
+        sf::Texture*        _destTexture;
+        sf::Vector2i        _offset;
     public:
-        using CImageBaseClass::_image;
-        using CImageBaseClass::_sprite;
+        CSequenceOfFrames(int left=0, int top=0, int width=1, int height=1);
+        ~CSequenceOfFrames();
 
-        CSequenceOfFrames(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);
-        void SetWidth(int w);
-        void SetHeight(int h);
+        void SetOffset(int x, int y);
+        void SetSize(int w, int h);
+        void SetDestTexture(sf::Texture* pTexture);
         bool LoadImg(const char* filename);
 
-        sf::Vector2f GetPosition();
-        int GetWidth();
-        int GetHeight();
+        int GetWidth() const;
+        int GetHeight() const;
+        void TurnOff(int frame = 0);
+
+        void OnLoop();
 };
 
 #endif

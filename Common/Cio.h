@@ -30,6 +30,7 @@ class Cio
         static list<string> LoadTxtFile(string filename, string symbol, bool isDelete=true);
         static bool AnalyticExpression(string str, string &name, string &value);
         static bool AnalyticExpression(string str, string symbol, string &name, string &value);
+        static list<string> Cio::SplitString(string str, string symbol);
 };
 
 #endif

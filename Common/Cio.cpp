@@ -133,7 +133,6 @@ bool Cio::IsOneWord(std::string &str, std::string valid_characters)
 	}
 }
 
-
 //==============_(:3J Z)_===================
 bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 {
@@ -150,22 +149,47 @@ bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 	return true;
 }
 
+list<string> Cio::SplitString(string str, string symbol)
+{
+    list<string> __result;
+    while (str.find(symbol) != string::npos){
+	    string __tmp = "";
+	    __tmp.insert (0,str,0,str.find(symbol));
+        if (IsNested(__tmp, '"', '"'))
+            __result.push_back(__tmp);
+
+		str.erase(0,str.find(symbol)+1);
+    }
+
+    if (IsNested(str, '"', '"'))
+        __result.push_back(str);
+
+    return __result;
+}
+
 bool Cio::AnalyticExpression(string str, string symbol, string &name, string &value)
 {
-	if (str.empty() || str.find(symbol) == string::npos)
+    if (str.empty() || str.find(symbol) == string::npos){
+        cout << "Cio::AnalyticExpression(): \"" << str << "\" can't find symbol \"" << symbol << "\"." << endl;
 		return false;
+    }
 
 	name = "";
 	name.insert (0,str,0,str.find(symbol));
 
-	if (!IsOneWord(name, CHARACTERS)) return false;
+	if (!IsOneWord(name, CHARACTERS)){
+        cout << "Cio::AnalyticExpression(): name of argument \"" << name << "\" is wrong format." << endl;
+        return false;
+    }
 
 	value = "";
 	value.insert (0,str,str.find(symbol) + 1, str.length() - 1);
 
 	if (!IsNested(value, '"', '"'))
-		if (!IsOneWord(value, NUMBER))
+        if (!IsOneWord(value, NUMBER)){
+            cout << "Cio::AnalyticExpression(): value of argument \"" << name << "\" is wrong format." << endl;
 			return false;
+        }
 
 	return true;
 }

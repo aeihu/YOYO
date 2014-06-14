@@ -15,7 +15,7 @@
 #include <cstdio>
 #include "../Common/CCommon.h"
 #include "../Animation/CAnimation.h"
-#include "../Graphics/CSequenceOfFrames.h"
+#include "../Graphics/CSequenceOfSprite.h"
 #include "../Common/CResourceControl.h"
 
 class CMessageBox : public CBox , public CTextProcessing
@@ -24,7 +24,7 @@ class CMessageBox : public CBox , public CTextProcessing
         sf::Vector2f        _speakerNameOffset;
         sf::Vector2f        _msgOffset;
         sf::Text            _speakerName;
-        CSequenceOfFrames   _frames;
+        CSequenceOfSprite   _frames;
         bool                _isPaused;
 
         bool CheckList(map<string, string>& list);
@@ -32,8 +32,6 @@ class CMessageBox : public CBox , public CTextProcessing
     protected:
         using CBox::_visible;
     public:
-        CAnimation   _AnimationControl;
-
         CMessageBox();
         
         static CMessageBox* Create(const char* filename);

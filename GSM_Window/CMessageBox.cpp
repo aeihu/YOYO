@@ -12,10 +12,10 @@ using namespace std;
 
 CMessageBox::CMessageBox()
 {
-    _AnimationControl._MaxFrames = 1;
-    _AnimationControl.SetFrameRate(10);
-    _AnimationControl.SetCurrentFrame(0);
-    _AnimationControl._Type = CAnimation::Oscillate;
+    _frames.SetMaxFrames(1);
+    _frames.SetFrameRate(10);
+    _frames.SetCurrentFrame(0);
+    _frames._Type = CAnimation::Oscillate;
     _childrenList.push_back(&_frames);
     _frames.SetFlag(FLAG_SCALE);
     _isPaused = false;
@@ -49,8 +49,8 @@ bool CMessageBox::SetProperty(map<string, string>& list)
 
     _frames.SetWidth(atoi(list["CURSOR_WIDTH"].c_str()));
     _frames.SetHeight(atoi(list["CURSOR_HEIGHT"].c_str()));
-    _AnimationControl._MaxFrames = atoi(list["CURSOR_MAX_FRAMES"].c_str());
-    _AnimationControl.SetFrameRate(atoi(list["CURSOR_FRAME_RATE"].c_str()));
+    _frames.SetMaxFrames(atoi(list["CURSOR_MAX_FRAMES"].c_str()));
+    _frames.SetFrameRate(atoi(list["CURSOR_FRAME_RATE"].c_str()));
 
     _speakerNameOffset.x = atof(list["SPEAKER_OFFSET_X"].c_str());
     _speakerNameOffset.y = atof(list["SPEAKER_OFFSET_Y"].c_str());
@@ -145,9 +145,6 @@ bool CMessageBox::OnLoop()
         CBox::GetPosition().y + _msgOffset.y);
 
     if (IsTextAllShown() && !GetText().empty()){
-        _frames.SetCurrentImageFrame(_AnimationControl.GetCurrentFrame());
-        _AnimationControl.OnAnimate(CCommon::_Common.GetTicks());
-        
         _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f,  
             CTextProcessing::GetLastCharacterPos().y);
 

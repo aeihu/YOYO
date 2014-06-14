@@ -13,12 +13,12 @@
 #include <map>
 #include "../Animation/CAnimation.h"
 #include "../Parser/CParser.h"
-#include "../Graphics/CSequenceOfFrames.h"
+#include "../Graphics/CSequenceOfSprite.h"
 #include "../Common/CConfigFile.h"
 
 using namespace std;
 
-class CButtonBase : public CSequenceOfFrames , public CConfigFile
+class CButtonBase : public CSequenceOfSprite , public CConfigFile
 {
     private:
         bool            _isMouseOver;

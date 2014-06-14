@@ -10,10 +10,9 @@
     #define _CCHARACTERLAYER_H_
 
 #include "../Graphics/CImageBaseClass.h"
-#include "../Common/CCommon.h"
 #include "../Common/CConfigFile.h"
-#include "../Animation/CAnimation.h"
 #include "../Graphics/CSequenceOfFrames.h"
+#include "../Sound/CSoundBank.h"
 #include <map>
 #include <string>
 
@@ -22,23 +21,20 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass, public CConfigFile
 {
   private:
-        sf::Texture                 _imageFace;
-        map<string, string>         _faceList;
-        bool                        _isFaceEnable;
-        CSequenceOfFrames           _framesOfMouth;
-        CSequenceOfFrames           _framesOfEyes;
+        list<pair<string, pair<string, string> > >      _faceList;
+        bool                                            _isFaceEnable;
+        CSequenceOfFrames                               _framesOfMouth;
+        CSequenceOfFrames                               _framesOfEyes;
+        string                                          _currcentVoice;
         
-        //bool LoadChara(const char* FileName);
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);
-        bool LoadImage(const char* FileName, sf::Texture &image, sf::Sprite &sprite);
   public:
-        CAnimation                  _AnimationControl;
-
         CCharacterLayer(float x=0.0f, float y=0.0f);
         
         static CCharacterLayer* Create(const char* filename);
         bool SetFace(string name);
+        void SetVoice(string name);
 
         bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
