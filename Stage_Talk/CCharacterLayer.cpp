@@ -39,11 +39,6 @@ bool CCharacterLayer::OnLoop()
 {
     bool __result = CImageBaseClass::OnLoop();
 
-    //if (_framesOfMouth._sprite.getScale().x > 1.0f || _framesOfMouth._sprite.getScale().y > 1.0f)
-    //    _imageFace.setSmooth(true);
-    //else
-    //    _imageFace.setSmooth(false);
-
     if (_visible){
         if (_isFaceEnable){
             _framesOfMouth.OnLoop();
@@ -218,8 +213,6 @@ bool CCharacterLayer::SetFace(string name)
         if ((*it).first == name){
             _framesOfEyes.LoadImg((*it).second.first.c_str());
             _framesOfMouth.LoadImg((*it).second.second.c_str());
-            //LoadImage((*it).second.first.c_str(), _framesOfEyes._image, _framesOfEyes._sprite);
-            //LoadImage((*it).second.second.c_str(), _framesOfMouth._image, _framesOfMouth._sprite);
             return true;
         }
     }

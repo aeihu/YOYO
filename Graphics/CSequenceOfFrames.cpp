@@ -72,11 +72,6 @@ void CSequenceOfFrames::SetSize(int w, int h)
     _image.create(w,h);
 }
 
-//void CSequenceOfFrames::SetHeight(int h)
-//{
-//    _rect.height = h;
-//}
-
 int CSequenceOfFrames::GetWidth() const
 {
     return _rect.width;
