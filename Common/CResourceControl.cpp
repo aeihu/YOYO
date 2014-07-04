@@ -75,6 +75,12 @@ bool CResourceControl::SetImageVisibility(std::string name, int alpha, float inc
     return false;
 }
 
+bool CResourceControl::SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause)
+{
+    float __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
+    SetImageVisibility(name, alpha, __i, pause);
+}
+
 bool CResourceControl::Move(string name, float x, float y, unsigned int elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));

@@ -28,10 +28,11 @@ class CResourceControl : public CObjectControl
 
         inline CResourceControl() {_interval = 10; _isNeedSort = false;}
     public:
-        static CResourceControl         _ResourceManager;
+        static CResourceControl                 _ResourceManager;
 
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
+        bool SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause);
 
         bool AddDrawableObject(string name, CImageBaseClass* obj);
         bool DelDrawableObject(string name);
