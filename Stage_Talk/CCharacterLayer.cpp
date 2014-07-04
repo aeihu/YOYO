@@ -58,6 +58,12 @@ bool CCharacterLayer::OnLoop()
                     _framesOfMouth.TurnOn();
                 break;
             }
+
+        int aaa = std::rand() % 1000;
+        cout << aaa << endl;
+        if (aaa == 0){
+            _framesOfEyes.TurnOn(1);
+        }
     }
 
     return __result;
