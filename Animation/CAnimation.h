@@ -18,6 +18,7 @@ class CAnimation {
         int                     _frameRate; //Milliseconds
         unsigned long           _oldTime;
         int                     _maxFrames;
+        int                     _counter;
 
         void                    OnOscillate();
         void                    OnALoop();
@@ -40,7 +41,7 @@ class CAnimation {
         int GetCurrentFrame() const;
         bool GetEnable() const;
         void SetFrameInc(int inc);
-        virtual void TurnOn();
+        virtual void TurnOn(int counter = -1);
         virtual void TurnOff(int frame = 0);
         void SetMaxFrames(int frame);
         int GetMaxFrames() const;

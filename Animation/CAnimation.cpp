@@ -17,6 +17,7 @@ CAnimation::CAnimation()
     _frameInc = 1;
     _frameRate = 100; //Milliseconds
     _oldTime = 0;
+    _counter = -1;
     _Type = Forward;
     _enable = false;
 }
@@ -47,19 +48,24 @@ void CAnimation::OnAnimate(unsigned long time)
 
 void CAnimation::OnOscillate()
 {
-  _currentFrame += _frameInc;
-  if(_frameInc > 0) {
-      if(_currentFrame >= _maxFrames) {
-        _frameInc = -_frameInc;
-                _currentFrame = _maxFrames - 1;
-      }
-  }
-    else{
-    if(_currentFrame <= 0) {
-      _frameInc = -_frameInc;
-            _currentFrame = 0;
+    _currentFrame += _frameInc;
+    if(_frameInc > 0) {
+        if(_currentFrame >= _maxFrames) {
+            _frameInc = -_frameInc;
+            _currentFrame = _maxFrames - 1;
+        }
     }
-  }
+    else{
+        if(_currentFrame <= 0) {
+            _frameInc = -_frameInc;
+            _currentFrame = 0;
+            
+            if (_counter == 1)
+                TurnOff();
+            
+            _counter -= 1;
+        }
+    }
 }
 
 void CAnimation::OnALoop()
@@ -129,9 +135,12 @@ void CAnimation::SetFrameInc(int inc)
 
 //------------------------------------------------------------------------------
 
-void CAnimation::TurnOn()
+void CAnimation::TurnOn(int counter)
 {
-    _enable = true;
+    if (counter != 0){
+        _counter = counter;
+        _enable = true;
+    }
 }
 
 //------------------------------------------------------------------------------
