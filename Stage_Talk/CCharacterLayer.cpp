@@ -16,6 +16,7 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _framesOfMouth._Type = CAnimation::Oscillate;
     _framesOfEyes._Type = CAnimation::Oscillate;
     _currcentVoice = "";
+    _timer = 0;
 }
 
 CCharacterLayer* CCharacterLayer::Create(const char* filename)
@@ -43,37 +44,32 @@ bool CCharacterLayer::OnLoop()
         if (_isFaceEnable){
             _framesOfMouth.OnLoop();
             _framesOfEyes.OnLoop();
-        }
 
-        if (_currcentVoice != "")
-            switch (CSoundBank::_SoundControl.IsVoiceSilence(_currcentVoice)){
-                case CSoundBank::VOICE_STOPPED:
-                    _currcentVoice = "";
-                    _framesOfMouth.TurnOff();
-                break;
-                case CSoundBank::VOICE_SILENCE:
-                    _framesOfMouth.TurnOff();
-                break;
-                case CSoundBank::VOICE_PLAYING:
-                    _framesOfMouth.TurnOn();
-                break;
+            if (_currcentVoice != "")
+                switch (CSoundBank::_SoundControl.IsVoiceSilence(_currcentVoice)){
+                    case CSoundBank::VOICE_STOPPED:
+                        _currcentVoice = "";
+                        _framesOfMouth.TurnOff();
+                    break;
+                    case CSoundBank::VOICE_SILENCE:
+                        _framesOfMouth.TurnOff();
+                    break;
+                    case CSoundBank::VOICE_PLAYING:
+                        _framesOfMouth.TurnOn();
+                    break;
+                }
+
+            if (_timer < CCommon::_Common.GetTicks()){
+                if (_timer != 0)
+                    _framesOfEyes.TurnOn(1);
+                
+                _timer = std::rand() % 20000 + CCommon::_Common.GetTicks();
+                cout << _timer << endl;
             }
-
-        int aaa = std::rand() % 1000;
-        cout << aaa << endl;
-        if (aaa == 0){
-            _framesOfEyes.TurnOn(1);
         }
     }
 
     return __result;
-}
-
-void CCharacterLayer::OnRender(sf::RenderWindow* Surf_Dest)
-{
-    if (_visible){
-        CImageBaseClass::OnRender(Surf_Dest);
-    }
 }
 
 bool CCharacterLayer::CheckList(map<string, string>& list) 

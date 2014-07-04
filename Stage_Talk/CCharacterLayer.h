@@ -26,6 +26,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         CSequenceOfFrames                               _framesOfMouth;
         CSequenceOfFrames                               _framesOfEyes;
         string                                          _currcentVoice;
+        unsigned long                                   _timer;
         
         bool CheckList(map<string, string>& list);
         bool SetProperty(map<string, string>& list);
@@ -37,6 +38,6 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void SetVoice(string name);
 
         bool OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+       // void OnRender(sf::RenderWindow* Surf_Dest);
 };
 #endif
