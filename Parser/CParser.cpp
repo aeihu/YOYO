@@ -7,7 +7,6 @@
 */
 
 #include "CParser.h"
-#include  <cstring>
 
 CParser CParser::_Parser;
 

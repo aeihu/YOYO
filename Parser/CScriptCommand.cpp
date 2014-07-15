@@ -26,7 +26,7 @@ typedef enum{
     FLAG_NONPARAMETRIC,
 }ENUM_FLAG;
 
-bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, string>& result)
+bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags, vector<string> args, map<string, vector<string> >& result)
 {
     result.clear();
     list<pair<string, ENUM_FLAG> >::iterator __it;
@@ -43,18 +43,23 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags,
             case 1:
                 {
                     vector<string>::iterator __itOfArgs;
-                    __itOfArgs = std::find (args.begin(), args.end(), (*__it).first);
+                    __itOfArgs = std::find(args.begin(), args.end(), (*__it).first);
 
                     if (__itOfArgs != args.end()){
                         if ((*__it).second == FLAG_NONPARAMETRIC){
-                            result[(*__it).first] = "";
+                            result[(*__it).first] = vector<string>();
                         }
                         else{
                             ++__itOfArgs;
+                            while (__itOfArgs != args.end()){
+                                if ((*__itOfArgs)[0] == '-' && atoi((*__itOfArgs).c_str()) == 0)
+                                    break;
 
-                            if (__itOfArgs != args.end())
-                                result[(*__it).first] = *__itOfArgs;
-                            else{
+                                result[(*__it).first].push_back(*__itOfArgs);
+                                ++__itOfArgs;
+                            }
+
+                            if (result[(*__it).first].size() < 1){
                                 cout << funcName << "(): flag \"" << (*__it).first << "\" has no argument." << endl;
                                 result.clear();
                                 return false;
@@ -72,10 +77,14 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags,
     }
 
 #ifdef _DEBUG
-    for (map<string, string>::iterator it=result.begin();
+    for (map<string, vector<string> >::iterator it=result.begin();
         it!=result.end();)
     {
-        cout << (*it).first << " : " << (*it).second << endl;
+        cout << (*it).first << " : ";
+        for (int i=0; i<(*it).second.size(); i++)
+            cout << (*it).second[i] << " ";
+        
+        cout << endl;
         it++;
     }
 #endif
@@ -103,47 +112,68 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
-    map<string,string> __values;
+    map<string, vector<string> > __values;
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
 
-    int __alpha = __values.count("-a") == 0 ? 255 : atoi(__values["-a"].c_str());
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
+    if (__values.count("-n") == 0)
+        return false;
+    
+    bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
+    
+    for (int i=0; i<__values["-n"].size(); i++){
+        int __alpha = __values.count("-a") == 0 ? 255 : 
+            (i<__values["-a"].size() ? atoi(__values["-a"][i].c_str()) : atoi(__values["-a"][__values["-a"].size()-1].c_str()));
 
-    if (CResourceControl::_ResourceManager.IsExists(objTypeName+":"+__name)){
-        CImageBaseClass* __obj = CResourceControl::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
-        
-        if (__values.count("-l") > 0)
-            CResourceControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, atoi(__values["-l"].c_str()));
+        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+            (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
 
-        float* __x = &__obj->GetPosition().x;
-        float* __y = &__obj->GetPosition().y;
+        string __name = __values["-n"][i];
+        char __type = __values.count("-t") == 0 ? 'c' :
+            (i<__values["-t"].size() ? __values["-t"][i][0] : __values["-t"][__values["-t"].size()-1][0]);
 
 
-        *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"].c_str());
-        *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"].c_str());
-        if (__values.count("-s") > 1)
-            if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],__x,__y))
-                cout << __funcName << "(): can't find position \""<< __values["-s"] << "\"." <<endl;
+        if (CResourceControl::_ResourceManager.IsExists(objTypeName+":"+__name)){
+            CImageBaseClass* __obj = CResourceControl::_ResourceManager.GetDrawableObject(objTypeName+":"+__name);
+            
+            if (__values.count("-l") > 0){
+                CResourceControl::_ResourceManager.SetDrawableObjectLayerOrder(objTypeName+":"+__name, 
+                    (i<__values["-l"].size() ? atoi(__values["-l"][i].c_str()) : atoi(__values["-l"][__values["-l"].size()-1].c_str())));
+            }
 
-        switch (CResourceControl::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
-            case -1:
-            break;
-            case -2:
-                cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has showed." <<endl;
-                return false;
-            break;
-            case 0:
-                return true;
-            break;
+            float* __x = &__obj->GetPosition().x;
+            float* __y = &__obj->GetPosition().y;
+
+
+            *__x = __values.count("-x") == 0 ? *__x : (i<__values["-x"].size() ? atof(__values["-x"][i].c_str()) : *__x);
+            *__y = __values.count("-y") == 0 ? *__y : (i<__values["-y"].size() ? atof(__values["-y"][i].c_str()) : *__y);
+
+            if (__values.count("-s") > 1)
+                if (i<__values["-s"].size())
+                    if (!CResourceManager::_PositionControl.GetPosition(__values["-s"][i],__x,__y))
+                        cout << __funcName << "(): can't find position \""<< __values["-s"][i] << "\"." <<endl;
+
+            switch (CResourceControl::_ResourceManager.Show(objTypeName+":"+__name, *__x, *__y, __type, __incr, __pause, __alpha)){
+                case -1:
+                    __result = false;
+                break;
+                case -2:
+                    cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has showed." <<endl;
+                    __result = false;
+                break;
+                case 0:
+                    __result = __result && true;
+                break;
+            }
+        }
+        else{
+            cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
+            __result = false;
         }
     }
 
-    cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
-    return false;
+    return __result;
 }
 
 bool Common_FuncOfHide(string objTypeName, vector<string> args)
@@ -161,29 +191,41 @@ bool Common_FuncOfHide(string objTypeName, vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
     __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //type
 
-    map<string,string> __values;
+    map<string, vector<string> > __values;
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
 
-    float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
+    if (__values.count("-n") == 0)
+        return false;
+    
+    bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
-    char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
-    
-    
-    switch (CResourceControl::_ResourceManager.Hide(objTypeName+":"+__name, __type, __incr, __pause)){
-        case -1:
-            cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
-        break;
-        case -2:
-            cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has hidden." <<endl;
-        break;
-        case 0:
-            return true;
-        break;
-    }
 
-    return false;
+    for (int i=0; i<__values["-n"].size(); i++){
+        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+            (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
+        //float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
+        string __name = __values["-n"][i];
+        //bool __pause = __values.count("-p") == 0 ? false : true;
+        //char __type = __values.count("-t") == 0 ? 'c' : __values["-t"][0];
+        char __type = __values.count("-t") == 0 ? 'c' :
+            (i<__values["-t"].size() ? __values["-t"][i][0] : __values["-t"][__values["-t"].size()-1][0]);
+    
+        switch (CResourceControl::_ResourceManager.Hide(objTypeName+":"+__name, __type, __incr, __pause)){
+            case -1:
+                cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
+                __result = false;
+            break;
+            case -2:
+                cout << __funcName << "(): "<< objTypeName <<" \""<< __name << "\" has hidden." <<endl;
+                __result = false;
+            break;
+            case 0:
+                __result = __result && true;
+            break;
+        }
+    }
+    return __result;
 }
 
 bool Common_FuncOfAdd(string objTypeName, vector<string> args)
@@ -333,32 +375,40 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
 
-    map<string,string> __values;
+    map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
         return false;
 
-    string __name = __values.count("-n") == 0 ? "" : __values["-n"];
-    float __x = 0;
-    float __y = 0;
+    if (__values.count("-n") == 0)
+        return false;
 
-    if (__values.count("-s") > 1){
-        if (!CResourceManager::_PositionControl.GetPosition(__values["-s"],&__x,&__y)){
-            cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"] << "\"." <<endl;
-            return false;
+    bool __result = true;
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    
+    for (int i=0; i<__values["-n"].size(); i++){
+        string __name = __values["-n"][i];
+        float __x = 0;
+        float __y = 0;
+
+        if (__values.count("-s") > 1)
+            if (i<__values["-s"].size())
+                if (!CResourceManager::_PositionControl.GetPosition(__values["-s"][i], &__x, &__y)){
+                    cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"][i] << "\"." <<endl;
+                    __result = false;
+                }
+
+        __x = __values.count("-x") == 0 ? __x : (i<__values["-x"].size() ? atof(__values["-x"][i].c_str()) : __x);
+        __y = __values.count("-y") == 0 ? __y : (i<__values["-y"].size() ? atof(__values["-y"][i].c_str()) : __y);
+
+        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+            (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
+
+        if(!CResourceControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
+            cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+            __result = false;
         }
     }
-
-    __x = __values.count("-x") == 0 ? __x : atof(__values["-x"].c_str());
-    __y = __values.count("-y") == 0 ? __y : atof(__values["-y"].c_str());
-
-    unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
-    bool __pause = __values.count("-p") == 0 ? false : true;
-
-    if(!CResourceControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
-        cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
-        return false;
-    }
-    return true;
+    return __result;
 }
 
 bool Cmd_HideCharacterLayer(vector<string> args)
@@ -676,15 +726,14 @@ bool Cmd_Message(vector<string> args)
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //speakername
     __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //voice
     
-    map<string,string> __values;
+    map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_Message", __flags, args, __values))
         return false;
     
-    string __msgBoxName = __values.count("-n") == 0 ? "" : __values["-n"];
-    string __character = __values.count("-c") == 0 ? "" : __values["-c"];
-    string __msg = __values.count("-m") == 0 ? "" : __values["-m"];
-    string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"];
-    string __voice = __values.count("-v") == 0 ? "" : __values["-v"];
+    string __msgBoxName = __values.count("-n") == 0 ? "" : __values["-n"][0];
+    string __msg = __values.count("-m") == 0 ? "" : __values["-m"][0];
+    string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"][0];
+    string __voice = __values.count("-v") == 0 ? "" : __values["-v"][0];
 
     CImageBaseClass* __obj = CResourceControl::_ResourceManager.GetDrawableObject("MessageBox:"+__msgBoxName);
     if(__obj == NULL){
@@ -694,13 +743,17 @@ bool Cmd_Message(vector<string> args)
     
     CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
 
-    if (__character != ""){
-        __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__character);
-        if(__obj == NULL)
-            cout << "Cmd_Message(): CharacterLayer \"" << __character << "\" has no existed." <<endl;
-        else{
-            CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__obj);
-            __chara->SetVoice(__voice);
+    if (__values.count("-c") != 0){
+        for (int i=0; i<__values["-c"].size(); i++){
+            if (__values["-c"][i] != ""){
+                __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__values["-c"][i]);
+                if(__obj == NULL)
+                    cout << "Cmd_Message(): CharacterLayer \"" << __values["-c"][i] << "\" has no existed." <<endl;
+                else{
+                    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__obj);
+                    __chara->SetVoice(__voice);
+                }
+            }
         }
     }
 
