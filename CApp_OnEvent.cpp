@@ -369,6 +369,8 @@ void CApp::OnLButtonDown(int mX, int mY)
 {
     //if (!CResourceManager::_ButtonControl.OnLButtonDown(mX, mY))
     //    CResourceManager::_MessageBoxControl.OnLButtonDown(mX, mY);
+   
+    CResourceControl::_ResourceManager.OnLButtonDown(mX, mY);
 }
 
 void CApp::OnRButtonDown(int mX, int mY)

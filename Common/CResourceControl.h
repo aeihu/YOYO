@@ -44,6 +44,8 @@ class CResourceControl : public CObjectControl
         char Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha=255);
         char Hide(string name, char type, unsigned int elapsed, bool pause);
         
+        bool OnLButtonUp(int mX, int mY);
+        bool OnLButtonDown(int mX, int mY);
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();

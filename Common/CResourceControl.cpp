@@ -185,6 +185,24 @@ char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool p
     return -1;
 }
 
+bool CResourceControl::OnLButtonUp(int mX, int mY)
+{
+    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnLButtonUp(mX, mY))
+            return true;
+
+    return false;
+}
+
+bool CResourceControl::OnLButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnLButtonDown(mX, mY))
+            return true;
+
+    return false;
+}
+
 void CResourceControl::OnLoop(bool &pause)
 {
     if (_isNeedSort){

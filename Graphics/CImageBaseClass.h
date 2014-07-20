@@ -70,6 +70,9 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         virtual void OnRender(sf::RenderWindow* Surf_Dest);
         virtual bool OnLoop();
 
+        virtual bool OnLButtonUp(int mX, int mY){return false;}
+        virtual bool OnLButtonDown(int mX, int mY){return false;}
+
         virtual bool GetVisible() const;
 };
 
