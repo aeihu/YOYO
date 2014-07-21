@@ -155,13 +155,13 @@ list<string> Cio::SplitString(string str, string symbol)
     while (str.find(symbol) != string::npos){
 	    string __tmp = "";
 	    __tmp.insert (0,str,0,str.find(symbol));
-        if (IsNested(__tmp, '"', '"'))
+        //if (IsNested(__tmp, '"', '"'))
             __result.push_back(__tmp);
 
 		str.erase(0,str.find(symbol)+1);
     }
 
-    if (IsNested(str, '"', '"'))
+    //if (IsNested(str, '"', '"'))
         __result.push_back(str);
 
     return __result;
