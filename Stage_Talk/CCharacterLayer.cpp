@@ -158,7 +158,6 @@ bool CCharacterLayer::SetProperty(map<string, string>& list)
     _faceList.clear();
 
     if (list["FACE_ENABLE"] != "0"){
-        _isFaceEnable = true;
         _framesOfMouth.SetOffset(atoi(list["MOUTH_OFFSET_X"].c_str()), atoi(list["MOUTH_OFFSET_Y"].c_str()));
         _framesOfMouth.SetMaxFrames(atoi(list["MOUTH_MAX_FRAMES"].c_str()));
         _framesOfMouth.SetFrameRate(atoi(list["MOUTH_FRAME_RATE"].c_str()));
@@ -192,11 +191,13 @@ bool CCharacterLayer::SetProperty(map<string, string>& list)
         map<string, string>::iterator it;
         for (it = list.begin(); it!=list.end(); it++){
             std::list<string> __list = Cio::SplitString("\""+(*it).second+"\"", "|");
-
-            if (__list.size() == 2){
+            
+            if (__list.size() == 2 && Cio::IsNested(__list.front(), '"', '"') && Cio::IsNested(__list.back(), '"', '"')){
                 _faceList.push_back(
                     make_pair((*it).first, 
                     make_pair(__list.front(), __list.back())));
+        
+                _isFaceEnable = true;
             }
             else
                 cout << "CCharacterLayer::SetProperty(): face \"" << (*it).first << "\" failed to add." << endl;

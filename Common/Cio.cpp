@@ -9,6 +9,14 @@
 
 #define CHARACTERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_,."
 #define NUMBER "0123456789.-"
+const char TRIM_CH[] = {0x09,0x20};
+
+string& Cio::Trim(string& str)
+{
+    str.erase(0,str.find_first_not_of(TRIM_CH));  
+    str.erase(str.find_last_not_of(TRIM_CH) + 1); 
+    return str;
+}
 
 void Cio::ClearFileInMem(char* &file)
 {
@@ -123,25 +131,13 @@ list<string> Cio::LoadTxtFile(string filename, string symbol, bool isDelete)
 
 	string __data = LoadTxtFile(filename);
 
-    list<string> __strList = SplitString(__data, "\n\r");
+    list<string> __result = SplitString(__data, "\n\r");
         
-    for (list<string>::iterator it=__strList.begin();it!=__strList.end(); it++){
+    for (list<string>::iterator it=__result.begin();it!=__result.end(); it++){
         (*it) = DeleteComment(*it);
     }
-    //{
-    //    stringstream __sStream(__data);
-    //    string __str;
 
-    //    while(!__sStream.eof()){
-    //        string __tmp;
-    //        __sStream >> __tmp;
-    //        __tmp = DeleteComment(__tmp);
-    //        __str.append(__tmp);
-    //    }
-
-    //    __data = __str;
-    //}
-
+/*  end as ;
 	list<string> __result;
 	string __expression = "";
     bool __isEnd = true;
@@ -162,7 +158,7 @@ list<string> Cio::LoadTxtFile(string filename, string symbol, bool isDelete)
 			__result.push_back(__expression);
             __expression = "";
         }
-	}
+	}*/
 
 	return __result;
 }
@@ -188,16 +184,18 @@ bool Cio::IsOneWord(std::string &str, std::string valid_characters)
 //==============_(:3J Z)_===================
 bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 {
+    str = Trim(str);
+
     size_t first_symbol_pos = str.find_first_of(first_symbol);
-    size_t last_symbol_pos = str.find_first_of(last_symbol, first_symbol_pos+1);
+    size_t last_symbol_pos = str.find_last_of(last_symbol);
 
 	if (first_symbol_pos==string::npos || last_symbol_pos==string::npos)
         return false;
 
-
 	string __tmp = "";
 	__tmp.insert(0, str, first_symbol_pos+1, last_symbol_pos-first_symbol_pos-1);
 	str = __tmp;
+
 	return true;
 }
 
@@ -207,10 +205,12 @@ list<string> Cio::SplitString(string str, string symbol)
     while (str.find_first_of(symbol) != string::npos){
 	    string __tmp = "";
 	    __tmp.insert (0,str,0,str.find_first_of(symbol));
-        //if (IsNested(__tmp, '"', '"'))
-        __result.push_back(__tmp);
+        __tmp = Trim(__tmp);
 
-		str.erase(0,str.find_first_of(symbol)+1);
+        if (!__tmp.empty())
+            __result.push_back(__tmp);
+
+		str.erase(0, str.find_first_of(symbol)+1);
     }
 
     //if (IsNested(str, '"', '"'))

@@ -31,8 +31,6 @@ class CParser
 
         bool FindSection(list<string> &Commands, const char* Section);
         int AnalysisOfParameters(string para, vector<string> &plist);
-        //void split(string str);
-        string DeleteComment(string str, bool isDelete=true);
         //int AnalysisOfParameters(string para, queue<string> &plist);
 
         bool (*_pFunc)(vector<string>);

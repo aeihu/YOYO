@@ -25,6 +25,7 @@ class Cio
         static bool IsNested(string &str, char first_symbol, char last_symbol);
         static size_t CounterOfString(string str, string symbol, size_t pos=0);
         static string DeleteComment(string& str, bool isDelete=true);
+        static string& Trim(string& str);
 
         static bool LoadFileToMem(string filename, char* &file, unsigned long& size);
         static void ClearFileInMem(char* &file);
@@ -33,7 +34,7 @@ class Cio
         static list<string> LoadTxtFile(string filename, string symbol, bool isDelete=true);
         static bool AnalyticExpression(string str, string &name, string &value);
         static bool AnalyticExpression(string str, string symbol, string &name, string &value);
-        static list<string> Cio::SplitString(string str, string symbol);
+        static list<string> SplitString(string str, string symbol);
 };
 
 #endif

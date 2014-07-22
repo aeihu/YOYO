@@ -47,30 +47,9 @@ bool CParser::FindSection(list<string> &Commands, const char* Section)
     return false;
 }
 
-string CParser::DeleteComment(string str, bool isDelete)
-{
-    size_t __pos = str.find("//");
-    if (__pos != string::npos){
-        string __str = str.substr(0, __pos);
-        for (int i=0; i<__str.length(); i++){
-            if (__str[i] == '"')
-                isDelete = !isDelete;
-        }
-
-        if (isDelete)
-            return __str;
-        else
-            return  str.substr(0, __pos+2) + DeleteComment(str.substr(__pos+2), isDelete);
-    }
-
-    return str;
-}
-
 bool CParser::LoadScript(const char* FileName, const char* Section, list<string> &Commands)
 {
     list<string> __commands = Cio::LoadTxtFile(FileName, ";]", false);
-    //list<string> __strs = Cio::LoadTxtFile(FileName, "\n\r", true);
-    //list<string> __commands;// = Cio::LoadTxtFile(FileName, "\n\r", true);
 
     if (Section != NULL){
         if (!FindSection(__commands, Section)){
@@ -80,8 +59,6 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
     }
     
     for (list<string>::iterator it=__commands.begin();it!=__commands.end(); it++){
-        (*it) = DeleteComment(*it);
-
         if ((*it).find("@end") != string::npos){
             __commands.erase(it, __commands.end());
             break;
