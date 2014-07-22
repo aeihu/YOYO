@@ -45,6 +45,15 @@ bool Cio::LoadFileToMem(string filename, char* &file, unsigned long& size)
 	}
 }
 
+size_t Cio::CounterOfString(string str, string symbol, size_t pos)
+{
+    size_t __pos = str.find_first_of(symbol, pos);
+    if (__pos == string::npos)
+        return 0;
+    else
+        return 1 + CounterOfString(str, symbol, __pos+1);
+}
+
 string Cio::LoadTxtFile(string filename)
 {
 	if (filename.find("*")!=string::npos){
@@ -88,6 +97,25 @@ string Cio::LoadTxtFile(string filename)
 	}
 }
 
+string Cio::DeleteComment(string& str, bool isDelete)
+{
+    size_t __pos = str.find("//");
+    if (__pos != string::npos){
+        string __str = str.substr(0, __pos);
+        for (int i=0; i<__str.length(); i++){
+            if (__str[i] == '"')
+                isDelete = !isDelete;
+        }
+
+        if (isDelete)
+            return __str;
+        else
+            return  str.substr(0, __pos+2) + DeleteComment(str.substr(__pos+2), isDelete);
+    }
+
+    return str;
+}
+
 list<string> Cio::LoadTxtFile(string filename, string symbol, bool isDelete)
 {
 	unsigned int _offset = 1;
@@ -95,21 +123,45 @@ list<string> Cio::LoadTxtFile(string filename, string symbol, bool isDelete)
 
 	string __data = LoadTxtFile(filename);
 
+    list<string> __strList = SplitString(__data, "\n\r");
+        
+    for (list<string>::iterator it=__strList.begin();it!=__strList.end(); it++){
+        (*it) = DeleteComment(*it);
+    }
+    //{
+    //    stringstream __sStream(__data);
+    //    string __str;
+
+    //    while(!__sStream.eof()){
+    //        string __tmp;
+    //        __sStream >> __tmp;
+    //        __tmp = DeleteComment(__tmp);
+    //        __str.append(__tmp);
+    //    }
+
+    //    __data = __str;
+    //}
+
 	list<string> __result;
+	string __expression = "";
+    bool __isEnd = true;
 	
 	while(!__data.empty()){
-		string __expression = "";	
 		if (__data.find_first_of(symbol) != string::npos){
-			__expression.insert(0, __data, 0, __data.find_first_of(symbol)+_offset);
+			__expression.append(__data, 0, __data.find_first_of(symbol)+_offset);
 			__data.erase(0,__data.find_first_of(symbol)+1);
+
+            __isEnd = CounterOfString(__expression, "\"") % 2 == 0 ? true : false;
 		}
 		else{
 			__expression = __data;
 			__data = "";
 		}
 
-		if (!__expression.empty())
+		if (!__expression.empty() && __isEnd){
 			__result.push_back(__expression);
+            __expression = "";
+        }
 	}
 
 	return __result;
@@ -136,15 +188,15 @@ bool Cio::IsOneWord(std::string &str, std::string valid_characters)
 //==============_(:3J Z)_===================
 bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 {
-	if (str.find_first_of(first_symbol)==string::npos ||
-		str.find_last_of(last_symbol)==string::npos)
-		return false;
+    size_t first_symbol_pos = str.find_first_of(first_symbol);
+    size_t last_symbol_pos = str.find_first_of(last_symbol, first_symbol_pos+1);
 
-	if (str.find_first_of(first_symbol) >= str.find_last_of(last_symbol))
-		return false;
+	if (first_symbol_pos==string::npos || last_symbol_pos==string::npos)
+        return false;
+
 
 	string __tmp = "";
-	__tmp.insert(0, str, str.find_first_of(first_symbol)+1, str.find_last_of(last_symbol)-str.find_first_of(first_symbol)-1);
+	__tmp.insert(0, str, first_symbol_pos+1, last_symbol_pos-first_symbol_pos-1);
 	str = __tmp;
 	return true;
 }
@@ -152,17 +204,17 @@ bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
 list<string> Cio::SplitString(string str, string symbol)
 {
     list<string> __result;
-    while (str.find(symbol) != string::npos){
+    while (str.find_first_of(symbol) != string::npos){
 	    string __tmp = "";
-	    __tmp.insert (0,str,0,str.find(symbol));
+	    __tmp.insert (0,str,0,str.find_first_of(symbol));
         //if (IsNested(__tmp, '"', '"'))
-            __result.push_back(__tmp);
+        __result.push_back(__tmp);
 
-		str.erase(0,str.find(symbol)+1);
+		str.erase(0,str.find_first_of(symbol)+1);
     }
 
     //if (IsNested(str, '"', '"'))
-        __result.push_back(str);
+    __result.push_back(str);
 
     return __result;
 }

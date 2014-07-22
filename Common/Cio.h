@@ -12,6 +12,7 @@
 #include <string>
 #include <fstream> 
 #include <iostream> 
+#include <sstream> 
 #include <list> 
 #include "CZlib.h"
 
@@ -22,6 +23,8 @@ class Cio
     public:
         static bool IsOneWord(string &str, string valid_characters);
         static bool IsNested(string &str, char first_symbol, char last_symbol);
+        static size_t CounterOfString(string str, string symbol, size_t pos=0);
+        static string DeleteComment(string& str, bool isDelete=true);
 
         static bool LoadFileToMem(string filename, char* &file, unsigned long& size);
         static void ClearFileInMem(char* &file);

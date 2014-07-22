@@ -49,8 +49,6 @@ bool CParser::FindSection(list<string> &Commands, const char* Section)
 
 string CParser::DeleteComment(string str, bool isDelete)
 {
-    list<string> strList = Cio::SplitString(str, "\n\r");
-
     size_t __pos = str.find("//");
     if (__pos != string::npos){
         string __str = str.substr(0, __pos);
@@ -81,10 +79,8 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
         }
     }
     
-    for (list<string>::iterator it=__commands.begin();
-        it!=__commands.end(); it++){
-        
-        (*it) = DeleteComment((*it));
+    for (list<string>::iterator it=__commands.begin();it!=__commands.end(); it++){
+        (*it) = DeleteComment(*it);
 
         if ((*it).find("@end") != string::npos){
             __commands.erase(it, __commands.end());
