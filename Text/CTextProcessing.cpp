@@ -132,7 +132,7 @@ void CTextProcessing::OnLoop()
         }
         else{
             unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
-            _textOfShown += _text.substr(_index, __size);
+            _textOfShown.append(_text.substr(_index, __size));
             _index += __size;
         }
         CTextFunction::SetString(_sfText, _textOfShown);
