@@ -16,6 +16,7 @@ class CTextFunction
 {
     public:
         static void SetString(sf::Text& text, std::string str);
+        static void SetString(sf::Text& text, std::string str, size_t len);
         static unsigned int SizeOfCharWithUTF8(char Char);
         static unsigned int StringLengthWithUTF8(std::string str);
 };

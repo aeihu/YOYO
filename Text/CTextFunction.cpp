@@ -10,6 +10,16 @@ void CTextFunction::SetString(sf::Text& text, std::string str)
     __uft32String = NULL;
 }
 
+void CTextFunction::SetString(sf::Text& text, std::string str, size_t len)
+{
+    //sf::Uint32* __uft32String = new sf::Uint32[str.length()];
+    sf::Uint32* __uft32String = new sf::Uint32[len];
+    sf::Utf8::toUtf32(str.begin(), str.end(), __uft32String);
+    text.setString(__uft32String);
+    delete[] __uft32String;
+    __uft32String = NULL;
+}
+
 unsigned int CTextFunction::SizeOfCharWithUTF8(char Char)
 {
     if (Char < 0){

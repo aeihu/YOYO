@@ -60,7 +60,7 @@ bool CMessageBox::SetProperty(map<string, string>& list)
     CFont* __fnt = NULL;
     CObject* __obj = list.count("MSG_FONT") < 1 ? 
         CResourceControl::_ResourceManager.GetObject("Font:__main") : 
-        CResourceControl::_ResourceManager.GetObject(list["MSG_FONT"]);
+        CResourceControl::_ResourceManager.GetObject("Font:"+list["MSG_FONT"]);
    
     if (__obj != NULL){
         __fnt = static_cast<CFont*>(__obj);

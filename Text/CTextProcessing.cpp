@@ -135,7 +135,8 @@ void CTextProcessing::OnLoop()
             _textOfShown.append(_text.substr(_index, __size));
             _index += __size;
         }
-        CTextFunction::SetString(_sfText, _textOfShown);
+       // CTextFunction::SetString(_sfText, _textOfShown, _length);
+        CTextFunction::SetString(_sfText, "\/", 2);
     }
 }
 

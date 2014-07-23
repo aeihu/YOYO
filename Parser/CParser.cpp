@@ -64,11 +64,11 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
             break;
         }
 
-        if ((*it).find_last_of(";") != string::npos){
-            (*it).erase((*it).find_last_of(";"),1);
-            while ((*it).find_first_of("\n\r") != string::npos)
-                (*it).erase((*it).find_first_of("\n\r"),1);
-        }
+        if ((*it).find_last_of(";") != string::npos)
+        (*it).erase((*it).find_last_of(";"),1);
+
+        while ((*it).find_first_of("\n\r") != string::npos)
+            (*it).erase((*it).find_first_of("\n\r"),1);
     }
     
     Commands.insert(Commands.begin(), __commands.begin(), __commands.end());
@@ -254,7 +254,8 @@ void CParser::InsertCmd(string cmd)
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 {
     string __tmp = "";
-
+    char ss[] = {0x20,0x09};
+    list<string> ooo = Cio::SplitString(para, ss);
     while (para.length() != 0)
     {
         if (para[0] != 0x20 && para[0] != 0x09){
