@@ -306,6 +306,37 @@ bool Common_FuncOfDelete(string objTypeName, vector<string> args)
     return true;
 }
 
+bool Common_FuncOfLayerOrder(string objTypeName, vector<string> args)
+{ 
+    string __funcName = "Cmd_SetLayerOrder" + objTypeName;
+
+    if (args.size() < 1){
+        cout << __funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NECESSITY));    //layer
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0 || __values.count("-l") == 0)
+        return false;
+   
+    for (int i=0; i<__values["-n"].size(); i++){
+        char __layer = i<__values["-l"].size() ? atoi(__values["-l"][i].c_str()) : atoi(__values["-l"][__values["-i"].size()-1].c_str());
+
+        if (CResourceControl::SetLayerOrder(objTypeName+":"+__values["-n"][i], __layer))
+            cout << __funcName <<"(): " << objTypeName << " \""<< __name << "\" has no existed." <<endl;
+    }
+
+    return true;
+}
+
 /*==============================================================
     commad of script
 ===============================================================*/
@@ -440,6 +471,11 @@ bool Cmd_SetFaceCharacterLayer(vector<string> args)
         return false;
     }
 }
+
+bool Cmd_SetCharacterLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("CharacterLayer", args);
+}
 //
 //bool Cmd_AlphaCharacterLayer(char postion, int alpha)
 //{
@@ -484,6 +520,10 @@ bool Cmd_HideBackground(vector<string> args)
     return Common_FuncOfHide("Background", args);
 }
 
+bool Cmd_SetBackgroundLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("Background", args);
+}
 /*
     Cmd_AddImg: comand of add image.
     args[0]: set image name.
@@ -511,6 +551,10 @@ bool Cmd_DelImg(vector<string> args)
     return Common_FuncOfDelete("Img", args);
 }
 
+bool Cmd_SetImgLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("Img", args);
+}
 //
 //void Cmd_WhiteScreen(int msec)
 //{
@@ -692,6 +736,11 @@ bool Cmd_HideButton(vector<string> args)
 {
     return Common_FuncOfHide("Button", args);
 }
+
+bool Cmd_SetButtonLayerOrder(vector<string>)
+{
+    return Common_FuncOfLayerOrder("Button", args);
+}
 //
 //
 //void  Cmd_FullScreen()
@@ -792,6 +841,11 @@ bool Cmd_HideMessageBox(vector<string> args)
     return Common_FuncOfHide("MessageBox", args);
 }
 
+bool Cmd_SetMessageBoxLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("MessageBox", args);
+}
+
 bool Cmd_AddLogBox(vector<string> args)
 {
     return Common_FuncOfAdd("LogBox", args);
@@ -810,6 +864,11 @@ bool Cmd_HideLogBox(vector<string> args)
 bool Cmd_DelLogBox(vector<string> args)
 {
     return Common_FuncOfDelete("LogBox", args);
+}
+
+bool Cmd_SetLogBoxLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("LogBox", args);
 }
 
 bool Cmd_AddParticleSystem(vector<string> args)
@@ -870,6 +929,11 @@ bool Cmd_HideParticleSystem(vector<string> args)
     }
 
     return true;
+}
+
+bool Cmd_SetParticleSystemLayerOrder(vector<string> args)
+{
+    return Common_FuncOfLayerOrder("ParticleSystem", args);
 }
 
 bool Cmd_AddFont(vector<string> args)

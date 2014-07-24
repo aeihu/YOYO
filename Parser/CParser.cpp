@@ -64,8 +64,8 @@ bool CParser::LoadScript(const char* FileName, const char* Section, list<string>
             break;
         }
 
-        if ((*it).find_last_of(";") != string::npos)
-        (*it).erase((*it).find_last_of(";"),1);
+        //if ((*it).find_last_of(";") != string::npos)
+        //    (*it).erase((*it).find_last_of(";"),1);
 
         while ((*it).find_first_of("\n\r") != string::npos)
             (*it).erase((*it).find_first_of("\n\r"),1);
@@ -113,27 +113,32 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
         else if (__commandName == "@face_chara") _pFunc = &Cmd_SetFaceCharacterLayer;
+        else if (__commandName == "@order_chara") _pFunc = &Cmd_SetCharacterLayerOrder;
 
         else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
         else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
+        else if (__commandName == "@order_bg") _pFunc = &Cmd_SetBackgroundLayerOrder;
 
         else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
         else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
+        else if (__commandName == "@order_img") _pFunc = &Cmd_SetImgLayerOrder;
 
         else if (__commandName == "@add_msgbox") _pFunc = &Cmd_AddMessageBox;
         else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
         else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;
         else if (__commandName == "@del_msgbox") _pFunc = &Cmd_DelMessageBox;
+        else if (__commandName == "@order_msgbox") _pFunc = &Cmd_SetMessageBoxLayerOrder;
         else if (__commandName == "@msg") _pFunc = &Cmd_Message;
 
         else if (__commandName == "@add_logbox") _pFunc = &Cmd_AddLogBox;
         else if (__commandName == "@show_logbox") _pFunc = &Cmd_ShowLogBox;
         else if (__commandName == "@hide_logbox") _pFunc = &Cmd_HideLogBox;
         else if (__commandName == "@del_logbox") _pFunc = &Cmd_DelLogBox;
+        else if (__commandName == "@order_logbox") _pFunc = &Cmd_SetLogBoxLayerOrder;
 
         else if (__commandName == "@add_se") _pFunc = &Cmd_AddSE;
         else if (__commandName == "@del_se") _pFunc = &Cmd_DelSE;
@@ -150,6 +155,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
         else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
+        else if (__commandName == "@order_btn") _pFunc = &Cmd_SetButtonLayerOrder;
         
         else if (__commandName == "@add_var") _pFunc = &Cmd_AddVariable;
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
@@ -162,6 +168,7 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@del_particle") _pFunc = &Cmd_DelParticleSystem;
         else if (__commandName == "@show_particle") _pFunc = &Cmd_ShowParticleSystem;
         else if (__commandName == "@hide_particle") _pFunc = &Cmd_HideParticleSystem;
+        else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
         else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1)
@@ -254,24 +261,31 @@ void CParser::InsertCmd(string cmd)
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 {
     string __tmp = "";
-    char ss[] = {0x20,0x09};
-    list<string> ooo = Cio::SplitString(para, ss);
+    size_t __index = 0;
+
     while (para.length() != 0)
     {
         if (para[0] != 0x20 && para[0] != 0x09){
             if (para[0] == '"' && __tmp.empty()){
                 para.erase(0,1);
-
-                if(para.find("\"")!=string::npos){
-                    __tmp.insert (0,para,0,para.find("\""));
-                    plist.push_back(__tmp);
-                    __tmp.clear();
-                    para.erase(0,para.find("\"") + 1);
-                }
-                else{
-                    plist.clear();
-                    return -1;
-                }
+                
+                __index = 0;
+                do{
+                     __index = para.find("\"", __index == 0 ? 0 : __index+1);
+                    if (__index != string::npos && __index > 0){
+                        if (para[__index-1] != '\\'){
+                            __tmp.insert (0, para, 0, __index);
+                            plist.push_back(__tmp);
+                            __tmp.clear();
+                            para.erase(0, __index + 1);
+                            break;
+                        }
+                    }
+                    else{
+                        plist.clear();
+                        return -1;
+                    }
+                }while (true);
             }
             else{
                 __tmp += para[0];
@@ -302,54 +316,3 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 
     return plist.size();
 }
-
-//int CParser::AnalysisOfParameters(string para, queue<string> &plist)
-//{
-//    string __tmp = "";
-//
-//    while (para.length() != 0)
-//    {
-//        if (para[0] != 0x20 && para[0] != 0x09){
-//            if (para[0] == '"' && __tmp.empty()){
-//                para.erase(0,1);
-//
-//                if(para.find("\"")!=string::npos){
-//                    __tmp.insert (0,para,0,para.find("\""));
-//                    plist.push(__tmp);
-//                    __tmp.clear();
-//                    para.erase(0,para.find("\"") + 1);
-//                }
-//                else{
-//                    //plist.clear();
-//                    return -1;
-//                }
-//            }
-//            else{
-//                __tmp += para[0];
-//                para.erase(0,1);
-//
-//                if (para.length() == 0)
-//                    plist.push(__tmp);
-//            }
-//        }
-//        else{
-//            if (!__tmp.empty()){
-//                    plist.push(__tmp);
-//                    __tmp.clear();
-//            }
-//
-//            para.erase(0,1);
-//        }
-//    }
-//
-//    //for (unsigned int i = 1; i < plist.size(); i++)
-//    //{
-//    //    if(plist[i].at(0) == '$'){
-//    //        if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
-//    //            plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
-//    //        }
-//    //    }
-//    //}
-//
-//    return plist.size();
-//}

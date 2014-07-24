@@ -23,7 +23,7 @@ class CResourceControl : public CObjectControl
 
         unsigned int                            _interval;
         bool                                    _isNeedSort;
-        vector<pair<string, CImageBaseClass*>>  _drawableObjectList;
+        vector<pair<string, CImageBaseClass*> > _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
 
         inline CResourceControl() {_interval = 10; _isNeedSort = false;}
@@ -33,6 +33,7 @@ class CResourceControl : public CObjectControl
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
         bool SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause);
+        bool SetLayerOrder(char order);
 
         bool AddDrawableObject(string name, CImageBaseClass* obj);
         bool DelDrawableObject(string name);
