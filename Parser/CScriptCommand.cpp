@@ -330,8 +330,8 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string> args)
     for (int i=0; i<__values["-n"].size(); i++){
         char __layer = i<__values["-l"].size() ? atoi(__values["-l"][i].c_str()) : atoi(__values["-l"][__values["-i"].size()-1].c_str());
 
-        if (CResourceControl::SetLayerOrder(objTypeName+":"+__values["-n"][i], __layer))
-            cout << __funcName <<"(): " << objTypeName << " \""<< __name << "\" has no existed." <<endl;
+        if (CResourceControl::_ResourceManager.SetLayerOrder(objTypeName+":"+__values["-n"][i], __layer))
+            cout << __funcName <<"(): " << objTypeName << " \""<< __values["-n"][i] << "\" has no existed." <<endl;
     }
 
     return true;
@@ -737,7 +737,7 @@ bool Cmd_HideButton(vector<string> args)
     return Common_FuncOfHide("Button", args);
 }
 
-bool Cmd_SetButtonLayerOrder(vector<string>)
+bool Cmd_SetButtonLayerOrder(vector<string> args)
 {
     return Common_FuncOfLayerOrder("Button", args);
 }

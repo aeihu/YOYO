@@ -89,7 +89,7 @@ bool CResourceControl::SetImageVisibility(string name, int alpha, unsigned int e
     return SetImageVisibility(name, alpha, __i, pause);
 }
 
-bool CResourceControl::SetLayerOrder(char order)
+bool CResourceControl::SetLayerOrder(string name, char order)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
     if (__obj != NULL){

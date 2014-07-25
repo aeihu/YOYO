@@ -33,7 +33,7 @@ class CResourceControl : public CObjectControl
         inline void SetInterval(unsigned int interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
         bool SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause);
-        bool SetLayerOrder(char order);
+        bool SetLayerOrder(string name, char order);
 
         bool AddDrawableObject(string name, CImageBaseClass* obj);
         bool DelDrawableObject(string name);
