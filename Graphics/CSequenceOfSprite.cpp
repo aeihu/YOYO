@@ -68,15 +68,15 @@ int CSequenceOfSprite::GetHeight()
     return _rect.height;
 }
 
-bool CSequenceOfSprite::OnLoop()
+bool CSequenceOfSprite::OnSubLoop()
 {
-    bool __result = CImageBaseClass::OnLoop();
+    //bool __result = CImageBaseClass::OnLoop();
     if (GetEnable()){
         SetCurrentImageFrame(GetCurrentFrame());
         OnAnimate(CCommon::_Common.GetTicks());
     }
 
-    return __result;
+    return false;
 }
 void CSequenceOfSprite::TurnOff(int frame)
 {

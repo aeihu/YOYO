@@ -48,30 +48,35 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
         
-        float& GetRotation();
+        virtual float& GetRotation();
         void SetRotation(float r);
         sf::Vector2f& GetPosition();
-        void SetPosition(float x, float y);
-        sf::Vector2f& GetOffset();
-        void SetOffset(float x, float y);
+        virtual void SetPosition(float x, float y);
+        virtual sf::Vector2f& GetOffset();
+        virtual void SetOffset(float x, float y);
 
-        int& GetAlpha();
-        void SetAlpha(int alpha);
-        void SetLayerOrder(char order);
+        virtual int& GetAlpha();
+        virtual void SetAlpha(int alpha);
+        virtual void SetLayerOrder(char order);
 
-        sf::Vector2f& GetScale();
-        void SetScale(float x, float y);
-        void SetScaleX(float x);
-        void SetScaleY(float y);
-        void SetFlag(char flag);
-        char GetFlag() const;
-        char GetLayerOrder() const;
+        virtual sf::Vector2f& GetScale();
+        virtual void SetScale(float x, float y);
+        virtual void SetScaleX(float x);
+        virtual void SetScaleY(float y);
+        virtual void SetFlag(char flag);
+        virtual char GetFlag() const;
+        virtual char GetLayerOrder() const;
         static CImageBaseClass* Create(const char* filename);
+
         virtual void OnRender(sf::RenderWindow* Surf_Dest);
+        virtual void OnSubRender(sf::RenderWindow* Surf_Dest){}
+
         virtual bool OnLoop();
+        virtual bool OnSubLoop(){return false;}
 
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}
+        virtual bool OnMouseMove(int mX, int mY){return false;}
 
         virtual bool GetVisible() const;
 };

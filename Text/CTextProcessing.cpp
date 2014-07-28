@@ -129,6 +129,7 @@ void CTextProcessing::OnLoop()
         if (_isSkip){
             _textOfShown = _text;
             _index = _text.length();
+            _isSkip = false;
         }
         else{
             unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);

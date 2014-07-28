@@ -155,8 +155,15 @@ bool CImageBaseClass::LoadImg(const char* fileName)
 
 void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_visible)
+    if (_visible){
         Surf_Dest->draw(_sprite);
+        OnSubRender(Surf_Dest);
+
+        list<CImageBaseClass*>::iterator it;
+        for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
+            (*it)->OnRender(Surf_Dest);
+        }
+    }
 }
 
 bool CImageBaseClass::OnLoop()
@@ -168,6 +175,7 @@ bool CImageBaseClass::OnLoop()
         _sprite.setColor(sf::Color(255,255,255,_alpha));
 
     if (_visible){
+        __result = OnSubLoop() ? true : __result;
         if (_coordinate != _sprite.getPosition())
             _sprite.setPosition(_coordinate);
         
@@ -176,22 +184,24 @@ bool CImageBaseClass::OnLoop()
 
         if (_rotation != _sprite.getRotation())
             _sprite.setRotation(_rotation);
-    }
+        
+        list<CImageBaseClass*>::iterator it;
+        for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
+            if ((*it)->GetFlag() | FLAG_ALPHA)
+                (*it)->SetAlpha(_alpha);
 
-    list<CImageBaseClass*>::iterator it;
-    for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
-        if ((*it)->GetFlag() | FLAG_ALPHA)
-            (*it)->SetAlpha(_alpha);
+            if ((*it)->GetFlag() | FLAG_POSITION)
+                (*it)->SetPosition(_coordinate.x + (*it)->GetOffset().x ,
+                    _coordinate.y + (*it)->GetOffset().y);
 
-        if ((*it)->GetFlag() | FLAG_POSITION)
-            (*it)->SetPosition(_coordinate.x + (*it)->GetOffset().x ,
-                _coordinate.y + (*it)->GetOffset().y);
+            if ((*it)->GetFlag() | FLAG_SCALE)
+                (*it)->SetScale(_scale.x, _scale.y);
 
-        if ((*it)->GetFlag() | FLAG_SCALE)
-            (*it)->SetScale(_scale.x, _scale.y);
+            if ((*it)->GetFlag() | FLAG_ROTATION)
+                (*it)->SetRotation(_rotation);
 
-        if ((*it)->GetFlag() | FLAG_ROTATION)
-            (*it)->SetRotation(_rotation);
+            __result = (*it)->OnLoop() ? true : __result;
+        }
     }
 
     return __result;

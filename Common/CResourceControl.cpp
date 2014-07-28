@@ -213,6 +213,15 @@ bool CResourceControl::OnLButtonDown(int mX, int mY)
     return false;
 }
 
+bool CResourceControl::OnMouseMove(int mX, int mY)
+{
+    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnLButtonDown(mX, mY))
+            return true;
+
+    return false;
+}
+
 void CResourceControl::OnLoop(bool &pause)
 {
     if (_isNeedSort){
@@ -230,9 +239,12 @@ void CResourceControl::OnLoop(bool &pause)
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
+    //unsigned long l = CCommon::_Common.GetTicks();
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++)
         (*it).second->OnRender(Surf_Dest);
+
+    //cout << "time: " << CCommon::_Common.GetTicks()-l <<endl;
 }
 
 void CResourceControl::OnCleanup()

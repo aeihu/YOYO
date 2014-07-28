@@ -13,7 +13,7 @@
 #include "Common/CCommon.h"
 #include "Common/CAdder.h"
 #include <algorithm>
-#include "Common/CFPS.h"
+//#include "Common/CFPS.h"
 //#include "Common/Define.h"
 #include "Common/CEvent.h"
 //#include "CSurface.h"

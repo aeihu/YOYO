@@ -9,6 +9,7 @@ CTextLog::CTextLog()
 void CTextLog::SetTextLog(string text, sf::SoundBuffer* voice, sf::Font& font)
 {
     _text.setFont(font);
+    _text.setColor(sf::Color::Black);
     SetTextLog(text, voice);
 }
 
@@ -74,9 +75,9 @@ void CTextLog::OnCleanup()
     }
 }
 
-void CTextLog::OnMouseMove(int x, int y)
+bool CTextLog::OnMouseMove(int x, int y)
 {
-    _btnVoice.OnMouseMove(x, y);
+    return _btnVoice.OnMouseMove(x, y);
 }
 
 bool CTextLog::OnLButtonDown(int x, int y)

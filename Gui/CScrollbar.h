@@ -42,13 +42,13 @@ class CScrollbar : public CBox
     public:
         CScrollbar();
 
-        void OnMouseMove(int x, int y);
+        bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         
         virtual bool CheckList(map<string, string>& list);
         virtual bool SetProperty(map<string, string>& list);
-        bool OnLoop();
+        bool OnSubLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
 
         bool SetMaxValue(int value);

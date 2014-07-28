@@ -20,8 +20,9 @@ using namespace std;
 class CLogBox : public CBox
 {
     private:
-        unsigned int                _logMax;
-        unsigned int                _visNum;
+        size_t                      _logMax;
+        size_t                      _logRowHeight;
+        size_t                      _visNum;
         sf::Vector2f                _logOffset;
         deque<CTextLog*>            _logList;
         CScrollbar                  _scrollbar;
@@ -32,16 +33,17 @@ class CLogBox : public CBox
         CLogBox();
         
         static CLogBox* Create(const char* filename);
-        void OnMouseMove(int x, int y);
+        bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
-        bool OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        bool OnSubLoop();
+        void OnSubRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
 
         void AddLog(string text, sf::SoundBuffer* voice, sf::Font& font);
+        void AddLog(string text, sf::SoundBuffer* voice);
 };
 
 #endif

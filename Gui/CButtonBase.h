@@ -34,8 +34,8 @@ class CButtonBase : public CSequenceOfSprite , public CConfigFile
 
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 
-        bool OnLoop();
-        void OnMouseMove(int x, int y);
+        bool OnSubLoop();
+        bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         bool IsMouseOver() const;

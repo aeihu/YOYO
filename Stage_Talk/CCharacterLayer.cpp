@@ -36,9 +36,9 @@ void CCharacterLayer::SetVoice(string name)
     _currcentVoice = name;
 }
 
-bool CCharacterLayer::OnLoop()
+bool CCharacterLayer::OnSubLoop()
 {
-    bool __result = CImageBaseClass::OnLoop();
+    //bool __result = CImageBaseClass::OnLoop();
 
     if (_visible){
         if (_isFaceEnable){
@@ -69,7 +69,7 @@ bool CCharacterLayer::OnLoop()
         }
     }
 
-    return __result;
+    return false;
 }
 
 bool CCharacterLayer::CheckList(map<string, string>& list) 

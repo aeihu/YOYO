@@ -54,15 +54,15 @@ bool CButtonBase::OnLButtonUp(int x, int y)
     return false;
 }
 
-bool CButtonBase::OnLoop()
+bool CButtonBase::OnSubLoop()
 {
-    bool __result = CImageBaseClass::OnLoop();
+    //bool __result = CImageBaseClass::OnLoop();
 
     if (!_isMouseDown){
-        __result = __result && CSequenceOfSprite::OnLoop();
+        return CSequenceOfSprite::OnSubLoop();
     }
 
-    return __result;
+    return false;
 }
 
 bool CButtonBase::IsMouseOver() const
@@ -75,7 +75,7 @@ bool CButtonBase::IsMouseDown() const
     return _isMouseDown;
 }
 
-void CButtonBase::OnMouseMove(int x, int y)
+bool CButtonBase::OnMouseMove(int x, int y)
 {
     if (IsStandby()){
         if(( x > GetPosition().x ) && ( x < GetPosition().x + GetWidth()) && 
@@ -83,6 +83,7 @@ void CButtonBase::OnMouseMove(int x, int y)
             if (!_isMouseOver)
             _isMouseOver = true;
             _AnimationControl._Type = CAnimation::Forward;
+            return true;
         }
         else{
             _isMouseOver = false;
@@ -90,6 +91,7 @@ void CButtonBase::OnMouseMove(int x, int y)
             _AnimationControl._Type = CAnimation::Backward;
         }
     }
+    return false;
 }
 
 bool CButtonBase::CheckList(map<string, string>& list) 

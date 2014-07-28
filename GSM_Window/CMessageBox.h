@@ -39,12 +39,12 @@ class CMessageBox : public CBox , public CTextProcessing
         void SetFont(sf::Font& font);
         void SetSpeakerName(string name);
 
-        void OnMouseMove(int x, int y);
+        //bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
-        bool OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        bool OnSubLoop();
+        void OnSubRender(sf::RenderWindow* Surf_Dest);
 };
 #endif

@@ -30,7 +30,7 @@ class CSequenceOfSprite : public CImageBaseClass, public CAnimation
         int GetHeight();
         void TurnOff(int frame = 0);
 
-        bool OnLoop();
+        bool OnSubLoop();
 };
 
 #endif

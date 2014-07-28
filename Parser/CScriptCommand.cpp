@@ -814,10 +814,16 @@ bool Cmd_Message(vector<string> args)
             cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
     }
 
-    //CResourceManager::_LogBoxControl._logBoxList["log"].AddLog(
-    //    CResourceManager::_MessageBoxControl._messageBoxList[__msgBoxName].GetText(), 
-    //    NULL,
-    //    CResourceManager::_FontControl._fontList["__main"].GetFont());
+    __obj = CResourceControl::_ResourceManager.GetDrawableObject("LogBox:log");
+    if(__obj == NULL){
+        cout << "Cmd_Message(): LogBox \"" << __msgBoxName << "\" has no existed." <<endl;
+        return false;
+    }
+    CLogBox* __logbox = static_cast<CLogBox*>(__obj);
+    
+    CObject* sda = CResourceControl::_ResourceManager.GetObject("Font:__main");
+    CFont* __font = static_cast<CFont*>(sda);
+    __logbox->AddLog(__msgbox->GetText(), NULL, __font->GetFont());
     return true;
 }
 

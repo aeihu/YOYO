@@ -47,6 +47,7 @@ class CResourceControl : public CObjectControl
         
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);
+        bool OnMouseMove(int mX, int mY);
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();

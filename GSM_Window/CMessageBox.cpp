@@ -134,9 +134,9 @@ bool CMessageBox::CheckList(map<string, string>& list)
     return result;
 }
 
-bool CMessageBox::OnLoop()
+bool CMessageBox::OnSubLoop()
 {
-    bool __result = CBox::OnLoop();
+   // bool __result = CBox::OnLoop();
 
     _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
@@ -153,19 +153,16 @@ bool CMessageBox::OnLoop()
     else
         _frames.SetAlpha(0);
 
-    __result = __result && _frames.OnLoop();
+    //__result = __result && _frames.OnLoop();
     CTextProcessing::OnLoop();
-    return _isPaused || !IsTextAllShown() || __result;
+    return _isPaused || !IsTextAllShown();// || __result;
 }
 
-void CMessageBox::OnRender(sf::RenderWindow* Surf_Dest)
+void CMessageBox::OnSubRender(sf::RenderWindow* Surf_Dest)
 {
-    if (CBox::_visible){
-        CBox::OnRender(Surf_Dest);
-        Surf_Dest->draw(_speakerName);
-        CTextProcessing::OnRender(Surf_Dest);
-        _frames.OnRender(Surf_Dest);
-    }
+    Surf_Dest->draw(_speakerName);
+    CTextProcessing::OnRender(Surf_Dest);
+    _frames.OnRender(Surf_Dest);
 }
 
 void CMessageBox::SetSpeakerName(string name)

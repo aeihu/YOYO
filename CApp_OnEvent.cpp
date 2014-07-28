@@ -404,6 +404,7 @@ void CApp::OnRButtonUp(int mX, int mY)
 //------------------------------------------------------------------------------
 void CApp::OnLButtonUp(int mX, int mY)
 {
+    CResourceControl::_ResourceManager.OnLButtonUp(mX, mY);
     //if (!CResourceManager::_ButtonControl.OnLButtonUp(mX,mY))
     //    CResourceManager::_MessageBoxControl.OnLButtonUp(mX,mY);
 }
@@ -412,6 +413,7 @@ void CApp::OnLButtonUp(int mX, int mY)
 //------------------------------------------------------------------------------
 void CApp::OnMouseMove(int mX, int mY)
 {
+    CResourceControl::_ResourceManager.OnMouseMove(mX, mY);
     //CResourceManager::_ButtonControl.OnMouseMove(mX,mY);
 }
 

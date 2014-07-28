@@ -32,7 +32,7 @@ class CTextLog
         void SetAlpha(int alpha);
         void SetPosition(float x, float y);
 
-        void OnMouseMove(int x, int y);
+        bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         void OnLoop();

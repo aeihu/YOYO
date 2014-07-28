@@ -37,7 +37,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         bool SetFace(string name);
         void SetVoice(string name);
 
-        bool OnLoop();
+        bool OnSubLoop();
        // void OnRender(sf::RenderWindow* Surf_Dest);
 };
 #endif
