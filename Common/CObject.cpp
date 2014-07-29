@@ -8,8 +8,33 @@
 
 #include "CObject.h"
 
-
-string CObject::GetFullFileName() const
+CObject::CObject()
 {
-    return _fullFileName;
+    _path = _className = ""; 
+}
+
+string CObject::GetClassName() const
+{
+    return _className;
+}
+        
+string CObject::GetPath() const
+{
+    return _path;
+}
+        
+void CObject::OnSaveData(ofstream& file) const
+{
+    file << "class_name=" << _className << endl;
+    file << "path=" << _path << endl;
+}
+
+void CObject::SetClassName(string name)
+{
+    _className = name;
+}
+
+void CObject::SetPath(string path)
+{
+    _path = path;
 }

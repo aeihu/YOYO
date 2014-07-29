@@ -25,6 +25,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         bool                                            _isFaceEnable;
         CSequenceOfFrames                               _framesOfMouth;
         CSequenceOfFrames                               _framesOfEyes;
+        string                                          _currcentFace;
         string                                          _currcentVoice;
         unsigned long                                   _timer;
         
@@ -36,8 +37,9 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         static CCharacterLayer* Create(const char* filename);
         bool SetFace(string name);
         void SetVoice(string name);
-
+        
         bool OnSubLoop();
+        virtual void OnSaveData(ofstream& file) const;
        // void OnRender(sf::RenderWindow* Surf_Dest);
 };
 #endif

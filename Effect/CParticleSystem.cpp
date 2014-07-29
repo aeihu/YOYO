@@ -11,6 +11,8 @@ CParticleSystem* CParticleSystem::Create(const char* filename)
 {
     CParticleSystem* __ptc = new CParticleSystem();
     if (__ptc->LoadConfigFile(filename)){
+        __ptc->SetClassName("particle");
+        __ptc->SetPath(filename);
         __ptc->SetLayerOrder(1);
         return __ptc;
     }
@@ -192,7 +194,7 @@ bool CParticleSystem::SetProperty(map<string, string>& list)
     _speedMin = atoi(list["PARTICLE_SPEED_MIN"].c_str());
     int _speedMax = atoi(list["PARTICLE_SPEED_MAX"].c_str());
 
-    if (_angleMax - _speedMin <= 0){
+    if (_speedMax - _speedMin <= 0){
         cout << "PARTICLE_SPEED_MIN can't be greater than PARTICLE_SPEED_MAX." << endl;
         return false;
     }
@@ -224,4 +226,11 @@ bool CParticleSystem::SetProperty(map<string, string>& list)
     _rotation = atof(list["ROTATION_RATIO"].c_str());
 
     return true;
+}
+        
+void CParticleSystem::OnSaveData(ofstream& file) const
+{
+    CObject::OnSaveData(file);
+    file << "layer_order=" << GetLayerOrder() << endl;
+    file << "enable=" << _enable << endl;
 }

@@ -51,6 +51,8 @@ class CResourceControl : public CObjectControl
         void OnLoop(bool &pause);
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
+        void OnSaveData();
+        void OnLoadData();
 };
 
 #endif

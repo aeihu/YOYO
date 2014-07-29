@@ -266,3 +266,25 @@ bool CResourceControl::IsExists(string name)
 
     return _objectList.count(name) > 0;
 }
+
+void CResourceControl::OnSaveData()
+{
+    ofstream __savefile("./userdata/1.txt");
+
+    if(!__savefile){
+        cout << "error" << endl;
+        return;
+    }
+
+    for (int i=0; i<_drawableObjectList.size(); i++){
+        __savefile << "name=" << _drawableObjectList[i].first <<endl;
+        _drawableObjectList[i].second->OnSaveData(__savefile);
+    }
+
+    __savefile.close();
+}
+
+void CResourceControl::OnLoadData()
+{
+
+}

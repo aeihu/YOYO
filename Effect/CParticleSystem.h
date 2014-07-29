@@ -55,6 +55,7 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         void SetEmitter(sf::Vector2f position);
         bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
+        virtual void OnSaveData(ofstream& file) const;
         bool GetEnable() const;
         void SetEnable(bool val);
 };

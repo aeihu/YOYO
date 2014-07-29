@@ -123,8 +123,11 @@ char CImageBaseClass::GetLayerOrder() const
 CImageBaseClass* CImageBaseClass::Create(const char* filename)
 {
     CImageBaseClass* __img = new CImageBaseClass();
-    if (__img->LoadImg(filename))
+    if (__img->LoadImg(filename)){
+        __img->SetClassName("image");
+        __img->SetPath(filename);
         return __img;
+    }
     
     delete __img;
     return NULL;
@@ -205,4 +208,19 @@ bool CImageBaseClass::OnLoop()
     }
 
     return __result;
+}
+
+void CImageBaseClass::OnSaveData(ofstream& file) const
+{
+    CObject::OnSaveData(file);
+    file << "layer_order=" << _layerOrder << endl;
+    file << "alpha=" << _alpha << endl;
+    file << "x=" << _coordinate.x << endl;
+    file << "y=" << _coordinate.y << endl;
+    file << "offset_x=" << _offset.x << endl;
+    file << "offset_y=" << _offset.y << endl;
+    file << "scale_x=" << _scale.x << endl;
+    file << "scale_y=" << _scale.y << endl;
+    file << "rotation=" << _rotation << endl;
+    file << "flag=" << _flag << endl;
 }

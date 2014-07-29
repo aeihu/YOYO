@@ -77,7 +77,8 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}
         virtual bool OnMouseMove(int mX, int mY){return false;}
-
+        
+        virtual void OnSaveData(ofstream& file) const;
         virtual bool GetVisible() const;
 };
 

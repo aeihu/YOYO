@@ -63,8 +63,11 @@ sf::Font& CFont::GetFont()
 CFont* CFont::Create(const char* filename)
 {
     CFont* __fnt = new CFont();
-    if (__fnt->LoadFont(filename))
+    if (__fnt->LoadFont(filename)){
+        __fnt->SetClassName("btn");
+        __fnt->SetPath(filename);
         return __fnt;
+    }
     
     delete __fnt;
     return NULL;

@@ -10,17 +10,24 @@
     #define _COBJECT_H_
 
 #include <string>
+#include <fstream>
 
 using namespace std;
 
 class CObject
 {
+    private:
+        string      _path;
+        string      _className;
     protected:
-        string      _fullFileName;
+        void SetClassName(string name);
+        void SetPath(string path);
     public:
-        CObject() {_fullFileName="";}
+        CObject();
         //virtual CObject* Create(const char* filename)=0;
-        string GetFullFileName() const;
+        string GetClassName() const;
+        string GetPath() const;
+        virtual void OnSaveData(ofstream& file) const;
 };
 
 #endif

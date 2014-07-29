@@ -15,7 +15,7 @@ CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
     _isFaceEnable = false;
     _framesOfMouth._Type = CAnimation::Oscillate;
     _framesOfEyes._Type = CAnimation::Oscillate;
-    _currcentVoice = "";
+    _currcentFace = _currcentVoice = "";
     _timer = 0;
 }
 
@@ -23,6 +23,8 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
 {    
     CCharacterLayer* __chr = new CCharacterLayer();
     if (__chr->LoadConfigFile(filename)){
+        __chr->SetClassName("character");
+        __chr->SetPath(filename);
         __chr->SetLayerOrder(2);
         return __chr;
     }
@@ -216,10 +218,17 @@ bool CCharacterLayer::SetFace(string name)
         if ((*it).first == name){
             _framesOfEyes.LoadImg((*it).second.first.c_str());
             _framesOfMouth.LoadImg((*it).second.second.c_str());
+            _currcentFace = name;
             return true;
         }
     }
     
     cout << "CCharacterLayer::SetFace(): can't find face \"" << name << "\"." << endl;
     return false;
+}
+
+void CCharacterLayer::OnSaveData(ofstream& file) const
+{
+    CImageBaseClass::OnSaveData(file);
+    file << "face=" << _currcentFace <<endl;
 }
