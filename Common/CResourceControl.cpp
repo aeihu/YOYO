@@ -16,6 +16,44 @@ bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> 
     return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
 }
 
+bool CResourceControl::AddVariable(string name, string val)
+{
+    if(_userVariableList.count("$"+name) > 0)
+        return false;
+
+    _userVariableList["$"+name] = val;
+    return true;
+}
+
+bool CResourceControl::SetVariable(string name, string val)
+{
+    if(_userVariableList.count("$"+name) > 0){
+        _userVariableList["$"+name] = val;
+        return true;
+    }
+
+    return false;
+}
+
+string CResourceControl::GetVariable(string name)
+{
+    if(_userVariableList.count(name) > 0){
+        return _userVariableList[name];
+    }
+
+    return "";
+}
+
+bool CResourceControl::DelVariable(string name)
+{
+    if(_userVariableList.count("$"+name) > 0){
+        _userVariableList.erase("$"+name);
+        return true;
+    }
+
+    return false;
+}
+
 bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
 {
     if (obj == NULL)
@@ -277,8 +315,10 @@ void CResourceControl::OnSaveData()
     }
 
     for (int i=0; i<_drawableObjectList.size(); i++){
+        __savefile << "_(:3J Z)_" <<endl;
         __savefile << "name=" << _drawableObjectList[i].first <<endl;
         _drawableObjectList[i].second->OnSaveData(__savefile);
+        __savefile << "(:3[____]" <<endl;
     }
 
     __savefile.close();

@@ -1075,11 +1075,7 @@ bool Cmd_AddVariable(vector<string> args)
     string __val = args[1];
     __name = "$" + __name;
     
-    if(CCommon::_Common._PlayerVariableTable.count(__name) > 0)
-        return false;
-
-    CCommon::_Common._PlayerVariableTable[__name] = __val;
-    return true;
+    return CResourceControl::_ResourceManager.AddVariable(__name, __val);
 }
 
 bool Cmd_SetVariable(vector<string> args)
@@ -1093,12 +1089,8 @@ bool Cmd_SetVariable(vector<string> args)
     string __name = args[0];
     string __val = args[1];
     __name = "$" + __name;
-
-    if(CCommon::_Common._PlayerVariableTable.count(__name) < 1)
-        return false;
     
-    CCommon::_Common._PlayerVariableTable[__name] = __val;
-    return true;
+    return CResourceControl::_ResourceManager.SetVariable(__name, __val);
 }
 
 bool Cmd_DelVariable(vector<string> args)
@@ -1110,8 +1102,7 @@ bool Cmd_DelVariable(vector<string> args)
     }
 
     for (unsigned int i=0; i<args.size(); i++){
-        if(CCommon::_Common._PlayerVariableTable.count("$"+args[i]) > 0)
-            CCommon::_Common._PlayerVariableTable.erase("$"+args[i]);
+        CResourceControl::_ResourceManager.DelVariable("$"+args[i]);
     }
 
     return true;

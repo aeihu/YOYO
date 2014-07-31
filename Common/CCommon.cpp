@@ -102,15 +102,15 @@ bool CCommon::OnInit()
     __expressions.clear();
     
 //===========================================================================
-    __expressions = Cio::LoadTxtFile(GAME_SYSDATA, "\r\n");
+    //__expressions = Cio::LoadTxtFile(GAME_SYSDATA, "\r\n");
 
-    for (list<string>::iterator it=__expressions.begin();
-        it!=__expressions.end(); it++){
-        string __paraName = "";
-        string __paraValue = "";
-        if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
-            _SystemVariableTable[__paraName] = __paraValue;
-    }
+    //for (list<string>::iterator it=__expressions.begin();
+    //    it!=__expressions.end(); it++){
+    //    string __paraName = "";
+    //    string __paraValue = "";
+    //    if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
+    //        _SystemVariableTable[__paraName] = __paraValue;
+    //}
     
     return true;
 }
@@ -355,20 +355,20 @@ unsigned long CCommon::GetTicks(){
     return __clock.getElapsedTime().asMilliseconds();
 }
 
-void CCommon::SaveSysData()
-{
-    FILE* File = fopen(GAME_SYSDATA.c_str(), "w");
-    map<string, string>::iterator it;
-    for ( it=_SystemVariableTable.begin(); it != _SystemVariableTable.end(); it++ )
-        fprintf (File, "%s = %s\n",(*it).first.c_str(),(*it).second.c_str());
-
-    fclose (File);
-}
+//void CCommon::SaveSysData()
+//{
+//    FILE* File = fopen(GAME_SYSDATA.c_str(), "w");
+//    map<string, string>::iterator it;
+//    for ( it=_SystemVariableTable.begin(); it != _SystemVariableTable.end(); it++ )
+//        fprintf (File, "%s = %s\n",(*it).first.c_str(),(*it).second.c_str());
+//
+//    fclose (File);
+//}
 
 void CCommon::OnCleanup()
 {
-    _PlayerVariableTable.clear();
-    _SystemVariableTable.clear();
+    //_PlayerVariableTable.clear();
+    //_SystemVariableTable.clear();
 
     //for (int i = 0; i < LogList.size(); i++)
     //{

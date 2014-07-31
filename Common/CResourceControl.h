@@ -20,11 +20,14 @@ class CResourceControl : public CObjectControl
 {
     protected:
         friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
+        friend bool Cmd_AddVariable(vector<string> args);
 
         unsigned int                            _interval;
         bool                                    _isNeedSort;
         vector<pair<string, CImageBaseClass*> > _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
+        map<string, string>                     _userVariableList;
+        map<string, string>                     _systemVariableList;
 
         inline CResourceControl() {_interval = 10; _isNeedSort = false;}
     public:
@@ -34,6 +37,11 @@ class CResourceControl : public CObjectControl
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
         bool SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause);
         bool SetLayerOrder(string name, char order);
+
+        bool AddVariable(string name, string val);
+        bool SetVariable(string name, string val);
+        string GetVariable(string name);
+        bool DelVariable(string name);
 
         bool AddDrawableObject(string name, CImageBaseClass* obj);
         bool DelDrawableObject(string name);

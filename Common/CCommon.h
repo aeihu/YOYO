@@ -28,8 +28,6 @@ class CCommon
 
         void SetValue(const char* name, const char* value);
     public:
-        map<string, string>        _PlayerVariableTable;
-        map<string, string>        _SystemVariableTable;
         eEventFocus                _EventFocus;
 
         string CONFIG_PATH;
@@ -84,7 +82,7 @@ class CCommon
 
         CCommon();
 
-        void SaveSysData();
+        //void SaveSysData();
         unsigned long GetTicks();
 
         bool OnInit();

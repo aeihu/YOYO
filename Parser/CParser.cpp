@@ -308,9 +308,10 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
     for (unsigned int i = 1; i < plist.size(); i++)
     {
         if(plist[i].at(0) == '$'){
-            if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
-                plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
-            }
+            //if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
+                //plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
+            //}
+            plist[i] = CResourceControl::_ResourceManager.GetVariable(plist[i]);
         }
     }
 
