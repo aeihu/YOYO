@@ -31,7 +31,7 @@ class Cio
         static void ClearFileInMem(char* &file);
 
         static string LoadTxtFile(string filename);
-        static list<string> LoadTxtFile(string filename, string symbol, bool isDelete=true);
+        static list<string> LoadTxtFile(string filename, string symbol);
         static bool AnalyticExpression(string str, string &name, string &value);
         static bool AnalyticExpression(string str, string symbol, string &name, string &value);
         static list<string> SplitString(string str, string symbol);

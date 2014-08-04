@@ -49,7 +49,7 @@ bool CParser::FindSection(list<string> &Commands, const char* Section)
 
 bool CParser::LoadScript(const char* FileName, const char* Section, list<string> &Commands)
 {
-    list<string> __commands = Cio::LoadTxtFile(FileName, ";]", false);
+    list<string> __commands = Cio::LoadTxtFile(FileName, ";]");
 
     if (Section != NULL){
         if (!FindSection(__commands, Section)){

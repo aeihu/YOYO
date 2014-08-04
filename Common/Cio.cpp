@@ -124,11 +124,8 @@ string Cio::DeleteComment(string str, bool isDelete)
     return str;
 }
 
-list<string> Cio::LoadTxtFile(string filename, string symbol, bool isDelete)
+list<string> Cio::LoadTxtFile(string filename, string symbol)
 {
-	unsigned int _offset = 1;
-	if (isDelete) _offset = 0;
-
 	string __data = LoadTxtFile(filename);
 
     list<string> __result = SplitString(__data, "\n\r");

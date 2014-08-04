@@ -235,7 +235,7 @@ char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool p
 
 bool CResourceControl::OnLButtonUp(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
         if ((*it).second->OnLButtonUp(mX, mY))
             return true;
 
@@ -244,7 +244,7 @@ bool CResourceControl::OnLButtonUp(int mX, int mY)
 
 bool CResourceControl::OnLButtonDown(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
         if ((*it).second->OnLButtonDown(mX, mY))
             return true;
 
@@ -253,7 +253,7 @@ bool CResourceControl::OnLButtonDown(int mX, int mY)
 
 bool CResourceControl::OnMouseMove(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*>>::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
         if ((*it).second->OnLButtonDown(mX, mY))
             return true;
 
