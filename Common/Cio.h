@@ -24,7 +24,7 @@ class Cio
         static bool IsOneWord(string &str, string valid_characters);
         static bool IsNested(string &str, char first_symbol, char last_symbol);
         static size_t CounterOfString(string str, string symbol, size_t pos=0);
-        static string DeleteComment(string& str, bool isDelete=true);
+        static string DeleteComment(string str, bool isDelete=true);
         static string& Trim(string& str);
 
         static bool LoadFileToMem(string filename, char* &file, unsigned long& size);

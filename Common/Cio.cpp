@@ -105,7 +105,7 @@ string Cio::LoadTxtFile(string filename)
 	}
 }
 
-string Cio::DeleteComment(string& str, bool isDelete)
+string Cio::DeleteComment(string str, bool isDelete)
 {
     size_t __pos = str.find("//");
     if (__pos != string::npos){
