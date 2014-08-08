@@ -22,7 +22,7 @@ void CTextFunction::SetString(sf::Text& text, std::string str)
 //    __uft32String = NULL;
 //}
 
-unsigned int CTextFunction::SizeOfCharWithUTF8(char Char)
+size_t CTextFunction::SizeOfCharWithUTF8(char Char)
 {
     if (Char < 0){
         if((unsigned char)Char >= 0xE0){
@@ -36,7 +36,7 @@ unsigned int CTextFunction::SizeOfCharWithUTF8(char Char)
     return 1;
 }
 
-unsigned int CTextFunction::StringLengthWithUTF8(std::string str)
+size_t CTextFunction::StringLengthWithUTF8(std::string str)
 {
     size_t __index = 0;
     size_t __result = 0;

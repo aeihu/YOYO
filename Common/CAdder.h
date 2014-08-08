@@ -19,7 +19,7 @@ class CAdder
 {
     private:
     protected:
-        unsigned int            _interval;
+        size_t                  _interval;
         unsigned long           _oldTime;
         char                    _type;
         bool                    _pause;
@@ -70,7 +70,7 @@ class CAdderControl
         void Delete(float* pval, bool isGoFinish);
     protected:
         int OnLoop();
-        unsigned int Count();
+        size_t Count();
     public:
         void Insert(char type, float goal, bool pause, int* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);
         void Insert(char type, float goal, bool pause, float* val, float val1, float val2=0.0f, float val3=0.0f, float val4=0.0f, bool isGoFinish=true);

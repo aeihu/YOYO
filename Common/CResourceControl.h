@@ -18,11 +18,18 @@ using namespace std;
 
 class CResourceControl : public CObjectControl
 {
+    private:
+        struct CCmp{
+            bool operator()(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
+            {
+                return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
+            }
+        }                                       _sort;
     protected:
         friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
         friend bool Cmd_AddVariable(vector<string> args);
 
-        unsigned int                            _interval;
+        size_t                                  _interval;
         bool                                    _isNeedSort;
         vector<pair<string, CImageBaseClass*> > _drawableObjectList;
         //map<string, CImageBaseClass*>           _drawableObjectList;
@@ -33,9 +40,9 @@ class CResourceControl : public CObjectControl
     public:
         static CResourceControl                 _ResourceManager;
 
-        inline void SetInterval(unsigned int interval) {_interval = interval;}
+        inline void SetInterval(size_t interval) {_interval = interval;}
         bool SetImageVisibility(string name, int alpha, float incr, bool pause);
-        bool SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause);
+        bool SetImageVisibility(string name, int alpha, size_t elapsed, bool pause);
         bool SetLayerOrder(string name, char order);
 
         bool AddVariable(string name, string val);
@@ -49,9 +56,9 @@ class CResourceControl : public CObjectControl
         void SetDrawableObjectLayerOrder(string name, char layer);
         
         bool IsExists(string name);
-        bool Move(string name, float x, float y, unsigned int elapsed, bool pause);
-        char Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha=255);
-        char Hide(string name, char type, unsigned int elapsed, bool pause);
+        bool Move(string name, float x, float y, size_t elapsed, bool pause);
+        char Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha=255);
+        char Hide(string name, char type, size_t elapsed, bool pause);
         
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);

@@ -22,15 +22,15 @@ class CSurface {
         static bool OnLoad(std::string File, sf::Texture &Img);
         static bool OnLoad(std::string File, sf::Image &Img);
 
-        //static CImage* OnCreate(unsigned int W, unsigned int H);
+        //static CImage* OnCreate(size_t W, size_t H);
 
-        //static CImage* OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
+        //static CImage* OnCreate(size_t W, size_t H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
 
         static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src);
 
         static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, int X, int Y);
 
-        static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, unsigned int X, unsigned int Y, int X2, int Y2, int W, int H);
+        static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H);
 
         static bool Transparent(sf::Image* Surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
         

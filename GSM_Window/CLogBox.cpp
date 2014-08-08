@@ -33,7 +33,7 @@ CLogBox* CLogBox::Create(const char* filename)
 
 bool CLogBox::OnSubLoop()
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
+    for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
             _logList[_scrollbar.GetValue()+__i]->SetPosition(CBox::GetPosition().x+_logOffset.x, 
                 CBox::GetPosition().y+_logOffset.y + __i * _logRowHeight);
@@ -51,7 +51,7 @@ bool CLogBox::OnSubLoop()
 
 void CLogBox::OnSubRender(sf::RenderWindow* Surf_Dest)
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
+    for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
             _logList[_scrollbar.GetValue()+__i]->OnRender(Surf_Dest);
         }
@@ -64,7 +64,7 @@ void CLogBox::OnSubRender(sf::RenderWindow* Surf_Dest)
 
 void CLogBox::OnCleanup()
 {
-    for (unsigned int __i=0; __i<_logList.size(); __i++){
+    for (size_t __i=0; __i<_logList.size(); __i++){
         _logList[__i]->OnCleanup();
         delete _logList[__i];
     }
@@ -160,7 +160,7 @@ void CLogBox::AddLog(string text, sf::SoundBuffer* voice)
 
 bool CLogBox::OnMouseMove(int x, int y)
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
+    for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
             if (_logList[_scrollbar.GetValue()+__i]->OnMouseMove(x, y))
                 return true;
@@ -174,7 +174,7 @@ bool CLogBox::OnMouseMove(int x, int y)
 
 bool CLogBox::OnLButtonDown(int x, int y)
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
+    for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
             if (_logList[_scrollbar.GetValue()+__i]->OnLButtonDown(x, y))
                 return true;
@@ -188,7 +188,7 @@ bool CLogBox::OnLButtonDown(int x, int y)
 
 bool CLogBox::OnLButtonUp(int x, int y)
 {
-    for (unsigned int __i = 0; __i < _visNum; __i++){
+    for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
             if (_logList[_scrollbar.GetValue()+__i]->OnLButtonUp(x, y))
                 return true;

@@ -20,7 +20,8 @@ void CApp::OnCleanup() {
     //CSoundBank::_SoundControl.OnCleanup();
     //CResourceManager::_ParticleSystemControl.OnCleanup();
     //CParser::_Parser.OnCleanup();
-    CCommon::_Common.OnCleanup();
+    CResourceControl::_ResourceManager.OnCleanup();
+    //CCommon::_Common.OnCleanup();
 
     sf_Display->close();
     delete sf_Display;

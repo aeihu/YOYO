@@ -40,13 +40,13 @@ void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
-    unsigned int TilesetWidth  = _tile.getSize().x / _rect.width;
+    size_t TilesetWidth  = _tile.getSize().x / _rect.width;
 
     if (TilesetWidth == 0)
         return;
     //int TilesetHeight  = _tile.GetHeight() / _rect.GetHeight();
-    //unsigned int Width = _rect.width;
-    //unsigned int Height = _rect.height;
+    //size_t Width = _rect.width;
+    //size_t Height = _rect.height;
 
     _rect.left = (frame % TilesetWidth) * _rect.width;
     //_rect.Right = _rect.Left+Width;

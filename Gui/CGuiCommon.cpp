@@ -12,11 +12,11 @@
 
 using namespace std;
 
-vector<vector<unsigned int> > CGuiCommon::OnLoad(const char* File)
+vector<vector<size_t> > CGuiCommon::OnLoad(const char* File)
 {    
 //===============step.1==============================
     //char File[255] = "";
-    vector<vector<unsigned int> > table;
+    vector<vector<size_t> > table;
     FILE* FileHandle = fopen(File, "r");
     
     if(FileHandle != NULL) {
@@ -25,9 +25,9 @@ vector<vector<unsigned int> > CGuiCommon::OnLoad(const char* File)
 
         while(fscanf(FileHandle, " %[^\r\n] ", str) != EOF)
         {
-            unsigned int i = 0;
+            size_t i = 0;
             string s = "%d ";
-            vector<unsigned int> list;
+            vector<size_t> list;
             while(sscanf(str,s.c_str(), &i) != 0){
                 list.push_back(i);
                 s="%*d "+s;
@@ -39,14 +39,14 @@ vector<vector<unsigned int> > CGuiCommon::OnLoad(const char* File)
   return table;
 }
 
-bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size)
+bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, size_t Tile_Size)
 {
     if(Surf_Dest == NULL || Surf_Src == NULL) {
         cout << "CGuiCommon::CreateBoxBackground(): failed to creat surface." << endl;
         return false;
     }
 
-    vector<vector<unsigned int> > table;
+    vector<vector<size_t> > table;
     table = OnLoad(File);
     
     if (table.size() < 1){
@@ -56,10 +56,10 @@ bool CGuiCommon::CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, 
 
     Surf_Dest->create(table[0].size() * Tile_Size, table.size() * Tile_Size);
 
-    unsigned int tileset_width = Surf_Src->getSize().x / Tile_Size;
+    size_t tileset_width = Surf_Src->getSize().x / Tile_Size;
 
-    for (unsigned int i=0; i<table.size(); i++){
-        for (int j=0; j<table[i].size(); j++){
+    for (size_t i=0; i<table.size(); i++){
+        for (size_t j=0; j<table[i].size(); j++){
             CSurface::OnDraw(Surf_Dest, Surf_Src, 
                 j * Tile_Size, 
                 i * Tile_Size, 

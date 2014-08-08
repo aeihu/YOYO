@@ -93,7 +93,7 @@ void CParser::ExecuteCmd(string cmd)
     if (AnalysisOfParameters(cmd, __listOfCmdPara) > 0){
 
 #ifdef _DEBUG
-        for (unsigned int i=0; i<__listOfCmdPara.size(); i++){
+        for (size_t i=0; i<__listOfCmdPara.size(); i++){
             cout << i << ": " << __listOfCmdPara[i] << " ";
         }
         cout << endl;
@@ -305,7 +305,7 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
         }
     }
 
-    for (unsigned int i = 1; i < plist.size(); i++)
+    for (size_t i = 1; i < plist.size(); i++)
     {
         if(plist[i].at(0) == '$'){
             //if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){

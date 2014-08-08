@@ -68,7 +68,7 @@ void CAdderControl::Clear()
     _fAdderList.clear();
 }
 
-unsigned int CAdderControl::Count()
+size_t CAdderControl::Count()
 {
     return _fAdderList.size();
 }

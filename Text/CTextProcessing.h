@@ -26,9 +26,9 @@ class CTextProcessing
         string              _text;
         string              _textOfShown;
         sf::Text            _sfText;
-        unsigned int        _rowWidth;
-        unsigned int        _index;
-        unsigned int        _length;
+        size_t              _rowWidth;
+        size_t              _index;
+        size_t              _length;
         sf::Color           _textColor;
         sf::Color           _shadowColor;
         unsigned long       _oldTime;
@@ -38,7 +38,7 @@ class CTextProcessing
     public:
         CTextProcessing();
 
-        void SetRowWidth(unsigned int width);
+        void SetRowWidth(size_t width);
         virtual void SetFont(sf::Font& font);
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);

@@ -364,20 +364,20 @@ unsigned long CCommon::GetTicks(){
 //
 //    fclose (File);
 //}
-
-void CCommon::OnCleanup()
-{
-    //_PlayerVariableTable.clear();
-    //_SystemVariableTable.clear();
-
-    //for (int i = 0; i < LogList.size(); i++)
-    //{
-    //    if (LogList[i] != NULL)
-    //    {
-    //        SDL_FreeSurface(LogList[i]);
-    //        LogList[i] = NULL;
-    //    }
-    //}
-
-    //LogList.clear();
-}
+//
+//void CCommon::OnCleanup()
+//{
+//    //_PlayerVariableTable.clear();
+//    //_SystemVariableTable.clear();
+//
+//    //for (int i = 0; i < LogList.size(); i++)
+//    //{
+//    //    if (LogList[i] != NULL)
+//    //    {
+//    //        SDL_FreeSurface(LogList[i]);
+//    //        LogList[i] = NULL;
+//    //    }
+//    //}
+//
+//    //LogList.clear();
+//}

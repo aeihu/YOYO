@@ -15,7 +15,7 @@ class CTextStyle
 {
     private:
     public:
-        unsigned int        _size;
+        size_t              _size;
         sf::Color           _color;
         //sf::String::   _style;
 

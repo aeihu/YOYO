@@ -11,10 +11,10 @@
 
 CResourceControl  CResourceControl::_ResourceManager;
 
-bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
-{
-    return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
-}
+//bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
+//{
+//    return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
+//}
 
 bool CResourceControl::AddVariable(string name, string val)
 {
@@ -59,7 +59,7 @@ bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
     if (obj == NULL)
         return false;
 
-    if (IsExists(name) > 0){
+    if (IsExists(name)){
         delete obj;
         return false;
     }
@@ -71,7 +71,7 @@ bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
 
 bool CResourceControl::DelDrawableObject(string name)
 {
-    for (int i=0; i<_drawableObjectList.size(); i++){
+    for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
             delete _drawableObjectList[i].second;
             _drawableObjectList.erase(_drawableObjectList.begin()+i);
@@ -84,7 +84,7 @@ bool CResourceControl::DelDrawableObject(string name)
 
 CImageBaseClass* CResourceControl::GetDrawableObject(string name)
 {
-    for (int i=0; i<_drawableObjectList.size(); i++){
+    for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)
             return _drawableObjectList[i].second;
     }
@@ -94,7 +94,7 @@ CImageBaseClass* CResourceControl::GetDrawableObject(string name)
 
 void CResourceControl::SetDrawableObjectLayerOrder(string name, char layer)
 {
-    for (int i=0; i<_drawableObjectList.size(); i++){
+    for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
             _drawableObjectList[i].second->SetLayerOrder(layer);
             _isNeedSort = true;
@@ -121,7 +121,7 @@ bool CResourceControl::SetImageVisibility(std::string name, int alpha, float inc
     return false;
 }
 
-bool CResourceControl::SetImageVisibility(string name, int alpha, unsigned int elapsed, bool pause)
+bool CResourceControl::SetImageVisibility(string name, int alpha, size_t elapsed, bool pause)
 {
     float __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
     return SetImageVisibility(name, alpha, __i, pause);
@@ -137,14 +137,14 @@ bool CResourceControl::SetLayerOrder(string name, char order)
     return false;
 }
 
-bool CResourceControl::Move(string name, float x, float y, unsigned int elapsed, bool pause)
+bool CResourceControl::Move(string name, float x, float y, size_t elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return false;
 
-    unsigned int __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
+    size_t __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
     if (x - __obj->GetPosition().x < -0.001f || x - __obj->GetPosition().x > 0.001f){
         __obj->Insert(0, x, pause, &__obj->GetPosition().x, abs((x - __obj->GetPosition().x) / __i));
     }
@@ -155,7 +155,7 @@ bool CResourceControl::Move(string name, float x, float y, unsigned int elapsed,
     return true;
 }
         
-char CResourceControl::Show(string name, float x, float y, char type, unsigned int elapsed, bool pause, int alpha)
+char CResourceControl::Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -195,7 +195,7 @@ char CResourceControl::Show(string name, float x, float y, char type, unsigned i
     return -1;
 }
         
-char CResourceControl::Hide(string name, char type, unsigned int elapsed, bool pause)
+char CResourceControl::Hide(string name, char type, size_t elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
@@ -253,9 +253,9 @@ bool CResourceControl::OnLButtonDown(int mX, int mY)
 
 bool CResourceControl::OnMouseMove(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
-        if ((*it).second->OnLButtonDown(mX, mY))
-            return true;
+    //for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    //    if ((*it).second->OnLButtonDown(mX, mY))
+    //        return true;
 
     return false;
 }
@@ -263,7 +263,7 @@ bool CResourceControl::OnMouseMove(int mX, int mY)
 void CResourceControl::OnLoop(bool &pause)
 {
     if (_isNeedSort){
-        std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), sort_cmp);
+        std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), _sort);
         _isNeedSort = false;
     }
 
@@ -297,7 +297,7 @@ void CResourceControl::OnCleanup()
 
 bool CResourceControl::IsExists(string name)
 {
-    for (int i=0; i<_drawableObjectList.size(); i++){
+    for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)
             return true;
     }
@@ -314,7 +314,7 @@ void CResourceControl::OnSaveData()
         return;
     }
 
-    for (int i=0; i<_drawableObjectList.size(); i++){
+    for (size_t i=0; i<_drawableObjectList.size(); i++){
         __savefile << "_(:3J Z)_" <<endl;
         __savefile << "name=" << _drawableObjectList[i].first <<endl;
         _drawableObjectList[i].second->OnSaveData(__savefile);

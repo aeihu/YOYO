@@ -80,7 +80,7 @@ bool CSurface::OnLoad(string File,  sf::Texture &Img) {
 }
 
 //==============================================================================
-//CImage* CSurface::OnCreate(unsigned int W, unsigned int H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
+//CImage* CSurface::OnCreate(size_t W, size_t H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
 //{
 //    CImage* result = new CImage();
 //    CColor color(R,G,B,A);
@@ -99,7 +99,7 @@ bool CSurface::OnLoad(string File,  sf::Texture &Img) {
 //}
 
 //==============================================================================
-//CImage* CSurface::OnCreate(unsigned int W, unsigned int H)
+//CImage* CSurface::OnCreate(size_t W, size_t H)
 //{
 //    return CSurface::OnCreate(W, H, 0, 0, 0, 255);
 //}
@@ -127,7 +127,7 @@ bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, int X, int Y)
 }
 
 //==============================================================================
-bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, unsigned int X, unsigned int Y, int X2, int Y2, int W, int H) {
+bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H) {
     if(Surf_Dest == NULL || Surf_Src == NULL) {
         return false;
     }

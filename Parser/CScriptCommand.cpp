@@ -81,7 +81,7 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> > flags,
         it!=result.end();)
     {
         cout << (*it).first << " : ";
-        for (int i=0; i<(*it).second.size(); i++)
+        for (size_t i=0; i<(*it).second.size(); i++)
             cout << (*it).second[i] << " ";
         
         cout << endl;
@@ -122,11 +122,11 @@ bool Common_FuncOfShow(string objTypeName, vector<string> args)
     bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
     
-    for (int i=0; i<__values["-n"].size(); i++){
+    for (size_t i=0; i<__values["-n"].size(); i++){
         int __alpha = __values.count("-a") == 0 ? 255 : 
             (i<__values["-a"].size() ? atoi(__values["-a"][i].c_str()) : atoi(__values["-a"][__values["-a"].size()-1].c_str()));
 
-        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+        size_t __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
             (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
 
         string __name = __values["-n"][i];
@@ -201,8 +201,8 @@ bool Common_FuncOfHide(string objTypeName, vector<string> args)
     bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
 
-    for (int i=0; i<__values["-n"].size(); i++){
-        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+    for (size_t i=0; i<__values["-n"].size(); i++){
+        size_t __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
             (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
         //float __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT : atof(__values["-i"].c_str());
         string __name = __values["-n"][i];
@@ -291,13 +291,13 @@ bool Common_FuncOfDelete(string objTypeName, vector<string> args)
     }
     
     if (objTypeName != "Font") {
-        for (unsigned int i=0; i<args.size(); i++){
+        for (size_t i=0; i<args.size(); i++){
             if (!CResourceControl::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
     }
     else{
-        for (unsigned int i=0; i<args.size(); i++){
+        for (size_t i=0; i<args.size(); i++){
             if (!CResourceControl::_ResourceManager.DelObject(objTypeName+":"+args[i]))
                 cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
         }
@@ -327,7 +327,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string> args)
     if (__values.count("-n") == 0 || __values.count("-l") == 0)
         return false;
    
-    for (int i=0; i<__values["-n"].size(); i++){
+    for (size_t i=0; i<__values["-n"].size(); i++){
         char __layer = i<__values["-l"].size() ? atoi(__values["-l"][i].c_str()) : atoi(__values["-l"][__values["-i"].size()-1].c_str());
 
         if (CResourceControl::_ResourceManager.SetLayerOrder(objTypeName+":"+__values["-n"][i], __layer))
@@ -374,7 +374,7 @@ bool Cmd_DelPosition(vector<string> args)
         return false;
     }
 
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         CResourceManager::_PositionControl.DelPosition(args[i]);
     }
 
@@ -416,7 +416,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
     bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
     
-    for (int i=0; i<__values["-n"].size(); i++){
+    for (size_t i=0; i<__values["-n"].size(); i++){
         string __name = __values["-n"][i];
         float __x = 0;
         float __y = 0;
@@ -431,7 +431,7 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
         __x = __values.count("-x") == 0 ? __x : (i<__values["-x"].size() ? atof(__values["-x"][i].c_str()) : __x);
         __y = __values.count("-y") == 0 ? __y : (i<__values["-y"].size() ? atof(__values["-y"][i].c_str()) : __y);
 
-        unsigned int __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
+        size_t __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
             (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
 
         if(!CResourceControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
@@ -651,7 +651,7 @@ bool Cmd_DelSE(vector<string> args)
         return false;
     }
 
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         if (!CSoundBank::_SoundControl.DeleteSE(args[i]))
             cout << "Cmd_DelSE(): can't find SE \""<< args[i] << "\"." << endl;
     }
@@ -709,7 +709,7 @@ bool Cmd_DelVoice(vector<string> args)
         return false;
     }
 
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         if (!CSoundBank::_SoundControl.DeleteVoice(args[i]))
             cout << "Cmd_DelVoice(): can't find Voice \""<< args[i] << "\"." << endl;
     }
@@ -793,7 +793,7 @@ bool Cmd_Message(vector<string> args)
     CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
 
     if (__values.count("-c") != 0){
-        for (int i=0; i<__values["-c"].size(); i++){
+        for (size_t i=0; i<__values["-c"].size(); i++){
             if (__values["-c"][i] != ""){
                 __obj = CResourceControl::_ResourceManager.GetDrawableObject("CharacterLayer:"+__values["-c"][i]);
                 if(__obj == NULL)
@@ -895,7 +895,7 @@ bool Cmd_ShowParticleSystem(vector<string> args)
         return false;
     }
 
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         if (CResourceControl::_ResourceManager.GetDrawableObject("ParticleSystem:"+args[i]) == NULL){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
@@ -920,7 +920,7 @@ bool Cmd_HideParticleSystem(vector<string> args)
         return false;
     }
     
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         if (CResourceControl::_ResourceManager.GetDrawableObject(args[i]) == NULL){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
@@ -1101,7 +1101,7 @@ bool Cmd_DelVariable(vector<string> args)
         return false;
     }
 
-    for (unsigned int i=0; i<args.size(); i++){
+    for (size_t i=0; i<args.size(); i++){
         CResourceControl::_ResourceManager.DelVariable("$"+args[i]);
     }
 

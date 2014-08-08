@@ -38,7 +38,7 @@ bool CTextProcessing::isWordOrNumber(char c)
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 121) || (c >= 43 && c <= 58);
 }
 
-void CTextProcessing::SetRowWidth(unsigned int width)
+void CTextProcessing::SetRowWidth(size_t width)
 {
     _rowWidth = width;
 }
@@ -78,19 +78,19 @@ string CTextProcessing::GetText()
 
 void CTextProcessing::Process()
 {
-    unsigned int __index = 0;
-    unsigned int __cursorPos = 0;
-    unsigned int __fontSize = _sfText.getCharacterSize();
+    size_t __index = 0;
+    size_t __cursorPos = 0;
+    size_t __fontSize = _sfText.getCharacterSize();
 
     while (__index < _text.length()){
-        unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[__index]);
+        size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[__index]);
         string __str = "";
 
         __cursorPos += __size==1?__fontSize>>1:__fontSize;
 
         if (__size == 1 && __index > 0){
             if (!isWordOrNumber(_text[__index-1]))
-                for (unsigned int i=__index; i<_text.length(); i++){
+                for (size_t i=__index; i<_text.length(); i++){
                     if (!isWordOrNumber(_text[i])){
                         if (__cursorPos+(i-__index)*(__fontSize>>1) > _rowWidth)
                             __str = "\n";
@@ -132,7 +132,7 @@ void CTextProcessing::OnLoop()
             _isSkip = false;
         }
         else{
-            unsigned int __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
+            size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
             _textOfShown.append(_text.substr(_index, __size));
             _index += __size;
         }

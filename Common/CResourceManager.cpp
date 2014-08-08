@@ -21,7 +21,7 @@ CPositionControl CResourceManager::_PositionControl;
 template<typename X>
 void CResourceManager::GetInfo(const char* resourcename, map<string, X> xlist)
 {
-    unsigned int __total = 0;
+    size_t __total = 0;
     cout<<resourcename<<":"<<endl;
 
     for (typename map<std::string,  X>::iterator it=xlist.begin();

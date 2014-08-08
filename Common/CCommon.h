@@ -43,8 +43,8 @@ class CCommon
         int COLOR_KEY_GREEN;
         int COLOR_KEY_BLUE;
 
-        unsigned int INCREMENT;//    25
-        unsigned int INTERVAL;//    25
+        size_t INCREMENT;//    25
+        size_t INTERVAL;//    25
 
         //<config>
         int  TILE_SIZE;//    32
@@ -86,7 +86,7 @@ class CCommon
         unsigned long GetTicks();
 
         bool OnInit();
-        void OnCleanup();
+        //void OnCleanup();
 };
 
 #endif

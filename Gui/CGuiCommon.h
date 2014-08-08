@@ -16,9 +16,9 @@
 class CGuiCommon
 {
     private:
-        static std::vector<std::vector<unsigned int> > OnLoad(const char* File);
+        static std::vector<std::vector<size_t> > OnLoad(const char* File);
     public:
-        static bool CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, unsigned int Tile_Size);
+        static bool CreateBoxBackground(sf::Image* Surf_Dest, sf::Image* Surf_Src, const char* File, size_t Tile_Size);
     protected:
 };
 
