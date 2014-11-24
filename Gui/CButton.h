@@ -17,8 +17,8 @@ class CButton : public CButtonBase
 {
     private:
         void Exec(void* data=NULL);
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
     public:
         list<string>    _cmdList;
         

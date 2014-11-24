@@ -94,40 +94,40 @@ bool CButtonBase::OnMouseMove(int x, int y)
     return false;
 }
 
-bool CButtonBase::CheckList(map<string, string>& list) 
+bool CButtonBase::CheckList(Object json) 
 {
     bool result = true;
-    if (list.count("TILESET_PATH") < 1){
+    if (!json.has<String>("TILESET_PATH")){
         cout << "can't find value of TILESET_PATH." << endl;
         result = false;
     }
 
-    if (list.count("WIDTH") < 1){
+    if (!json.has<Number>("WIDTH")){
         cout << "can't find value of WIDTH." << endl;
         result = false;
     }
 
-    if (list.count("HEIGHT") < 1){
+    if (!json.has<Number>("HEIGHT")){
         cout << "can't find value of HEIGHT." << endl;
         result = false;
     }
 
-    if (list.count("MAX_FRAMES") < 1){
+    if (!json.has<Number>("MAX_FRAMES")){
         cout << "can't find value of MAX_FRAMES." << endl;
         result = false;
     }
 
-    if (list.count("FRAME_RATE") < 1){
+    if (!json.has<Number>("FRAME_RATE")){
         cout << "can't find value of FRAME_RATE." << endl;
         result = false;
     }
 
-    if (list.count("X") < 1){
+    if (!json.has<Number>("X")){
         cout << "can't find value of X." << endl;
         result = false;
     }
 
-    if (list.count("Y") < 1){
+    if (!json.has<Number>("Y")){
         cout << "can't find value of Y." << endl;
         result = false;
     }
@@ -135,16 +135,16 @@ bool CButtonBase::CheckList(map<string, string>& list)
     return result;
 }
 
-bool CButtonBase::SetProperty(map<string, string>& list)
+bool CButtonBase::SetProperty(Object json)
 {    
-    SetWidth(atoi(list["WIDTH"].c_str()));
-    SetHeight(atoi(list["HEIGHT"].c_str()));
-    if (!LoadImg(list["TILESET_PATH"].c_str()))
+    SetWidth(json.get<Number>("WIDTH"));
+    SetHeight(json.get<Number>("HEIGHT"));
+    if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
         return false;
 
-    SetMaxFrames(atoi(list["MAX_FRAMES"].c_str()));
-    SetFrameRate(atoi(list["FRAME_RATE"].c_str()));
-    SetPosition(atof(list["X"].c_str()), atof(list["Y"].c_str()));
+    SetMaxFrames(json.get<Number>("MAX_FRAMES"));
+    SetFrameRate(json.get<Number>("FRAME_RATE"));
+    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
 
     return true;
 }

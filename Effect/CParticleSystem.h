@@ -45,8 +45,8 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         bool                    _enable;
 
         void ResetParticle(std::size_t index);
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
     public:
         CParticleSystem();
 
@@ -55,7 +55,7 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         void SetEmitter(sf::Vector2f position);
         bool OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
-        virtual void OnSaveData(ofstream& file) const;
+        virtual void OnSaveData(Object& json) const;
         bool GetEnable() const;
         void SetEnable(bool val);
 };

@@ -27,8 +27,8 @@ class CLogBox : public CBox
         deque<CTextLog*>            _logList;
         CScrollbar                  _scrollbar;
     protected:
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
     public:
         CLogBox();
         

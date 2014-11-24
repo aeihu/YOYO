@@ -65,6 +65,16 @@ void CSequenceOfFrames::SetOffset(int x, int y)
     _offset.y = y;
 }
 
+void CSequenceOfFrames::SetOffsetX(int x)
+{
+    _offset.x = x;
+}
+
+void CSequenceOfFrames::SetOffsetY(int y)
+{
+    _offset.y = y;
+}
+
 void CSequenceOfFrames::SetSize(int w, int h)
 {
     _rect.width = w;

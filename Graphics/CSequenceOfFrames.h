@@ -25,6 +25,8 @@ class CSequenceOfFrames : public CAnimation
 
         void SetCurrentImageFrame(int frame);
         void SetOffset(int x, int y);
+        void SetOffsetX(int x);
+        void SetOffsetY(int y);
         void SetSize(int w, int h);
         void SetDestTexture(sf::Texture* pTexture);
         bool LoadImg(const char* filename);

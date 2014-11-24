@@ -11,8 +11,10 @@
 
 #include <string>
 #include <fstream>
+#include <jsonxx.h>
 
 using namespace std;
+using namespace jsonxx;
 
 class CObject
 {
@@ -27,7 +29,7 @@ class CObject
         //virtual CObject* Create(const char* filename)=0;
         string GetClassName() const;
         string GetPath() const;
-        virtual void OnSaveData(ofstream& file) const;
+        virtual void OnSaveData(Object& json) const;
 };
 
 #endif

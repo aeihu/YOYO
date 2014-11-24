@@ -21,16 +21,16 @@ using namespace std;
 class CCharacterLayer : public CImageBaseClass, public CConfigFile
 {
   private:
-        list<pair<string, pair<string, string> > >      _faceList;
-        bool                                            _isFaceEnable;
-        CSequenceOfFrames                               _framesOfMouth;
-        CSequenceOfFrames                               _framesOfEyes;
-        string                                          _currcentFace;
-        string                                          _currcentVoice;
-        unsigned long                                   _timer;
+        Object                  _faceList;
+        bool                    _isFaceEnable;
+        CSequenceOfFrames       _framesOfMouth;
+        CSequenceOfFrames       _framesOfEyes;
+        string                  _currcentFace;
+        string                  _currcentVoice;
+        unsigned long           _timer;
         
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
   public:
         CCharacterLayer(float x=0.0f, float y=0.0f);
         
@@ -39,7 +39,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void SetVoice(string name);
         
         bool OnSubLoop();
-        virtual void OnSaveData(ofstream& file) const;
+        virtual void OnSaveData(Object& json) const;
        // void OnRender(sf::RenderWindow* Surf_Dest);
 };
 #endif

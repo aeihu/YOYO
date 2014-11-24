@@ -139,26 +139,26 @@ int CScrollbar::GetValue() const
     return _value;
 }
 
-bool CScrollbar::CheckList(map<string, string>& list)
+bool CScrollbar::CheckList(Object json)
 {
     bool __result = true;
 
-    if (list.count("SCROLLBAR_HEIGHT") < 1){
+    if (!json.has<String>("SCROLLBAR_HEIGHT")){
         cout << "can't find value of SCROLLBAR_HEIGHT." << endl;
         __result = false;
     }
 
-    if (list.count("BUTTON_ARROW_DOWN_PATH") < 1){
+    if (!json.has<String>("BUTTON_ARROW_DOWN_PATH")){
         cout << "can't find value of BUTTON_ARROW_DOWN_PATH." << endl;
         __result = false;
     }
 
-    if (list.count("BUTTON_ARROW_UP_PATH") < 1){
+    if (!json.has<String>("BUTTON_ARROW_UP_PATH")){
         cout << "can't find value of BUTTON_ARROW_UP_PATH." << endl;
         __result = false;
     }
 
-    if (list.count("BUTTON_BAR_PATH") < 1){
+    if (!json.has<String>("BUTTON_BAR_PATH")){
         cout << "can't find value of BUTTON_BAR_PATH." << endl;
         __result = false;
     }
@@ -166,17 +166,17 @@ bool CScrollbar::CheckList(map<string, string>& list)
     return __result;
 }
 
-bool CScrollbar::SetProperty(map<string, string>& list)
+bool CScrollbar::SetProperty(Object json)
 {
-    _height = atof(list["SCROLLBAR_HEIGHT"].c_str());
+    _height = json.get<Number>("SCROLLBAR_HEIGHT");
 
-    if (!_btnArrowUp.LoadConfigFile(list["BUTTON_ARROW_UP_PATH"].c_str()))
+    if (!_btnArrowUp.LoadConfigFile(json.get<String>("BUTTON_ARROW_UP_PATH").c_str()))
         return false;
 
-    if (!_btnArrowDown.LoadConfigFile(list["BUTTON_ARROW_DOWN_PATH"].c_str()))
+    if (!_btnArrowDown.LoadConfigFile(json.get<String>("BUTTON_ARROW_DOWN_PATH").c_str()))
         return false;
 
-    if (!_btnBar.LoadConfigFile(list["BUTTON_BAR_PATH"].c_str()))
+    if (!_btnBar.LoadConfigFile(json.get<String>("BUTTON_BAR_PATH").c_str()))
         return false;
 
     return true;

@@ -74,77 +74,32 @@ bool CCharacterLayer::OnSubLoop()
     return false;
 }
 
-bool CCharacterLayer::CheckList(map<string, string>& list) 
+bool CCharacterLayer::CheckList(Object json) 
 {
     bool result = true;
-    if (list.count("BODY_PATH") < 1){
+    if (!json.has<String>("BODY_PATH")){
         cout << "can't find value of BODY_PATH." << endl;
         result = false;
     }
 
-    if (list.count("FACE_ENABLE") < 1){
+    if (!json.has<Boolean>("FACE_ENABLE")){
         cout << "can't find value of FACE_ENABLE." << endl;
         return false;
     }
 
-    if (list["FACE_ENABLE"] != "0"){
-        if (list.count("MOUTH_OFFSET_X") < 1){
-            cout << "can't find value of MOUTH_OFFSET_X." << endl;
-            result = false;
-        }
-        
-        if (list.count("MOUTH_OFFSET_Y") < 1){
-            cout << "can't find value of MOUTH_OFFSET_Y." << endl;
-            result = false;
-        }
-
-        if (list.count("MOUTH_WIDTH") < 1){
-            cout << "can't find value of MOUTH_WIDTH." << endl;
-            result = false;
-        }
-        
-        if (list.count("MOUTH_HEIGHT") < 1){
-            cout << "can't find value of MOUTH_HEIGHT." << endl;
-            result = false;
-        }
-        
-        if (list.count("MOUTH_MAX_FRAMES") < 1){
-            cout << "can't find value of MOUTH_MAX_FRAMES." << endl;
-            result = false;
-        }
-        
-        if (list.count("MOUTH_FRAME_RATE") < 1){
+    if (json.get<Boolean>("FACE_ENABLE")){
+        if (!json.has<Number>("MOUTH_FRAME_RATE")){
             cout << "can't find value of MOUTH_FRAME_RATE." << endl;
             result = false;
         }
         
-        if (list.count("EYES_OFFSET_X") < 1){
-            cout << "can't find value of EYES_OFFSET_X." << endl;
-            result = false;
-        }
-        
-        if (list.count("EYES_OFFSET_Y") < 1){
-            cout << "can't find value of EYES_OFFSET_Y." << endl;
-            result = false;
-        }
-
-        if (list.count("EYES_WIDTH") < 1){
-            cout << "can't find value of EYES_WIDTH." << endl;
-            result = false;
-        }
-        
-        if (list.count("EYES_HEIGHT") < 1){
-            cout << "can't find value of EYES_HEIGHT." << endl;
-            result = false;
-        }
-        
-        if (list.count("EYES_MAX_FRAMES") < 1){
-            cout << "can't find value of EYES_MAX_FRAMES." << endl;
-            result = false;
-        }
-        
-        if (list.count("EYES_FRAME_RATE") < 1){
+        if (!json.has<Number>("EYES_FRAME_RATE")){
             cout << "can't find value of EYES_FRAME_RATE." << endl;
+            result = false;
+        }
+        
+        if (!json.has<Object>("FACE")){
+            cout << "can't find value of FACE." << endl;
             result = false;
         }
     }
@@ -152,58 +107,21 @@ bool CCharacterLayer::CheckList(map<string, string>& list)
     return result;
 }
 
-bool CCharacterLayer::SetProperty(map<string, string>& list)
+bool CCharacterLayer::SetProperty(Object json)
 {
-    if (!LoadImg(list["BODY_PATH"].c_str()))
+    if (!LoadImg(json.get<String>("BODY_PATH").c_str()))
         return false;
 
-    _faceList.clear();
+    _faceList.reset();
 
-    if (list["FACE_ENABLE"] != "0"){
-        _framesOfMouth.SetOffset(atoi(list["MOUTH_OFFSET_X"].c_str()), atoi(list["MOUTH_OFFSET_Y"].c_str()));
-        _framesOfMouth.SetMaxFrames(atoi(list["MOUTH_MAX_FRAMES"].c_str()));
-        _framesOfMouth.SetFrameRate(atoi(list["MOUTH_FRAME_RATE"].c_str()));
-
-        _framesOfMouth.SetSize(atoi(list["MOUTH_WIDTH"].c_str()), atoi(list["MOUTH_HEIGHT"].c_str()));
+    if (json.get<Boolean>("FACE_ENABLE")){
+        _framesOfMouth.SetFrameRate(json.get<Number>("MOUTH_FRAME_RATE"));
         _framesOfMouth.SetDestTexture(&_image);
 
-        _framesOfEyes.SetOffset(atoi(list["EYES_OFFSET_X"].c_str()), atoi(list["EYES_OFFSET_Y"].c_str()));
-        _framesOfEyes.SetMaxFrames(atoi(list["EYES_MAX_FRAMES"].c_str()));
-        _framesOfEyes.SetFrameRate(atoi(list["EYES_FRAME_RATE"].c_str()));
-
-        _framesOfEyes.SetSize(atoi(list["EYES_WIDTH"].c_str()), atoi(list["EYES_HEIGHT"].c_str()));
+        _framesOfEyes.SetFrameRate(json.get<Number>("EYES_FRAME_RATE"));
         _framesOfEyes.SetDestTexture(&_image);
-
-        list.erase("BODY_PATH");
-        list.erase("MOUTH_OFFSET_X");
-        list.erase("MOUTH_OFFSET_Y");
-        list.erase("MOUTH_MAX_FRAMES");
-        list.erase("MOUTH_FRAME_RATE");
-        list.erase("MOUTH_WIDTH");
-        list.erase("MOUTH_HEIGHT");
-        list.erase("FACE_ENABLE");
-
-        list.erase("EYES_OFFSET_X");
-        list.erase("EYES_OFFSET_Y");
-        list.erase("EYES_MAX_FRAMES");
-        list.erase("EYES_FRAME_RATE");
-        list.erase("EYES_WIDTH");
-        list.erase("EYES_HEIGHT");
-
-        map<string, string>::iterator it;
-        for (it = list.begin(); it!=list.end(); it++){
-            std::list<string> __list = Cio::SplitString("\""+(*it).second+"\"", "|");
-            
-            if (__list.size() == 2 && Cio::IsNested(__list.front(), '"', '"') && Cio::IsNested(__list.back(), '"', '"')){
-                _faceList.push_back(
-                    make_pair((*it).first, 
-                    make_pair(__list.front(), __list.back())));
-        
-                _isFaceEnable = true;
-            }
-            else
-                cout << "CCharacterLayer::SetProperty(): face \"" << (*it).first << "\" failed to add." << endl;
-        }
+        _faceList = json.get<Object>("FACE");
+        _isFaceEnable = true;
     }
     else
         _isFaceEnable= false;
@@ -213,11 +131,88 @@ bool CCharacterLayer::SetProperty(map<string, string>& list)
 
 bool CCharacterLayer::SetFace(string name)
 {
-    list<pair<string, pair<string, string> > >::iterator it;
-    for (it = _faceList.begin(); it!=_faceList.end(); it++){
-        if ((*it).first == name){
-            _framesOfEyes.LoadImg((*it).second.first.c_str());
-            _framesOfMouth.LoadImg((*it).second.second.c_str());
+    if (_currcentFace == name)
+        return true;
+
+    if (_faceList.has<Object>(name)){
+        if (!_faceList.get<Object>(name).has<Object>("EYE") || 
+            !_faceList.get<Object>(name).has<Object>("MOUTH")){
+            cout << "CCharacterLayer::SetFace(): can't find EYE or MOUTH in value face \"" << name << "\"." << endl;
+            return false;
+        }
+        
+        Object __eye = _faceList.get<Object>(name).get<Object>("EYE");
+        Object __mouth = _faceList.get<Object>(name).get<Object>("MOUTH");
+        if (_framesOfEyes.LoadImg(__eye.get<String>("PATH").c_str()) &&
+            _framesOfMouth.LoadImg(__mouth.get<String>("PATH").c_str())){
+            if (__eye.has<Number>("OFFSET_X")) 
+                _framesOfEyes.SetOffsetX(__eye.get<Number>("OFFSET_X"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find EYE's OFFSET_X in value face \"" << name << "\"." << endl;
+                return false;
+            }
+
+            if (__eye.has<Number>("OFFSET_Y")) 
+                _framesOfEyes.SetOffsetY(__eye.get<Number>("OFFSET_Y"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find EYE's OFFSET_Y in value face \"" << name << "\"." << endl;
+                return false;
+            }
+
+            if (__eye.has<Number>("MAX_FRAMES")) 
+                _framesOfEyes.SetMaxFrames(__eye.get<Number>("MAX_FRAMES"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find EYE's MAX_FRAMES in value face \"" << name << "\"." << endl;
+                return false;
+            }
+            
+            if (!__eye.has<Number>("WIDTH")){
+                cout << "CCharacterLayer::SetFace(): can't find EYE's WIDTH in value face \"" << name << "\"." << endl;
+                return false;
+            }
+            else{
+                if (!__eye.has<Number>("HEIGHT")){
+                    cout << "CCharacterLayer::SetFace(): can't find EYE's HEIGHT in value face \"" << name << "\"." << endl;
+                    return false;
+                }
+                _framesOfEyes.SetSize(__eye.get<Number>("WIDTH"), __eye.get<Number>("HEIGHT"));
+            }
+
+            /////////////////////////////////////////////////////////////
+            
+            if (__mouth.has<Number>("OFFSET_X")) 
+                _framesOfMouth.SetOffsetX(__mouth.get<Number>("OFFSET_X"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find MOUTH's OFFSET_X in value face \"" << name << "\"." << endl;
+                return false;
+            }
+
+            if (__mouth.has<Number>("OFFSET_Y")) 
+                _framesOfMouth.SetOffsetY(__mouth.get<Number>("OFFSET_Y"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find MOUTH's OFFSET_Y in value face \"" << name << "\"." << endl;
+                return false;
+            }
+
+            if (__mouth.has<Number>("MAX_FRAMES")) 
+                _framesOfMouth.SetMaxFrames(__mouth.get<Number>("MAX_FRAMES"));
+            else{
+                cout << "CCharacterLayer::SetFace(): can't find MOUTH's MAX_FRAMES in value face \"" << name << "\"." << endl;
+                return false;
+            }
+            
+            if (!__mouth.has<Number>("WIDTH")){
+                cout << "CCharacterLayer::SetFace(): can't find MOUTH's WIDTH in value face \"" << name << "\"." << endl;
+                return false;
+            }
+            else{
+                if (!__mouth.has<Number>("HEIGHT")){
+                    cout << "CCharacterLayer::SetFace(): can't find MOUTH's HEIGHT in value face \"" << name << "\"." << endl;
+                    return false;
+                }
+                _framesOfMouth.SetSize(__mouth.get<Number>("WIDTH"), __mouth.get<Number>("HEIGHT"));
+            }
+
             _currcentFace = name;
             return true;
         }
@@ -227,8 +222,8 @@ bool CCharacterLayer::SetFace(string name)
     return false;
 }
 
-void CCharacterLayer::OnSaveData(ofstream& file) const
+void CCharacterLayer::OnSaveData(Object& json) const
 {
-    CImageBaseClass::OnSaveData(file);
-    file << "face=" << _currcentFace <<endl;
+    CImageBaseClass::OnSaveData(json);
+    json << "face" << _currcentFace;
 }

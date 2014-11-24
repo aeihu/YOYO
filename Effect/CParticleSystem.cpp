@@ -114,60 +114,60 @@ bool CParticleSystem::SetTexture(string filename)
     return true;
 }
 
-bool CParticleSystem::CheckList(map<string, string>& list)
+bool CParticleSystem::CheckList(Object json)
 {
     bool result = true;
-    if (list.count("PARTICLE_NUM") < 1){
+    if (!json.has<Number>("PARTICLE_NUM")){
         cout << "can't find value of PARTICLE_NUM." << endl;
         result = false;
     }
 
-    if (list.count("PARTICLE_WIDTH") < 1){
+    if (!json.has<Number>("PARTICLE_WIDTH")){
         cout << "can't find value of PARTICLE_WIDTH." << endl;
         result = false;
     }
 
-    if (list.count("PARTICLE_HEIGHT") < 1){
+    if (!json.has<Number>("PARTICLE_HEIGHT")){
         cout << "can't find value of PARTICLE_HEIGHT." << endl;
         result = false;
     }
     
-    if (list.count("LIFE_TIME") < 1){
+    if (!json.has<Number>("LIFE_TIME")){
         cout << "can't find value of LIFE_TIME." << endl;
         result = false;
     }
     
-    if (list.count("ROTATION_RATIO") < 1){
+    if (!json.has<Number>("ROTATION_RATIO")){
         cout << "can't find value of ROTATION_RATIO." << endl;
         result = false;
     }
     
-    if (list.count("PARTICLE_ANGLE_MAX") < 1){
+    if (!json.has<Number>("PARTICLE_ANGLE_MAX")){
         cout << "can't find value of PARTICLE_ANGLE_MAX." << endl;
         result = false;
     }
     
-    if (list.count("PARTICLE_ANGLE_MIN") < 1){
+    if (!json.has<Number>("PARTICLE_ANGLE_MIN")){
         cout << "can't find value of PARTICLE_ANGLE_MIN." << endl;
         result = false;
     }
 
-    if (list.count("PARTICLE_SPEED_MAX") < 1){
+    if (!json.has<Number>("PARTICLE_SPEED_MAX")){
         cout << "can't find value of PARTICLE_SPEED_MAX." << endl;
         result = false;
     }
     
-    if (list.count("PARTICLE_SPEED_MIN") < 1){
+    if (!json.has<Number>("PARTICLE_SPEED_MIN")){
         cout << "can't find value of PARTICLE_SPEED_MIN." << endl;
         result = false;
     }
 
-    if (list.count("PARTICLE_ORIGIN_X") < 1){
+    if (!json.has<Number>("PARTICLE_ORIGIN_X")){
         cout << "can't find value of PARTICLE_ORIGIN_X." << endl;
         result = false;
     }
 
-    if (list.count("PARTICLE_ORIGIN_Y") < 1){
+    if (!json.has<Number>("PARTICLE_ORIGIN_Y")){
         cout << "can't find value of PARTICLE_ORIGIN_Y." << endl;
         result = false;
     }
@@ -175,15 +175,15 @@ bool CParticleSystem::CheckList(map<string, string>& list)
     return result;
 }
 
-bool CParticleSystem::SetProperty(map<string, string>& list)
+bool CParticleSystem::SetProperty(Object json)
 {
-    if (list.count("PARTICLE_TEXTURE") > 0){
-        if (!CSurface::OnLoad(list["PARTICLE_TEXTURE"], _texture))
+    if (json.has<String>("PARTICLE_TEXTURE")){
+        if (!CSurface::OnLoad(json.get<String>("PARTICLE_TEXTURE"), _texture))
             return false;
     }
 
-    _angleMin = atoi(list["PARTICLE_ANGLE_MIN"].c_str());
-    int _angleMax = atoi(list["PARTICLE_ANGLE_MAX"].c_str());
+    _angleMin = json.get<Number>("PARTICLE_ANGLE_MIN");
+    int _angleMax = json.get<Number>("PARTICLE_ANGLE_MAX");
 
     if (_angleMax - _angleMin < 0){
         cout << "PARTICLE_ANGLE_MIN can't be greater than PARTICLE_ANGLE_MAX." << endl;
@@ -191,8 +191,8 @@ bool CParticleSystem::SetProperty(map<string, string>& list)
     }
     _angleOffet = _angleMax - _angleMin;
 
-    _speedMin = atoi(list["PARTICLE_SPEED_MIN"].c_str());
-    int _speedMax = atoi(list["PARTICLE_SPEED_MAX"].c_str());
+    _speedMin = json.get<Number>("PARTICLE_SPEED_MIN");
+    int _speedMax = json.get<Number>("PARTICLE_SPEED_MAX");
 
     if (_speedMax - _speedMin <= 0){
         cout << "PARTICLE_SPEED_MIN can't be greater than PARTICLE_SPEED_MAX." << endl;
@@ -200,37 +200,37 @@ bool CParticleSystem::SetProperty(map<string, string>& list)
     }
     _speedOffet = _speedMax - _speedMin;
 
-    _number = atoi(list["PARTICLE_NUM"].c_str());
+    _number = json.get<Number>("PARTICLE_NUM");
     _number = _number <= 0 ? 1 : _number; 
 
-    _width = atof(list["PARTICLE_WIDTH"].c_str());
-    _height = atof(list["PARTICLE_HEIGHT"].c_str());
-    _origin.x = atof(list["PARTICLE_ORIGIN_X"].c_str());
-    _origin.y = atof(list["PARTICLE_ORIGIN_Y"].c_str());
+    _width = json.get<Number>("PARTICLE_WIDTH");
+    _height = json.get<Number>("PARTICLE_HEIGHT");
+    _origin.x = json.get<Number>("PARTICLE_ORIGIN_X");
+    _origin.y = json.get<Number>("PARTICLE_ORIGIN_Y");
 
     _particles.clear();
 
-    if (list.count("EMITTER_X") > 0)
-        _emitter.x = atof(list["EMITTER_X"].c_str());
+    if (json.has<Number>("EMITTER_X"))
+        _emitter.x = json.get<Number>("EMITTER_X");
     
-    if (list.count("EMITTER_Y") > 0)
-        _emitter.y = atof(list["EMITTER_Y"].c_str());
+    if (json.has<Number>("EMITTER_Y"))
+        _emitter.y = json.get<Number>("EMITTER_Y");
 
-    if (list.count("EMITTER_X_DEVIATION") > 0)
-        _emitterDeviation.x = atoi(list["EMITTER_X_DEVIATION"].c_str());
+    if (json.has<Number>("EMITTER_X_DEVIATION"))
+        _emitterDeviation.x = json.get<Number>("EMITTER_X_DEVIATION");
     
-    if (list.count("EMITTER_Y_DEVIATION") > 0)
-        _emitterDeviation.y = atoi(list["EMITTER_Y_DEVIATION"].c_str());
+    if (json.has<Number>("EMITTER_Y_DEVIATION"))
+        _emitterDeviation.y = json.get<Number>("EMITTER_Y_DEVIATION");
     
-    _lifeTime = sf::milliseconds(atoi(list["LIFE_TIME"].c_str()));
-    _rotation = atof(list["ROTATION_RATIO"].c_str());
+    _lifeTime = sf::milliseconds(json.get<Number>("LIFE_TIME"));
+    _rotation = json.get<Number>("ROTATION_RATIO");
 
     return true;
 }
         
-void CParticleSystem::OnSaveData(ofstream& file) const
+void CParticleSystem::OnSaveData(Object& json) const
 {
-    CObject::OnSaveData(file);
-    file << "layer_order=" << GetLayerOrder() << endl;
-    file << "enable=" << _enable << endl;
+    CObject::OnSaveData(json);
+    json << "layer_order" << GetLayerOrder();
+    json << "enable" << _enable;
 }

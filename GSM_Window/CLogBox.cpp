@@ -72,44 +72,44 @@ void CLogBox::OnCleanup()
     _logList.clear();
 }
 
-bool CLogBox::CheckList(map<string, string>& list)
+bool CLogBox::CheckList(Object json)
 {
-    bool __result = CBox::CheckList(list);
+    bool __result = CBox::CheckList(json);
 
-    if (!_scrollbar.CheckList(list))
+    if (!_scrollbar.CheckList(json))
         __result = false;
 
-    if (list.count("LOG_OFFSET_X") < 1){
+    if (!json.has<Number>("LOG_OFFSET_X")){
         cout << "can't find value of LOG_OFFSET_X." << endl;
         __result = false;
     }
 
-    if (list.count("LOG_OFFSET_Y") < 1){
+    if (!json.has<Number>("LOG_OFFSET_Y")){
         cout << "can't find value of LOG_OFFSET_Y." << endl;
         __result = false;
     }
 
-    if (list.count("LOG_MAXNUM") < 1){
+    if (!json.has<Number>("LOG_MAXNUM")){
         cout << "can't find value of LOG_MAXNUM." << endl;
         __result = false;
     }
 
-    if (list.count("LOG_VISIBLE_NUM") < 1){
+    if (!json.has<Number>("LOG_VISIBLE_NUM")){
         cout << "can't find value of LOG_VISIBLE_NUM." << endl;
         __result = false;
     }
 
-    if (list.count("LOG_ROW_HEIGHT") < 1){
+    if (!json.has<Number>("LOG_ROW_HEIGHT")){
         cout << "can't find value of LOG_ROW_HEIGHT." << endl;
         __result = false;
     }
 
-    if (list.count("SCROLLBAR_OFFSET_X") < 1){
+    if (!json.has<Number>("SCROLLBAR_OFFSET_X")){
         cout << "can't find value of SCROLLBAR_OFFSET_X." << endl;
         __result = false;
     }
 
-    if (list.count("SCROLLBAR_OFFSET_Y") < 1){
+    if (!json.has<Number>("SCROLLBAR_OFFSET_Y")){
         cout << "can't find value of SCROLLBAR_OFFSET_Y." << endl;
         __result = false;
     }
@@ -117,19 +117,19 @@ bool CLogBox::CheckList(map<string, string>& list)
     return __result;
 }
 
-bool CLogBox::SetProperty(map<string, string>& list)
+bool CLogBox::SetProperty(Object json)
 {
-    _logMax = atoi(list["LOG_MAXNUM"].c_str());
-    _visNum = atoi(list["LOG_VISIBLE_NUM"].c_str());
-    _logRowHeight = atoi(list["LOG_ROW_HEIGHT"].c_str());
-    _logOffset.x = atof(list["LOG_OFFSET_X"].c_str());
-    _logOffset.y = atof(list["LOG_OFFSET_Y"].c_str());
-    _scrollbar.SetOffset(atof(list["SCROLLBAR_OFFSET_X"].c_str()), atof(list["SCROLLBAR_OFFSET_Y"].c_str()));
+    _logMax = json.get<Number>("LOG_MAXNUM");
+    _visNum = json.get<Number>("LOG_VISIBLE_NUM");
+    _logRowHeight = json.get<Number>("LOG_ROW_HEIGHT");
+    _logOffset.x = json.get<Number>("LOG_OFFSET_X");
+    _logOffset.y = json.get<Number>("LOG_OFFSET_Y");
+    _scrollbar.SetOffset(json.get<Number>("SCROLLBAR_OFFSET_X"), json.get<Number>("SCROLLBAR_OFFSET_Y"));
 
-    if (!_scrollbar.SetProperty(list))
+    if (!_scrollbar.SetProperty(json))
         return false;
 
-    return CBox::SetProperty(list);
+    return CBox::SetProperty(json);
 }
 
 void CLogBox::AddLog(string text, sf::SoundBuffer* voice, sf::Font& font)

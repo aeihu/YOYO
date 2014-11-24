@@ -68,6 +68,16 @@ void CImageBaseClass::SetOffset(float x, float y)
     _offset.y = y;
 }
 
+void CImageBaseClass::SetOffsetX(float x)
+{
+    _offset.x = x;
+}
+
+void CImageBaseClass::SetOffsetY(float y)
+{
+    _offset.y = y;
+}
+
 void CImageBaseClass::SetLayerOrder(char order)
 {
     _layerOrder = order;
@@ -210,17 +220,17 @@ bool CImageBaseClass::OnLoop()
     return __result;
 }
 
-void CImageBaseClass::OnSaveData(ofstream& file) const
+void CImageBaseClass::OnSaveData(Object& json) const
 {
-    CObject::OnSaveData(file);
-    file << "layer_order=" << _layerOrder << endl;
-    file << "alpha=" << _alpha << endl;
-    file << "x=" << _coordinate.x << endl;
-    file << "y=" << _coordinate.y << endl;
-    file << "offset_x=" << _offset.x << endl;
-    file << "offset_y=" << _offset.y << endl;
-    file << "scale_x=" << _scale.x << endl;
-    file << "scale_y=" << _scale.y << endl;
-    file << "rotation=" << _rotation << endl;
-    file << "flag=" << _flag << endl;
+    CObject::OnSaveData(json);
+    json << "layer_order" << _layerOrder;
+    json << "alpha" << _alpha;
+    json << "x" << _coordinate.x;
+    json << "y" << _coordinate.y;
+    json << "offset_x" << _offset.x;
+    json << "offset_y" << _offset.y;
+    json << "scale_x" << _scale.x;
+    json << "scale_y" << _scale.y;
+    json << "rotation" << _rotation;
+    json << "flag" << _flag;
 }

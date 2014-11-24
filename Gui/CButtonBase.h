@@ -26,8 +26,8 @@ class CButtonBase : public CSequenceOfSprite , public CConfigFile
         string          _seNameOfMouseOver;
         string          _seNameOfMouseDown;
     protected:
-        virtual bool CheckList(map<string, string>& list);
-        virtual bool SetProperty(map<string, string>& list);
+        virtual bool CheckList(Object json);
+        virtual bool SetProperty(Object json);
         virtual void Exec(void* data=NULL)=0;
     public:
         CAnimation      _AnimationControl;

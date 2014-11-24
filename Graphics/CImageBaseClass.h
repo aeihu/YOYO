@@ -54,6 +54,8 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         virtual void SetPosition(float x, float y);
         virtual sf::Vector2f& GetOffset();
         virtual void SetOffset(float x, float y);
+        virtual void SetOffsetX(float x);
+        virtual void SetOffsetY(float y);
 
         virtual int& GetAlpha();
         virtual void SetAlpha(int alpha);
@@ -78,7 +80,7 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
         virtual bool OnLButtonDown(int mX, int mY){return false;}
         virtual bool OnMouseMove(int mX, int mY){return false;}
         
-        virtual void OnSaveData(ofstream& file) const;
+        virtual void OnSaveData(Object& json) const;
         virtual bool GetVisible() const;
 };
 

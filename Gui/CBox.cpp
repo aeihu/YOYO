@@ -16,38 +16,39 @@ CBox::~CBox()
 {
 }
 
-bool CBox::CheckList(map<string, string>& list)
+bool CBox::CheckList(Object json)
 {
     bool __result = true;
 
-    if (list.count("TILESET_PATH") < 1){
+    if (!json.has<String>("TILESET_PATH")){
         cout << "can't find value of TILESET_PATH." << endl;
         __result = false;
     }
 
-    if (list.count("TILE_ENABLE") < 1){
+    if (json.has<Boolean>("TILE_ENABLE")){
+        if (json.get<Boolean>("TILE_ENABLE")){
+            if (!json.has<Number>("TILE_SIZE")){
+                cout << "can't find value of TILE_SIZE." << endl;
+                __result = false;
+            }
+
+            if (!json.has<String>("MAP_PATH")){
+                cout << "can't find value of MAP_PATH." << endl;
+                __result = false;
+            }
+        }
+    }
+    else{
         cout << "can't find value of TILE_ENABLE." << endl;
         __result = false;
     }
 
-    if (atoi(list["TILE_ENABLE"].c_str()) != 0){
-        if (list.count("TILE_SIZE") < 1){
-            cout << "can't find value of TILE_SIZE." << endl;
-            __result = false;
-        }
-
-        if (list.count("MAP_PATH") < 1){
-            cout << "can't find value of MAP_PATH." << endl;
-            __result = false;
-        }
-    }
-
-    if (list.count("X") < 1){
+    if (!json.has<Number>("X")){
         cout << "can't find value of X." << endl;
         __result = false;
     }
 
-    if (list.count("Y") < 1){
+    if (!json.has<Number>("Y")){
         cout << "can't find value of Y." << endl;
         __result = false;
     }
@@ -55,17 +56,17 @@ bool CBox::CheckList(map<string, string>& list)
     return __result;
 }
 
-bool CBox::SetProperty(map<string, string>& list)
+bool CBox::SetProperty(Object json)
 {
-    SetPosition(atof(list["X"].c_str()), atof(list["Y"].c_str()));
+    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
 
     sf::Image __tileset, __dest;
-    if (!CSurface::OnLoad(list["TILESET_PATH"].c_str(), __tileset))
+    if (!CSurface::OnLoad(json.get<String>("TILESET_PATH").c_str(), __tileset))
         return false;
 
-    if (atoi(list["TILE_ENABLE"].c_str()) != 0){
+    if (json.get<Boolean>("TILE_ENABLE")){
         if (!CGuiCommon::CreateBoxBackground(
-            &__dest, &__tileset, list["MAP_PATH"].c_str(), atoi(list["TILE_SIZE"].c_str())))
+            &__dest, &__tileset, json.get<String>("MAP_PATH").c_str(), json.get<Number>("TILE_SIZE")))
             return false;
 
         _image.loadFromImage(__dest);

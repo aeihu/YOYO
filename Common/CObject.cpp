@@ -23,10 +23,10 @@ string CObject::GetPath() const
     return _path;
 }
         
-void CObject::OnSaveData(ofstream& file) const
+void CObject::OnSaveData(Object& json) const
 {
-    file << "class_name=" << _className << endl;
-    file << "path=" << _path << endl;
+    json << "class_name" << _className;
+    json << "path" << _path;
 }
 
 void CObject::SetClassName(string name)

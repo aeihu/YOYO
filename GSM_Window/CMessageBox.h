@@ -27,8 +27,8 @@ class CMessageBox : public CBox , public CTextProcessing
         CSequenceOfSprite   _frames;
         bool                _isPaused;
 
-        bool CheckList(map<string, string>& list);
-        bool SetProperty(map<string, string>& list);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
     protected:
         using CBox::_visible;
     public:

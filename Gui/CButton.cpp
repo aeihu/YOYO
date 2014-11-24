@@ -13,26 +13,27 @@ void CButton::Exec(void* data)
     CParser::_Parser.InsertCmdList(_cmdList);
 }
 
-bool CButton::CheckList(map<string, string>& list)
+bool CButton::CheckList(Object json)
 {
-    bool result = CButtonBase::CheckList(list);
+    bool result = CButtonBase::CheckList(json);
 
-    if (list.count("SCRIPT_PATH") < 1){
+    if (!json.has<String>("SCRIPT_PATH")){
         cout << "can't find value of SCRIPT_PATH." << endl;
         result = false;
     }
     
-    if (list.count("SCRIPT_SECTION") < 1){
+    if (!json.has<String>("SCRIPT_SECTION")){
         cout << "can't find value of SCRIPT_SECTION." << endl;
         result = false;
     }
     return result;
 }
 
-bool CButton::SetProperty(map<string, string>& list)
+bool CButton::SetProperty(Object json)
 {
-    return CParser::_Parser.LoadScript(list["SCRIPT_PATH"].c_str(), 
-        list["SCRIPT_SECTION"].c_str(), _cmdList) && CButtonBase::SetProperty(list);
+    return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
+        json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 
+        CButtonBase::SetProperty(json);
 }
 
 CButton* CButton::Create(const char* filename)

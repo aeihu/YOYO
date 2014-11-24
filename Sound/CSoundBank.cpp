@@ -50,15 +50,15 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
 //------------------------------------------------------------------------------
 void CSoundBank::OnCleanup()
 {
-    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
-        if ((*it) != NULL)
-            delete (*it);
-    }
+    //for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+    //    if ((*it) != NULL)
+    //        delete (*it);
+    //}
 
-    _voicePool.clear();
-    _soundPool.clear();
-    _seList.clear();
-    _voiceList.clear();
+    //_voicePool.clear();
+    //_soundPool.clear();
+    //_seList.clear();
+    //_voiceList.clear();
 }
 
 

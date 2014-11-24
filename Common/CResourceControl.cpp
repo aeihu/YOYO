@@ -308,6 +308,8 @@ bool CResourceControl::IsExists(string name)
 void CResourceControl::OnSaveData()
 {
     ofstream __savefile("./userdata/1.txt");
+    Object __json;
+    __json.reset();
 
     if(!__savefile){
         cout << "error" << endl;
@@ -315,10 +317,10 @@ void CResourceControl::OnSaveData()
     }
 
     for (size_t i=0; i<_drawableObjectList.size(); i++){
-        __savefile << "_(:3J Z)_" <<endl;
+        cout << "_(:3J Z)_" <<endl;
         __savefile << "name=" << _drawableObjectList[i].first <<endl;
-        _drawableObjectList[i].second->OnSaveData(__savefile);
-        __savefile << "(:3[____]" <<endl;
+        _drawableObjectList[i].second->OnSaveData(__json);
+        cout << "(:3[____]" <<endl;
     }
 
     __savefile.close();

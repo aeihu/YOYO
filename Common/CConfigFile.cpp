@@ -8,23 +8,26 @@
 
 #include "CConfigFile.h"
         
+
 bool CConfigFile::LoadConfigFile(const char* FileName)
 {
-    list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
-    map<string, string> __valueList;
+    Object json;
+    json.parse(Cio::LoadTxtFile(FileName));
+    //list<string> __expressions = Cio::LoadTxtFile(FileName, "\r\n");
+    //map<string, string> __valueList;
 
-    for (list<string>::iterator it=__expressions.begin();
+ /*   for (list<string>::iterator it=__expressions.begin();
         it!=__expressions.end(); it++){
         string __paraName = "";
         string __paraValue = "";
         if(Cio::AnalyticExpression((*it), __paraName, __paraValue))
             __valueList[__paraName] = __paraValue;
-    }
+    }*/
 
-    if (!CheckList(__valueList))
+    if (!CheckList(json))
         return false;
 
-    if (!SetProperty(__valueList))
+    if (!SetProperty(json))
         return false;
 
     return true;

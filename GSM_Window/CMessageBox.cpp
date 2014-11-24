@@ -41,28 +41,28 @@ void CMessageBox::SetFont(sf::Font& font)
     _speakerName.setFont(font);
 }
 
-bool CMessageBox::SetProperty(map<string, string>& list)
+bool CMessageBox::SetProperty(Object json)
 {
-    CTextProcessing::SetRowWidth(atoi(list["MSG_WIDTH"].c_str()));
+    CTextProcessing::SetRowWidth(json.get<Number>("MSG_WIDTH"));
 
 //=================Init cursor==================================
-    if (!_frames.LoadImg(list["CURSOR_PATH"].c_str()))
+    if (!_frames.LoadImg(json.get<String>("CURSOR_PATH").c_str()))
         return false;
 
-    _frames.SetWidth(atoi(list["CURSOR_WIDTH"].c_str()));
-    _frames.SetHeight(atoi(list["CURSOR_HEIGHT"].c_str()));
-    _frames.SetMaxFrames(atoi(list["CURSOR_MAX_FRAMES"].c_str()));
-    _frames.SetFrameRate(atoi(list["CURSOR_FRAME_RATE"].c_str()));
+    _frames.SetWidth(json.get<Number>("CURSOR_WIDTH"));
+    _frames.SetHeight(json.get<Number>("CURSOR_HEIGHT"));
+    _frames.SetMaxFrames(json.get<Number>("CURSOR_MAX_FRAMES"));
+    _frames.SetFrameRate(json.get<Number>("CURSOR_FRAME_RATE"));
 
-    _speakerNameOffset.x = atof(list["SPEAKER_OFFSET_X"].c_str());
-    _speakerNameOffset.y = atof(list["SPEAKER_OFFSET_Y"].c_str());
-    _msgOffset.x = atof(list["MSG_OFFSET_X"].c_str());
-    _msgOffset.y = atof(list["MSG_OFFSET_Y"].c_str());
+    _speakerNameOffset.x = json.get<Number>("SPEAKER_OFFSET_X");
+    _speakerNameOffset.y = json.get<Number>("SPEAKER_OFFSET_Y");
+    _msgOffset.x = json.get<Number>("MSG_OFFSET_X");
+    _msgOffset.y = json.get<Number>("MSG_OFFSET_Y");
 
     CFont* __fnt = NULL;
-    CObject* __obj = list.count("MSG_FONT") < 1 ? 
-        CResourceControl::_ResourceManager.GetObject("Font:__main") : 
-        CResourceControl::_ResourceManager.GetObject("Font:"+list["MSG_FONT"]);
+    CObject* __obj = json.has<Number>("MSG_FONT") ? 
+        CResourceControl::_ResourceManager.GetObject("Font:"+json.get<String>("MSG_FONT")):
+        CResourceControl::_ResourceManager.GetObject("Font:__main");
    
     if (__obj != NULL){
         __fnt = static_cast<CFont*>(__obj);
@@ -71,64 +71,64 @@ bool CMessageBox::SetProperty(map<string, string>& list)
     else
         return false;
 
-    return CBox::SetProperty(list);
+    return CBox::SetProperty(json);
 }
 
-bool CMessageBox::CheckList(map<string, string>& list)
+bool CMessageBox::CheckList(Object json)
 {
-    bool result = CBox::CheckList(list);
+    bool result = CBox::CheckList(json);
 
-    if (list.count("MSG_OFFSET_X") < 1){
+    if (!json.has<Number>("MSG_OFFSET_X")){
         cout << "can't find value of MSG_OFFSET_X." << endl;
         result = false;
     }
 
-    if (list.count("MSG_OFFSET_Y") < 1){
+    if (!json.has<Number>("MSG_OFFSET_Y")){
         cout << "can't find value of MSG_OFFSET_X." << endl;
         result = false;
     }
 
-    if (list.count("MSG_WIDTH") < 1){
+    if (!json.has<Number>("MSG_WIDTH")){
         cout << "can't find value of MSG_WIDTH." << endl;
         result = false;
     }
 
-    //if (list.count("MSG_APPEND") < 1){
+    //if (!json.has<Number>("MSG_APPEND") < 1){
     //    cout << "can't find value of MSG_APPEND." << endl;
     //    result = false;
     //}
 
-    if (list.count("CURSOR_PATH") < 1){
+    if (!json.has<String>("CURSOR_PATH")){
         cout << "can't find value of CURSOR_PATH." << endl;
         result = false;
     }
 
-    if (list.count("CURSOR_WIDTH") < 1){
+    if (!json.has<Number>("CURSOR_WIDTH")){
         cout << "can't find value of CURSOR_CURSOR_WIDTH." << endl;
         result = false;
     }
 
-    if (list.count("CURSOR_HEIGHT") < 1){
+    if (!json.has<Number>("CURSOR_HEIGHT")){
         cout << "can't find value of CURSOR_CURSOR_HEIGHT." << endl;
         result = false;
     }
 
-    if (list.count("CURSOR_FRAME_RATE") < 1){
+    if (!json.has<Number>("CURSOR_FRAME_RATE")){
         cout << "can't find value of CURSOR_FRAME_RATE." << endl;
         result = false;
     }
 
-    if (list.count("CURSOR_MAX_FRAMES") < 1){
+    if (!json.has<Number>("CURSOR_MAX_FRAMES")){
         cout << "can't find value of CURSOR_MAX_FRAMES." << endl;
         result = false;
     }
 
-    if (list.count("SPEAKER_OFFSET_X") < 1){
+    if (!json.has<Number>("SPEAKER_OFFSET_X")){
         cout << "can't find value of SPEAKER_OFFSET_X." << endl;
         result = false;
     }
 
-    if (list.count("SPEAKER_OFFSET_Y") < 1){
+    if (!json.has<Number>("SPEAKER_OFFSET_Y")){
         cout << "can't find value of SPEAKER_OFFSET_Y." << endl;
         result = false;
     }
