@@ -30,12 +30,14 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
     if (!CSurface::OnLoad(filename, _tile))
         return false;
 
+    SetCurrentImageFrame(GetCurrentFrame());
     return true;
 }
 
 void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
 {
     _destTexture = pTexture;
+    _imageOfTexture = pTexture->copyToImage();
 }
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
@@ -54,6 +56,8 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
     //_rect.Bottom = _rect.Top+Height;
 
     if (_destTexture != NULL){
+        _image.copy(_imageOfTexture, _offset.x, _offset.y ,_rect);
+        _destTexture->update(_image, _offset.x, _offset.y);
         _image.copy(_tile, 0,0 ,_rect);
         _destTexture->update(_image, _offset.x, _offset.y);
     }

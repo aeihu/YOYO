@@ -50,15 +50,15 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
 //------------------------------------------------------------------------------
 void CSoundBank::OnCleanup()
 {
-    //for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
-    //    if ((*it) != NULL)
-    //        delete (*it);
-    //}
+    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+        if ((*it) != NULL)
+            delete (*it);
+    }
 
-    //_voicePool.clear();
-    //_soundPool.clear();
-    //_seList.clear();
-    //_voiceList.clear();
+    _voicePool.clear();
+    _soundPool.clear();
+    _seList.clear();
+    _voiceList.clear();
 }
 
 
@@ -87,25 +87,37 @@ void CSoundBank::PlaySE(sf::SoundBuffer sound)
     _soundPool.back().play();
 }
 
-bool CSoundBank::PlayVoice(string name)
+bool CSoundBank::PlayVoice(string name, bool isSameChannel)
 {
     if (_voiceList.count(name) < 1)
         return false;
     
-    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
-        if ((*it)->getStatus() == sf::Sound::Stopped){
-            (*it)->Load(_voiceList[name]);
-            (*it)->_Name = name;
-            (*it)->play();
-            return true;
+    if (isSameChannel){
+        for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+            if ((*it)->getStatus() == sf::Sound::Playing)
+                (*it)->stop();
         }
+        _voicePool.front()->Load(_voiceList[name]);
+        _voicePool.front()->_Name = name;
+        _voicePool.front()->play();
+        return true;
     }
+    else{
+        for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+            if ((*it)->getStatus() == sf::Sound::Stopped){
+                (*it)->Load(_voiceList[name]);
+                (*it)->_Name = name;
+                (*it)->play();
+                return true;
+            }
+        }
 
-    _voicePool.push_back(new CVoiceStream());
-    _voicePool.back()->Load(_voiceList[name]);
-    _voicePool.back()->_Name = name;
-    _voicePool.back()->play();
-    return true;
+        _voicePool.push_back(new CVoiceStream());
+        _voicePool.back()->Load(_voiceList[name]);
+        _voicePool.back()->_Name = name;
+        _voicePool.back()->play();
+        return true;
+    }
 }
 
 bool CSoundBank::DelBuffer(map<string, sf::SoundBuffer>& list, string name)

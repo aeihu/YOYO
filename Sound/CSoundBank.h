@@ -68,7 +68,7 @@ class CSoundBank {
         bool DeleteSE(string name);
 
         int AddVoice(string name, const char* FileName) ;
-        bool PlayVoice(string name);
+        bool PlayVoice(string name, bool isSameChannel=true);
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);

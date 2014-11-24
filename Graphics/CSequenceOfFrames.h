@@ -15,6 +15,7 @@ class CSequenceOfFrames : public CAnimation
 {
     private:
         sf::IntRect         _rect;
+        sf::Image           _imageOfTexture;
         sf::Image           _image;
         sf::Image           _tile;
         sf::Texture*        _destTexture;

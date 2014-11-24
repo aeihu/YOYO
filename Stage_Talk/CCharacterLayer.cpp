@@ -88,13 +88,45 @@ bool CCharacterLayer::CheckList(Object json)
     }
 
     if (json.get<Boolean>("FACE_ENABLE")){
-        if (!json.has<Number>("MOUTH_FRAME_RATE")){
-            cout << "can't find value of MOUTH_FRAME_RATE." << endl;
+        if (!json.has<Number>("EYE_OFFSET_X")){
+            cout << "can't find value of EYE_OFFSET_X." << endl;
             result = false;
         }
-        
-        if (!json.has<Number>("EYES_FRAME_RATE")){
-            cout << "can't find value of EYES_FRAME_RATE." << endl;
+        if (!json.has<Number>("EYE_OFFSET_Y")){
+            cout << "can't find value of EYE_OFFSET_Y." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("EYE_WIDTH")){
+            cout << "can't find value of EYE_WIDTH." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("EYE_HEIGHT")){
+            cout << "can't find value of EYE_HEIGHT." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("EYE_FRAME_RATE")){
+            cout << "can't find value of EYE_FRAME_RATE." << endl;
+            result = false;
+        }
+
+        if (!json.has<Number>("MOUTH_OFFSET_X")){
+            cout << "can't find value of MOUTH_OFFSET_X." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("MOUTH_OFFSET_Y")){
+            cout << "can't find value of MOUTH_OFFSET_Y." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("MOUTH_WIDTH")){
+            cout << "can't find value of MOUTH_WIDTH." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("MOUTH_HEIGHT")){
+            cout << "can't find value of MOUTH_HEIGHT." << endl;
+            result = false;
+        }
+        if (!json.has<Number>("MOUTH_FRAME_RATE")){
+            cout << "can't find value of MOUTH_FRAME_RATE." << endl;
             result = false;
         }
         
@@ -115,10 +147,14 @@ bool CCharacterLayer::SetProperty(Object json)
     _faceList.reset();
 
     if (json.get<Boolean>("FACE_ENABLE")){
+        _framesOfMouth.SetOffset(json.get<Number>("MOUTH_OFFSET_X"), json.get<Number>("MOUTH_OFFSET_Y"));
+        _framesOfMouth.SetSize(json.get<Number>("MOUTH_WIDTH"), json.get<Number>("MOUTH_HEIGHT"));
         _framesOfMouth.SetFrameRate(json.get<Number>("MOUTH_FRAME_RATE"));
         _framesOfMouth.SetDestTexture(&_image);
 
-        _framesOfEyes.SetFrameRate(json.get<Number>("EYES_FRAME_RATE"));
+        _framesOfEyes.SetOffset(json.get<Number>("EYE_OFFSET_X"), json.get<Number>("EYE_OFFSET_Y"));
+        _framesOfEyes.SetSize(json.get<Number>("EYE_WIDTH"), json.get<Number>("EYE_HEIGHT"));
+        _framesOfEyes.SetFrameRate(json.get<Number>("EYE_FRAME_RATE"));
         _framesOfEyes.SetDestTexture(&_image);
         _faceList = json.get<Object>("FACE");
         _isFaceEnable = true;
@@ -145,19 +181,6 @@ bool CCharacterLayer::SetFace(string name)
         Object __mouth = _faceList.get<Object>(name).get<Object>("MOUTH");
         if (_framesOfEyes.LoadImg(__eye.get<String>("PATH").c_str()) &&
             _framesOfMouth.LoadImg(__mouth.get<String>("PATH").c_str())){
-            if (__eye.has<Number>("OFFSET_X")) 
-                _framesOfEyes.SetOffsetX(__eye.get<Number>("OFFSET_X"));
-            else{
-                cout << "CCharacterLayer::SetFace(): can't find EYE's OFFSET_X in value face \"" << name << "\"." << endl;
-                return false;
-            }
-
-            if (__eye.has<Number>("OFFSET_Y")) 
-                _framesOfEyes.SetOffsetY(__eye.get<Number>("OFFSET_Y"));
-            else{
-                cout << "CCharacterLayer::SetFace(): can't find EYE's OFFSET_Y in value face \"" << name << "\"." << endl;
-                return false;
-            }
 
             if (__eye.has<Number>("MAX_FRAMES")) 
                 _framesOfEyes.SetMaxFrames(__eye.get<Number>("MAX_FRAMES"));
@@ -165,34 +188,8 @@ bool CCharacterLayer::SetFace(string name)
                 cout << "CCharacterLayer::SetFace(): can't find EYE's MAX_FRAMES in value face \"" << name << "\"." << endl;
                 return false;
             }
-            
-            if (!__eye.has<Number>("WIDTH")){
-                cout << "CCharacterLayer::SetFace(): can't find EYE's WIDTH in value face \"" << name << "\"." << endl;
-                return false;
-            }
-            else{
-                if (!__eye.has<Number>("HEIGHT")){
-                    cout << "CCharacterLayer::SetFace(): can't find EYE's HEIGHT in value face \"" << name << "\"." << endl;
-                    return false;
-                }
-                _framesOfEyes.SetSize(__eye.get<Number>("WIDTH"), __eye.get<Number>("HEIGHT"));
-            }
 
             /////////////////////////////////////////////////////////////
-            
-            if (__mouth.has<Number>("OFFSET_X")) 
-                _framesOfMouth.SetOffsetX(__mouth.get<Number>("OFFSET_X"));
-            else{
-                cout << "CCharacterLayer::SetFace(): can't find MOUTH's OFFSET_X in value face \"" << name << "\"." << endl;
-                return false;
-            }
-
-            if (__mouth.has<Number>("OFFSET_Y")) 
-                _framesOfMouth.SetOffsetY(__mouth.get<Number>("OFFSET_Y"));
-            else{
-                cout << "CCharacterLayer::SetFace(): can't find MOUTH's OFFSET_Y in value face \"" << name << "\"." << endl;
-                return false;
-            }
 
             if (__mouth.has<Number>("MAX_FRAMES")) 
                 _framesOfMouth.SetMaxFrames(__mouth.get<Number>("MAX_FRAMES"));
@@ -200,19 +197,6 @@ bool CCharacterLayer::SetFace(string name)
                 cout << "CCharacterLayer::SetFace(): can't find MOUTH's MAX_FRAMES in value face \"" << name << "\"." << endl;
                 return false;
             }
-            
-            if (!__mouth.has<Number>("WIDTH")){
-                cout << "CCharacterLayer::SetFace(): can't find MOUTH's WIDTH in value face \"" << name << "\"." << endl;
-                return false;
-            }
-            else{
-                if (!__mouth.has<Number>("HEIGHT")){
-                    cout << "CCharacterLayer::SetFace(): can't find MOUTH's HEIGHT in value face \"" << name << "\"." << endl;
-                    return false;
-                }
-                _framesOfMouth.SetSize(__mouth.get<Number>("WIDTH"), __mouth.get<Number>("HEIGHT"));
-            }
-
             _currcentFace = name;
             return true;
         }
