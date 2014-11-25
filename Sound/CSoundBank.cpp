@@ -26,7 +26,6 @@ int CSoundBank::AddBuffer(map<string, sf::SoundBuffer>& list, string name, const
         return -2;
 
     list[name] = Buffer;
-
     return 0;
 }
 
@@ -171,23 +170,14 @@ void CSoundBank::OnLoop()
         }
     }
 
-    if (_voicePool.size() > CCommon::_Common.VOICE_POOL_NUM){
-        for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); ){
-            if ((*it)->getStatus() == sf::Sound::Stopped){
-                delete (*it);
-                _voicePool.erase(it);
-
-                if (_voicePool.size() <= CCommon::_Common.VOICE_POOL_NUM)
-                    break;
-            }
-            else
-                it++;
-        }
-    }
-
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it)->getStatus() == sf::Sound::Stopped){
-            (*it)->_Name = "";
+            if (_voicePool.size() > CCommon::_Common.VOICE_POOL_NUM){
+                delete (*it);
+                _voicePool.erase(it);
+            }
+            else
+                (*it)->_Name = "";
         }
     }
 }
