@@ -57,6 +57,8 @@ class CResourceControl : public CObjectControl
         
         bool IsExists(string name);
         bool Move(string name, float x, float y, size_t elapsed, bool pause);
+        bool MoveX(string name, float x, size_t elapsed, bool pause);
+        bool MoveY(string name, float y, size_t elapsed, bool pause);
         char Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha=255);
         char Hide(string name, char type, size_t elapsed, bool pause);
         

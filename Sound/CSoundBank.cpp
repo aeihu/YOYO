@@ -67,23 +67,18 @@ bool CSoundBank::PlaySE(string name)
     if (_seList.count(name) < 1)
         return false;
 
-    PlaySE(_seList[name]);
-    return true;
-}
-
-void CSoundBank::PlaySE(sf::SoundBuffer sound)
-{
     for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
         if ((*it).getStatus() == sf::Sound::Stopped){
-            (*it).setBuffer(sound);
+            (*it).setBuffer(_seList[name]);
             (*it).play();
-            return;
+            return true;
         }
     }
 
     _soundPool.push_back(sf::Sound());
-    _soundPool.back().setBuffer(sound);
+    _soundPool.back().setBuffer(_seList[name]);
     _soundPool.back().play();
+    return true;
 }
 
 bool CSoundBank::PlayVoice(string name, bool isSameChannel)

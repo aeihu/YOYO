@@ -37,7 +37,8 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
 void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
 {
     _destTexture = pTexture;
-    _imageOfTexture = pTexture->copyToImage();
+    if (pTexture)
+        _imageOfTexture = pTexture->copyToImage();
 }
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)

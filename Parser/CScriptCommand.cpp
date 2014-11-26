@@ -420,25 +420,57 @@ bool Cmd_MoveCharacterLayer(vector<string> args)
         string __name = __values["-n"][i];
         float __x = 0;
         float __y = 0;
+        char __flag = 0;
+
+        if (__values.count("-x") > 0){
+            __x = i < __values["-x"].size() ? atof(__values["-x"][i].c_str()) : __x;
+            __flag |= 0x1;
+        }
+
+        if (__values.count("-y") > 0){
+            __y = i < __values["-y"].size() ? atof(__values["-y"][i].c_str()) : __y;
+            __flag |= 0x2;
+        }
 
         if (__values.count("-s") > 1)
-            if (i<__values["-s"].size())
+            if (i<__values["-s"].size()){
                 if (!CResourceManager::_PositionControl.GetPosition(__values["-s"][i], &__x, &__y)){
                     cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"][i] << "\"." <<endl;
                     __result = false;
                 }
+                __flag = 3;
+            }
 
-        __x = __values.count("-x") == 0 ? __x : (i<__values["-x"].size() ? atof(__values["-x"][i].c_str()) : __x);
-        __y = __values.count("-y") == 0 ? __y : (i<__values["-y"].size() ? atof(__values["-y"][i].c_str()) : __y);
 
         size_t __incr = __values.count("-i") == 0 ? (float)CCommon::_Common.INCREMENT :
             (i<__values["-i"].size() ? atoi(__values["-i"][i].c_str()) : atoi(__values["-i"][__values["-i"].size()-1].c_str()));
 
-        if(!CResourceControl::_ResourceManager.Move(__name, __x, __y, __incr, __pause)){
-            cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
-            __result = false;
+        switch (__flag)
+        {
+            case 1:
+                if(!CResourceControl::_ResourceManager.MoveX("CharacterLayer:"+__name, 
+                    __x, __incr, __pause)){
+                    cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+                    __result = false;
+                }
+            break;
+            case 2:
+                if(!CResourceControl::_ResourceManager.MoveY("CharacterLayer:"+__name, 
+                    __y, __incr, __pause)){
+                    cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+                    __result = false;
+                }
+            break;
+            case 3:
+                if(!CResourceControl::_ResourceManager.Move("CharacterLayer:"+__name, 
+                    __x, __y, __incr, __pause)){
+                    cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+                    __result = false;
+                }
+            break;
         }
     }
+
     return __result;
 }
 

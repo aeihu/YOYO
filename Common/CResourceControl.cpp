@@ -137,6 +137,36 @@ bool CResourceControl::SetLayerOrder(string name, char order)
     return false;
 }
 
+bool CResourceControl::MoveX(string name, float x, size_t elapsed, bool pause)
+{
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+
+    if (__obj == NULL)
+        return false;
+
+    size_t __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
+    if (x - __obj->GetPosition().x < -0.001f || x - __obj->GetPosition().x > 0.001f){
+        __obj->Insert(0, x, pause, &__obj->GetPosition().x, abs((x - __obj->GetPosition().x) / __i));
+    }
+
+    return true;
+}
+        
+bool CResourceControl::MoveY(string name, float y, size_t elapsed, bool pause)
+{
+    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+
+    if (__obj == NULL)
+        return false;
+
+    size_t __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
+    if (y - __obj->GetPosition().y < -0.001f || y - __obj->GetPosition().y > 0.001f){
+        __obj->Insert(0, y, pause, &__obj->GetPosition().y, abs((y - __obj->GetPosition().y) / __i));
+    }
+
+    return true;
+}
+
 bool CResourceControl::Move(string name, float x, float y, size_t elapsed, bool pause)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
