@@ -14,11 +14,12 @@
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
 #include "../Common/CObject.h"
+#include "../Common/CEntityBaiscProperties.h"
 
-class CImageBaseClass : virtual public CAdderControl, public CObject
+class CImageBaseClass : virtual public CAdderControl, public CObject, public CEntityBaiscProperties
 {
     public:
-        enum EImageFlag{
+        enum ESubImageFlag{
             FLAG_POSITION = 1,
             FLAG_ALPHA = 2,
             FLAG_SCALE = 4,
@@ -31,10 +32,6 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
 
         char                              _layerOrder;
         int                               _alpha;
-        sf::Vector2f                      _scale;
-        sf::Vector2f                      _coordinate;
-        sf::Vector2f                      _offset;
-        float                             _rotation;
         char                              _flag;
     protected:
         sf::Texture                       _image;
@@ -47,15 +44,6 @@ class CImageBaseClass : virtual public CAdderControl, public CObject
     public:
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
-        
-        virtual float& GetRotation();
-        void SetRotation(float r);
-        sf::Vector2f& GetPosition();
-        virtual void SetPosition(float x, float y);
-        virtual sf::Vector2f& GetOffset();
-        virtual void SetOffset(float x, float y);
-        virtual void SetOffsetX(float x);
-        virtual void SetOffsetY(float y);
 
         virtual int& GetAlpha();
         virtual void SetAlpha(int alpha);

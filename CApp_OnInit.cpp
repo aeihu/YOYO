@@ -38,6 +38,15 @@ bool CApp::OnInit()
         return false;
     }
 
+    CCamera::Reset(0, 0, CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
+    //_view.setViewport(sf::FloatRect(0, 0, 1, 1));
+    //cout << _view.getCenter().x << ":" << _view.getCenter().y << endl;
+    //_view.zoom(2);
+    CCamera::SetCenter(CCommon::_Common.WWIDTH/2,CCommon::_Common.WHEIGHT/2);
+    //CCamera::SetCenter(0,CCommon::_Common.WHEIGHT/2);
+    //_view.setRotation(90);
+    CCamera::Bind(sf_Display);
+    //sf_Display->setView(_view);
     return true;
 }
 

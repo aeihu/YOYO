@@ -36,48 +36,6 @@ char CImageBaseClass::GetFlag() const
     return _flag;
 }
 
-float& CImageBaseClass::GetRotation()
-{
-    return _rotation;
-}
-
-void CImageBaseClass::SetRotation(float r)
-{
-    _rotation = r;
-}
-
-sf::Vector2f& CImageBaseClass::GetPosition() 
-{
-    return _coordinate;
-}
-
-void CImageBaseClass::SetPosition(float x, float y)
-{
-    _coordinate.x = x;
-    _coordinate.y = y;
-}
-
-sf::Vector2f& CImageBaseClass::GetOffset()
-{
-    return _offset;
-}
-
-void CImageBaseClass::SetOffset(float x, float y)
-{
-    _offset.x = x;
-    _offset.y = y;
-}
-
-void CImageBaseClass::SetOffsetX(float x)
-{
-    _offset.x = x;
-}
-
-void CImageBaseClass::SetOffsetY(float y)
-{
-    _offset.y = y;
-}
-
 void CImageBaseClass::SetLayerOrder(char order)
 {
     _layerOrder = order;
@@ -107,7 +65,6 @@ void CImageBaseClass::SetScale(float x, float y)
 void CImageBaseClass::SetScaleX(float x)
 {
     SetScale(x, _scale.y);
-    _scale.x = x;
 }
 
 void CImageBaseClass::SetScaleY(float y)

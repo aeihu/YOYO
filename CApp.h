@@ -26,16 +26,16 @@
 #include "Effect/CParticleSystem.h"
 #include "Common/CResourceManager.h"
 #include "Common/CResourceControl.h"
+#include "Graphics/CCamera.h"
 
 //==============================================================================
 
 class CApp : public CEvent {
     private:
         bool                        Running;
+        bool                        FullScreen;
 
         sf::RenderWindow*           sf_Display;
-
-        bool                        FullScreen;
     public:
         CApp();
 

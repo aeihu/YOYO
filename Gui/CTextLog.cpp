@@ -63,8 +63,8 @@ void CTextLog::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CTextLog::CVoiceButton::Exec(void* data)
 {
-    sf::SoundBuffer* __voice = static_cast<sf::SoundBuffer*>(data);
-    CSoundBank::_SoundControl.PlaySE(*__voice);
+    //sf::SoundBuffer* __voice = static_cast<sf::SoundBuffer*>(data);
+    //CSoundBank::_SoundControl.PlaySE(*__voice);
 }
 
 void CTextLog::OnCleanup()

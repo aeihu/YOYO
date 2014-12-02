@@ -6,8 +6,8 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CDrawableObjectControl_H_
-    #define _CDrawableObjectControl_H_
+#ifndef _CDRAWABLEOBJECTCONTROL_H_
+    #define _CDRAWABLEOBJECTCONTROL_H_
 
 #include <string>
 #include "CCommon.h"

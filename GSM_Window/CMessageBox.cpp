@@ -7,6 +7,7 @@
 */
 
 #include "CMessageBox.h"
+#include "../Graphics/CCamera.h"
 
 using namespace std;
 
@@ -139,7 +140,6 @@ bool CMessageBox::CheckList(Object json)
 bool CMessageBox::OnSubLoop()
 {
    // bool __result = CBox::OnLoop();
-
     _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
