@@ -6,67 +6,67 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#include "CEntityBaiscProperties.h"
+#include "CBaiscProperties.h"
 
-float& CEntityBaiscProperties::GetRotation()
+float& CBaiscProperties::GetRotation()
 {
     return _rotation;
 }
 
-void CEntityBaiscProperties::SetRotation(float r)
+void CBaiscProperties::SetRotation(float r)
 {
     _rotation = r;
 }
 
-sf::Vector2f& CEntityBaiscProperties::GetPosition() 
+sf::Vector2f& CBaiscProperties::GetPosition() 
 {
     return _coordinate;
 }
 
-void CEntityBaiscProperties::SetPosition(float x, float y)
+void CBaiscProperties::SetPosition(float x, float y)
 {
     _coordinate.x = x;
     _coordinate.y = y;
 }
 
-sf::Vector2f& CEntityBaiscProperties::GetOffset()
+sf::Vector2f& CBaiscProperties::GetOffset()
 {
     return _offset;
 }
 
-void CEntityBaiscProperties::SetOffset(float x, float y)
+void CBaiscProperties::SetOffset(float x, float y)
 {
     _offset.x = x;
     _offset.y = y;
 }
 
-void CEntityBaiscProperties::SetOffsetX(float x)
+void CBaiscProperties::SetOffsetX(float x)
 {
     _offset.x = x;
 }
 
-void CEntityBaiscProperties::SetOffsetY(float y)
+void CBaiscProperties::SetOffsetY(float y)
 {
     _offset.y = y;
 }
 
-void CEntityBaiscProperties::SetScale(float x, float y)
+void CBaiscProperties::SetScale(float x, float y)
 {
     _scale.x = x;
     _scale.y = y;
 }
 
-void CEntityBaiscProperties::SetScaleX(float x)
+void CBaiscProperties::SetScaleX(float x)
 {
     _scale.x = x;
 }
 
-void CEntityBaiscProperties::SetScaleY(float y)
+void CBaiscProperties::SetScaleY(float y)
 {
     _scale.y = y;
 }
         
-sf::Vector2f& CEntityBaiscProperties::GetScale()
+sf::Vector2f& CBaiscProperties::GetScale()
 {
     return _scale;
 }

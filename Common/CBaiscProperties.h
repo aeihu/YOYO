@@ -11,7 +11,7 @@
 
 #include <SFML/Graphics.hpp>
 
-class CEntityBaiscProperties
+class CBaiscProperties
 {
     protected:
         sf::Vector2f                      _scale;
