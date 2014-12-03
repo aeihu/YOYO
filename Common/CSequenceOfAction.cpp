@@ -15,7 +15,7 @@ bool CSequenceOfAction::OnLoop()
             _actionList.erase(_actionList.begin());
     }
     
-    return _actionList.empty();
+    return !_actionList.empty();
 }
 
 void CSequenceOfAction::AddAction(CAction act)

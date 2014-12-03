@@ -12,10 +12,11 @@
 
 #include "CAction.h"
 #include <vector>
+#include "CActionBaseClass.h"
 
 using namespace std;
 
-class CSequenceOfAction
+class CSequenceOfAction : public CActionBaseClass
 {
     private:
         vector<CAction>     _actionList;

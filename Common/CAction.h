@@ -9,38 +9,41 @@
 #ifndef _CACTION_H_
     #define _CACTION_H_
 
-class CAction
+#include "CActionBaseClass.h"
+#include "CCommon.h"
+
+class CAction : public CActionBaseClass
 {
     protected:
     public:
-        enum Eflag{
-            INT = 0x01,
-            FLOAT,
-            FUNC
-        };
+        //enum Eflag{
+        //    INT = 0x01,
+        //    FLOAT,
+        //    FUNC
+        //};
 
-        union UActType{
-            int             _int;
-            float           _float;
-            void*           _data;
-        };
+        //union UActType{
+        //    int             _int;
+        //    float           _float;
+        //    void*           _data;
+        //};
 
-        union PActType{
-            int*            _int;
-            float*          _float;
-            void*           _data;
-        };
+        //union PActType{
+        //    int*            _int;
+        //    float*          _float;
+        //    void*           _data;
+        //};
 
-        CAction(int* val, int fin, int inc);
+        //CAction(int* val, int fin, float inc);
         CAction(float* val, float fin, float inc);
         CAction(void* func, void *data);
         CAction(void* func);
         bool OnLoop();
     private:
-        PActType        _data;
-        UActType        _dataOfFinish;
-        UActType        _incr;
-        Eflag           _type;
+        float*      _val;
+        float       _valOfFinish;
+        float       _incr;
+        //Eflag           _type;
 };
 
 #endif

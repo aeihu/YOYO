@@ -16,7 +16,7 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _rotation = 0.0f;
     _coordinate.x = x;
     _coordinate.y = y;
-    _alpha = 0;
+    _alpha = 0.0f;
     _visible = false;
     _image.setSmooth(true);
     _layerOrder = 0;
@@ -77,7 +77,7 @@ sf::Vector2f& CImageBaseClass::GetScale()
     return _scale;
 }
 
-int& CImageBaseClass::GetAlpha() 
+float& CImageBaseClass::GetAlpha() 
 {
     return _alpha;
 }
@@ -107,7 +107,7 @@ bool CImageBaseClass::GetVisible() const
 
 bool CImageBaseClass::IsStandby()
 {
-    return _visible && Count()==0;
+    return _visible;// && Count()==0;
 }
 
 bool CImageBaseClass::LoadImg(const char* fileName)
@@ -138,7 +138,7 @@ void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
 
 bool CImageBaseClass::OnLoop()
 {
-    bool __result = CAdderControl::OnLoop()>0 ? true : false;
+    bool __result = CBaiscProperties::OnLoop();//>0 ? true : false;
     _visible = _alpha > 0 ? true : false;
 
     if (_sprite.getColor().a != _alpha)

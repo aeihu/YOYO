@@ -41,7 +41,7 @@ class CResourceControl : public CObjectControl
         static CResourceControl                 _ResourceManager;
 
         inline void SetInterval(size_t interval) {_interval = interval;}
-        bool SetImageVisibility(string name, int alpha, float incr, bool pause);
+        //bool SetImageVisibility(string name, int alpha, float incr, bool pause);
         bool SetImageVisibility(string name, int alpha, size_t elapsed, bool pause);
         bool SetLayerOrder(string name, char order);
 

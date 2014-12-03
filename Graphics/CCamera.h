@@ -10,8 +10,9 @@
     #define _CCAMERA_H_ 
 
 #include <SFML/Graphics.hpp>
+#include "../Common/CBaiscProperties.h"
 
-class CCamera
+class CCamera : public CBaiscProperties
 {
 private:
     static sf::View         _camera;

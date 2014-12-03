@@ -6,18 +6,24 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CENTITYBAISCPROPERTIES_H_
-    #define _CENTITYBAISCPROPERTIES_H_
+#ifndef _CBAISCPROPERTIES_H_
+    #define _CBAISCPROPERTIES_H_
 
+#include "CAction.h"
 #include <SFML/Graphics.hpp>
+#include <list>
+
+using namespace std;
 
 class CBaiscProperties
 {
     protected:
-        sf::Vector2f                      _scale;
-        sf::Vector2f                      _coordinate;
-        sf::Vector2f                      _offset;
-        float                             _rotation;
+        sf::Vector2f                        _scale;
+        sf::Vector2f                        _coordinate;
+        sf::Vector2f                        _offset;
+        float                               _rotation;
+        
+        list<CActionBaseClass*>             _actList;
     public:
         virtual float& GetRotation();
         void SetRotation(float r);
@@ -32,6 +38,17 @@ class CBaiscProperties
         virtual void SetScale(float x, float y);
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
+        virtual bool AddAction(CActionBaseClass* act);
+        virtual bool AddAction(float* val, size_t elapsed, float fin);
+        //virtual bool AddAction(int* val, size_t elapsed, int fin);
+        virtual bool AddActionOfRotation(size_t elapsed, float rotation);
+        virtual bool AddActionOfScale(size_t elapsed, float x, float y);
+
+        virtual bool AddActionOfMove(size_t elapsed, float x, float y);	  
+        virtual bool AddActionOfMoveX(size_t elapsed, float x);
+        virtual bool AddActionOfMoveY(size_t elapsed, float y);
+
+        virtual bool OnLoop();
 };
 
 #endif

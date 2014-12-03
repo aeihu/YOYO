@@ -14,9 +14,9 @@
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
 #include "../Common/CObject.h"
-#include "../Common/CEntityBaiscProperties.h"
+#include "../Common/CBaiscProperties.h"
 
-class CImageBaseClass : virtual public CAdderControl, public CObject, public CEntityBaiscProperties
+class CImageBaseClass : public CObject, public CBaiscProperties// virtual public CAdderControl, 
 {
     public:
         enum ESubImageFlag{
@@ -27,11 +27,11 @@ class CImageBaseClass : virtual public CAdderControl, public CObject, public CEn
         };
 
     private:
-        using CAdderControl::OnLoop;
-        using CAdderControl::Count;
+        //using CAdderControl::OnLoop;
+        //using CAdderControl::Count;
 
         char                              _layerOrder;
-        int                               _alpha;
+        float                             _alpha;
         char                              _flag;
     protected:
         sf::Texture                       _image;
@@ -45,7 +45,7 @@ class CImageBaseClass : virtual public CAdderControl, public CObject, public CEn
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
 
-        virtual int& GetAlpha();
+        virtual float& GetAlpha();
         virtual void SetAlpha(int alpha);
         virtual void SetLayerOrder(char order);
 
