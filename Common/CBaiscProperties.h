@@ -10,12 +10,13 @@
     #define _CBAISCPROPERTIES_H_
 
 #include "CAction.h"
+#include "CObject.h"
 #include <SFML/Graphics.hpp>
 #include <list>
 
 using namespace std;
 
-class CBaiscProperties
+class CBaiscProperties : public CObject
 {
     protected:
         sf::Vector2f                        _scale;
@@ -39,16 +40,17 @@ class CBaiscProperties
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
         virtual bool AddAction(CActionBaseClass* act);
-        virtual bool AddAction(float* val, size_t elapsed, float fin);
+        virtual bool AddAction(float* val, size_t elapsed, float fin, bool pause);
         //virtual bool AddAction(int* val, size_t elapsed, int fin);
-        virtual bool AddActionOfRotation(size_t elapsed, float rotation);
-        virtual bool AddActionOfScale(size_t elapsed, float x, float y);
+        virtual bool AddActionOfRotation(size_t elapsed, float rotation, bool pause);
+        virtual bool AddActionOfScale(size_t elapsed, float x, float y, bool pause);
 
-        virtual bool AddActionOfMove(size_t elapsed, float x, float y);	  
-        virtual bool AddActionOfMoveX(size_t elapsed, float x);
-        virtual bool AddActionOfMoveY(size_t elapsed, float y);
+        virtual bool AddActionOfMove(size_t elapsed, float x, float y, bool pause);	  
+        virtual bool AddActionOfMoveX(size_t elapsed, float x, bool pause);
+        virtual bool AddActionOfMoveY(size_t elapsed, float y, bool pause);
 
         virtual bool OnLoop();
+        virtual void OnSaveData(Object& json) const;
 };
 
 #endif

@@ -13,10 +13,9 @@
 #include <list>
 #include "../Graphics/CSurface.h"
 #include "../Common/CAdder.h"
-#include "../Common/CObject.h"
 #include "../Common/CBaiscProperties.h"
 
-class CImageBaseClass : public CObject, public CBaiscProperties// virtual public CAdderControl, 
+class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl, 
 {
     public:
         enum ESubImageFlag{

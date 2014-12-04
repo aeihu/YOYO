@@ -74,6 +74,7 @@ sf::Vector2f& CBaiscProperties::GetScale()
 
 bool CBaiscProperties::OnLoop()
 {
+    bool __isPause = false;
     for (list<CActionBaseClass*>::iterator it=_actList.begin();it!=_actList.end(); ){
         if ((*it)->OnLoop()){
             delete (*it);
@@ -82,8 +83,10 @@ bool CBaiscProperties::OnLoop()
             if (it == _actList.end())
                 break;
         }
-        else
+        else{
+            __isPause = (*it)->IsPause() ? true : __isPause;
             ++it;
+        }
     }
 
     //for (size_t i=_actList.size(); i>0; i--){
@@ -95,7 +98,7 @@ bool CBaiscProperties::OnLoop()
     //
     //}
 
-    return !_actList.empty();
+    return _actList.empty() ? false : __isPause;
 }
 
 bool CBaiscProperties::AddAction(CActionBaseClass* act)
@@ -107,13 +110,13 @@ bool CBaiscProperties::AddAction(CActionBaseClass* act)
     return true;
 }
 
-bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin)
+bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin, bool pause)
 {
     if (val){
         float __inc = (fin - *val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)elapsed);
 
         if (__inc < -0.000001f || __inc > 0.000001f)
-            _actList.push_back(new CAction(val, fin, __inc));
+            _actList.push_back(new CAction(val, fin, __inc, pause));
 
         return true;
     }
@@ -132,31 +135,43 @@ bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin)
 //    return false;
 //}
 
-bool CBaiscProperties::AddActionOfRotation(size_t elapsed, float rotation)
+bool CBaiscProperties::AddActionOfRotation(size_t elapsed, float rotation, bool pause)
 {
-    return AddAction(&_rotation, elapsed, rotation);
+    return AddAction(&_rotation, elapsed, rotation, pause);
 }
 
-bool CBaiscProperties::AddActionOfScale(size_t elapsed, float x, float y)
+bool CBaiscProperties::AddActionOfScale(size_t elapsed, float x, float y, bool pause)
 {
-    return AddAction(&_scale.x, elapsed, x) && 
-        AddAction(&_scale.y, elapsed, y);
+    return AddAction(&_scale.x, elapsed, x, pause) && 
+        AddAction(&_scale.y, elapsed, y, pause);
 }
 
-bool CBaiscProperties::AddActionOfMove(size_t elapsed, float x, float y)
+bool CBaiscProperties::AddActionOfMove(size_t elapsed, float x, float y, bool pause)
 {
-    return AddAction(&_coordinate.x, elapsed, x) && 
-        AddAction(&_coordinate.y, elapsed, y);
+    return AddAction(&_coordinate.x, elapsed, x, pause) && 
+        AddAction(&_coordinate.y, elapsed, y, pause);
 }
 
 
-bool CBaiscProperties::AddActionOfMoveX(size_t elapsed, float x)
+bool CBaiscProperties::AddActionOfMoveX(size_t elapsed, float x, bool pause)
 {
-    return AddAction(&_coordinate.x, elapsed, x);
+    return AddAction(&_coordinate.x, elapsed, x, pause);
 }
 
-bool CBaiscProperties::AddActionOfMoveY(size_t elapsed, float y)
+bool CBaiscProperties::AddActionOfMoveY(size_t elapsed, float y, bool pause)
 {
-    return AddAction(&_coordinate.y, elapsed, y);
+    return AddAction(&_coordinate.y, elapsed, y, pause);
 
+}
+
+void CBaiscProperties::OnSaveData(Object& json) const
+{
+    CObject::OnSaveData(json);
+    json << "x" << _coordinate.x;
+    json << "y" << _coordinate.y;
+    json << "offset_x" << _offset.x;
+    json << "offset_y" << _offset.y;
+    json << "scale_x" << _scale.x;
+    json << "scale_y" << _scale.y;
+    json << "rotation" << _rotation;
 }

@@ -16,34 +16,14 @@ class CAction : public CActionBaseClass
 {
     protected:
     public:
-        //enum Eflag{
-        //    INT = 0x01,
-        //    FLOAT,
-        //    FUNC
-        //};
-
-        //union UActType{
-        //    int             _int;
-        //    float           _float;
-        //    void*           _data;
-        //};
-
-        //union PActType{
-        //    int*            _int;
-        //    float*          _float;
-        //    void*           _data;
-        //};
-
-        //CAction(int* val, int fin, float inc);
-        CAction(float* val, float fin, float inc);
-        CAction(void* func, void *data);
-        CAction(void* func);
+        CAction(float* val, float fin, float inc, bool pause=false);
+        CAction(void* func, void *data, bool pause=false);
+        CAction(void* func, bool pause=false);
         bool OnLoop();
     private:
         float*      _val;
         float       _valOfFinish;
         float       _incr;
-        //Eflag           _type;
 };
 
 #endif

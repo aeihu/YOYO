@@ -13,6 +13,8 @@ bool CSequenceOfAction::OnLoop()
     if (!_actionList.empty()){
         if (_actionList.front().OnLoop())
             _actionList.erase(_actionList.begin());
+        else
+            _pause = _actionList.front().IsPause();
     }
     
     return !_actionList.empty();

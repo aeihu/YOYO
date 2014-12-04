@@ -16,12 +16,12 @@
 //    _type = INT;
 //}
 
-CAction::CAction(float* val, float fin, float inc)
+CAction::CAction(float* val, float fin, float inc, bool pause)
 {
     _val = val;
     _valOfFinish = fin;
     _incr = inc;
-    //_type = FLOAT;
+    _pause = pause;
 }
 
 bool CAction::OnLoop()

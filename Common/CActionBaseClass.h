@@ -11,8 +11,12 @@
 
 class CActionBaseClass
 {
-    public: 
+    protected:
+        bool        _pause;
+    public:
+        CActionBaseClass() {_pause = false;}
         virtual bool OnLoop()=0; 
+        bool IsPause() {return _pause;}
 };
 
 #endif

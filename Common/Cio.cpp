@@ -90,8 +90,17 @@ string Cio::LoadTxtFile(string filename)
 			//if (is)
 			//  std::cout << "all characters read successfully.";
 			//else
-			if (__is)
+            
+            //char BOM[3] = {0xEF,0xBB,0xBF};
+			if (__is){
 				__result = __buffer;
+                
+                if (__result.length() > 3)
+                    if ((unsigned char)__result[0] == 0xEF && 
+                        (unsigned char)__result[1] == 0xBB && 
+                        (unsigned char)__result[2] == 0xBF)
+                        __result = __result.erase(0,3);
+            }
 			else
 				cout << "Cio::LoadTxtFile(): only " << __is.gcount() << " could be read";
 

@@ -155,9 +155,10 @@ void CSoundBank::OnLoop()
     if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
         for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end();){
             if ((*it).getStatus() == sf::Sound::Stopped){
-                _soundPool.erase(it);
+                it=_soundPool.erase(it);
 
-                if (_soundPool.size() <= CCommon::_Common.SOUND_POOL_NUM)
+                if (it == _soundPool.end() ||
+                    _soundPool.size() <= CCommon::_Common.SOUND_POOL_NUM)
                     break;
             }
             else
@@ -165,15 +166,22 @@ void CSoundBank::OnLoop()
         }
     }
 
-    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
+    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); ){
         if ((*it)->getStatus() == sf::Sound::Stopped){
             if (_voicePool.size() > CCommon::_Common.VOICE_POOL_NUM){
                 delete (*it);
-                _voicePool.erase(it);
+                it=_voicePool.erase(it);
+
+                if (it == _voicePool.end())
+                    break;
             }
-            else
+            else{
                 (*it)->_Name = "";
+                it++;
+            }
         }
+        else
+            it++;
     }
 }
 
