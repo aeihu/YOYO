@@ -11,23 +11,30 @@
 
 #include <SFML/Graphics.hpp>
 #include "../Common/CBaiscProperties.h"
+#include "../Common/CConfigFile.h"
 
 class CCamera : public CBaiscProperties
 {
 private:
-    static sf::View         _camera;
-    static sf::Vector2f     _offset;
+    sf::View            _camera;
+    sf::Vector2f        _size;
 protected:
 public:
-    static void Reset(float x, float y, float w, float h);
-    static void SetViewport(float x, float y, float w, float h);
-    static void SetCenter(float x, float y);
-    static void SetSize(float w, float h);
-    static void SetZoom(float zoom);
-    static void SetRotation(float angle);
-    static void Bind(sf::RenderWindow* window);
-    static sf::Vector2f GetCenter();
-    static sf::Vector2f GetPosition();
+    static CCamera* CCamera::Create();
+
+    void Reset(float x, float y, float w, float h);
+    void SetViewport(float x, float y, float w, float h);
+    void SetCenter(float x, float y);
+    void SetSize(float w, float h);
+    void SetZoom(float zoom);
+    void SetRotation(float angle);
+    void Bind(sf::RenderWindow* window);
+    bool OnLoop();
+    sf::Vector2f GetCenter();
+    sf::Vector2f GetPosition();
+    virtual void OnSaveData(Object& json) const;
+    bool CheckList(Object json);
+    bool SetProperty(Object json);
 };
 
 
