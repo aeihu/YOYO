@@ -62,15 +62,15 @@ bool CMessageBox::SetProperty(Object json)
 
     CFont* __fnt = NULL;
     CObject* __obj = json.has<Number>("MSG_FONT") ? 
-        CResourceControl::_ResourceManager.GetObject("Font:"+json.get<String>("MSG_FONT")):
-        CResourceControl::_ResourceManager.GetObject("Font:__main");
+        CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:"+json.get<String>("MSG_FONT")):
+        CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:__main");
    
-    if (__obj != NULL){
-        __fnt = static_cast<CFont*>(__obj);
-        SetFont(__fnt->GetFont());
-    }
-    else
-        return false;
+    //if (__obj != NULL){
+    //    __fnt = static_cast<CFont*>(__obj);
+    //    SetFont(__fnt->GetFont());
+    //}
+    //else
+    //    return false;
 
     return CBox::SetProperty(json);
 }

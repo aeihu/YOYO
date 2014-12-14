@@ -25,7 +25,7 @@ bool CDrawableObjectControl::IsExists(string name)
     return false;//_objectList.count(name) > 0;
 }
 
-bool CDrawableObjectControl::AddDrawableObject(string objTypeName, string filename)
+bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, string filename)
 {
     
     CImageBaseClass* __obj = NULL;
@@ -39,16 +39,16 @@ bool CDrawableObjectControl::AddDrawableObject(string objTypeName, string filena
     else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
 
     if (__obj != NULL){
-        string __name = GetNameInFilename(filename);
+        //string __name = GetNameInFilename(filename);
         
-        if (IsExists(__name)){
+        if (IsExists(name)){
             cout << "CResourceControl::AddDrawableObject" << objTypeName 
-                <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
+                <<"(): " << objTypeName << " \""<< name << "\" has existed." <<endl;
             delete __obj;
             return false;
         }
 
-        _drawableObjectList.push_back(make_pair(__name, __obj));
+        _drawableObjectList.push_back(make_pair(objTypeName+":"+name, __obj));
         _isNeedSort = true;
         return true;
     }
@@ -236,4 +236,63 @@ char CDrawableObjectControl::Hide(string name, char type, size_t elapsed, bool p
     }
 
     return -1;
+}
+
+
+bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
+{
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnLButtonUp(mX, mY))
+            return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnLButtonDown(mX, mY))
+            return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnMouseMove(int mX, int mY)
+{
+    //for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    //    if ((*it).second->OnLButtonDown(mX, mY))
+    //        return true;
+
+    return false;
+}
+
+void CDrawableObjectControl::OnLoop(bool &pause)
+{
+    if (_isNeedSort){
+        std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), _sort);
+        _isNeedSort = false;
+    }
+
+    vector<pair<string, CImageBaseClass*> >::iterator it;
+    for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ ){
+        if((*it).second->OnLoop()) 
+            pause=true;
+    }
+}
+
+void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Dest)
+{
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
+        it!=_drawableObjectList.end(); it++)
+        (*it).second->OnRender(Surf_Dest);
+}
+
+void CDrawableObjectControl::OnCleanup()
+{
+    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
+        it!=_drawableObjectList.end(); it++){
+            delete (*it).second;
+    }
+
+    _drawableObjectList.clear();
 }

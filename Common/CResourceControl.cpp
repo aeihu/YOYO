@@ -7,7 +7,7 @@
 */
 
 #include "CResourceControl.h"
-#include <algorithm>
+#include "../Parser/CParser.h"
 
 CResourceControl  CResourceControl::_ResourceManager;
 
@@ -16,12 +16,32 @@ CResourceControl  CResourceControl::_ResourceManager;
 //    return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
 //}
 
+string CResourceControl::GetNameInFilename(string filename)
+{
+    size_t __last_x_pos = filename.find_last_of('/');
+    size_t __last_s_pos = filename.find_last_of('*');
+    __last_x_pos = __last_x_pos == string::npos ? 0 : __last_x_pos;
+    __last_s_pos = __last_s_pos == string::npos ? 0 : __last_s_pos;
+    string __result = "";
+
+    if (__last_s_pos > __last_x_pos)
+        __result = filename.substr(__last_s_pos+1);
+    else
+        __result = filename.substr(__last_x_pos+1);
+    
+    size_t __last_p_pos = __result.find_last_of('.');
+    if (__last_p_pos != string::npos)
+        __result = __result.substr(0, __last_p_pos);
+
+    return __result;
+}
+
 bool CResourceControl::AddVariable(string name, string val)
 {
     if(_userVariableList.count("$"+name) > 0)
         return false;
 
-    _userVariableList["$"+name] = val;
+    _userVariableList["$"+name] = val;    
     return true;
 }
 
@@ -33,6 +53,36 @@ bool CResourceControl::SetVariable(string name, string val)
     }
 
     return false;
+}
+
+bool CResourceControl::AddCamera(string name)
+{
+    if(_cameraList.count(name) > 0)
+        return false;
+    
+    _cameraList[name] = CCamera::Create();
+    _cameraList[name]->Reset(0.0f, 0.0f,
+        CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
+    return true;
+}
+
+bool CResourceControl::DelCamera(string name)
+{
+    if(_cameraList.count(name) > 0){
+        delete _cameraList[name];
+        _cameraList.erase(name);
+        return true;
+    }
+
+    return false;
+}
+
+CCamera* CResourceControl::GetCamera(string name)
+{
+    if(_cameraList.count(name) > 0){
+        return _cameraList[name];
+    }
+    return NULL;
 }
 
 string CResourceControl::GetVariable(string name)
@@ -54,292 +104,130 @@ bool CResourceControl::DelVariable(string name)
     return false;
 }
 
-bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
-{
-    if (obj == NULL)
-        return false;
 
-    if (IsExists(name)){
-        delete obj;
-        return false;
-    }
-
-    _drawableObjectList.push_back(make_pair(name, obj));
-    _isNeedSort = true;
-    return true;
-}
-
-bool CResourceControl::DelDrawableObject(string name)
-{
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        if (_drawableObjectList[i].first == name){
-            delete _drawableObjectList[i].second;
-            _drawableObjectList.erase(_drawableObjectList.begin()+i);
-            return true;
-        }
-    }
-
-    return true;
-}
-
-CImageBaseClass* CResourceControl::GetDrawableObject(string name)
-{
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        if (_drawableObjectList[i].first == name)
-            return _drawableObjectList[i].second;
-    }
-
-    return NULL;
-}
-
-void CResourceControl::SetDrawableObjectLayerOrder(string name, char layer)
-{
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        if (_drawableObjectList[i].first == name){
-            _drawableObjectList[i].second->SetLayerOrder(layer);
-            _isNeedSort = true;
-            return;
-        }
-    }
-}
-
-bool CResourceControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause)
-{
-   // if (incr == 0)
-   //     incr = static_cast<float>(CCommon::_Common.INCREMENT);
-
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-    if (__obj != NULL){
-		__obj->AddAction(&__obj->GetAlpha(), elapsed, alpha);
-        //__obj->Insert(0,
-        //    alpha, pause,
-        //    &__obj->GetAlpha(),
-        //    incr);
-
-        return true;
-    }
-
-    return false;
-}
-
-//bool CResourceControl::SetImageVisibility(string name, int alpha, size_t elapsed, bool pause)
+//bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
 //{
-//    float __i = elapsed / _interval == 0 ? 1 : elapsed / _interval;
-//    return SetImageVisibility(name, alpha, __i, pause);
+//    if (obj == NULL)
+//        return false;
+//
+//    if (IsExists(name)){
+//        delete obj;
+//        return false;
+//    }
+//
+//    _drawableObjectList.push_back(make_pair(name, obj));
+//    _isNeedSort = true;
+//    return true;
 //}
 
-bool CResourceControl::SetLayerOrder(string name, char order)
+bool CResourceControl::CheckIn(Object& json, string name, string objTypeName)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-    if (__obj != NULL){
-        __obj->SetLayerOrder(order);
-        return true;
-    }
-    return false;
-}
-
-bool CResourceControl::MoveX(string name, float x, size_t elapsed, bool pause)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return false;
     
-    __obj->AddActionOfMoveX(elapsed, x);
-    return true;
-}
-        
-bool CResourceControl::MoveY(string name, float y, size_t elapsed, bool pause)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
+    if (!json.has<Array>(name))
         return false;
+
+    Array __array = json.get<Array>(name);
+    //if (__array.size() < 1)
+    //    return false;
     
-    __obj->AddActionOfMoveY(elapsed, y);
+    for (size_t i=0; i<__array.size(); i++)
+        _DrawableObjectControl.AddDrawableObject(
+            GetNameInFilename(__array.get<String>(i)), 
+            objTypeName, 
+            __array.get<String>(i));
+
     return true;
 }
 
-bool CResourceControl::Move(string name, float x, float y, size_t elapsed, bool pause)
+bool CResourceControl::OnInit(string filename)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
+    Object json;
+    if (!json.parse(Cio::LoadTxtFile(filename)))
         return false;
     
-    __obj->AddActionOfMove(elapsed, x ,y);
-    return true;
+    if (!json.has<String>("main_script"))
+        return false;
+
+    if (!CheckIn(json, "image_for_loading", "Img")) return false;
+    if (!CheckIn(json, "image_for_effect", "Img")) return false;
+    if (!CheckIn(json, "messagebox", "MessageBox")) return false;
+
+    return LoadScript(json.get<String>("main_script"));
 }
-        
-char CResourceControl::Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha)
+
+bool CResourceControl::LoadScript(string filename)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return -1;
-
-    if (__obj->GetVisible())
-        return -2;
-
-    float __i = elapsed == 0 ? 1 : elapsed / _interval;
-    float __x = x;
-    float __y = y;
-
-    switch (type)
+    //Object json;
+    string __ObjectTypeName = "";
+    if (!_script.empty())
     {
-        case 'u':
-            __y += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'r':
-            __x -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'd':
-            __y -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'l':
-            __x += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
+
     }
 
-    __obj->GetPosition().x = __x;
-    __obj->GetPosition().y = __y;
-    if (Move(name, x, y, elapsed, pause)){
-        SetImageVisibility(name, alpha, elapsed, pause);
-        return 0;
+    if (!_script.parse(Cio::LoadTxtFile(filename)))
+        return false;
+
+    //    if (objTypeName == "Img") __obj = CImageBaseClass::Create(filename.c_str());
+    //else if (objTypeName == "Background") __obj = CImageBaseClass::Create(filename.c_str());
+    //else if (objTypeName == "Button") __obj = CButton::Create(filename.c_str());
+    //else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(filename.c_str());
+    //else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
+    //else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(filename.c_str());
+    //else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
+
+    CheckIn(_script, "character","CharacterLayer");
+    CheckIn(_script, "background","Background");
+    CheckIn(_script, "cg","Img");
+    CheckIn(_script, "button","Button");
+    _script << "filename" << filename;
+
+    if (_script.has<Array>("script")){
+        for (size_t i=0; i< _script.get<Array>("script").size(); i++)
+            CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
     }
+    //CheckIn(_script, "ParticleSystem"," ParticleSystem");
 
-    return -1;
-}
-        
-char CResourceControl::Hide(string name, char type, size_t elapsed, bool pause)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return -1;
-
-    if (!__obj->GetVisible())
-        return -2;
-
-    float __x = __obj->GetPosition().x;
-    float __y = __obj->GetPosition().y;
-    float __i = elapsed == 0 ? 1 : elapsed / _interval;
-
-    switch (type)
-    {
-        case 'u':
-            __y -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'r':
-            __x += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'd':
-            __y += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-        case 'l':
-            __x -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-        break;
-    }
-
-    if (Move(name, __x, __y, elapsed, pause)){
-        SetImageVisibility(name, 0, __obj->GetAlpha() / __i, pause);
-        return 0;
-    }
-
-    return -1;
+    return true;
 }
 
-bool CResourceControl::OnLButtonUp(int mX, int mY)
-{
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
-        if ((*it).second->OnLButtonUp(mX, mY))
-            return true;
-
-    return false;
-}
-
-bool CResourceControl::OnLButtonDown(int mX, int mY)
-{
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
-        if ((*it).second->OnLButtonDown(mX, mY))
-            return true;
-
-    return false;
-}
-
-bool CResourceControl::OnMouseMove(int mX, int mY)
-{
-    //for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
-    //    if ((*it).second->OnLButtonDown(mX, mY))
-    //        return true;
-
-    return false;
-}
 
 void CResourceControl::OnLoop(bool &pause)
 {
-    if (_isNeedSort){
-        std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), _sort);
-        _isNeedSort = false;
-    }
-
-    vector<pair<string, CImageBaseClass*> >::iterator it;
-    for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
-    {
-        if((*it).second->OnLoop()) 
-            pause=true;
-    }
+    _DrawableObjectControl.OnLoop(pause);
 }
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
+    _DrawableObjectControl.OnRender(Surf_Dest);
     //unsigned long l = CCommon::_Common.GetTicks();
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
-        it!=_drawableObjectList.end(); it++)
-        (*it).second->OnRender(Surf_Dest);
 
     //cout << "time: " << CCommon::_Common.GetTicks()-l <<endl;
 }
 
 void CResourceControl::OnCleanup()
 {
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
-        it!=_drawableObjectList.end(); it++){
-            delete (*it).second;
-    }
-
-    _drawableObjectList.clear();
-}
-
-bool CResourceControl::IsExists(string name)
-{
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        if (_drawableObjectList[i].first == name)
-            return true;
-    }
-
-    return _objectList.count(name) > 0;
+    _DrawableObjectControl.OnCleanup();
 }
 
 void CResourceControl::OnSaveData()
 {
-    ofstream __savefile("./userdata/1.txt");
-    Object __json;
-    __json.reset();
+    //ofstream __savefile("./userdata/1.txt");
+    //Object __json;
+    //__json.reset();
 
-    if(!__savefile){
-        cout << "error" << endl;
-        return;
-    }
+    //if(!__savefile){
+    //    cout << "error" << endl;
+    //    return;
+    //}
 
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        cout << "_(:3J Z)_" <<endl;
-        __savefile << "name=" << _drawableObjectList[i].first <<endl;
-        _drawableObjectList[i].second->OnSaveData(__json);
-        cout << "(:3[____]" <<endl;
-    }
+    //for (size_t i=0; i<_drawableObjectList.size(); i++){
+    //    cout << "_(:3J Z)_" <<endl;
+    //    __savefile << "name=" << _drawableObjectList[i].first <<endl;
+    //    _drawableObjectList[i].second->OnSaveData(__json);
+    //    cout << "(:3[____]" <<endl;
+    //}
 
-    __savefile.close();
+    //__savefile.close();
 }
 
 void CResourceControl::OnLoadData()

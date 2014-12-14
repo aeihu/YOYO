@@ -16,8 +16,10 @@
 #include <SFML/Graphics.hpp>
 #include <cstdio>
 #include "Cio.h"
+#include "jsonxx.h"
 
 using namespace std;
+using namespace jsonxx;
 
 typedef enum {BUTTON_FOCUS, MAP_FOCUS, MESSAGEBOX_FOCUS, MENUBOX_FOCUS, LOGBOX_FOCUS, BUTTON_STATE} eEventFocus;
 
@@ -26,7 +28,7 @@ class CCommon
     private:
         sf::Clock __clock;
 
-        void SetValue(const char* name, const char* value);
+        void SetValue(Object json);
     public:
         eEventFocus                _EventFocus;
 
@@ -36,14 +38,14 @@ class CCommon
         string GAME_ICON;
         string GAME_SYSDATA;
 
-        bool APPLY_ALPHA;
+        //bool APPLY_ALPHA;
 
         int MAX_FPS;
-        int COLOR_KEY_RED;
-        int COLOR_KEY_GREEN;
-        int COLOR_KEY_BLUE;
+        //int COLOR_KEY_RED;
+        //int COLOR_KEY_GREEN;
+        //int COLOR_KEY_BLUE;
 
-        size_t INCREMENT;//    25
+        //size_t INCREMENT;//    25
         size_t INTERVAL;//    25
 
         //<config>
@@ -56,7 +58,7 @@ class CCommon
         char   CHAR_COLOR_GREEN;
         char   CHAR_COLOR_BLUE;
         char   CHAR_COLOR_ALPHA;//10
-        char   FONT_SHADOW;//10
+        //char   FONT_SHADOW;//10
         char   CHAR_SHADOW_COLOR_RED ;//10
         char   CHAR_SHADOW_COLOR_GREEN ;//10
         char   CHAR_SHADOW_COLOR_BLUE ;//10
@@ -76,7 +78,7 @@ class CCommon
         string MOUSEDOWN_SE;// "MOUSEDOWN"
         string BOXCLOSED_SE;// "BOXCLOSED"
 
-        float CHARACTER_LAYER_MOVE_BUFFER;// 30
+        //float CHARACTER_LAYER_MOVE_BUFFER;// 30
 
         static CCommon _Common;
 

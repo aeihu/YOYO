@@ -9,6 +9,7 @@
 #include "CCharacterLayer.h"
 #include "../Common/CZlib.h"
 #include "../Common/Cio.h"
+#include "../Common/CResourceControl.h"
 
 CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 {
@@ -48,7 +49,7 @@ bool CCharacterLayer::OnSubLoop()
             _framesOfEyes.OnLoop();
 
             if (_currcentVoice != "")
-                switch (CSoundBank::_SoundControl.IsVoiceSilence(_currcentVoice)){
+                switch (CResourceControl::_ResourceManager._SoundControl.IsVoiceSilence(_currcentVoice)){
                     case CSoundBank::VOICE_STOPPED:
                         _currcentVoice = "";
                         _framesOfMouth.TurnOff();

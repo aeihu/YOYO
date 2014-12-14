@@ -18,7 +18,7 @@ bool CApp::OnInit()
         return false;
 
     CParser::_Parser.SetRunning(&Running);
-    CSoundBank::_SoundControl.OnInit();
+    CResourceControl::_ResourceManager._SoundControl.OnInit();
 
     //if (!CResourceControl::_ResourceManager.AddObjcet("Font:__main", CCommon::_Common.FONT_PATH.c_str()))
     //    return false;
@@ -31,21 +31,23 @@ bool CApp::OnInit()
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if (!CParser::_Parser.LoadScript(CCommon::_Common.GAME_PATH.c_str(), "init"))
+    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str()))
     {
-        cout << "CApp::OnInit(): can't find script file \"" << CCommon::_Common.GAME_PATH.c_str()
-            << "\" or section [init]." << endl;
+        cout << "CApp::OnInit(): can't find script file \"" 
+            << CCommon::_Common.GAME_PATH.c_str() << "\"." << endl;
         return false;
     }
 
-    CCamera::Reset(0, 0, CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
+    //sf::View _view;
+    //CCamera::Reset(0, 0, CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
     //_view.setViewport(sf::FloatRect(0, 0, 1, 1));
     //cout << _view.getCenter().x << ":" << _view.getCenter().y << endl;
+    //cout << _view.getSize().x << ":" << _view.getSize().y << endl;
     //_view.zoom(2);
-    CCamera::SetCenter(CCommon::_Common.WWIDTH/2,CCommon::_Common.WHEIGHT/2);
+    //CCamera::SetCenter(CCommon::_Common.WWIDTH/2,CCommon::_Common.WHEIGHT/2);
     //CCamera::SetCenter(0,CCommon::_Common.WHEIGHT/2);
     //_view.setRotation(90);
-    CCamera::Bind(sf_Display);
+    //CCamera::Bind(sf_Display);
     //sf_Display->setView(_view);
     return true;
 }

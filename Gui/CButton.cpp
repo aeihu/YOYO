@@ -10,7 +10,7 @@
 
 void CButton::Exec(void* data)
 {
-    CParser::_Parser.InsertCmdList(_cmdList);
+    //CParser::_Parser.InsertCmdList(_cmdList);
 }
 
 bool CButton::CheckList(Object json)
@@ -31,9 +31,11 @@ bool CButton::CheckList(Object json)
 
 bool CButton::SetProperty(Object json)
 {
-    return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
-        json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 
-        CButtonBase::SetProperty(json);
+    //return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
+    //    json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 
+    //    CButtonBase::SetProperty(json);
+
+    return true;
 }
 
 CButton* CButton::Create(const char* filename)

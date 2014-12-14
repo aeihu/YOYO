@@ -24,7 +24,6 @@
 #include "Sound/CSoundBank.h"
 #include "Gui/CButton.h"
 #include "Effect/CParticleSystem.h"
-#include "Common/CResourceManager.h"
 #include "Common/CResourceControl.h"
 #include "Graphics/CCamera.h"
 

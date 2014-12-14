@@ -24,7 +24,7 @@ void CApp::OnLoop() {
     //CResourceManager::_LogBoxControl.OnLoop(__isPause);
 
     CResourceControl::_ResourceManager.OnLoop(__isPause);
-    CSoundBank::_SoundControl.OnLoop();
+    CResourceControl::_ResourceManager._SoundControl.OnLoop();
 
     if (CParser::_Parser.IsDeplaying() || __isPause)
         return;

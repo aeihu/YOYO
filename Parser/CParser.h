@@ -10,7 +10,8 @@
     #define _CPARSER_H_
 
 #include <string>
-#include <list>
+//#include <list>
+#include <vector>
 #include <map>
 #include <iostream>
 #include <exception>
@@ -25,27 +26,25 @@ using namespace std;
 class CParser
 {
     private:        
-        list<string>            _cmdList;
+        vector<string>          _cmdList;
         unsigned long           _delay;
         bool*                   _pRunning;
+        size_t                  _index;
 
-        bool FindSection(list<string> &Commands, const char* Section);
         int AnalysisOfParameters(string para, vector<string> &plist);
-        //int AnalysisOfParameters(string para, queue<string> &plist);
 
-        bool (*_pFunc)(vector<string>);
+        bool (*_pFunc)(vector<string>&);
     public:
         static CParser _Parser;
         CParser();
-        bool LoadScript(const char* FileName, const char* Section);
-        bool LoadScript(const char* FileName, const char* Section, list<string> &Commands);
+
+        void reset();
+        void SetIndex(size_t i);
+        size_t GetIndex();
         void OnLoop();
         void OnCleanup();
 
         void ExecuteCmd(string cmd);
-        bool ExecuteAllCmd(const char* FileName, const char* Section);
-        void ExecuteAllCmd(list<string> commands);
-        void InsertCmdList(list<string> commands);
         void InsertCmd(string cmd);
         void SetDeplay(int ms);
 

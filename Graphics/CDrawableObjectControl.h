@@ -25,14 +25,14 @@ class CDrawableObjectControl
 
         vector<pair<string, CImageBaseClass*> > _drawableObjectList;
 
-        inline CDrawableObjectControl() {_isNeedSort = false;}
     protected:
     public:
+        inline CDrawableObjectControl() {_isNeedSort = false;}
         bool IsExists(string name);
         bool SetImageVisibility(string name, int alpha, size_t elapsed, bool pause);
         bool SetLayerOrder(string name, char order);
         
-        bool AddDrawableObject(string objTypeName, string filename);
+        bool AddDrawableObject(string name, string objTypeName, string filename);
         bool DelDrawableObject(string name);
         CImageBaseClass* GetDrawableObject(string name);
         void SetDrawableObjectLayerOrder(string name, char layer);
@@ -42,6 +42,13 @@ class CDrawableObjectControl
         bool MoveY(string name, float y, size_t elapsed, bool pause);
         char Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha=255);
         char Hide(string name, char type, size_t elapsed, bool pause);
+
+        bool OnLButtonUp(int mX, int mY);
+        bool OnLButtonDown(int mX, int mY);
+        bool OnMouseMove(int mX, int mY);
+        void OnLoop(bool &pause);
+        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnCleanup();
 };
 
 #endif

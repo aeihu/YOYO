@@ -55,7 +55,7 @@ class CSoundBank {
             VOICE_PLAYING,
         };
 
-        static CSoundBank                               _SoundControl;
+        //static CSoundBank                               _SoundControl;
         CSoundBank();
 
         bool OnInit();
