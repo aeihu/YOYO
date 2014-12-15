@@ -19,7 +19,7 @@ class CObjectControl
     protected:
         map<string, CObject*>          _objectList;
     public:
-        virtual bool AddObject(string name, CObject* obj);
+        virtual bool AddObject(string name, string objTypeName, string filename);
         virtual bool DelObject(string name);
         virtual void OnCleanup();
 
