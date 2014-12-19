@@ -32,6 +32,8 @@ class CScript
     public:
         bool AddVariable(string name, string val);
         bool SetVariable(string name, string val);
+        string GetVariable(string name);
+        bool DelVariable(string name);
         
         virtual bool OnInit(string filename)=0;
         virtual bool LoadScript(string filename)=0;

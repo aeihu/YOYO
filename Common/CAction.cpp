@@ -16,6 +16,11 @@
 //    _type = INT;
 //}
 
+CAction::CAction(void* func, bool pause)
+{
+    _pause = pause;
+}
+
 CAction::CAction(float* val, float fin, float inc, bool pause)
 {
     _val = val;

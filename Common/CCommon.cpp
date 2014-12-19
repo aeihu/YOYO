@@ -41,7 +41,7 @@ CCommon::CCommon()
     CHAR_SHADOW_COLOR_ALPHA = 120;
     SOUND_POOL_NUM = 5;
     VOICE_POOL_NUM = 3;
-    FONT_PATH =  "C://WINDOWS//Fonts//MSGOTHIC.TTC";
+    //FONT_PATH =  "C://WINDOWS//Fonts//MSGOTHIC.TTC";
     //</config>
 
     //<option>
@@ -100,7 +100,7 @@ void CCommon::SetValue(Object json)
     if (json.has<Number>("INTERVAL")) INTERVAL = json.get<Number>("INTERVAL");
     
     if (json.has<Number>("FONT_SIZE")) FONT_SIZE = json.get<Number>("FONT_SIZE");
-    if (json.has<String>("FONT_PATH")) FONT_PATH = json.get<String>("FONT_PATH");
+    //if (json.has<String>("FONT_PATH")) FONT_PATH = json.get<String>("FONT_PATH");
     if (json.has<Number>("CHAR_COLOR_RED")) CHAR_COLOR_RED = json.get<Number>("CHAR_COLOR_RED");
     if (json.has<Number>("CHAR_COLOR_GREEN")) CHAR_COLOR_GREEN = json.get<Number>("CHAR_COLOR_GREEN");
     if (json.has<Number>("CHAR_COLOR_BLUE")) CHAR_COLOR_BLUE = json.get<Number>("CHAR_COLOR_BLUE");

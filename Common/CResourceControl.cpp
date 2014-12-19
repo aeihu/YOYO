@@ -11,11 +11,6 @@
 
 CResourceControl  CResourceControl::_ResourceManager;
 
-//bool sort_cmp(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
-//{
-//    return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
-//}
-
 string CResourceControl::GetNameInFilename(string filename)
 {
     size_t __last_x_pos = filename.find_last_of('/');
@@ -36,105 +31,95 @@ string CResourceControl::GetNameInFilename(string filename)
     return __result;
 }
 
-bool CResourceControl::AddVariable(string name, string val)
+bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
 {
-    if(_userVariableList.count("$"+name) > 0)
+    if (!json.has<Array>(colName))
         return false;
 
-    _userVariableList["$"+name] = val;    
+    Array __array = json.get<Array>(colName);
+    
+    for (size_t i=0; i<__array.size(); i++){
+        if (objTypeName == "Font"){
+            _ObjectControl.DelObject(__array.get<String>(i));
+        }
+        else if (objTypeName == "Voice"){
+            _SoundControl.DeleteVoice(__array.get<String>(i));
+        }
+        else if (objTypeName == "Se"){
+            _SoundControl.DeleteSE(__array.get<String>(i));
+        }
+        else if (objTypeName == "Camera"){
+            _CameraControl.DelCamera(__array.get<String>(i));
+        }
+        else{
+            _DrawableObjectControl.DelDrawableObject(__array.get<String>(i));
+        }
+    }
+
+    return true;
+    
+}
+
+//
+// 返回值需要修改类型
+//
+bool CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
+{
+    if (!json.has<Array>(colName))
+        return false;
+
+    Array __array = json.get<Array>(colName);
+    Array __arrayOfAssetName;
+    string __assetName = "";
+    
+    for (size_t i=0; i<__array.size(); i++){
+        __assetName = GetNameInFilename(__array.get<String>(i));
+        if (objTypeName == "Font"){
+            if (!_ObjectControl.AddObject(__assetName,
+                objTypeName,
+                __array.get<String>(i)))
+                return false;
+        }
+        else if (objTypeName == "Voice"){
+            if (_SoundControl.AddVoice(__assetName,
+                __array.get<String>(i).c_str()) != 0)
+                return false;
+        }
+        else if (objTypeName == "Se"){
+            if (_SoundControl.AddSE(__assetName,
+                __array.get<String>(i).c_str()) != 0)
+                return false;
+        }
+        else if (objTypeName == "Camera"){
+            if (!_CameraControl.AddCamera(__assetName,
+                __array.get<String>(i).c_str()))
+                return false;
+        }
+        else{
+            if (!_DrawableObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __array.get<String>(i)))
+                return false;
+        }
+
+        __arrayOfAssetName << objTypeName + ":" + __assetName;
+    }
+
+    json << "[" + objTypeName + "]" << __arrayOfAssetName;
     return true;
 }
 
-bool CResourceControl::SetVariable(string name, string val)
+bool CResourceControl::OnInit(string filename, sf::RenderWindow* display)
 {
-    if(_userVariableList.count("$"+name) > 0){
-        _userVariableList["$"+name] = val;
-        return true;
-    }
-
-    return false;
-}
-
-bool CResourceControl::AddCamera(string name)
-{
-    if(_cameraList.count(name) > 0)
-        return false;
-    
-    _cameraList[name] = CCamera::Create();
-    _cameraList[name]->Reset(0.0f, 0.0f,
-        CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
-    return true;
-}
-
-bool CResourceControl::DelCamera(string name)
-{
-    if(_cameraList.count(name) > 0){
-        delete _cameraList[name];
-        _cameraList.erase(name);
-        return true;
-    }
-
-    return false;
-}
-
-CCamera* CResourceControl::GetCamera(string name)
-{
-    if(_cameraList.count(name) > 0){
-        return _cameraList[name];
-    }
-    return NULL;
-}
-
-string CResourceControl::GetVariable(string name)
-{
-    if(_userVariableList.count(name) > 0){
-        return _userVariableList[name];
-    }
-
-    return "";
-}
-
-bool CResourceControl::DelVariable(string name)
-{
-    if(_userVariableList.count("$"+name) > 0){
-        _userVariableList.erase("$"+name);
-        return true;
-    }
-
-    return false;
-}
-
-
-//bool CResourceControl::AddDrawableObject(string name, CImageBaseClass* obj)
-//{
-//    if (obj == NULL)
-//        return false;
-//
-//    if (IsExists(name)){
-//        delete obj;
-//        return false;
-//    }
-//
-//    _drawableObjectList.push_back(make_pair(name, obj));
-//    _isNeedSort = true;
-//    return true;
-//}
-
-bool CResourceControl::CheckIn(Object& json, string name, string objTypeName)
-{
-    
-    if (!json.has<Array>(name))
+    if (!_CameraControl.OnInit(display))
         return false;
 
-    Array __array = json.get<Array>(name);
-    //if (__array.size() < 1)
-    //    return false;
-    
-    for (size_t i=0; i<__array.size(); i++)
-        _DrawableObjectControl.AddDrawableObject(
-            GetNameInFilename(__array.get<String>(i)), 
-            objTypeName, 
-            __array.get<String>(i));
+    if (!_SoundControl.OnInit())
+        return false;
+
+    if (!OnInit(filename))
+        return false;
 
     return true;
 }
@@ -147,10 +132,14 @@ bool CResourceControl::OnInit(string filename)
     
     if (!json.has<String>("main_script"))
         return false;
-
+    
+    if (!CheckIn(json, "font", "Font")) return false;
+    if (!CheckIn(json, "se", "Se")) return false;
     if (!CheckIn(json, "image_for_loading", "Img")) return false;
     if (!CheckIn(json, "image_for_effect", "Img")) return false;
     if (!CheckIn(json, "messagebox", "MessageBox")) return false;
+    if (!CheckIn(json, "button", "Button")) return false;
+    if (!CheckIn(json, "camera", "Camera")) return false;
 
     return LoadScript(json.get<String>("main_script"));
 }
@@ -161,7 +150,7 @@ bool CResourceControl::LoadScript(string filename)
     string __ObjectTypeName = "";
     if (!_script.empty())
     {
-
+        _script.reset();
     }
 
     if (!_script.parse(Cio::LoadTxtFile(filename)))
@@ -174,11 +163,22 @@ bool CResourceControl::LoadScript(string filename)
     //else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
     //else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(filename.c_str());
     //else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
+    
+    CheckOut(_script, "[character]","CharacterLayer");
+    CheckOut(_script, "[background]","Background");
+    CheckOut(_script, "[cg]","Img");
+    CheckOut(_script, "[button]","Button");
+    CheckOut(_script, "[se]", "Se");
+    CheckOut(_script, "[voice]", "Voice");
 
     CheckIn(_script, "character","CharacterLayer");
     CheckIn(_script, "background","Background");
     CheckIn(_script, "cg","Img");
     CheckIn(_script, "button","Button");
+    CheckIn(_script, "se", "Se");
+    CheckIn(_script, "voice", "Voice");
+    CheckIn(_script, "camera", "Camera");
+
     _script << "filename" << filename;
 
     if (_script.has<Array>("script")){

@@ -17,7 +17,7 @@ bool CSequenceOfAction::OnLoop()
             _pause = _actionList.front().IsPause();
     }
     
-    return !_actionList.empty();
+    return _actionList.empty();
 }
 
 void CSequenceOfAction::AddAction(CAction act)

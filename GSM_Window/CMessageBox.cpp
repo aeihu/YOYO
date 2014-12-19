@@ -61,16 +61,16 @@ bool CMessageBox::SetProperty(Object json)
     _msgOffset.y = json.get<Number>("MSG_OFFSET_Y");
 
     CFont* __fnt = NULL;
-    CObject* __obj = json.has<Number>("MSG_FONT") ? 
-        CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:"+json.get<String>("MSG_FONT")):
-        CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:__main");
+    CObject* __obj = 
+        CResourceControl::_ResourceManager._ObjectControl.GetObject(
+        "Font:"+json.get<String>("MSG_FONT"));
    
-    //if (__obj != NULL){
-    //    __fnt = static_cast<CFont*>(__obj);
-    //    SetFont(__fnt->GetFont());
-    //}
-    //else
-    //    return false;
+    if (__obj != NULL){
+        __fnt = static_cast<CFont*>(__obj);
+        SetFont(__fnt->GetFont());
+    }
+    else
+        return false;
 
     return CBox::SetProperty(json);
 }
@@ -94,10 +94,10 @@ bool CMessageBox::CheckList(Object json)
         result = false;
     }
 
-    //if (!json.has<Number>("MSG_APPEND") < 1){
-    //    cout << "can't find value of MSG_APPEND." << endl;
-    //    result = false;
-    //}
+    if (!json.has<String>("MSG_FONT")){
+        cout << "can't find value of MSG_FONT." << endl;
+        result = false;
+    }
 
     if (!json.has<String>("CURSOR_PATH")){
         cout << "can't find value of CURSOR_PATH." << endl;

@@ -13,28 +13,29 @@
 #include "../Common/CBaiscProperties.h"
 #include "../Common/CConfigFile.h"
 
-class CCamera : public CBaiscProperties
+class CCamera : public CBaiscProperties, public CConfigFile
 {
-private:
-    sf::View            _camera;
-    sf::Vector2f        _size;
-protected:
-public:
-    static CCamera* CCamera::Create();
+    private:
+        sf::View            _camera;
+        sf::Vector2f        _size;
 
-    void Reset(float x, float y, float w, float h);
-    void SetViewport(float x, float y, float w, float h);
-    void SetCenter(float x, float y);
-    void SetSize(float w, float h);
-    void SetZoom(float zoom);
-    void SetRotation(float angle);
-    void Bind(sf::RenderWindow* window);
-    bool OnLoop();
-    sf::Vector2f GetCenter();
-    sf::Vector2f GetPosition();
-    virtual void OnSaveData(Object& json) const;
-    bool CheckList(Object json);
-    bool SetProperty(Object json);
+        bool CheckList(Object json);
+        bool SetProperty(Object json);
+    protected:
+    public:
+        static CCamera* CCamera::Create(const char* filename);
+
+        void Reset(float x, float y, float w, float h);
+        void SetViewport(float x, float y, float w, float h);
+        void SetCenter(float x, float y);
+        void SetSize(float w, float h);
+        void SetZoom(float zoom);
+        void SetRotation(float angle);
+        void Bind(sf::RenderWindow* window);
+        bool OnLoop();
+        sf::Vector2f GetCenter();
+        sf::Vector2f GetPosition();
+        virtual void OnSaveData(Object& json) const;
 };
 
 

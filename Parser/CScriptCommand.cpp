@@ -404,6 +404,7 @@ bool Cmd_MoveCharacterLayer(vector<string>& args)
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //pause
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
@@ -414,6 +415,7 @@ bool Cmd_MoveCharacterLayer(vector<string>& args)
 
     bool __result = true;
     bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
     
     for (size_t i=0; i<__values["-n"].size(); i++){
         string __name = __values["-n"][i];
@@ -448,21 +450,21 @@ bool Cmd_MoveCharacterLayer(vector<string>& args)
         {
             case 1:
                 if(!CResourceControl::_ResourceManager._DrawableObjectControl.MoveX("CharacterLayer:"+__name, 
-                    __x, __inte, __pause)){
+                    __x, __inte, __pause, __reset)){
                     cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
                     __result = false;
                 }
             break;
             case 2:
                 if(!CResourceControl::_ResourceManager._DrawableObjectControl.MoveY("CharacterLayer:"+__name, 
-                    __y, __inte, __pause)){
+                    __y, __inte, __pause, __reset)){
                     cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
                     __result = false;
                 }
             break;
             case 3:
                 if(!CResourceControl::_ResourceManager._DrawableObjectControl.Move("CharacterLayer:"+__name, 
-                    __x, __y, __inte, __pause)){
+                    __x, __y, __inte, __pause, __reset)){
                     cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
                     __result = false;
                 }
@@ -1002,59 +1004,59 @@ bool Cmd_DelVariable(vector<string>& args)
     return true;
 }
 
-bool Cmd_AddCamera(vector<string>& args)
-{
-    if (args.size() < 1){
-        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));   //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    __flags.push_back(pair<string, ENUM_FLAG>("-w", FLAG_OPTIONAL));    //width
-    __flags.push_back(pair<string, ENUM_FLAG>("-h", FLAG_OPTIONAL));    //height
-    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_OPTIONAL));    //rotation
-    __flags.push_back(pair<string, ENUM_FLAG>("-z", FLAG_OPTIONAL));    //zoom
-    
-    map<string, vector<string> > __values;
-    if (!Common_ArgsToKV("Cmd_AddCamera", __flags, args, __values))
-        return false;
-
-    
-    for (size_t i=0; i<__values["-n"].size(); i++){
-        string __name = __values["-n"][i];
-        float __x = __values.count("-x") == 0 ? 0.0f : i < __values["-x"].size() ? 
-            atof(__values["-x"][i].c_str()):atof(__values["-x"][__values["-x"].size()-1].c_str());
-        float __y = __values.count("-y") == 0 ? 0.0f : i < __values["-y"].size() ? 
-            atof(__values["-y"][i].c_str()):atof(__values["-y"][__values["-y"].size()-1].c_str());
-        float __w = __values.count("-w") == 0 ? 0.0f : i < __values["-w"].size() ? 
-            atof(__values["-w"][i].c_str()):atof(__values["-w"][__values["-w"].size()-1].c_str());
-        float __h = __values.count("-h") == 0 ? 0.0f : i < __values["-h"].size() ? 
-            atof(__values["-h"][i].c_str()):atof(__values["-h"][__values["-h"].size()-1].c_str());
-        float __r = __values.count("-r") == 0 ? 0.0f : i < __values["-r"].size() ? 
-            atof(__values["-r"][i].c_str()):atof(__values["-r"][__values["-r"].size()-1].c_str());
-        float __z = __values.count("-z") == 0 ? 1.0f : i < __values["-z"].size() ? 
-            atof(__values["-z"][i].c_str()):atof(__values["-z"][__values["-z"].size()-1].c_str());
-
-        CResourceControl::_ResourceManager.AddCamera(__name);
-    }
-    return true;
-}
-
-bool Cmd_DelCamera(vector<string>& args)
-{
-    if (args.size() < 1){
-        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-
-    for (size_t i=0; i<args.size(); i++){
-        CResourceControl::_ResourceManager.DelCamera(args[i]);
-    }
-
-    return true;
-}
+//bool Cmd_AddCamera(vector<string>& args)
+//{
+//    if (args.size() < 1){
+//        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
+//            << " argument(s) in the command." <<endl;
+//        return false;
+//    }
+//
+//    std::list<pair<string, ENUM_FLAG> > __flags;
+//    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));   //name
+//    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+//    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+//    __flags.push_back(pair<string, ENUM_FLAG>("-w", FLAG_OPTIONAL));    //width
+//    __flags.push_back(pair<string, ENUM_FLAG>("-h", FLAG_OPTIONAL));    //height
+//    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_OPTIONAL));    //rotation
+//    __flags.push_back(pair<string, ENUM_FLAG>("-z", FLAG_OPTIONAL));    //zoom
+//    
+//    map<string, vector<string> > __values;
+//    if (!Common_ArgsToKV("Cmd_AddCamera", __flags, args, __values))
+//        return false;
+//
+//    
+//    for (size_t i=0; i<__values["-n"].size(); i++){
+//        string __name = __values["-n"][i];
+//        float __x = __values.count("-x") == 0 ? 0.0f : i < __values["-x"].size() ? 
+//            atof(__values["-x"][i].c_str()):atof(__values["-x"][__values["-x"].size()-1].c_str());
+//        float __y = __values.count("-y") == 0 ? 0.0f : i < __values["-y"].size() ? 
+//            atof(__values["-y"][i].c_str()):atof(__values["-y"][__values["-y"].size()-1].c_str());
+//        float __w = __values.count("-w") == 0 ? 0.0f : i < __values["-w"].size() ? 
+//            atof(__values["-w"][i].c_str()):atof(__values["-w"][__values["-w"].size()-1].c_str());
+//        float __h = __values.count("-h") == 0 ? 0.0f : i < __values["-h"].size() ? 
+//            atof(__values["-h"][i].c_str()):atof(__values["-h"][__values["-h"].size()-1].c_str());
+//        float __r = __values.count("-r") == 0 ? 0.0f : i < __values["-r"].size() ? 
+//            atof(__values["-r"][i].c_str()):atof(__values["-r"][__values["-r"].size()-1].c_str());
+//        float __z = __values.count("-z") == 0 ? 1.0f : i < __values["-z"].size() ? 
+//            atof(__values["-z"][i].c_str()):atof(__values["-z"][__values["-z"].size()-1].c_str());
+//
+//        CResourceControl::_ResourceManager._CameraControl.AddCamera(__name);
+//    }
+//    return true;
+//}
+//
+//bool Cmd_DelCamera(vector<string>& args)
+//{
+//    if (args.size() < 1){
+//        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
+//            << " argument(s) in the command." <<endl;
+//        return false;
+//    }
+//
+//    for (size_t i=0; i<args.size(); i++){
+//        CResourceControl::_ResourceManager._CameraControl.DelCamera(args[i]);
+//    }
+//
+//    return true;
+//}

@@ -6,8 +6,8 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#ifndef _CObjectControl_H_
-    #define _CObjectControl_H_
+#ifndef _COBJECTCONTROL_H_
+    #define _COBJECTCONTROL_H_
 
 #include "CObject.h"
 #include <map>

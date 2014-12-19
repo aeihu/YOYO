@@ -61,13 +61,15 @@ bool CCamera::OnLoop()
     bool __result = CBaiscProperties::OnLoop();
     
     if (_coordinate != _camera.getCenter())
-            _camera.setCenter(_coordinate);
+        _camera.setCenter(_coordinate);
 
     if (_rotation != _camera.getRotation())
         _camera.setRotation(_rotation);
 
     if (_size != _camera.getSize())
         _camera.setSize(_size);
+
+    _camera.zoom(_scale.x);
     
     return __result;
 }
@@ -90,9 +92,62 @@ void CCamera::OnSaveData(Object& json) const
     json << "height" << _size.y;
 }
 
-CCamera* CCamera::Create()
+CCamera* CCamera::Create(const char* filename)
 {
-    CCamera* __Camera = new CCamera();
-    __Camera->SetClassName("camera");
-    return __Camera;
+    CCamera* __camera = new CCamera();
+    if (__camera->LoadConfigFile(filename)){
+        __camera->SetClassName("camera");
+        __camera->SetPath(filename);
+        return __camera;
+    }
+    
+    delete __camera;
+    return NULL;
+}
+
+bool CCamera::CheckList(Object json) 
+{
+    bool result = true;
+    if (!json.has<String>("X")){
+        cout << "can't find value of X." << endl;
+        result = false;
+    }
+
+    if (!json.has<Boolean>("Y")){
+        cout << "can't find value of X." << endl;
+        return false;
+    }
+
+    if (!json.has<Boolean>("ZOOM")){
+        cout << "can't find value of ZOOM." << endl;
+        return false;
+    }
+
+    if (!json.has<Boolean>("ROTATION")){
+        cout << "can't find value of ROTATION." << endl;
+        return false;
+    }
+
+
+    return result;
+}
+
+bool CCamera::SetProperty(Object json)
+{
+    float __w = CCommon::_Common.WWIDTH;
+    float __h = CCommon::_Common.WHEIGHT;
+
+    if (json.has<Number>("WIDTH")){
+        __w = json.get<Number>("WIDTH");
+    }
+
+    if (json.has<Number>("HEIGHT")){
+        __h = json.get<Number>("WIDTH");
+    }
+
+    Reset(json.get<Number>("X"), json.get<Number>("Y"), __w, __h);
+    SetZoom(json.get<Number>("ZOOM"));
+    SetRotation(json.get<Number>("ROTATION"));
+
+    return true;
 }

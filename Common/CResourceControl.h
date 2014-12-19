@@ -17,6 +17,7 @@
 #include "../Script/CScript.h"
 #include "../Sound/CSoundBank.h"
 #include "../Graphics/CDrawableObjectControl.h"
+#include "../Graphics/CCameraControl.h"
 
 using namespace std;
 
@@ -26,12 +27,13 @@ class CResourceControl : public CScript
         Object                                  _script;
 
         string GetNameInFilename(string filename);
-        bool CheckIn(Object& json, string name, string objTypeName);
+        bool CheckIn(Object& json, string colName, string objTypeName);
+        bool CheckOut(Object& json, string colName, string objTypeName);
     protected:
         friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
         friend bool Cmd_AddVariable(vector<string> args);
         
-        map<string, CCamera*>                   _cameraList;
+        //map<string, CCamera*>                   _cameraList;
         //CScript                                 _script;
 
         inline CResourceControl() {_script.reset();}
@@ -41,17 +43,9 @@ class CResourceControl : public CScript
         CPositionControl                        _PositionControl;
         CDrawableObjectControl                  _DrawableObjectControl;
         CObjectControl                          _ObjectControl;
-
-        bool AddVariable(string name, string val);
-        bool SetVariable(string name, string val);
-        string GetVariable(string name);
-        bool DelVariable(string name);
-
-        bool AddCamera(string name);
-        bool DelCamera(string name);
-        CCamera* GetCamera(string name);
+        CCameraControl                          _CameraControl;
         
-        
+        bool OnInit(string filename, sf::RenderWindow* display);
         bool OnInit(string filename);
         bool LoadScript(string filename);
         void OnLoop(bool &pause);

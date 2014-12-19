@@ -42,8 +42,8 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
         //string __name = GetNameInFilename(filename);
         
         if (IsExists(name)){
-            cout << "CResourceControl::AddDrawableObject" << objTypeName 
-                <<"(): " << objTypeName << " \""<< name << "\" has existed." <<endl;
+            cout << "CResourceControl::AddDrawableObject(): " 
+                << objTypeName << " \""<< name << "\" has existed." <<endl;
             delete __obj;
             return false;
         }
@@ -53,8 +53,8 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
         return true;
     }
     else
-        cout << "CResourceControl::AddDrawableObject" << objTypeName 
-            << "(): failed to create " << objTypeName << "." <<endl;
+        cout << "CResourceControl::AddDrawableObject(): failed to create " 
+            << objTypeName << "\"" << name << "\"." <<endl;
 
     return false;
 }
@@ -93,14 +93,14 @@ void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer
     }
 }
 
-bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause)
+bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause, bool reset)
 {
    // if (incr == 0)
    //     incr = static_cast<float>(CCommon::_Common.INCREMENT);
 
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
     if (__obj != NULL){
-		__obj->AddAction(&__obj->GetAlpha(), elapsed, alpha, pause);
+		__obj->AddAction(&__obj->GetAlpha(), elapsed, alpha, pause, reset);
         //__obj->Insert(0,
         //    alpha, pause,
         //    &__obj->GetAlpha(),
@@ -128,36 +128,36 @@ bool CDrawableObjectControl::SetLayerOrder(string name, char order)
     return false;
 }
 
-bool CDrawableObjectControl::MoveX(string name, float x, size_t elapsed, bool pause)
+bool CDrawableObjectControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return false;
     
-    __obj->AddActionOfMoveX(elapsed, x, pause);
+    __obj->AddActionOfMoveX(elapsed, x, pause, reset);
     return true;
 }
         
-bool CDrawableObjectControl::MoveY(string name, float y, size_t elapsed, bool pause)
+bool CDrawableObjectControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return false;
     
-    __obj->AddActionOfMoveY(elapsed, y, pause);
+    __obj->AddActionOfMoveY(elapsed, y, pause, reset);
     return true;
 }
 
-bool CDrawableObjectControl::Move(string name, float x, float y, size_t elapsed, bool pause)
+bool CDrawableObjectControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
 
     if (__obj == NULL)
         return false;
     
-    __obj->AddActionOfMove(elapsed, x ,y, pause);
+    __obj->AddActionOfMove(elapsed, x ,y, pause, reset);
     return true;
 }
         
@@ -192,8 +192,8 @@ char CDrawableObjectControl::Show(string name, float x, float y, char type, size
 
     __obj->GetPosition().x = __x;
     __obj->GetPosition().y = __y;
-    if (Move(name, x, y, elapsed, pause)){
-        SetImageVisibility(name, alpha, elapsed, pause);
+    if (Move(name, x, y, elapsed, pause, false)){
+        SetImageVisibility(name, alpha, elapsed, pause, false);
         return 0;
     }
 
@@ -230,8 +230,8 @@ char CDrawableObjectControl::Hide(string name, char type, size_t elapsed, bool p
     //    break;
     //}
 
-    if (Move(name, __x, __y, elapsed, pause)){
-        SetImageVisibility(name, 0, __obj->GetAlpha(), pause);
+    if (Move(name, __x, __y, elapsed, pause, false)){
+        SetImageVisibility(name, 0, __obj->GetAlpha(), pause, false);
         return 0;
     }
 

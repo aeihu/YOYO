@@ -18,10 +18,6 @@ bool CApp::OnInit()
         return false;
 
     CParser::_Parser.SetRunning(&Running);
-    CResourceControl::_ResourceManager._SoundControl.OnInit();
-
-    //if (!CResourceControl::_ResourceManager.AddObjcet("Font:__main", CCommon::_Common.FONT_PATH.c_str()))
-    //    return false;
 
     sf_Display->create(
         sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 
@@ -31,7 +27,7 @@ bool CApp::OnInit()
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str()))
+    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str(), sf_Display))
     {
         cout << "CApp::OnInit(): can't find script file \"" 
             << CCommon::_Common.GAME_PATH.c_str() << "\"." << endl;

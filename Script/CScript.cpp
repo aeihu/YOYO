@@ -28,6 +28,24 @@ bool CScript::SetVariable(string name, string val)
     return false;
 }
 
+string CScript::GetVariable(string name)
+{
+    if(_userVariableList.count(name) > 0){
+        return _userVariableList[name];
+    }
+
+    return "";
+}
+
+bool CScript::DelVariable(string name)
+{
+    if(_userVariableList.count("$"+name) > 0){
+        _userVariableList.erase("$"+name);
+        return true;
+    }
+
+    return false;
+}
 //bool CScript::OnInit(string filename)
 //{
 //    Object json;

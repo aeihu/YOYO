@@ -81,7 +81,7 @@ bool Cmd_AddVariable(vector<string>&);//(string name, string val, map<string, st
 bool Cmd_SetVariable(vector<string>&);//(string name, string val, map<string, string> &var_table);
 bool Cmd_DelVariable(vector<string>&);//(string name, map<string, string> &var_table);
 
-bool Cmd_AddCamera(vector<string>&);
-bool Cmd_DelCamera(vector<string>&);
+bool Cmd_UseCamera(vector<string>&);
+//bool Cmd_DelCamera(vector<string>&);
 
 #endif
