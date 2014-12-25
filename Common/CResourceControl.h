@@ -24,8 +24,8 @@ using namespace std;
 class CResourceControl : public CScript
 {
     private:
+        string                                  _fileNameOfScript;
         Object                                  _script;
-        Object                                  _scriptOfAsset;
         Object                                  _gameBaiscAsset;
         sf::Thread                              _threadOfLoading;
 
@@ -41,7 +41,9 @@ class CResourceControl : public CScript
         //map<string, CCamera*>                   _cameraList;
         //CScript                                 _script;
 
-        inline CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this) {_script.reset();}
+        inline CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this) {
+            _script.reset();
+            _fileNameOfScript = "";}
     public:
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;

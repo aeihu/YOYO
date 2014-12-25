@@ -74,20 +74,21 @@ sf::Vector2f& CBaiscProperties::GetScale()
 
 bool CBaiscProperties::OnLoop()
 {
-    bool __isPause = false;
-    for (list<CActionBaseClass*>::iterator it=_actList.begin();it!=_actList.end(); ){
-        if ((*it)->OnLoop()){
-            delete (*it);
-            (*it) = NULL;
-            it=_actList.erase(it);
-            if (it == _actList.end())
-                break;
-        }
-        else{
-            __isPause = (*it)->IsPause() ? true : __isPause;
-            ++it;
-        }
-    }
+    //bool __isPause = false;
+    //for (list<CActionBaseClass*>::iterator it=_actList.begin();it!=_actList.end(); ){
+    //    if ((*it)->OnLoop()){
+    //        delete (*it);
+    //        (*it) = NULL;
+    //        it=_actList.erase(it);
+    //        if (it == _actList.end())
+    //            break;
+    //    }
+    //    else{
+    //        __isPause = (*it)->IsPause() ? true : __isPause;
+    //        ++it;
+    //    }
+    //}
+    //return _actList.OnLoop();
 
     //for (size_t i=_actList.size(); i>0; i--){
     //    if (_actList[i-1]->OnLoop()){
@@ -98,7 +99,7 @@ bool CBaiscProperties::OnLoop()
     //
     //}
 
-    return _actList.empty() ? false : __isPause;
+    return _actList.OnLoop() ? false : _actList.IsPause();
 }
 
 bool CBaiscProperties::AddAction(CActionBaseClass* act)
@@ -106,7 +107,7 @@ bool CBaiscProperties::AddAction(CActionBaseClass* act)
     if (!act)
         return false;
 
-    _actList.push_back(act);
+    _actList.AddAction(act);
     return true;
 }
 
@@ -125,7 +126,7 @@ bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin, bool pau
 
             if (reset) __acts->AddAction(new CAction(val, __tmpVal, __inc, pause));
 
-            _actList.push_back(__acts);
+            _actList.AddAction(__acts);
         }
 
         return true;

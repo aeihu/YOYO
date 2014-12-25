@@ -112,7 +112,7 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
         __arrayOfAssetName << objTypeName + ":" + __assetName;
     }
 
-    _scriptOfAsset << "[" + objTypeName + "]" << __arrayOfAssetName;
+    json << "[" + colName + "]" << __arrayOfAssetName;
     
     if (__array.size() < 1)
         return 0;
@@ -156,44 +156,52 @@ bool CResourceControl::OnInit(string filename)
 void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
-    if (!_scriptOfAsset.empty()){
-        CheckOut(_scriptOfAsset, "[character]","CharacterLayer");
-        CheckOut(_scriptOfAsset, "[background]","Background");
-        CheckOut(_scriptOfAsset, "[cg]","Img");
-        CheckOut(_scriptOfAsset, "[button]","Button");
-        CheckOut(_scriptOfAsset, "[se]", "Se");
-        CheckOut(_scriptOfAsset, "[voice]", "Voice");
-        _scriptOfAsset.reset();
+    if (!_script.empty()){
+        CheckOut(_script, "[character]","CharacterLayer");
+        CheckOut(_script, "[background]","Background");
+        CheckOut(_script, "[cg]","Img");
+        CheckOut(_script, "[button]","Button");
+        CheckOut(_script, "[se]", "Se");
+        CheckOut(_script, "[voice]", "Voice");
+        _script.reset();
     }
 
-    CheckIn(_script, "character","CharacterLayer");
-    CheckIn(_script, "background","Background");
-    CheckIn(_script, "cg","Img");
-    CheckIn(_script, "button","Button");
-    CheckIn(_script, "se", "Se");
-    CheckIn(_script, "voice", "Voice");
-    CheckIn(_script, "camera", "Camera");
+    if (_script.parse(Cio::LoadTxtFile(_fileNameOfScript))){
+        _script << "filename" << _fileNameOfScript;
+        CheckIn(_script, "character","CharacterLayer");
+        CheckIn(_script, "background","Background");
+        CheckIn(_script, "cg","Img");
+        CheckIn(_script, "button","Button");
+        CheckIn(_script, "se", "Se");
+        CheckIn(_script, "voice", "Voice");
+        CheckIn(_script, "camera", "Camera");
 
-    if (_script.has<Array>("script")){
-        for (size_t i=0; i< _script.get<Array>("script").size(); i++)
-            CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
+        if (_script.has<Array>("script")){
+            for (size_t i=0; i< _script.get<Array>("script").size(); i++)
+                CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
+        }
     }
     CParser::_Parser.Continue();
 }
 
 bool CResourceControl::LoadScript(string filename)
 {
-    if (!_script.parse(Cio::LoadTxtFile(filename)))
-        return false;
-    
-    if (_gameBaiscAsset.has<Array>("image_for_loading")){
-        Array __imgs = _gameBaiscAsset.get<Array>("image_for_loading");
+    _fileNameOfScript = filename;
+    if (_gameBaiscAsset.has<Array>("[image_for_loading]")){
+        Array __imgs = _gameBaiscAsset.get<Array>("[image_for_loading]");
+        CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(
+            __imgs.get<String>(std::rand() % __imgs.size()));
+
+        if (__img != NULL){
+            //__img->
+        }
+
+
         _DrawableObjectControl.Show(
             __imgs.get<String>(std::rand() % __imgs.size()),
             0,0,0,500,true);
     }
 
-    _script << "filename" << filename;
     _threadOfLoading.launch();
 
     return true;

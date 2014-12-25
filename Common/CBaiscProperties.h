@@ -23,8 +23,9 @@ class CBaiscProperties : public CObject
         sf::Vector2f                        _coordinate;
         sf::Vector2f                        _offset;
         float                               _rotation;
+        float                               _alpha;
         
-        list<CActionBaseClass*>             _actList;
+        CSequenceOfAction                   _actList;
     public:
         virtual float& GetRotation();
         void SetRotation(float r);
