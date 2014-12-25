@@ -25,10 +25,15 @@ class CResourceControl : public CScript
 {
     private:
         Object                                  _script;
+        Object                                  _scriptOfAsset;
+        Object                                  _gameBaiscAsset;
+        sf::Thread                              _threadOfLoading;
 
         string GetNameInFilename(string filename);
-        bool CheckIn(Object& json, string colName, string objTypeName);
+        void LoadAsset();
+        char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
+        bool OnInit(string filename);
     protected:
         friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
         friend bool Cmd_AddVariable(vector<string> args);
@@ -36,7 +41,7 @@ class CResourceControl : public CScript
         //map<string, CCamera*>                   _cameraList;
         //CScript                                 _script;
 
-        inline CResourceControl() {_script.reset();}
+        inline CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this) {_script.reset();}
     public:
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;
@@ -45,11 +50,10 @@ class CResourceControl : public CScript
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
         
-        bool OnInit(string filename, sf::RenderWindow* display);
-        bool OnInit(string filename);
+        bool OnInit(string filename, sf::RenderTarget* display);
         bool LoadScript(string filename);
-        void OnLoop(bool &pause);
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnLoop();
+        void OnRender(sf::RenderTarget* Surf_Dest);
         void OnCleanup();
         void OnSaveData();
         void OnLoadData();

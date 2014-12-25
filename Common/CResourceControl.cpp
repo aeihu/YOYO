@@ -61,56 +61,66 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
 }
 
 //
-// 返回值需要修改类型
+// result: 
+//      1: normal
+//      0: column is 0
+//      -1: can't find column
+//      -2: failed to create asset
 //
-bool CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
+char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
 {
     if (!json.has<Array>(colName))
-        return false;
+        return -1;
 
     Array __array = json.get<Array>(colName);
     Array __arrayOfAssetName;
     string __assetName = "";
     
     for (size_t i=0; i<__array.size(); i++){
+        cout << "CResourceControl::CheckIn():Loading '" << __array.get<String>(i) << "'" << endl;
+
         __assetName = GetNameInFilename(__array.get<String>(i));
         if (objTypeName == "Font"){
             if (!_ObjectControl.AddObject(__assetName,
                 objTypeName,
                 __array.get<String>(i)))
-                return false;
+                return -2;
         }
         else if (objTypeName == "Voice"){
             if (_SoundControl.AddVoice(__assetName,
                 __array.get<String>(i).c_str()) != 0)
-                return false;
+                return -2;
         }
         else if (objTypeName == "Se"){
             if (_SoundControl.AddSE(__assetName,
                 __array.get<String>(i).c_str()) != 0)
-                return false;
+                return -2;
         }
         else if (objTypeName == "Camera"){
             if (!_CameraControl.AddCamera(__assetName,
                 __array.get<String>(i).c_str()))
-                return false;
+                return -2;
         }
         else{
             if (!_DrawableObjectControl.AddDrawableObject(
                 __assetName, 
                 objTypeName, 
                 __array.get<String>(i)))
-                return false;
+                return -2;
         }
 
         __arrayOfAssetName << objTypeName + ":" + __assetName;
     }
 
-    json << "[" + objTypeName + "]" << __arrayOfAssetName;
-    return true;
+    _scriptOfAsset << "[" + objTypeName + "]" << __arrayOfAssetName;
+    
+    if (__array.size() < 1)
+        return 0;
+
+    return 1;
 }
 
-bool CResourceControl::OnInit(string filename, sf::RenderWindow* display)
+bool CResourceControl::OnInit(string filename, sf::RenderTarget* display)
 {
     if (!_CameraControl.OnInit(display))
         return false;
@@ -126,50 +136,35 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* display)
 
 bool CResourceControl::OnInit(string filename)
 {
-    Object json;
-    if (!json.parse(Cio::LoadTxtFile(filename)))
+    if (!_gameBaiscAsset.parse(Cio::LoadTxtFile(filename)))
         return false;
     
-    if (!json.has<String>("main_script"))
+    if (!_gameBaiscAsset.has<String>("main_script"))
         return false;
     
-    if (!CheckIn(json, "font", "Font")) return false;
-    if (!CheckIn(json, "se", "Se")) return false;
-    if (!CheckIn(json, "image_for_loading", "Img")) return false;
-    if (!CheckIn(json, "image_for_effect", "Img")) return false;
-    if (!CheckIn(json, "messagebox", "MessageBox")) return false;
-    if (!CheckIn(json, "button", "Button")) return false;
-    if (!CheckIn(json, "camera", "Camera")) return false;
+    if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "image_for_loading", "Img") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "image_for_effect", "Img") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
 
-    return LoadScript(json.get<String>("main_script"));
+    return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
 
-bool CResourceControl::LoadScript(string filename)
+void CResourceControl::LoadAsset()
 {
-    //Object json;
-    string __ObjectTypeName = "";
-    if (!_script.empty())
-    {
-        _script.reset();
+    CParser::_Parser.Pause();
+    if (!_scriptOfAsset.empty()){
+        CheckOut(_scriptOfAsset, "[character]","CharacterLayer");
+        CheckOut(_scriptOfAsset, "[background]","Background");
+        CheckOut(_scriptOfAsset, "[cg]","Img");
+        CheckOut(_scriptOfAsset, "[button]","Button");
+        CheckOut(_scriptOfAsset, "[se]", "Se");
+        CheckOut(_scriptOfAsset, "[voice]", "Voice");
+        _scriptOfAsset.reset();
     }
-
-    if (!_script.parse(Cio::LoadTxtFile(filename)))
-        return false;
-
-    //    if (objTypeName == "Img") __obj = CImageBaseClass::Create(filename.c_str());
-    //else if (objTypeName == "Background") __obj = CImageBaseClass::Create(filename.c_str());
-    //else if (objTypeName == "Button") __obj = CButton::Create(filename.c_str());
-    //else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(filename.c_str());
-    //else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
-    //else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(filename.c_str());
-    //else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
-    
-    CheckOut(_script, "[character]","CharacterLayer");
-    CheckOut(_script, "[background]","Background");
-    CheckOut(_script, "[cg]","Img");
-    CheckOut(_script, "[button]","Button");
-    CheckOut(_script, "[se]", "Se");
-    CheckOut(_script, "[voice]", "Voice");
 
     CheckIn(_script, "character","CharacterLayer");
     CheckIn(_script, "background","Background");
@@ -179,24 +174,45 @@ bool CResourceControl::LoadScript(string filename)
     CheckIn(_script, "voice", "Voice");
     CheckIn(_script, "camera", "Camera");
 
-    _script << "filename" << filename;
-
     if (_script.has<Array>("script")){
         for (size_t i=0; i< _script.get<Array>("script").size(); i++)
             CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
     }
-    //CheckIn(_script, "ParticleSystem"," ParticleSystem");
+    CParser::_Parser.Continue();
+}
+
+bool CResourceControl::LoadScript(string filename)
+{
+    if (!_script.parse(Cio::LoadTxtFile(filename)))
+        return false;
+    
+    if (_gameBaiscAsset.has<Array>("image_for_loading")){
+        Array __imgs = _gameBaiscAsset.get<Array>("image_for_loading");
+        _DrawableObjectControl.Show(
+            __imgs.get<String>(std::rand() % __imgs.size()),
+            0,0,0,500,true);
+    }
+
+    _script << "filename" << filename;
+    _threadOfLoading.launch();
 
     return true;
 }
 
-
-void CResourceControl::OnLoop(bool &pause)
+void CResourceControl::OnLoop()
 {
-    _DrawableObjectControl.OnLoop(pause);
+    bool __pause = false;
+    _DrawableObjectControl.OnLoop(__pause);
+
+    _SoundControl.OnLoop();
+
+    if (__pause)
+        return;
+    
+    CParser::_Parser.OnLoop();
 }
 
-void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
     _DrawableObjectControl.OnRender(Surf_Dest);
     //unsigned long l = CCommon::_Common.GetTicks();

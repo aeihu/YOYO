@@ -121,9 +121,9 @@ bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin, bool pau
         float __inc = (fin - *val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)elapsed);
 
         if (__inc < -0.000001f || __inc > 0.000001f){
-            __acts->AddAction(CAction(val, fin, __inc, pause));
+            __acts->AddAction(new CAction(val, fin, __inc, pause));
 
-            if (reset) __acts->AddAction(CAction(val, __tmpVal, __inc, pause));
+            if (reset) __acts->AddAction(new CAction(val, __tmpVal, __inc, pause));
 
             _actList.push_back(__acts);
         }
@@ -181,7 +181,6 @@ bool CBaiscProperties::AddActionOfMoveX(size_t elapsed, float x, bool pause, boo
 bool CBaiscProperties::AddActionOfMoveY(size_t elapsed, float y, bool pause, bool reset)
 {
     return AddAction(&_coordinate.y, elapsed, y, pause, reset);
-
 }
 
 void CBaiscProperties::OnSaveData(Object& json) const

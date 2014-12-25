@@ -6,23 +6,18 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
+#ifndef _CFUNCOFACTION_H_
+    #define _CFUNCOFACTION_H_
 
-#ifndef _CSEQUENCEOFACTION_H_
-    #define _CSEQUENCEOFACTION_H_
-
-#include "CAction.h"
-#include <vector>
 #include "CActionBaseClass.h"
 
-using namespace std;
-
-class CSequenceOfAction : public CActionBaseClass
+class CFuncOfAction : public CActionBaseClass
 {
     private:
-        vector<CActionBaseClass*>     _actionList;
+        void (*_func)();
     protected:
     public:
-        void AddAction(CActionBaseClass* act);
+        CFuncOfAction(void (*func)());
         bool OnLoop();
 };
 

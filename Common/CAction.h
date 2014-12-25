@@ -17,8 +17,6 @@ class CAction : public CActionBaseClass
     protected:
     public:
         CAction(float* val, float fin, float inc, bool pause=false);
-        CAction(void* func, void *data, bool pause=false);
-        CAction(void* func, bool pause=false);
         bool OnLoop();
     private:
         float*      _val;

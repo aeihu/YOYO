@@ -11,16 +11,18 @@
 bool CSequenceOfAction::OnLoop()
 {
     if (!_actionList.empty()){
-        if (_actionList.front().OnLoop())
+        if (_actionList.front()->OnLoop()){
+            delete _actionList.front();
             _actionList.erase(_actionList.begin());
+        }
         else
-            _pause = _actionList.front().IsPause();
+            _pause = _actionList.front()->IsPause();
     }
     
     return _actionList.empty();
 }
 
-void CSequenceOfAction::AddAction(CAction act)
+void CSequenceOfAction::AddAction(CActionBaseClass* act)
 {
     _actionList.push_back(act);
 }
