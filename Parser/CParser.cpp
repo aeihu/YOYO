@@ -16,6 +16,7 @@ CParser::CParser()
     _pRunning = NULL;
     _pFunc = NULL;
     _index = 0;
+    _pause = false;
 }
 
 void CParser::reset()
@@ -164,10 +165,23 @@ size_t CParser::GetIndex()
     return _index;
 }
 
+void CParser::Pause()
+{
+    _pause = true;
+}
+
+void CParser::Continue()
+{
+    _pause = false;
+}
+
 void CParser::OnLoop()
 {
     try
     {
+        if (_pause || IsDeplaying())
+            return;
+
         if (_cmdList.size() > _index)
         {
             ExecuteCmd(_cmdList[_index]);

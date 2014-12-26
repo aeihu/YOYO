@@ -40,6 +40,6 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         
         bool OnSubLoop();
         virtual void OnSaveData(Object& json) const;
-       // void OnRender(sf::RenderWindow* Surf_Dest);
+       // void OnRender(sf::RenderTarget* Surf_Dest);
 };
 #endif

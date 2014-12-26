@@ -49,7 +49,7 @@ bool CLogBox::OnSubLoop()
     return _scrollbar.OnLoop();
 }
 
-void CLogBox::OnSubRender(sf::RenderWindow* Surf_Dest)
+void CLogBox::OnSubRender(sf::RenderTarget* Surf_Dest)
 {
     for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){

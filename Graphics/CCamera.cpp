@@ -50,7 +50,7 @@ void CCamera::SetRotation(float angle)
     //_camera.setRotation(_rotation);
 }
 
-void CCamera::Bind(sf::RenderWindow* window)
+void CCamera::Bind(sf::RenderTarget* window)
 {
     if (window)
         window->setView(_camera);

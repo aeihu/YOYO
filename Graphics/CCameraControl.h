@@ -15,23 +15,23 @@ class CCameraControl
 {
     private:
         map<string, CCamera*>           _cameraList;
-        sf::RenderWindow*               _display;
+        sf::RenderTarget*               _display;
     protected:
     public:
         bool AddCamera(string name, string filename);
         bool DelCamera(string name);
         CCamera* GetCamera(string name);
         
-        bool Move(string name, float x, float y, size_t elapsed, bool pause, bool reset);
-        bool MoveX(string name, float x, size_t elapsed, bool pause, bool reset);
-        bool MoveY(string name, float y, size_t elapsed, bool pause, bool reset);
-        bool Zoom(string name, float zoom, size_t elapsed, bool pause, bool reset);
-        bool Rotation(string name, float rotation, size_t elapsed, bool pause, bool reset);
+        //bool Move(string name, float x, float y, size_t elapsed, bool pause, bool reset);
+        //bool MoveX(string name, float x, size_t elapsed, bool pause, bool reset);
+        //bool MoveY(string name, float y, size_t elapsed, bool pause, bool reset);
+        //bool Zoom(string name, float zoom, size_t elapsed, bool pause, bool reset);
+        //bool Rotation(string name, float rotation, size_t elapsed, bool pause, bool reset);
 
         bool UseCamera(string name);
         bool UseDefaultCamera();
 
-        bool OnInit(sf::RenderWindow* display);
+        bool OnInit(sf::RenderTarget* display);
 };
 
 

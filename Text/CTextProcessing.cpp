@@ -145,7 +145,7 @@ void CTextProcessing::Skip()
     _isSkip = true;
 }
 
-void CTextProcessing::OnRender(sf::RenderWindow* Surf_Dest)
+void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)
 {
     _sfText.setOrigin(-2.0f, -2.0f);
     _sfText.setColor(_shadowColor);

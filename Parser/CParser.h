@@ -30,6 +30,7 @@ class CParser
         unsigned long           _delay;
         bool*                   _pRunning;
         size_t                  _index;
+        bool                    _pause;
 
         int AnalysisOfParameters(string para, vector<string> &plist);
 
@@ -37,7 +38,9 @@ class CParser
     public:
         static CParser _Parser;
         CParser();
-
+        
+        void Pause();
+        void Continue();
         void reset();
         void SetIndex(size_t i);
         size_t GetIndex();

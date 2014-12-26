@@ -12,7 +12,6 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include "../Graphics/CSurface.h"
-#include "../Common/CAdder.h"
 #include "../Common/CBaiscProperties.h"
 
 class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl, 
@@ -30,8 +29,8 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         //using CAdderControl::Count;
 
         char                              _layerOrder;
-        float                             _alpha;
         char                              _flag;
+        float                             _alpha;
     protected:
         sf::Texture                       _image;
         sf::Sprite                        _sprite;
@@ -56,9 +55,10 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         virtual char GetFlag() const;
         virtual char GetLayerOrder() const;
         static CImageBaseClass* Create(const char* filename);
+        virtual CAction* CreateActionOfAlpha(size_t elapsed, float alpha, bool pause);
 
-        virtual void OnRender(sf::RenderWindow* Surf_Dest);
-        virtual void OnSubRender(sf::RenderWindow* Surf_Dest){}
+        virtual void OnRender(sf::RenderTarget* Surf_Dest);
+        virtual void OnSubRender(sf::RenderTarget* Surf_Dest){}
 
         virtual bool OnLoop();
         virtual bool OnSubLoop(){return false;}

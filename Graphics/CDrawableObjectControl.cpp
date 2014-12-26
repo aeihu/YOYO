@@ -27,7 +27,6 @@ bool CDrawableObjectControl::IsExists(string name)
 
 bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, string filename)
 {
-    
     CImageBaseClass* __obj = NULL;
 
     if (objTypeName == "Img") __obj = CImageBaseClass::Create(filename.c_str());
@@ -93,24 +92,24 @@ void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer
     }
 }
 
-bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause, bool reset)
-{
-   // if (incr == 0)
-   //     incr = static_cast<float>(CCommon::_Common.INCREMENT);
-
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-    if (__obj != NULL){
-		__obj->AddAction(&__obj->GetAlpha(), elapsed, alpha, pause, reset);
-        //__obj->Insert(0,
-        //    alpha, pause,
-        //    &__obj->GetAlpha(),
-        //    incr);
-
-        return true;
-    }
-
-    return false;
-}
+//bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause, bool reset)
+//{
+//   // if (incr == 0)
+//   //     incr = static_cast<float>(CCommon::_Common.INCREMENT);
+//
+//    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+//    if (__obj != NULL){
+//		__obj->AddAction(&__obj->GetAlpha(), elapsed, alpha, pause, reset);
+//        //__obj->Insert(0,
+//        //    alpha, pause,
+//        //    &__obj->GetAlpha(),
+//        //    incr);
+//
+//        return true;
+//    }
+//
+//    return false;
+//}
 
 //bool CResourceControl::SetImageVisibility(string name, int alpha, size_t elapsed, bool pause)
 //{
@@ -120,47 +119,47 @@ bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, siz
 
 bool CDrawableObjectControl::SetLayerOrder(string name, char order)
 {
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+    CImageBaseClass* __obj = GetDrawableObject(name);
     if (__obj != NULL){
         __obj->SetLayerOrder(order);
         return true;
     }
     return false;
 }
-
-bool CDrawableObjectControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMoveX(elapsed, x, pause, reset);
-    return true;
-}
-        
-bool CDrawableObjectControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMoveY(elapsed, y, pause, reset);
-    return true;
-}
-
-bool CDrawableObjectControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
-{
-    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMove(elapsed, x ,y, pause, reset);
-    return true;
-}
-        
+//
+//bool CDrawableObjectControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
+//{
+//    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddActionOfMoveX(elapsed, x, pause, reset);
+//    return true;
+//}
+//        
+//bool CDrawableObjectControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
+//{
+//    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddActionOfMoveY(elapsed, y, pause, reset);
+//    return true;
+//}
+//
+//bool CDrawableObjectControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
+//{
+//    CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddActionOfMove(elapsed, x ,y, pause, reset);
+//    return true;
+//}
+        /*
 char CDrawableObjectControl::Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha)
 {
     CImageBaseClass* __obj = static_cast<CImageBaseClass*>(GetDrawableObject(name));
@@ -173,22 +172,6 @@ char CDrawableObjectControl::Show(string name, float x, float y, char type, size
 
     float __x = x;
     float __y = y;
-
-    //switch (type)
-    //{
-    //    case 'u':
-    //        __y += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'r':
-    //        __x -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'd':
-    //        __y -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'l':
-    //        __x += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //}
 
     __obj->GetPosition().x = __x;
     __obj->GetPosition().y = __y;
@@ -212,23 +195,6 @@ char CDrawableObjectControl::Hide(string name, char type, size_t elapsed, bool p
 
     float __x = __obj->GetPosition().x;
     float __y = __obj->GetPosition().y;
-    //float __i = elapsed == 0 ? 1 : elapsed / _interval;
-
-    //switch (type)
-    //{
-    //    case 'u':
-    //        __y -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'r':
-    //        __x += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'd':
-    //        __y += CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //    case 'l':
-    //        __x -= CCommon::_Common.CHARACTER_LAYER_MOVE_BUFFER;
-    //    break;
-    //}
 
     if (Move(name, __x, __y, elapsed, pause, false)){
         SetImageVisibility(name, 0, __obj->GetAlpha(), pause, false);
@@ -236,7 +202,7 @@ char CDrawableObjectControl::Hide(string name, char type, size_t elapsed, bool p
     }
 
     return -1;
-}
+}*/
 
 
 bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
@@ -280,11 +246,24 @@ void CDrawableObjectControl::OnLoop(bool &pause)
     }
 }
 
-void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Dest)
+void CDrawableObjectControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
+    sf::View __tmpView = Surf_Dest->getView();
+    bool __b = true;
     for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
-        it!=_drawableObjectList.end(); it++)
-        (*it).second->OnRender(Surf_Dest);
+        it!=_drawableObjectList.end(); it++){
+            if ((*it).second->GetLayerOrder() < 100){
+                (*it).second->OnRender(Surf_Dest);
+            }
+            else{
+                if (__b){
+                    Surf_Dest->setView(Surf_Dest->getDefaultView());
+                    __b = false;
+                }
+                (*it).second->OnRender(Surf_Dest);
+            }
+    }
+    Surf_Dest->setView(__tmpView);
 }
 
 void CDrawableObjectControl::OnCleanup()

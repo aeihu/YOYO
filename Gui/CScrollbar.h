@@ -49,7 +49,7 @@ class CScrollbar : public CBox
         virtual bool CheckList(Object json);
         virtual bool SetProperty(Object json);
         bool OnSubLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderTarget* Surf_Dest);
 
         bool SetMaxValue(int value);
         int GetValue() const;

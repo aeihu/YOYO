@@ -47,7 +47,7 @@ void CTextLog::OnLoop()
     }
 }
 
-void CTextLog::OnRender(sf::RenderWindow* Surf_Dest)
+void CTextLog::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (_voice != NULL)
         _btnVoice.OnRender(Surf_Dest);

@@ -123,7 +123,7 @@ bool CImageBaseClass::LoadImg(const char* fileName)
     return true;
 }
 
-void CImageBaseClass::OnRender(sf::RenderWindow* Surf_Dest)
+void CImageBaseClass::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (_visible){
         Surf_Dest->draw(_sprite);
@@ -175,6 +175,11 @@ bool CImageBaseClass::OnLoop()
     }
 
     return __result;
+}
+
+CAction* CImageBaseClass::CreateActionOfAlpha(size_t elapsed, float alpha, bool pause)
+{
+    return new CAction(&_alpha, elapsed, alpha, pause);
 }
 
 void CImageBaseClass::OnSaveData(Object& json) const

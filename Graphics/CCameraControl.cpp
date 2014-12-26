@@ -38,61 +38,61 @@ CCamera* CCameraControl::GetCamera(string name)
     return NULL;
 }
 
-
-bool CCameraControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
-{
-    CCamera* __obj = GetCamera(name);
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMoveX(elapsed, x, pause, reset);
-    return true;
-}
-        
-bool CCameraControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
-{
-    CCamera* __obj = GetCamera(name);
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMoveY(elapsed, y, pause, reset);
-    return true;
-}
-
-bool CCameraControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
-{
-    CCamera* __obj = GetCamera(name);
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfMove(elapsed, x ,y, pause, reset);
-    return true;
-}
-
-bool CCameraControl::Zoom(string name, float zoom, size_t elapsed, bool pause, bool reset)
-{
-    CCamera* __obj = GetCamera(name);
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfScaleX(elapsed, zoom, pause, reset);
-    return true;
-}
-
-bool CCameraControl::Rotation(string name, float rotation, size_t elapsed, bool pause, bool reset)
-{
-    CCamera* __obj = GetCamera(name);
-
-    if (__obj == NULL)
-        return false;
-    
-    __obj->AddActionOfRotation(elapsed, rotation, pause, reset);
-    return true;
-}
+//
+//bool CCameraControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
+//{
+//    CCamera* __obj = GetCamera(name);
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddAction(__obj->CreateActionOfMoveX(elapsed, x, pause));
+//    return true;
+//}
+//        
+//bool CCameraControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
+//{
+//    CCamera* __obj = GetCamera(name);
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddAction(__obj->CreateActionOfMoveY(elapsed, y, pause));
+//    return true;
+//}
+//
+//bool CCameraControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
+//{
+//    CCamera* __obj = GetCamera(name);
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddAction(__obj->CreateActionOfMove(elapsed, x, y, pause));
+//    return true;
+//}
+//
+//bool CCameraControl::Zoom(string name, float zoom, size_t elapsed, bool pause, bool reset)
+//{
+//    CCamera* __obj = GetCamera(name);
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddAction(__obj->CreateActionOfScaleX(elapsed, zoom, pause));
+//    return true;
+//}
+//
+//bool CCameraControl::Rotation(string name, float rotation, size_t elapsed, bool pause, bool reset)
+//{
+//    CCamera* __obj = GetCamera(name);
+//
+//    if (__obj == NULL)
+//        return false;
+//    
+//    __obj->AddActionOfRotation(elapsed, rotation, pause, reset);
+//    return true;
+//}
 
 bool CCameraControl::UseCamera(string name)
 {
@@ -105,7 +105,7 @@ bool CCameraControl::UseCamera(string name)
     return true;
 }
 
-bool CCameraControl::OnInit(sf::RenderWindow* display)
+bool CCameraControl::OnInit(sf::RenderTarget* display)
 {
     if (display != NULL){
         _display = display;

@@ -35,7 +35,7 @@ bool CScrollbar::OnSubLoop()
 }
 
 
-void CScrollbar::OnRender(sf::RenderWindow* Surf_Dest)
+void CScrollbar::OnRender(sf::RenderTarget* Surf_Dest)
 {
     //dai ding
     if (_maxValue < 1)

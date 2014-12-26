@@ -41,7 +41,7 @@ class CTextProcessing
         void SetRowWidth(size_t width);
         virtual void SetFont(sf::Font& font);
         void OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderTarget* Surf_Dest);
         void Skip();
         void Clear();
         bool IsTextAllShown();

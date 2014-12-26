@@ -28,7 +28,7 @@ CMessageBox* CMessageBox::Create(const char* filename)
     if (__msgbox->LoadConfigFile(filename)){
         __msgbox->SetClassName("msgbox");
         __msgbox->SetPath(filename);
-        __msgbox->SetLayerOrder(4);
+        __msgbox->SetLayerOrder(104);
         return __msgbox;
     }
     
@@ -160,7 +160,7 @@ bool CMessageBox::OnSubLoop()
     return _isPaused || !IsTextAllShown();// || __result;
 }
 
-void CMessageBox::OnSubRender(sf::RenderWindow* Surf_Dest)
+void CMessageBox::OnSubRender(sf::RenderTarget* Surf_Dest)
 {
     Surf_Dest->draw(_speakerName);
     CTextProcessing::OnRender(Surf_Dest);

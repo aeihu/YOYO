@@ -31,7 +31,7 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void SetSize(float w, float h);
         void SetZoom(float zoom);
         void SetRotation(float angle);
-        void Bind(sf::RenderWindow* window);
+        void Bind(sf::RenderTarget* window);
         bool OnLoop();
         sf::Vector2f GetCenter();
         sf::Vector2f GetPosition();

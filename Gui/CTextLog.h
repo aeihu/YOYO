@@ -37,7 +37,7 @@ class CTextLog
         bool OnLButtonUp(int x, int y);
         void OnLoop();
         void OnCleanup();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderTarget* Surf_Dest);
 };
 
 #endif
