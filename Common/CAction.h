@@ -16,7 +16,7 @@ class CAction : public CActionBaseClass
 {
     protected:
     public:
-        CAction(float* val, float fin, float inc, bool pause=false);
+        CAction(float* val, size_t elapsed, float fin, bool pause=false);
         bool OnLoop();
     private:
         float*      _val;

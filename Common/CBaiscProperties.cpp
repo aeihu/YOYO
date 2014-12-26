@@ -9,6 +9,11 @@
 #include "CBaiscProperties.h"
 #include "CCommon.h"
 
+CBaiscProperties::CBaiscProperties()
+{
+    _rotation = 0.0f;
+}
+
 float& CBaiscProperties::GetRotation()
 {
     return _rotation;
@@ -74,31 +79,6 @@ sf::Vector2f& CBaiscProperties::GetScale()
 
 bool CBaiscProperties::OnLoop()
 {
-    //bool __isPause = false;
-    //for (list<CActionBaseClass*>::iterator it=_actList.begin();it!=_actList.end(); ){
-    //    if ((*it)->OnLoop()){
-    //        delete (*it);
-    //        (*it) = NULL;
-    //        it=_actList.erase(it);
-    //        if (it == _actList.end())
-    //            break;
-    //    }
-    //    else{
-    //        __isPause = (*it)->IsPause() ? true : __isPause;
-    //        ++it;
-    //    }
-    //}
-    //return _actList.OnLoop();
-
-    //for (size_t i=_actList.size(); i>0; i--){
-    //    if (_actList[i-1]->OnLoop()){
-    //        delete _actList[i-1];
-    //        _actList[i-1] = NULL;
-    //        _actList.erase(_actList.begin()+(i-1));
-    //    }
-    //
-    //}
-
     return _actList.OnLoop() ? false : _actList.IsPause();
 }
 
@@ -111,77 +91,45 @@ bool CBaiscProperties::AddAction(CActionBaseClass* act)
     return true;
 }
 
-bool CBaiscProperties::AddAction(float* val, size_t elapsed, float fin, bool pause, bool reset)
+CAction* CBaiscProperties::CreateActionOfRotation(size_t elapsed, float rotation, bool pause)
 {
-    if (val){
-        CSequenceOfAction* __acts = new CSequenceOfAction();
-        if (reset) elapsed = elapsed >> 2;
-        if (elapsed == 0) elapsed = 1;
-        float __tmpVal = *val;
-
-        float __inc = (fin - *val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)elapsed);
-
-        if (__inc < -0.000001f || __inc > 0.000001f){
-            __acts->AddAction(new CAction(val, fin, __inc, pause));
-
-            if (reset) __acts->AddAction(new CAction(val, __tmpVal, __inc, pause));
-
-            _actList.AddAction(__acts);
-        }
-
-        return true;
-    }
-
-    return false;
+    return new CAction(&_rotation, elapsed, rotation, pause);
 }
 
-//bool CBaiscProperties::AddAction(int* val, size_t elapsed, int fin)
-//{
-//    if (val){
-//        int __inc = (fin - *val) * ((1000/CCommon::_Common.MAX_FPS)/elapsed);
-//        _actList.push_back(new CAction(val, fin, __inc));
-//        return true;
-//    }
-//
-//    return false;
-//}
-
-bool CBaiscProperties::AddActionOfRotation(size_t elapsed, float rotation, bool pause, bool reset)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfScale(size_t elapsed, float x, float y, bool pause)
 {
-    return AddAction(&_rotation, elapsed, rotation, pause, reset);
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CAction(&_scale.x, elapsed, x, pause));
+    __result->AddAction(new CAction(&_scale.y, elapsed, y, pause));
+    return __result;
 }
 
-bool CBaiscProperties::AddActionOfScale(size_t elapsed, float x, float y, bool pause, bool reset)
+CAction* CBaiscProperties::CreateActionOfScaleX(size_t elapsed, float x, bool pause)
 {
-    return AddAction(&_scale.x, elapsed, x, pause, reset) && 
-        AddAction(&_scale.y, elapsed, y, pause, reset);
+    return new CAction(&_scale.x, elapsed, x, pause);
 }
 
-bool CBaiscProperties::AddActionOfScaleX(size_t elapsed, float x, bool pause, bool reset)
+CAction* CBaiscProperties::CreateActionOfScaleY(size_t elapsed, float y, bool pause)
 {
-    return AddAction(&_scale.x, elapsed, x, pause, reset);
+    return new CAction(&_scale.y, elapsed, y, pause);
 }
 
-bool CBaiscProperties::AddActionOfScaleY(size_t elapsed, float y, bool pause, bool reset)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfMove(size_t elapsed, float x, float y, bool pause)
 {
-    return AddAction(&_scale.y, elapsed, y, pause, reset);
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CAction(&_coordinate.x, elapsed, x, pause));
+    __result->AddAction(new CAction(&_coordinate.y, elapsed, y, pause));
+    return __result;
 }
 
-bool CBaiscProperties::AddActionOfMove(size_t elapsed, float x, float y, bool pause, bool reset)
+CAction* CBaiscProperties::CreateActionOfMoveX(size_t elapsed, float x, bool pause)
 {
-    return AddAction(&_coordinate.x, elapsed, x, pause, reset) && 
-        AddAction(&_coordinate.y, elapsed, y, pause, reset);
+    return new CAction(&_coordinate.x, elapsed, x, pause);
 }
 
-
-bool CBaiscProperties::AddActionOfMoveX(size_t elapsed, float x, bool pause, bool reset)
+CAction* CBaiscProperties::CreateActionOfMoveY(size_t elapsed, float y, bool pause)
 {
-    return AddAction(&_coordinate.x, elapsed, x, pause, reset);
-}
-
-bool CBaiscProperties::AddActionOfMoveY(size_t elapsed, float y, bool pause, bool reset)
-{
-    return AddAction(&_coordinate.y, elapsed, y, pause, reset);
+    return new CAction(&_coordinate.y, elapsed, y, pause);
 }
 
 void CBaiscProperties::OnSaveData(Object& json) const

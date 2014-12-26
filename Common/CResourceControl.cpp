@@ -181,6 +181,11 @@ void CResourceControl::LoadAsset()
                 CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
         }
     }
+
+    CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
+    if (__img != NULL)
+        __img->AddAction(__img->CreateActionOfAlpha(500,0,true));
+
     CParser::_Parser.Continue();
 }
 
@@ -189,17 +194,13 @@ bool CResourceControl::LoadScript(string filename)
     _fileNameOfScript = filename;
     if (_gameBaiscAsset.has<Array>("[image_for_loading]")){
         Array __imgs = _gameBaiscAsset.get<Array>("[image_for_loading]");
-        CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(
-            __imgs.get<String>(std::rand() % __imgs.size()));
+        _nameOfLoadingImg = __imgs.get<String>(std::rand() % __imgs.size());
+        CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
 
         if (__img != NULL){
-            //__img->
+            __img->AddAction(__img->CreateActionOfAlpha(500,255,true));
+            _DrawableObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
         }
-
-
-        _DrawableObjectControl.Show(
-            __imgs.get<String>(std::rand() % __imgs.size()),
-            0,0,0,500,true);
     }
 
     _threadOfLoading.launch();

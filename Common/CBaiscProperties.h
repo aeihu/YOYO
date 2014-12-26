@@ -10,6 +10,7 @@
     #define _CBAISCPROPERTIES_H_
 
 #include "CSequenceOfAction.h"
+#include "CSimultaneousOfAction.h"
 #include "CObject.h"
 #include <SFML/Graphics.hpp>
 #include <list>
@@ -23,10 +24,11 @@ class CBaiscProperties : public CObject
         sf::Vector2f                        _coordinate;
         sf::Vector2f                        _offset;
         float                               _rotation;
-        float                               _alpha;
         
         CSequenceOfAction                   _actList;
     public:
+        CBaiscProperties();
+
         virtual float& GetRotation();
         void SetRotation(float r);
         sf::Vector2f& GetPosition();
@@ -41,16 +43,14 @@ class CBaiscProperties : public CObject
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
         virtual bool AddAction(CActionBaseClass* act);
-        virtual bool AddAction(float* val, size_t elapsed, float fin, bool pause, bool reset);
-        //virtual bool AddAction(int* val, size_t elapsed, int fin);
-        virtual bool AddActionOfRotation(size_t elapsed, float rotation, bool pause, bool reset);
-        virtual bool AddActionOfScale(size_t elapsed, float x, float y, bool pause, bool reset);
-        virtual bool AddActionOfScaleX(size_t elapsed, float x, bool pause, bool reset);
-        virtual bool AddActionOfScaleY(size_t elapsed, float y, bool pause, bool reset);
+        virtual CAction* CreateActionOfRotation(size_t elapsed, float rotation, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfScale(size_t elapsed, float x, float y, bool pause);
+        virtual CAction* CreateActionOfScaleX(size_t elapsed, float x, bool pause);
+        virtual CAction* CreateActionOfScaleY(size_t elapsed, float y, bool pause);
 
-        virtual bool AddActionOfMove(size_t elapsed, float x, float y, bool pause, bool reset);	  
-        virtual bool AddActionOfMoveX(size_t elapsed, float x, bool pause, bool reset);
-        virtual bool AddActionOfMoveY(size_t elapsed, float y, bool pause, bool reset);
+        virtual CSimultaneousOfAction* CreateActionOfMove(size_t elapsed, float x, float y, bool pause);	  
+        virtual CAction* CreateActionOfMoveX(size_t elapsed, float x, bool pause);
+        virtual CAction* CreateActionOfMoveY(size_t elapsed, float y, bool pause);
 
         virtual bool OnLoop();
         virtual void OnSaveData(Object& json) const;

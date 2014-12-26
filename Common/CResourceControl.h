@@ -25,6 +25,8 @@ class CResourceControl : public CScript
 {
     private:
         string                                  _fileNameOfScript;
+        string                                  _nameOfLoadingImg;
+
         Object                                  _script;
         Object                                  _gameBaiscAsset;
         sf::Thread                              _threadOfLoading;

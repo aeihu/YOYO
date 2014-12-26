@@ -14,7 +14,7 @@
 
 using namespace std;
 
-class CSimultaneousOfAction : CActionBaseClass
+class CSimultaneousOfAction : public CActionBaseClass
 {
     private:
         list<CActionBaseClass*>     _actionList;

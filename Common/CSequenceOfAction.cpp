@@ -29,5 +29,6 @@ bool CSequenceOfAction::OnLoop()
 
 void CSequenceOfAction::AddAction(CActionBaseClass* act)
 {
-    _actionList.push_back(act);
+    if (act != NULL)
+        _actionList.push_back(act);
 }
