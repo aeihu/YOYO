@@ -8,6 +8,13 @@
 
 #include "CSequenceOfAction.h"
 
+bool CSequenceOfAction::IsPause()
+{
+    return _pause || 
+        (_actionList.size() < 1 ? 
+            false : _actionList.front()->IsPause());
+}
+
 bool CSequenceOfAction::OnLoop()
 {
     if (!_actionList.empty()){
@@ -15,8 +22,6 @@ bool CSequenceOfAction::OnLoop()
             delete _actionList.front();
             _actionList.erase(_actionList.begin());
         }
-        else
-            _pause = _actionList.front()->IsPause();
     }
     
     return _actionList.empty();

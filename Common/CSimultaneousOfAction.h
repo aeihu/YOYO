@@ -6,17 +6,15 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
+#ifndef _CSIMULTANEOUSOFACTION_H_
+    #define _CSIMULTANEOUSOFACTION_H_
 
-#ifndef _CSEQUENCEOFACTION_H_
-    #define _CSEQUENCEOFACTION_H_
-
-#include "CAction.h"
-#include <list>
 #include "CActionBaseClass.h"
+#include <list>
 
 using namespace std;
 
-class CSequenceOfAction : public CActionBaseClass
+class CSimultaneousOfAction : CActionBaseClass
 {
     private:
         list<CActionBaseClass*>     _actionList;
