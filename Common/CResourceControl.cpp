@@ -153,6 +153,11 @@ bool CResourceControl::OnInit(string filename)
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
 
+void CResourceControl::LoadProcess()
+{
+    _threadOfLoading.launch();
+}
+
 void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
@@ -184,7 +189,7 @@ void CResourceControl::LoadAsset()
 
     CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
     if (__img != NULL)
-        __img->AddAction(__img->CreateActionOfAlpha(500,0,true));
+        __img->AddAction(__img->CreateActionOfAlpha(500,0,false,true));
 
     CParser::_Parser.Continue();
 }
@@ -198,12 +203,13 @@ bool CResourceControl::LoadScript(string filename)
         CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
 
         if (__img != NULL){
-            __img->AddAction(__img->CreateActionOfAlpha(500,255,true));
+            CSequenceOfAction* __seq = new CSequenceOfAction();
+            __seq->AddAction(__img->CreateActionOfAlpha(500,255,false,true));
+            __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::LoadProcess));
+            __img->AddAction(__seq);
             _DrawableObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
         }
     }
-
-    _threadOfLoading.launch();
 
     return true;
 }
@@ -211,6 +217,7 @@ bool CResourceControl::LoadScript(string filename)
 void CResourceControl::OnLoop()
 {
     bool __pause = false;
+    _CameraControl.OnLoop(__pause);
     _DrawableObjectControl.OnLoop(__pause);
 
     _SoundControl.OnLoop();

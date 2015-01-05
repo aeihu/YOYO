@@ -55,7 +55,7 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         virtual char GetFlag() const;
         virtual char GetLayerOrder() const;
         static CImageBaseClass* Create(const char* filename);
-        virtual CAction* CreateActionOfAlpha(size_t elapsed, float alpha, bool pause);
+        virtual CAction* CreateActionOfAlpha(size_t elapsed, float alpha, bool restore, bool pause);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSubRender(sf::RenderTarget* Surf_Dest){}

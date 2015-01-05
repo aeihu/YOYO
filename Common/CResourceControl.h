@@ -18,6 +18,7 @@
 #include "../Sound/CSoundBank.h"
 #include "../Graphics/CDrawableObjectControl.h"
 #include "../Graphics/CCameraControl.h"
+#include "CClassFuncOfAction.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ class CResourceControl : public CScript
         sf::Thread                              _threadOfLoading;
 
         string GetNameInFilename(string filename);
+        void LoadProcess();
         void LoadAsset();
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);

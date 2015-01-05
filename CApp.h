@@ -11,7 +11,6 @@
 
 #include <SFML/Window.hpp>
 #include "Common/CCommon.h"
-#include "Common/CAdder.h"
 #include <algorithm>
 //#include "Common/CFPS.h"
 //#include "Common/Define.h"

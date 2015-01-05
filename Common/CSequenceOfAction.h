@@ -12,19 +12,18 @@
 
 #include "CAction.h"
 #include <list>
-#include "CActionBaseClass.h"
+#include "CActionSet.h"
 
 using namespace std;
 
-class CSequenceOfAction : public CActionBaseClass
+class CSequenceOfAction : public CActionSet
 {
     private:
-        list<CActionBaseClass*>     _actionList;
+        int     _loopNum;
     protected:
     public:
-        void AddAction(CActionBaseClass* act);
+        void SetLoopNum(int num);
         bool OnLoop();
-        bool IsPause();
 };
 
 #endif

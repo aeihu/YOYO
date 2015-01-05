@@ -177,9 +177,9 @@ bool CImageBaseClass::OnLoop()
     return __result;
 }
 
-CAction* CImageBaseClass::CreateActionOfAlpha(size_t elapsed, float alpha, bool pause)
+CAction* CImageBaseClass::CreateActionOfAlpha(size_t elapsed, float alpha, bool restore, bool pause)
 {
-    return new CAction(&_alpha, elapsed, alpha, pause);
+    return new CAction(&_alpha, elapsed, alpha, restore, pause);
 }
 
 void CImageBaseClass::OnSaveData(Object& json) const

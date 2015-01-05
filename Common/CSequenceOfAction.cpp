@@ -8,13 +8,6 @@
 
 #include "CSequenceOfAction.h"
 
-bool CSequenceOfAction::IsPause()
-{
-    return _pause || 
-        (_actionList.size() < 1 ? 
-            false : _actionList.front()->IsPause());
-}
-
 bool CSequenceOfAction::OnLoop()
 {
     if (!_actionList.empty()){
@@ -27,8 +20,7 @@ bool CSequenceOfAction::OnLoop()
     return _actionList.empty();
 }
 
-void CSequenceOfAction::AddAction(CActionBaseClass* act)
+void CSequenceOfAction::SetLoopNum(int num)
 {
-    if (act != NULL)
-        _actionList.push_back(act);
+    _loopNum = num < 1 ? 1 : num;
 }

@@ -14,8 +14,6 @@ bool CCameraControl::AddCamera(string name, string filename)
         return false;
     
     _cameraList[name] = CCamera::Create(filename.c_str());
-    _cameraList[name]->Reset(0.0f, 0.0f,
-        CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
     return true;
 }
 
@@ -36,6 +34,15 @@ CCamera* CCameraControl::GetCamera(string name)
         return _cameraList[name];
     }
     return NULL;
+}
+
+void CCameraControl::OnLoop(bool &pause)
+{
+    map<string, CCamera*>::iterator it;
+    for ( it=_cameraList.begin(); it !=_cameraList.end(); it++ ){
+        if((*it).second->OnLoop()) 
+            pause=true;
+    }
 }
 
 //

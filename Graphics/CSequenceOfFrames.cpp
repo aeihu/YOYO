@@ -57,7 +57,7 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
     //_rect.Bottom = _rect.Top+Height;
 
     if (_destTexture != NULL){
-        _image.copy(_imageOfTexture, _offset.x, _offset.y ,_rect);
+        _image.copy(_imageOfTexture, _offset.x, _offset.y, _rect);
         _destTexture->update(_image, _offset.x, _offset.y);
         _image.copy(_tile, 0,0 ,_rect);
         _destTexture->update(_image, _offset.x, _offset.y);

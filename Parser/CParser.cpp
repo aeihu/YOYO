@@ -116,6 +116,8 @@ void CParser::ExecuteCmd(string cmd)
         //else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
         else if (__commandName == "@order_btn") _pFunc = &Cmd_SetButtonLayerOrder;
         
+        else if (__commandName == "@use_camera") _pFunc = &Cmd_UseCamera;
+
         else if (__commandName == "@add_var") _pFunc = &Cmd_AddVariable;
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
         else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;

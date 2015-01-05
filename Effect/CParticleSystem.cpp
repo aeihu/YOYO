@@ -92,7 +92,7 @@ bool CParticleSystem::OnLoop()
     return false;
 }
 
-void CParticleSystem::OnRender(sf::RenderWindow* Surf_Dest)
+void CParticleSystem::OnRender(sf::RenderTarget* Surf_Dest)
 {
     for (std::size_t i = 0; i < _particles.size(); ++i){
 //        if (_particles[i]._Layer == layer)

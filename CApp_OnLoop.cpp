@@ -13,7 +13,7 @@
 #include <exception>
 //==============================================================================
 void CApp::OnLoop() {
-    bool __isPause = false;
+    //bool __isPause = false;
 
     //CResourceManager::_BackgroundLayerControl.OnLoop(__isPause);
     //CResourceManager::_CharacterLayerControl.OnLoop(__isPause);
@@ -22,14 +22,8 @@ void CApp::OnLoop() {
     //CResourceManager::_MessageBoxControl.OnLoop(__isPause);
     //CResourceManager::_ButtonControl.OnLoop(__isPause);
     //CResourceManager::_LogBoxControl.OnLoop(__isPause);
-
-    CResourceControl::_ResourceManager.OnLoop(__isPause);
-    CResourceControl::_ResourceManager._SoundControl.OnLoop();
-
-    if (CParser::_Parser.IsDeplaying() || __isPause)
-        return;
-    
-    CParser::_Parser.OnLoop();
+    //cout << "CApp::OnLoop()" << endl;
+    CResourceControl::_ResourceManager.OnLoop();
 }
 
 //==============================================================================

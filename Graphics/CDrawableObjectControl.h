@@ -30,12 +30,12 @@ class CDrawableObjectControl
         inline CDrawableObjectControl() {_isNeedSort = false;}
         bool IsExists(string name);
         //bool SetImageVisibility(string name, int alpha, size_t elapsed, bool pause, bool reset);
-        bool SetLayerOrder(string name, char order);
+        //bool SetLayerOrder(string name, char order);
         
         bool AddDrawableObject(string name, string objTypeName, string filename);
         bool DelDrawableObject(string name);
         CImageBaseClass* GetDrawableObject(string name);
-        void SetDrawableObjectLayerOrder(string name, char layer);
+        bool SetDrawableObjectLayerOrder(string name, char layer);
 
         //bool Move(string name, float x, float y, size_t elapsed, bool pause, bool reset);
         //bool MoveX(string name, float x, size_t elapsed, bool pause, bool reset);

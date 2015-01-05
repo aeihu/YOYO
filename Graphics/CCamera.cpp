@@ -15,6 +15,8 @@ void CCamera::Reset(float x, float y, float w, float h)
     _offset.y = h/2;
     _coordinate.x = x;
     _coordinate.y = y;
+    _size.x = w;
+    _size.y = h;
     //std::cout << _offset.x << ":" << _offset.y << std::endl;
     _camera.reset(sf::FloatRect(x, y, w, h));
 }
@@ -108,22 +110,22 @@ CCamera* CCamera::Create(const char* filename)
 bool CCamera::CheckList(Object json) 
 {
     bool result = true;
-    if (!json.has<String>("X")){
+    if (!json.has<Number>("X")){
         cout << "can't find value of X." << endl;
         result = false;
     }
 
-    if (!json.has<Boolean>("Y")){
-        cout << "can't find value of X." << endl;
+    if (!json.has<Number>("Y")){
+        cout << "can't find value of Y." << endl;
         return false;
     }
 
-    if (!json.has<Boolean>("ZOOM")){
+    if (!json.has<Number>("ZOOM")){
         cout << "can't find value of ZOOM." << endl;
         return false;
     }
 
-    if (!json.has<Boolean>("ROTATION")){
+    if (!json.has<Number>("ROTATION")){
         cout << "can't find value of ROTATION." << endl;
         return false;
     }

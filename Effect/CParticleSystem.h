@@ -54,7 +54,7 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
         bool OnLoop();
-        void OnRender(sf::RenderWindow* Surf_Dest);
+        void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
         bool GetEnable() const;
         void SetEnable(bool val);

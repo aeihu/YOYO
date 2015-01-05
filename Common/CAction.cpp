@@ -8,15 +8,7 @@
 
 #include "CAction.h"
 
-//CAction::CAction(float* val, float fin, float inc, bool pause)
-//{
-//    _val = val;
-//    _valOfFinish = fin;
-//    _incr = inc;
-//    _pause = pause;
-//}
-
-CAction::CAction(float* val, size_t elapsed, float fin, bool pause)
+CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause)
 {
     _val = NULL;
     if (val){
@@ -25,6 +17,8 @@ CAction::CAction(float* val, size_t elapsed, float fin, bool pause)
         _valOfFinish = fin;
         _pause = pause;
         _incr = (fin - *val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)elapsed);
+        _orgVal = *val;
+        _restore = restore;
     }
 }
 
@@ -37,19 +31,20 @@ bool CAction::OnLoop()
         (*_val) += _incr;
 
         if (_incr < 0){
-            if ((*_val) < _valOfFinish){
+            if ((*_val) < _valOfFinish)
                 (*_val) = _valOfFinish;
-                return true;
-            }
         }
-        else if (_incr > 0)
-            if ((*_val) > _valOfFinish){
+        else if (_incr > 0){
+            if ((*_val) > _valOfFinish)
                 (*_val) = _valOfFinish;
-                return true;
-            }
+        }
+  
 
         return false;
     }
-    else
+    else{
+        if (_restore) *_val = _orgVal;
+
         return true;
+    }
 }

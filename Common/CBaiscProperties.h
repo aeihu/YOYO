@@ -43,14 +43,14 @@ class CBaiscProperties : public CObject
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
         virtual bool AddAction(CActionBaseClass* act);
-        virtual CAction* CreateActionOfRotation(size_t elapsed, float rotation, bool pause);
-        virtual CSimultaneousOfAction* CreateActionOfScale(size_t elapsed, float x, float y, bool pause);
-        virtual CAction* CreateActionOfScaleX(size_t elapsed, float x, bool pause);
-        virtual CAction* CreateActionOfScaleY(size_t elapsed, float y, bool pause);
+        virtual CAction* CreateActionOfRotation(size_t elapsed, float rotation, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfScale(size_t elapsed, float x, float y, bool restore, bool pause);
+        virtual CAction* CreateActionOfScaleX(size_t elapsed, float x, bool restore, bool pause);
+        virtual CAction* CreateActionOfScaleY(size_t elapsed, float y, bool restore, bool pause);
 
-        virtual CSimultaneousOfAction* CreateActionOfMove(size_t elapsed, float x, float y, bool pause);	  
-        virtual CAction* CreateActionOfMoveX(size_t elapsed, float x, bool pause);
-        virtual CAction* CreateActionOfMoveY(size_t elapsed, float y, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfMove(size_t elapsed, float x, float y, bool restore, bool pause);	  
+        virtual CAction* CreateActionOfMoveX(size_t elapsed, float x, bool restore, bool pause);
+        virtual CAction* CreateActionOfMoveY(size_t elapsed, float y, bool restore, bool pause);
 
         virtual bool OnLoop();
         virtual void OnSaveData(Object& json) const;

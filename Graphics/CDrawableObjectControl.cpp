@@ -81,15 +81,16 @@ CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
     return NULL;
 }
 
-void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
+bool CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
 {
     for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
             _drawableObjectList[i].second->SetLayerOrder(layer);
             _isNeedSort = true;
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 //bool CDrawableObjectControl::SetImageVisibility(std::string name, int alpha, size_t elapsed, bool pause, bool reset)
@@ -117,15 +118,15 @@ void CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer
 //    return SetImageVisibility(name, alpha, __i, pause);
 //}
 
-bool CDrawableObjectControl::SetLayerOrder(string name, char order)
-{
-    CImageBaseClass* __obj = GetDrawableObject(name);
-    if (__obj != NULL){
-        __obj->SetLayerOrder(order);
-        return true;
-    }
-    return false;
-}
+//bool CDrawableObjectControl::SetLayerOrder(string name, char order)
+//{
+//    CImageBaseClass* __obj = GetDrawableObject(name);
+//    if (__obj != NULL){
+//        __obj->SetLayerOrder(order);
+//        return true;
+//    }
+//    return false;
+//}
 //
 //bool CDrawableObjectControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
 //{

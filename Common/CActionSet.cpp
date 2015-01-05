@@ -15,18 +15,6 @@ bool CActionSet::IsPause()
             false : _actionList.front()->IsPause());
 }
 
-//bool CActionSet::OnLoop()
-//{
-//    if (!_actionList.empty()){
-//        if (_actionList.front()->OnLoop()){
-//            delete _actionList.front();
-//            _actionList.erase(_actionList.begin());
-//        }
-//    }
-//    
-//    return _actionList.empty();
-//}
-
 void CActionSet::AddAction(CActionBaseClass* act)
 {
     if (act != NULL)

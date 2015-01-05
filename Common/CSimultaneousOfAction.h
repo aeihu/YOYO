@@ -9,20 +9,17 @@
 #ifndef _CSIMULTANEOUSOFACTION_H_
     #define _CSIMULTANEOUSOFACTION_H_
 
-#include "CActionBaseClass.h"
+#include "CActionSet.h"
 #include <list>
 
 using namespace std;
 
-class CSimultaneousOfAction : public CActionBaseClass
+class CSimultaneousOfAction : public CActionSet
 {
     private:
-        list<CActionBaseClass*>     _actionList;
     protected:
     public:
-        void AddAction(CActionBaseClass* act);
         bool OnLoop();
-        bool IsPause();
 };
 
 #endif
