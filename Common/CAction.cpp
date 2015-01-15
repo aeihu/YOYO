@@ -22,6 +22,9 @@ CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause
     }
 }
 
+/*
+    when result is true, it's mean action is finished
+*/
 bool CAction::OnLoop()
 {
     if (_val == NULL)
