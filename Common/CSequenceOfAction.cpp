@@ -19,8 +19,3 @@ bool CSequenceOfAction::OnLoop()
     
     return _actionList.empty();
 }
-
-void CSequenceOfAction::SetLoopNum(int num)
-{
-    _loopNum = num < 1 ? 1 : num;
-}

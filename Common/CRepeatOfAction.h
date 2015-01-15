@@ -6,21 +6,22 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
+#ifndef _CREPEATOFACTION_H_
+    #define _CREPEATOFACTION_H_
 
-#ifndef _CSEQUENCEOFACTION_H_
-    #define _CSEQUENCEOFACTION_H_
-
-#include "CAction.h"
-#include <list>
 #include "CActionSet.h"
 
-using namespace std;
-
-class CSequenceOfAction : public CActionSet
+class CRepeatOfAction : public CActionSet
 {
+    private:
+        int                                 _loopNum;
+        list<CActionBaseClass*>::iterator   _iterator;
     protected:
     public:
+        CRepeatOfAction();
+
         bool OnLoop();
+        void SetLoopNum(int num);
 };
 
 #endif
