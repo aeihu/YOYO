@@ -91,9 +91,15 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> >& flags
     return true;
 }
 
-bool Common_FuncOfShow(string objTypeName, vector<string>& args)
+bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act)
 { 
     string __funcName = "Cmd_Show" + objTypeName;
+
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
     if (args.size() < 1){
         cout << __funcName << "(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -109,7 +115,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args)
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
     __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
@@ -145,7 +151,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args)
             if (!CResourceControl::_ResourceManager._PositionControl.GetPosition(__values["-s"][0],__x,__y))
                 cout << __funcName << "(): can't find position \""<< __values["-s"][0] << "\"." <<endl;
         
-        __obj->AddAction(__obj->CreateActionOfAlpha(__inte, __alpha, __reset, __pause));
+        act->AddAction(__obj->CreateActionOfAlpha(__inte, __alpha, __reset, __pause));
         __obj->SetPosition(*__x, *__y);
         return true;
     }
@@ -155,9 +161,15 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args)
     return false;
 }
 
-bool Common_FuncOfHide(string objTypeName, vector<string>& args)
+bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act)
 { 
     string __funcName = "Cmd_Hide" + objTypeName;
+
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
     if (args.size() < 1){
         cout << __funcName << "(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -168,7 +180,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args)
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //interval
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
@@ -187,91 +199,206 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args)
         CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
 
     if (__obj != NULL){
-        __obj->AddAction(__obj->CreateActionOfAlpha(__inte, 0, __reset, __pause));
+        act->AddAction(__obj->CreateActionOfAlpha(__inte, 0, __reset, __pause));
         return true;
     }
     return false;
 }
-//
-//bool Common_FuncOfAdd(string objTypeName, vector<string>& args)
-//{
-//    if (args.size() != 2){
-//        cout << "Cmd_Add" << objTypeName << "(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    string __name = args[0];
-//    const char* __filename = args[1].c_str();
-//
-//    if (objTypeName == "Font"){
-//        CObject* __obj = NULL;
-//
-//        if (objTypeName == "Font") __obj = CFont::Create(__filename);
-//
-//        if (__obj != NULL){
-//            if (CResourceControl::_ResourceManager.AddObject(objTypeName+":"+__name, __obj))
-//                return true;
-//            else
-//                cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
-//        }
-//        else
-//            cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
-//    }
-//    else{
-//        CImageBaseClass* __obj = NULL;
-//
-//        if (objTypeName == "Img") __obj = CImageBaseClass::Create(__filename);
-//        else if (objTypeName == "Background") __obj = CImageBaseClass::Create(__filename);
-//        else if (objTypeName == "Button") __obj = CButton::Create(__filename);
-//        else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(__filename);
-//        else if (objTypeName == "LogBox") __obj = CLogBox::Create(__filename);
-//        else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(__filename);
-//        else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(__filename);
-//        
-//        if (__obj != NULL){
-//            if (CResourceControl::_ResourceManager.AddDrawableObject(objTypeName+":"+__name, __obj)){
-//                
-//                //__msgBox->SetFont(
-//                //    static_cast<CFont*>(CResourceControl::_ResourceManager.GetObject("__main"))->GetFont());
-//                return true;
-//            }
-//            else
-//                cout << "Cmd_Add" << objTypeName <<"(): " << objTypeName << " \""<< __name << "\" has existed." <<endl;
-//        }
-//        else
-//            cout << "Cmd_Add" << objTypeName << "(): failed to create " << objTypeName << "." <<endl;
-//    }
-//
-//    return false;
-//}
-//
-//bool Common_FuncOfDelete(string objTypeName, vector<string>& args)
-//{ 
-//    string __funcName = "Cmd_Del" + objTypeName;
-//    if (args.size() < 1){
-//        cout << __funcName << "(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//    
-//    if (objTypeName != "Font") {
-//        for (size_t i=0; i<args.size(); i++){
-//            if (!CResourceControl::_ResourceManager.DelDrawableObject(objTypeName+":"+args[i]))
-//                cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
-//        }
-//    }
-//    else{
-//        for (size_t i=0; i<args.size(); i++){
-//            if (!CResourceControl::_ResourceManager.DelObject(objTypeName+":"+args[i]))
-//                cout << __funcName << "(): can't find " << objTypeName << " \""<< args[i] << "\"." <<endl;
-//        }
-//    }
-//
-//    return true;
-//}
 
-bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args)
+bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act)
+{ 
+    string __funcName = "Cmd_Move" + objTypeName;
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << __funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0)
+        return false;
+
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
+    string __name = __values["-n"][0];
+    float __x = 0;
+    float __y = 0;
+    char __flag = 0;
+    size_t __inte = __values.count("-i") == 0 ? 
+        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
+
+    if (__values.count("-x") > 0){
+        __x = atof(__values["-x"][0].c_str());
+        __flag |= 0x1;
+    }
+
+    if (__values.count("-y") > 0){
+        __y = atof(__values["-y"][0].c_str());
+        __flag |= 0x2;
+    }
+
+    if (__values.count("-s") > 1){
+        if (!CResourceControl::_ResourceManager._PositionControl.GetPosition(__values["-s"][0], &__x, &__y)){
+            cout << __funcName << "(): can't find position \""<< __values["-s"][0] << "\"." <<endl;
+        }
+        __flag = 3;
+    }
+    
+    CImageBaseClass* __obj = 
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    if (__obj != NULL){
+        switch (__flag)
+        {
+            case 1:
+                act->AddAction(__obj->CreateActionOfMoveX(__inte, __x, __reset, __pause));
+            break;
+            case 2:
+                act->AddAction(__obj->CreateActionOfMoveY(__inte, __y, __reset, __pause));
+            break;
+            case 3:
+                act->AddAction(__obj->CreateActionOfMove(__inte, __x, __y, __reset, __pause));
+            break;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet* act)
+{
+    string __funcName = "Cmd_Rotation" + objTypeName;
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << __funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_NECESSITY));    //Rotation
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
+    
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0)
+        return false;
+    
+    string __name = __values["-n"][0];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
+    float __rotation = atof(__values["-v"][0].c_str());
+    size_t __inte = __values.count("-i") == 0 ? 
+        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
+    
+    CImageBaseClass* __obj = 
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+
+    if (__obj != NULL){
+        act->AddAction(__obj->CreateActionOfRotation(__inte,__rotation,__reset,__pause));
+        return true;
+    }
+    return false;
+}
+
+bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* act)
+{ 
+    string __funcName = "Cmd_Scale" + objTypeName;
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << __funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0)
+        return false;
+
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
+    string __name = __values["-n"][0];
+    float __x = 0;
+    float __y = 0;
+    char __flag = 0;
+    size_t __inte = __values.count("-i") == 0 ? 
+        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
+
+    if (__values.count("-x") > 0){
+        __x = atof(__values["-x"][0].c_str());
+        __flag |= 0x1;
+    }
+
+    if (__values.count("-y") > 0){
+        __y = atof(__values["-y"][0].c_str());
+        __flag |= 0x2;
+    }
+
+    
+    CImageBaseClass* __obj = 
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+
+    if (__obj != NULL){
+        switch (__flag)
+        {
+            case 1:
+                act->AddAction(__obj->CreateActionOfScaleX(__inte, __x, __reset, __pause));
+            break;
+            case 2:
+                act->AddAction(__obj->CreateActionOfScaleY(__inte, __y, __reset, __pause));
+            break;
+            case 3:
+                act->AddAction(__obj->CreateActionOfScale(__inte, __x, __y, __reset, __pause));
+            break;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSet* act)
 { 
     string __funcName = "Cmd_SetLayerOrder" + objTypeName;
 
@@ -306,17 +433,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args)
     commad of script
 ===============================================================*/
 
-//bool Cmd_ShowInfo(vector<string>& args)
-//{
-//    CResourceManager::GetInfo();
-//    //CResourceManager::GetInfo("ImageList", CResourceManager::_ImgLayerControl._imgLayerList);
-//    //CResourceManager::GetInfo("BackgroundList", CResourceManager::_BackgroundLayerControl._imgLayerList);
-//    //CResourceManager::GetInfo("CharacterList", CResourceManager::_CharacterLayerControl._characterList);
-//    //CResourceManager::GetInfo("MessageBoxList", CResourceManager::_MessageBoxControl._messageBoxList);
-//    return true;
-//}
-
-bool Cmd_AddPosition(vector<string>& args)
+bool Cmd_AddPosition(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 3){
         cout << "Cmd_AddPosition(): command invaild. can't set " << args.size()
@@ -331,7 +448,7 @@ bool Cmd_AddPosition(vector<string>& args)
     return true;
 }
 
-bool Cmd_DelPosition(vector<string>& args)
+bool Cmd_DelPosition(vector<string>& args, CActionSet* act)
 {
     if (args.size() < 1){
         cout << "Cmd_DelPosition(): command invaild. can't set " << args.size()
@@ -346,95 +463,36 @@ bool Cmd_DelPosition(vector<string>& args)
     return true;
 }
 
-//bool Cmd_AddCharacterLayer(vector<string>& args)
-//{
-//    return Common_FuncOfAdd("CharacterLayer", args);
-//}
+//===========================================
 //
-//bool Cmd_DelCharacterLayer(vector<string>& args)
-//{
-//    return Common_FuncOfDelete("CharacterLayer", args);
-//}
+//===========================================
 
-bool Cmd_ShowCharacterLayer(vector<string>& args)
+bool Cmd_ShowCharacterLayer(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfShow("CharacterLayer", args);
+    return Common_FuncOfShow("CharacterLayer", args, act);
 }
 
-bool Cmd_MoveCharacterLayer(vector<string>& args)
+bool Cmd_MoveCharacterLayer(vector<string>& args, CActionSet* act)
 {
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //position
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //pause
-
-    map<string, vector<string> > __values;
-    if (!Common_ArgsToKV("Cmd_MoveCharacterLayer", __flags, args, __values))
-        return false;
-
-    if (__values.count("-n") == 0)
-        return false;
-
-    bool __pause = __values.count("-p") == 0 ? false : true;
-    bool __reset = __values.count("-r") == 0 ? false : true;
-    string __name = __values["-n"][0];
-    float __x = 0;
-    float __y = 0;
-    char __flag = 0;
-    size_t __inte = __values.count("-i") == 0 ? 
-        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
-
-    if (__values.count("-x") > 0){
-        __x = atof(__values["-x"][0].c_str());
-        __flag |= 0x1;
-    }
-
-    if (__values.count("-y") > 0){
-        __y = atof(__values["-y"][0].c_str());
-        __flag |= 0x2;
-    }
-
-    if (__values.count("-s") > 1){
-        if (!CResourceControl::_ResourceManager._PositionControl.GetPosition(__values["-s"][0], &__x, &__y)){
-            cout << "Cmd_MoveCharacterLayer(): can't find position \""<< __values["-s"][0] << "\"." <<endl;
-        }
-        __flag = 3;
-    }
-        
-    if (CResourceControl::_ResourceManager._DrawableObjectControl.IsExists("CharacterLayer:"+__name)){
-        CImageBaseClass* __obj = 
-            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("CharacterLayer:"+__name);
-
-        switch (__flag)
-        {
-            case 1:
-                __obj->AddAction(__obj->CreateActionOfMoveX(__inte, __x, __reset, __pause));
-            break;
-            case 2:
-                __obj->AddAction(__obj->CreateActionOfMoveY(__inte, __y, __reset, __pause));
-            break;
-            case 3:
-                __obj->AddAction(__obj->CreateActionOfMove(__inte, __x, __y, __reset, __pause));
-            break;
-        }
-        return true;
-    }
-    else
-        cout << "Cmd_MoveCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
-
-    return false;
+    return Common_FuncOfMove("CharacterLayer", args, act);
 }
 
-bool Cmd_HideCharacterLayer(vector<string>& args)
+bool Cmd_ScaleCharacterLayer(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("CharacterLayer", args);
+    return Common_FuncOfScale("CharacterLayer", args, act);
 }
 
-bool Cmd_SetFaceCharacterLayer(vector<string>& args)
+bool Cmd_RotationCharacterLayer(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("CharacterLayer", args, act);
+}
+
+bool Cmd_HideCharacterLayer(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfHide("CharacterLayer", args, act);
+}
+
+bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 2){
         cout << "Cmd_SetFaceCharacterLayer(): command invaild. can't set " << args.size()
@@ -460,57 +518,48 @@ bool Cmd_SetFaceCharacterLayer(vector<string>& args)
     }
 }
 
-bool Cmd_SetCharacterLayerOrder(vector<string>& args)
+bool Cmd_SetCharacterLayerOrder(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("CharacterLayer", args);
-}
-//
-//bool Cmd_AlphaCharacterLayer(char postion, int alpha)
-//{
-//    //for (int i = 0; i < CResourceManager::_CharacterLayerControl._characterList.size(); i++)
-//    //{
-//    //    if(CResourceManager::_CharacterLayerControl._characterList[i]->Postion == postion)
-//    //    {
-//    //        CResourceManager::_CharacterLayerControl._characterList[i]->Alpha = alpha;
-//    //        return true;
-//    //    }
-//    //}
-//    return false;
-//}
-//
-//bool Cmd_LoadMap(const char* filename)
-//{
-//    return CArea::AreaControl.OnLoad(filename);
-//}
-//
-//bool Cmd_LoadScript(const char* filename, const char* Section)
-//{
-//    return CParser::_Parser.LoadScript(filename, Section);
-//}
-//
-//bool Cmd_AddBackground(vector<string>& args)
-//{
-//    return Common_FuncOfAdd("Background", args);
-//}
-
-bool Cmd_ShowBackground(vector<string>& args)
-{
-    return Common_FuncOfShow("Background", args);
+    return Common_FuncOfLayerOrder("CharacterLayer", args, act);
 }
 
-//bool Cmd_DelBackground(vector<string>& args)
+//===========================================
+//
+//===========================================
+
+bool Cmd_ShowBackground(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfShow("Background", args, act);
+}
+
+//bool Cmd_DelBackground(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("Background", args);
 //}
 
-bool Cmd_HideBackground(vector<string>& args)
+bool Cmd_HideBackground(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("Background", args);
+    return Common_FuncOfHide("Background", args, act);
 }
 
-bool Cmd_SetBackgroundLayerOrder(vector<string>& args)
+bool Cmd_MoveBackground(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("Background", args);
+    return Common_FuncOfMove("Background", args, act);
+}
+
+bool Cmd_ScaleBackground(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScale("Background", args, act);
+}
+
+bool Cmd_RotationBackground(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("Background", args, act);
+}
+
+bool Cmd_SetBackgroundLayerOrder(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfLayerOrder("Background", args, act);
 }
 /*
     Cmd_AddImg: comand of add image.
@@ -519,32 +568,42 @@ bool Cmd_SetBackgroundLayerOrder(vector<string>& args)
     args[2]: set image postion of x.
     args[3]: set image postion of y.
 */
-//bool Cmd_AddImg(vector<string>& args)
+//bool Cmd_AddImg(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("Img", args);
 //}
 
-bool Cmd_ShowImg(vector<string>& args)
+bool Cmd_ShowImg(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfShow("Img", args);
+    return Common_FuncOfShow("Img", args, act);
 }
 
-bool Cmd_HideImg(vector<string>& args)
+bool Cmd_HideImg(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("Img", args);
+    return Common_FuncOfHide("Img", args, act);
 }
 
-//bool Cmd_DelImg(vector<string>& args)
-//{
-//    return Common_FuncOfDelete("Img", args);
-//}
-
-bool Cmd_SetImgLayerOrder(vector<string>& args)
+bool Cmd_MoveImg(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("Img", args);
+    return Common_FuncOfMove("Img", args, act);
 }
 
-bool Cmd_PlayBGM(vector<string>& args)
+bool Cmd_ScaleImg(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScale("Img", args, act);
+}
+
+bool Cmd_RotationImg(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("Img", args, act);
+}
+
+bool Cmd_SetImgLayerOrder(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfLayerOrder("Img", args, act);
+}
+
+bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 1){
         cout << "Cmd_PlayBGM(): command invaild. can't set " << args.size()
@@ -560,7 +619,7 @@ bool Cmd_PlayBGM(vector<string>& args)
     return true;
 }
 
-bool Cmd_PauseBGM(vector<string>& args)
+bool Cmd_PauseBGM(vector<string>& args, CActionSet* act)
 {
     if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Playing)
         CResourceControl::_ResourceManager._SoundControl.PauseBgm();
@@ -568,7 +627,7 @@ bool Cmd_PauseBGM(vector<string>& args)
     return true;
 }
 
-bool Cmd_ResumeBGM(vector<string>& args)
+bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 {
     if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Paused)
         CResourceControl::_ResourceManager._SoundControl.PlayBgm();
@@ -576,7 +635,7 @@ bool Cmd_ResumeBGM(vector<string>& args)
     return true;
 }
 
-//bool Cmd_AddSE(vector<string>& args)
+//bool Cmd_AddSE(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() != 2){
 //        cout << "Cmd_AddSE(): command invaild. can't set " << args.size()
@@ -602,7 +661,7 @@ bool Cmd_ResumeBGM(vector<string>& args)
 //    return true;
 //}
 //
-//bool Cmd_DelSE(vector<string>& args)
+//bool Cmd_DelSE(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() < 1){
 //        cout << "Cmd_DelSE(): command invaild. can't set " << args.size()
@@ -618,7 +677,7 @@ bool Cmd_ResumeBGM(vector<string>& args)
 //    return true;
 //}
 
-bool Cmd_PlaySE(vector<string>& args)
+bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 1){
         cout << "Cmd_PlaySE(): command invaild. can't set " << args.size()
@@ -634,7 +693,7 @@ bool Cmd_PlaySE(vector<string>& args)
     return false;
 }
 
-//bool Cmd_AddVoice(vector<string>& args)
+//bool Cmd_AddVoice(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() != 2){
 //        cout << "Cmd_AddVoice(): command invaild. can't set " << args.size()
@@ -660,7 +719,7 @@ bool Cmd_PlaySE(vector<string>& args)
 //    return true;
 //}
 //
-//bool Cmd_DelVoice(vector<string>& args)
+//bool Cmd_DelVoice(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() < 1){
 //        cout << "Cmd_DelVoice(): command invaild. can't set " << args.size()
@@ -676,29 +735,44 @@ bool Cmd_PlaySE(vector<string>& args)
 //    return true;
 //}
 
-//bool Cmd_AddButton(vector<string>& args)
+//bool Cmd_AddButton(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("Button", args);
 //}
 //
-//bool Cmd_DelButton(vector<string>& args)
+//bool Cmd_DelButton(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("Button", args);
 //}
 
-bool Cmd_ShowButton(vector<string>& args)
+bool Cmd_ShowButton(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfShow("Button", args);
+    return Common_FuncOfShow("Button", args, act);
 }
 
-bool Cmd_HideButton(vector<string>& args)
+bool Cmd_HideButton(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("Button", args);
+    return Common_FuncOfHide("Button", args, act);
 }
 
-bool Cmd_SetButtonLayerOrder(vector<string>& args)
+bool Cmd_MoveButton(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("Button", args);
+    return Common_FuncOfMove("Button", args, act);
+}
+
+bool Cmd_ScaleButton(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScale("Button", args, act);
+}
+
+bool Cmd_RotationButton(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("Button", args, act);
+}
+
+bool Cmd_SetButtonLayerOrder(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfLayerOrder("Button", args, act);
 }
 //
 //
@@ -725,7 +799,7 @@ bool Cmd_SetButtonLayerOrder(vector<string>& args)
 //    CCommon::_Common.FONT_SHADOW = b;
 //}
 //
-bool Cmd_Message(vector<string>& args)
+bool Cmd_Message(vector<string>& args, CActionSet* act)
 {
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //MessageBoxName
@@ -786,67 +860,67 @@ bool Cmd_Message(vector<string>& args)
     return true;
 }
 
-//bool Cmd_AddMessageBox(vector<string>& args)
+//bool Cmd_AddMessageBox(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("MessageBox", args);
 //}
 //
-//bool Cmd_DelMessageBox(vector<string>& args)
+//bool Cmd_DelMessageBox(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("MessageBox", args);
 //}
 
-bool Cmd_ShowMessageBox(vector<string>& args)
+bool Cmd_ShowMessageBox(vector<string>& args, CActionSet* act)
 {   
-    return Common_FuncOfShow("MessageBox", args);
+    return Common_FuncOfShow("MessageBox", args, act);
 }
 
-bool Cmd_HideMessageBox(vector<string>& args)
+bool Cmd_HideMessageBox(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("MessageBox", args);
+    return Common_FuncOfHide("MessageBox", args, act);
 }
 
-bool Cmd_SetMessageBoxLayerOrder(vector<string>& args)
+bool Cmd_SetMessageBoxLayerOrder(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("MessageBox", args);
+    return Common_FuncOfLayerOrder("MessageBox", args, act);
 }
 
-//bool Cmd_AddLogBox(vector<string>& args)
+//bool Cmd_AddLogBox(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("LogBox", args);
 //}
 
-bool Cmd_ShowLogBox(vector<string>& args)
+bool Cmd_ShowLogBox(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfShow("LogBox", args);
+    return Common_FuncOfShow("LogBox", args, act);
 }
 
-bool Cmd_HideLogBox(vector<string>& args)
+bool Cmd_HideLogBox(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfHide("LogBox", args);
+    return Common_FuncOfHide("LogBox", args, act);
 }
 
-//bool Cmd_DelLogBox(vector<string>& args)
+//bool Cmd_DelLogBox(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("LogBox", args);
 //}
 
-bool Cmd_SetLogBoxLayerOrder(vector<string>& args)
+bool Cmd_SetLogBoxLayerOrder(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("LogBox", args);
+    return Common_FuncOfLayerOrder("LogBox", args, act);
 }
 
-//bool Cmd_AddParticleSystem(vector<string>& args)
+//bool Cmd_AddParticleSystem(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("ParticleSystem", args);
 //}
 //
-//bool Cmd_DelParticleSystem(vector<string>& args)
+//bool Cmd_DelParticleSystem(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("ParticleSystem", args);
 //}
 
-bool Cmd_ShowParticleSystem(vector<string>& args)
+bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act)
 {
     if (args.size() < 1){
         cout << "Cmd_ShowParticleSystem(): command invaild. can't set " << args.size()
@@ -871,7 +945,7 @@ bool Cmd_ShowParticleSystem(vector<string>& args)
     return true;
 }
 
-bool Cmd_HideParticleSystem(vector<string>& args)
+bool Cmd_HideParticleSystem(vector<string>& args, CActionSet* act)
 {
     if (args.size() < 1){
         cout << "Cmd_HideParticleSystem(): command invaild. can't set " << args.size()
@@ -897,23 +971,23 @@ bool Cmd_HideParticleSystem(vector<string>& args)
     return true;
 }
 
-bool Cmd_SetParticleSystemLayerOrder(vector<string>& args)
+bool Cmd_SetParticleSystemLayerOrder(vector<string>& args, CActionSet* act)
 {
-    return Common_FuncOfLayerOrder("ParticleSystem", args);
+    return Common_FuncOfLayerOrder("ParticleSystem", args, act);
 }
 
-//bool Cmd_AddFont(vector<string>& args)
+//bool Cmd_AddFont(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfAdd("Font", args);
 //}
 //
-//bool Cmd_DelFont(vector<string>& args)
+//bool Cmd_DelFont(vector<string>& args, CActionSet* act)
 //{
 //    return Common_FuncOfDelete("Font", args);
 //}
 
 //bool Cmd_AddVariable(string name, string val, map<string, string> &var_table)
-bool Cmd_AddVariable(vector<string>& args)
+bool Cmd_AddVariable(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 2){
         cout << "Cmd_AddVariable(): command invaild. can't set " << args.size()
@@ -928,7 +1002,7 @@ bool Cmd_AddVariable(vector<string>& args)
     return CResourceControl::_ResourceManager.AddVariable(__name, __val);
 }
 
-bool Cmd_SetVariable(vector<string>& args)
+bool Cmd_SetVariable(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 2){
         cout << "Cmd_SetVariable(): command invaild. can't set " << args.size()
@@ -943,7 +1017,7 @@ bool Cmd_SetVariable(vector<string>& args)
     return CResourceControl::_ResourceManager.SetVariable(__name, __val);
 }
 
-bool Cmd_DelVariable(vector<string>& args)
+bool Cmd_DelVariable(vector<string>& args, CActionSet* act)
 {
     if (args.size() < 1){
         cout << "Cmd_DelVariable(): command invaild. can't set " << args.size()
@@ -958,7 +1032,7 @@ bool Cmd_DelVariable(vector<string>& args)
     return true;
 }
 
-//bool Cmd_AddCamera(vector<string>& args)
+//bool Cmd_AddCamera(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() < 1){
 //        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
@@ -1000,7 +1074,7 @@ bool Cmd_DelVariable(vector<string>& args)
 //    return true;
 //}
 //
-//bool Cmd_DelCamera(vector<string>& args)
+//bool Cmd_DelCamera(vector<string>& args, CActionSet* act)
 //{
 //    if (args.size() < 1){
 //        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
@@ -1015,7 +1089,7 @@ bool Cmd_DelVariable(vector<string>& args)
 //    return true;
 //}
 
-bool Cmd_UseCamera(vector<string>& args)
+bool Cmd_UseCamera(vector<string>& args, CActionSet* act)
 {
     if (args.size() == 0){
         CResourceControl::_ResourceManager._CameraControl.UseDefaultCamera();
