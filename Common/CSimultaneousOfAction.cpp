@@ -8,6 +8,16 @@
 
 #include "CSimultaneousOfAction.h"
 
+bool CSimultaneousOfAction::IsPause()
+{
+    for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
+        if ((*it)->IsPause())
+            return true;
+    }
+
+    return false;
+}
+
 bool CSimultaneousOfAction::OnLoop()
 {
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
