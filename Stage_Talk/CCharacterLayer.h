@@ -35,6 +35,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         CCharacterLayer(float x=0.0f, float y=0.0f);
         
         static CCharacterLayer* Create(const char* filename);
+        
+        void FlipHorizontally();
         bool SetFace(string name);
         void SetVoice(string name);
         

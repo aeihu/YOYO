@@ -25,9 +25,6 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         };
 
     private:
-        //using CAdderControl::OnLoop;
-        //using CAdderControl::Count;
-
         char                              _layerOrder;
         char                              _flag;
         float                             _alpha;
@@ -35,6 +32,8 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         sf::Texture                       _image;
         sf::Sprite                        _sprite;
         bool                              _visible;
+        bool                              _flipX;
+        bool                              _flipY;
         list<CImageBaseClass*>            _childrenList;
 
         bool IsStandby();
@@ -42,6 +41,8 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
     public:
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
+
+        virtual void FlipHorizontally();
 
         virtual float& GetAlpha();
         virtual void SetAlpha(int alpha);

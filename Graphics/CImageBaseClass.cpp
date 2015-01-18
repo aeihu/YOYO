@@ -17,6 +17,8 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _coordinate.x = x;
     _coordinate.y = y;
     _alpha = 0.0f;
+    _flipX =
+    _flipY=
     _visible = false;
     _image.setSmooth(true);
     _layerOrder = 0;
@@ -25,6 +27,14 @@ CImageBaseClass::CImageBaseClass(float x, float y)
 
 CImageBaseClass::~CImageBaseClass()
 {}
+
+void CImageBaseClass::FlipHorizontally()
+{
+    sf::Image __img = _image.copyToImage();
+    __img.flipHorizontally();
+    _image.loadFromImage(__img);
+    _flipX = !_flipX;
+}
 
 void CImageBaseClass::SetFlag(char flag)
 {
@@ -146,6 +156,7 @@ bool CImageBaseClass::OnLoop()
 
     if (_visible){
         __result = OnSubLoop() ? true : __result;
+
         if (_coordinate != _sprite.getPosition())
             _sprite.setPosition(_coordinate);
         

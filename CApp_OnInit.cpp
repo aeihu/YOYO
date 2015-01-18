@@ -18,10 +18,10 @@ bool CApp::OnInit()
         return false;
 
     CParser::_Parser.SetRunning(&Running);
-
+    
     sf_Display->create(
         sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 
-        CCommon::_Common.GAME_NAME);
+        CCommon::_Common.GAME_NAME,sf::Style::Close);
 
     sf_Display->setFramerateLimit(CCommon::_Common.MAX_FPS);
 

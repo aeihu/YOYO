@@ -24,7 +24,7 @@ void FuncOfStdin()
     string __cmd;
     while (true){
         getline(cin,__cmd);
-        CParser::_Parser.InsertCmd(__cmd);
+        //CParser::_Parser.InsertCmd(__cmd);
     }
 }
 

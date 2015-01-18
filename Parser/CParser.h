@@ -20,35 +20,39 @@
 #include "CScriptCommand.h"
 #include "../Common/CCommon.h"
 #include "../Common/Cio.h"
+#include "../Common/CRepeatOfAction.h"
 
 using namespace std;
 
 class CParser
 {
     private:        
-        vector<string>          _cmdList;
+        //vector<string>          _cmdList;
+        Array                   _cmdList;
         unsigned long           _delay;
         bool*                   _pRunning;
         size_t                  _index;
         bool                    _pause;
 
         int AnalysisOfParameters(string para, vector<string> &plist);
+        void ParserObject(Object& obj, CActionSet* act);
 
-        bool (*_pFunc)(vector<string>&);
+        bool (*_pFunc)(vector<string>&, CActionSet*);
+        //bool (*_pFunc)(vector<string>&);
     public:
         static CParser _Parser;
         CParser();
         
         void Pause();
         void Continue();
-        void reset();
+        void Reset();
         void SetIndex(size_t i);
         size_t GetIndex();
         void OnLoop();
         void OnCleanup();
 
-        void ExecuteCmd(string cmd);
-        void InsertCmd(string cmd);
+        void ExecuteCmd(string cmd, CActionSet* act=NULL);
+        void InsertCmd(Array cmd);
         void SetDeplay(int ms);
 
         bool IsDeplaying();

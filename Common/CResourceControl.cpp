@@ -182,14 +182,15 @@ void CResourceControl::LoadAsset()
         CheckIn(_script, "camera", "Camera");
 
         if (_script.has<Array>("script")){
-            for (size_t i=0; i< _script.get<Array>("script").size(); i++)
-                CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
+            CParser::_Parser.InsertCmd(_script.get<Array>("script"));
+            //for (size_t i=0; i< _script.get<Array>("script").size(); i++)
+            //    CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
         }
     }
 
     CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
     if (__img != NULL)
-        __img->AddAction(__img->CreateActionOfAlpha(500,0,false,true));
+        _ActionControl.AddAction(__img->CreateActionOfAlpha(500,0,false,true));
 
     CParser::_Parser.Continue();
 }
@@ -206,7 +207,7 @@ bool CResourceControl::LoadScript(string filename)
             CSequenceOfAction* __seq = new CSequenceOfAction();
             __seq->AddAction(__img->CreateActionOfAlpha(500,255,false,true));
             __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::LoadProcess));
-            __img->AddAction(__seq);
+            _ActionControl.AddAction(__seq);
             _DrawableObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
         }
     }
@@ -221,6 +222,10 @@ void CResourceControl::OnLoop()
     _DrawableObjectControl.OnLoop(__pause);
 
     _SoundControl.OnLoop();
+    
+    _ActionControl.OnLoop();
+    if (_ActionControl.IsPause()) 
+        __pause = true;
 
     if (__pause)
         return;

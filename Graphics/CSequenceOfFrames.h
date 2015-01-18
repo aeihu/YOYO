@@ -23,8 +23,10 @@ class CSequenceOfFrames : public CAnimation
     public:
         CSequenceOfFrames(int left=0, int top=0, int width=1, int height=1);
         ~CSequenceOfFrames();
-
+        
+        void FlipHorizontally();
         void SetCurrentImageFrame(int frame);
+        sf::Vector2i GetOffset();
         void SetOffset(int x, int y);
         void SetOffsetX(int x);
         void SetOffsetY(int y);

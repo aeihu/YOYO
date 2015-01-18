@@ -140,6 +140,14 @@ bool CCharacterLayer::CheckList(Object json)
     return result;
 }
 
+void CCharacterLayer::FlipHorizontally()
+{
+    _framesOfEyes.FlipHorizontally();
+    _framesOfMouth.FlipHorizontally();
+    
+    CImageBaseClass::FlipHorizontally();
+}
+
 bool CCharacterLayer::SetProperty(Object json)
 {
     if (!LoadImg(json.get<String>("BODY_PATH").c_str()))
@@ -163,6 +171,7 @@ bool CCharacterLayer::SetProperty(Object json)
     else
         _isFaceEnable= false;
 
+    //FlipHorizontally();
     return true;
 }
 
@@ -199,6 +208,11 @@ bool CCharacterLayer::SetFace(string name)
                 return false;
             }
             _currcentFace = name;
+
+            if (_flipX) {
+                _framesOfEyes.FlipHorizontally();
+                _framesOfMouth.FlipHorizontally();
+            }
             return true;
         }
     }

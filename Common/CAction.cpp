@@ -12,13 +12,13 @@ CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause
 {
     _val = NULL;
     if (val){
+        _isRunning = false;
         if (elapsed == 0) elapsed = 1;
         _val = val;
         _valOfFinish = fin;
         _pause = pause;
-        _incr = (fin - *val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)elapsed);
-        _orgVal = *val;
         _restore = restore;
+        _elapsed = elapsed;
     }
 }
 
@@ -29,25 +29,42 @@ bool CAction::OnLoop()
 {
     if (_val == NULL)
         return true;
+    
+    if (!_isRunning){
+        _isRunning = true;
+        _orgVal = *_val;
+        _incr = abs((_valOfFinish - *_val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)_elapsed));
+    }
 
     if ((*_val) != _valOfFinish){
-        (*_val) += _incr;
+        bool __b = (*_val) < _valOfFinish ? true:false; 
+        (*_val) += __b ? _incr : -_incr;
 
-        if (_incr < 0){
-            if ((*_val) < _valOfFinish)
+        if (__b){
+            if ((*_val) > _valOfFinish){
                 (*_val) = _valOfFinish;
+                goto FINISH;
+            }
         }
         else if (_incr > 0){
-            if ((*_val) > _valOfFinish)
+            if ((*_val) < _valOfFinish){
                 (*_val) = _valOfFinish;
+                goto FINISH;
+            }
         }
   
-
         return false;
     }
     else{
+FINISH:
         if (_restore) *_val = _orgVal;
-
+        
+        _isRunning = false;
         return true;
     }
+}
+
+bool CAction::IsPause()
+{
+    return _pause && _isRunning;
 }

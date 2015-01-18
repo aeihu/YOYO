@@ -19,10 +19,10 @@ CParser::CParser()
     _pause = false;
 }
 
-void CParser::reset()
+void CParser::Reset()
 {
     _index = 0;
-    _cmdList.clear();
+    _cmdList.reset();
 }
 
 void CParser::SetRunning(bool* running)
@@ -41,12 +41,13 @@ bool CParser::IsDeplaying()
 }
 
 
-void CParser::OnCleanup() {
-    _cmdList.clear();
+void CParser::OnCleanup() 
+{
+    _cmdList.reset();
     _pRunning = NULL;
 }
 
-void CParser::ExecuteCmd(string cmd)
+void CParser::ExecuteCmd(string cmd, CActionSet* act)
 {
     vector<string> __listOfCmdPara;
     if (AnalysisOfParameters(cmd, __listOfCmdPara) > 0){
@@ -71,19 +72,25 @@ void CParser::ExecuteCmd(string cmd)
         else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
+        else if (__commandName == "@scale_chara") _pFunc = &Cmd_ScaleCharacterLayer;
+        else if (__commandName == "@rota_chara") _pFunc = &Cmd_RotationCharacterLayer;
         else if (__commandName == "@face_chara") _pFunc = &Cmd_SetFaceCharacterLayer;
         else if (__commandName == "@order_chara") _pFunc = &Cmd_SetCharacterLayerOrder;
 
         //else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
-        //else if (__commandName == "@del_bg") _pFunc = &Cmd_DelBackground;
+        else if (__commandName == "@move_bg") _pFunc = &Cmd_MoveBackground;
+        else if (__commandName == "@scale_bg") _pFunc = &Cmd_ScaleBackground;
+        else if (__commandName == "@rota_bg") _pFunc = &Cmd_RotationBackground;
         else if (__commandName == "@order_bg") _pFunc = &Cmd_SetBackgroundLayerOrder;
 
         //else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
-        //else if (__commandName == "@del_img") _pFunc = &Cmd_DelImg;
+        else if (__commandName == "@move_img") _pFunc = &Cmd_MoveImg;
+        else if (__commandName == "@scale_img") _pFunc = &Cmd_ScaleImg;
+        else if (__commandName == "@rota_img") _pFunc = &Cmd_RotationImg;
         else if (__commandName == "@order_img") _pFunc = &Cmd_SetImgLayerOrder;
 
         //else if (__commandName == "@add_msgbox") _pFunc = &Cmd_AddMessageBox;
@@ -113,7 +120,9 @@ void CParser::ExecuteCmd(string cmd)
         //else if (__commandName == "@add_btn") _pFunc = &Cmd_AddButton;
         else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
-        //else if (__commandName == "@del_btn") _pFunc = &Cmd_DelButton;
+        else if (__commandName == "@move_btn") _pFunc = &Cmd_MoveButton;
+        else if (__commandName == "@scale_btn") _pFunc = &Cmd_ScaleButton;
+        else if (__commandName == "@rota_btn") _pFunc = &Cmd_RotationButton;
         else if (__commandName == "@order_btn") _pFunc = &Cmd_SetButtonLayerOrder;
         
         else if (__commandName == "@use_camera") _pFunc = &Cmd_UseCamera;
@@ -138,9 +147,9 @@ void CParser::ExecuteCmd(string cmd)
                 cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
                     << " argument(s) in the command." <<endl;
         }
-        else if (__commandName == "@reload"){
-            
-        }
+        //else if (__commandName == "@reload"){
+        //    
+        //}
         else if (__commandName == "@exit"){
             if (_pRunning != NULL)
                 *_pRunning = false;
@@ -151,7 +160,7 @@ void CParser::ExecuteCmd(string cmd)
         }
 
         if (_pFunc != NULL){
-            _pFunc(__listOfCmdPara);
+            _pFunc(__listOfCmdPara, act);
             _pFunc = NULL;
         }
     }
@@ -176,6 +185,49 @@ void CParser::Continue()
 {
     _pause = false;
 }
+        
+void CParser::ParserObject(Object& obj, CActionSet* act)
+{
+    if (obj.has<String>("type") && obj.has<Array>("script")){
+        CActionSet* __actionSet = NULL;
+
+        if (obj.get<String>("type") == "seq")
+            __actionSet = new CSequenceOfAction();
+        else if (obj.get<String>("type") == "sim")
+            __actionSet = new CSimultaneousOfAction();
+        else if (obj.get<String>("type") == "rep"){
+            if (obj.has<Number>("loop")){
+                CRepeatOfAction* __rep = new CRepeatOfAction();
+                __rep->SetLoopNum(obj.get<Number>("loop"));
+                __actionSet = __rep;
+            }
+            else{
+                cout << "error!" << endl;
+                return;
+            }
+        }
+        else{
+            cout << "error!" << endl;
+            return;
+        }
+
+        Array __arrOfScr = obj.get<Array>("script");
+
+        for (size_t i=0; i<__arrOfScr.size(); i++){
+            if (__arrOfScr.has<String>(i)){
+                ExecuteCmd(__arrOfScr.get<String>(i), __actionSet);
+            }
+            else if (__arrOfScr.has<Object>(i)){
+                ParserObject(__arrOfScr.get<Object>(i), __actionSet);
+            }
+        }
+        
+        if (__actionSet != NULL)
+            act->AddAction(__actionSet);
+    }else{
+        cout << "error!" << endl;
+    }
+}
 
 void CParser::OnLoop()
 {
@@ -184,9 +236,18 @@ void CParser::OnLoop()
         if (_pause || IsDeplaying())
             return;
 
-        if (_cmdList.size() > _index)
-        {
-            ExecuteCmd(_cmdList[_index]);
+        if (_cmdList.size() > _index){
+            if (_cmdList.has<String>(_index)){
+                ExecuteCmd(_cmdList.get<String>(_index), &CResourceControl::_ResourceManager._ActionControl);
+            }
+            else if (_cmdList.has<Object>(_index)){
+                Object __obj = _cmdList.get<Object>(_index);
+                ParserObject(__obj, &CResourceControl::_ResourceManager._ActionControl);
+                
+            }else{
+                    cout << "error!" << endl;
+            }
+
             ++_index;
         }
     }
@@ -196,9 +257,10 @@ void CParser::OnLoop()
     }
 }
 
-void CParser::InsertCmd(string cmd)
+void CParser::InsertCmd(Array cmd)
 {
-    _cmdList.push_back(cmd);
+    _cmdList.import(cmd);
+    //_cmdList.push_back(cmd);
 }
 
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)

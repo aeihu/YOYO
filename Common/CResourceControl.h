@@ -55,6 +55,7 @@ class CResourceControl : public CScript
         CDrawableObjectControl                  _DrawableObjectControl;
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
+        CSimultaneousOfAction                   _ActionControl;
         
         bool OnInit(string filename, sf::RenderTarget* display);
         bool LoadScript(string filename);

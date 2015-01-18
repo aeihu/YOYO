@@ -64,6 +64,18 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
     }
 }
 
+void CSequenceOfFrames::FlipHorizontally()
+{
+    _offset.x = _imageOfTexture.getSize().x - _offset.x - _rect.width;
+    _imageOfTexture.flipHorizontally();
+    _tile.flipHorizontally();
+}
+
+sf::Vector2i CSequenceOfFrames::GetOffset()
+{
+    return _offset;
+}
+
 void CSequenceOfFrames::SetOffset(int x, int y)
 {
     _offset.x = x;
