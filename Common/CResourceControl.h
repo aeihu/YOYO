@@ -31,28 +31,30 @@ class CResourceControl : public CScript
         Object                                  _script;
         Object                                  _gameBaiscAsset;
         sf::Thread                              _threadOfLoading;
+        bool                                    _DrawableObjCtrlEnable;
+        bool                                    _EffectObjCtrlEnable;
 
         string GetNameInFilename(string filename);
-        void LoadProcess();
+        void BeginLoadProcess();
+        void EndLoadProcess();
         void LoadAsset();
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
         bool OnInit(string filename);
     protected:
-        friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
-        friend bool Cmd_AddVariable(vector<string> args);
+        //friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
+        //friend bool Cmd_AddVariable(vector<string> args);
         
         //map<string, CCamera*>                   _cameraList;
         //CScript                                 _script;
 
-        inline CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this) {
-            _script.reset();
-            _fileNameOfScript = "";}
+        CResourceControl();
     public:
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;
         CPositionControl                        _PositionControl;
         CDrawableObjectControl                  _DrawableObjectControl;
+        CDrawableObjectControl                  _EffectObjectControl;
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;

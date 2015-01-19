@@ -11,6 +11,13 @@
 
 CResourceControl  CResourceControl::_ResourceManager;
 
+CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this)
+{
+    _EffectObjCtrlEnable = _DrawableObjCtrlEnable = false;
+    _script.reset();
+    _fileNameOfScript = "";
+}
+
 string CResourceControl::GetNameInFilename(string filename)
 {
     size_t __last_x_pos = filename.find_last_of('/');
@@ -101,6 +108,22 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 __array.get<String>(i).c_str()))
                 return -2;
         }
+        else if (objTypeName == "LoadingImg"){
+            objTypeName = "Img";
+            if (!_EffectObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __array.get<String>(i)))
+                return -2;
+        }
+        //else if (objTypeName == "EffectImg"){
+        //    objTypeName = "Img";
+        //    if (!_EffectObjectControl.AddDrawableObject(
+        //        __assetName, 
+        //        objTypeName, 
+        //        __array.get<String>(i)))
+        //        return -2;
+        //}
         else{
             if (!_DrawableObjectControl.AddDrawableObject(
                 __assetName, 
@@ -144,7 +167,7 @@ bool CResourceControl::OnInit(string filename)
     
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "image_for_loading", "Img") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "image_for_loading", "LoadingImg") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "Img") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
@@ -153,14 +176,20 @@ bool CResourceControl::OnInit(string filename)
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
 
-void CResourceControl::LoadProcess()
+void CResourceControl::BeginLoadProcess()
 {
     _threadOfLoading.launch();
+}
+
+void CResourceControl::EndLoadProcess()
+{
+    _EffectObjCtrlEnable = false;
 }
 
 void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
+    _DrawableObjCtrlEnable = false;
     if (!_script.empty()){
         CheckOut(_script, "[character]","CharacterLayer");
         CheckOut(_script, "[background]","Background");
@@ -188,10 +217,15 @@ void CResourceControl::LoadAsset()
         }
     }
 
-    CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
-    if (__img != NULL)
-        _ActionControl.AddAction(__img->CreateActionOfAlpha(500,0,false,true));
+    CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
+    if (__img != NULL){
+        CSequenceOfAction* __seq = new CSequenceOfAction();
+        __seq->AddAction(__img->CreateActionOfAlpha(500,0,false,true));
+        __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
+        _ActionControl.AddAction(__seq);
+    }
 
+    _DrawableObjCtrlEnable = true;
     CParser::_Parser.Continue();
 }
 
@@ -201,14 +235,15 @@ bool CResourceControl::LoadScript(string filename)
     if (_gameBaiscAsset.has<Array>("[image_for_loading]")){
         Array __imgs = _gameBaiscAsset.get<Array>("[image_for_loading]");
         _nameOfLoadingImg = __imgs.get<String>(std::rand() % __imgs.size());
-        CImageBaseClass* __img = _DrawableObjectControl.GetDrawableObject(_nameOfLoadingImg);
+        CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
 
         if (__img != NULL){
             CSequenceOfAction* __seq = new CSequenceOfAction();
+            _EffectObjCtrlEnable = true;
             __seq->AddAction(__img->CreateActionOfAlpha(500,255,false,true));
-            __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::LoadProcess));
+            __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
             _ActionControl.AddAction(__seq);
-            _DrawableObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
+            _EffectObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
         }
     }
 
@@ -219,7 +254,12 @@ void CResourceControl::OnLoop()
 {
     bool __pause = false;
     _CameraControl.OnLoop(__pause);
-    _DrawableObjectControl.OnLoop(__pause);
+
+    if (_DrawableObjCtrlEnable)
+        _DrawableObjectControl.OnLoop(__pause);
+
+    if (_EffectObjCtrlEnable)
+        _EffectObjectControl.OnLoop(__pause);
 
     _SoundControl.OnLoop();
     
@@ -235,7 +275,11 @@ void CResourceControl::OnLoop()
 
 void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    _DrawableObjectControl.OnRender(Surf_Dest);
+    if (_DrawableObjCtrlEnable)
+        _DrawableObjectControl.OnRender(Surf_Dest);
+    
+    if (_EffectObjCtrlEnable)
+        _EffectObjectControl.OnRender(Surf_Dest);
     //unsigned long l = CCommon::_Common.GetTicks();
 
     //cout << "time: " << CCommon::_Common.GetTicks()-l <<endl;
@@ -244,6 +288,7 @@ void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 void CResourceControl::OnCleanup()
 {
     _DrawableObjectControl.OnCleanup();
+    _EffectObjectControl.OnCleanup();
 }
 
 void CResourceControl::OnSaveData()
