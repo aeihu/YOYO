@@ -72,6 +72,9 @@ bool Cmd_SetVariable(vector<string>& args, CActionSet* act);//(string name, stri
 bool Cmd_DelVariable(vector<string>& args, CActionSet* act);//(string name, map<string, string> &var_table);
 
 bool Cmd_UseCamera(vector<string>& args, CActionSet* act);
+bool Cmd_MoveCamera(vector<string>& args, CActionSet* act);
+bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act);
+bool Cmd_RotationCamera(vector<string>& args, CActionSet* act);
 //bool Cmd_DelCamera(vector<string>&);
 
 #endif

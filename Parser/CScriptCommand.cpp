@@ -261,8 +261,16 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
         __flag = 3;
     }
     
-    CImageBaseClass* __obj = 
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    CBaiscProperties* __obj = NULL;
+
+    if (objTypeName == "Camera"){
+        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
+    }
+    else{
+        __obj = 
+            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    }
+
     if (__obj != NULL){
         switch (__flag)
         {
@@ -317,8 +325,15 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
     size_t __inte = __values.count("-i") == 0 ? 
         CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
     
-    CImageBaseClass* __obj = 
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    CBaiscProperties* __obj = NULL;
+
+    if (objTypeName == "Camera"){
+        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(objTypeName+":"+__name);//Camera
+    }
+    else{
+        __obj = 
+            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    }
 
     if (__obj != NULL){
         act->AddAction(__obj->CreateActionOfRotation(__inte,__rotation,__reset,__pause));
@@ -345,8 +360,14 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+
+    if (objTypeName == "Camera"){
+        __flags.push_back(pair<string, ENUM_FLAG>("-z", FLAG_NECESSITY));
+    }
+    else{
+        __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
+        __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
+    }
     __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
 
     map<string, vector<string> > __values;
@@ -364,20 +385,32 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     char __flag = 0;
     size_t __inte = __values.count("-i") == 0 ? 
         CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
-
-    if (__values.count("-x") > 0){
-        __x = atof(__values["-x"][0].c_str());
+    
+    if (objTypeName == "Camera"){
+        __x = atof(__values["-z"][0].c_str());
         __flag |= 0x1;
     }
+    else{
+        if (__values.count("-x") > 0){
+            __x = atof(__values["-x"][0].c_str());
+            __flag |= 0x1;
+        }
 
-    if (__values.count("-y") > 0){
-        __y = atof(__values["-y"][0].c_str());
-        __flag |= 0x2;
+        if (__values.count("-y") > 0){
+            __y = atof(__values["-y"][0].c_str());
+            __flag |= 0x2;
+        }
     }
 
-    
-    CImageBaseClass* __obj = 
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    CBaiscProperties* __obj = NULL;
+
+    if (objTypeName == "Camera"){
+        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(objTypeName+":"+__name);//Camera
+    }
+    else{
+        __obj = 
+            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    }
 
     if (__obj != NULL){
         switch (__flag)
@@ -1098,4 +1131,19 @@ bool Cmd_UseCamera(vector<string>& args, CActionSet* act)
         return CResourceControl::_ResourceManager._CameraControl.UseCamera(args[0]);
     }
     return true;
+}
+
+bool Cmd_MoveCamera(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfMove("Camera", args, act);
+}
+
+bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScale("Camera", args, act);
+}
+
+bool Cmd_RotationCamera(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("Camera", args, act);
 }

@@ -9,6 +9,12 @@
 #include "CCamera.h"
 //#include <iostream>
 
+CCamera::CCamera()
+{
+    _window = NULL;
+    _zoom = 1.0f;
+}
+
 void CCamera::Reset(float x, float y, float w, float h)
 {
     _offset.x = w/2; 
@@ -54,24 +60,45 @@ void CCamera::SetRotation(float angle)
 
 void CCamera::Bind(sf::RenderTarget* window)
 {
-    if (window)
+    if (window){
         window->setView(_camera);
+        _window = window;
+    }
+}
+     
+void CCamera::UnBind()
+{
+    _window = NULL;
 }
 
 bool CCamera::OnLoop()
 {
     bool __result = CBaiscProperties::OnLoop();
+    bool isChanged = false;
     
-    if (_coordinate != _camera.getCenter())
-        _camera.setCenter(_coordinate);
+    if (_coordinate != _camera.getCenter()){
+        _camera.setCenter(_coordinate.x, _coordinate.y);
+        isChanged = true;
+    }
 
-    if (_rotation != _camera.getRotation())
+    if (_rotation != _camera.getRotation()){
         _camera.setRotation(_rotation);
+        isChanged = true;
+    }
 
-    if (_size != _camera.getSize())
+    if (_size != _camera.getSize()){
         _camera.setSize(_size);
+        isChanged = true;
+    }
 
-    _camera.zoom(_scale.x);
+    if (_zoom != _scale.x){
+        _zoom = _scale.x;
+        _camera.zoom(_scale.x);
+        isChanged = true;
+    }
+
+    if (isChanged && _window != NULL)
+        _window->setView(_camera);
     
     return __result;
 }

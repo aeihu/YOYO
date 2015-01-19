@@ -126,6 +126,9 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
         else if (__commandName == "@order_btn") _pFunc = &Cmd_SetButtonLayerOrder;
         
         else if (__commandName == "@use_camera") _pFunc = &Cmd_UseCamera;
+        else if (__commandName == "@move_camera") _pFunc = &Cmd_MoveCamera;
+        else if (__commandName == "@scale_camera") _pFunc = &Cmd_ScaleCamera;
+        else if (__commandName == "@rota_camera") _pFunc = &Cmd_RotationCamera;
 
         else if (__commandName == "@add_var") _pFunc = &Cmd_AddVariable;
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;

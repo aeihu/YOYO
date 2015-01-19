@@ -45,62 +45,6 @@ void CCameraControl::OnLoop(bool &pause)
     }
 }
 
-//
-//bool CCameraControl::MoveX(string name, float x, size_t elapsed, bool pause, bool reset)
-//{
-//    CCamera* __obj = GetCamera(name);
-//
-//    if (__obj == NULL)
-//        return false;
-//    
-//    __obj->AddAction(__obj->CreateActionOfMoveX(elapsed, x, pause));
-//    return true;
-//}
-//        
-//bool CCameraControl::MoveY(string name, float y, size_t elapsed, bool pause, bool reset)
-//{
-//    CCamera* __obj = GetCamera(name);
-//
-//    if (__obj == NULL)
-//        return false;
-//    
-//    __obj->AddAction(__obj->CreateActionOfMoveY(elapsed, y, pause));
-//    return true;
-//}
-//
-//bool CCameraControl::Move(string name, float x, float y, size_t elapsed, bool pause, bool reset)
-//{
-//    CCamera* __obj = GetCamera(name);
-//
-//    if (__obj == NULL)
-//        return false;
-//    
-//    __obj->AddAction(__obj->CreateActionOfMove(elapsed, x, y, pause));
-//    return true;
-//}
-//
-//bool CCameraControl::Zoom(string name, float zoom, size_t elapsed, bool pause, bool reset)
-//{
-//    CCamera* __obj = GetCamera(name);
-//
-//    if (__obj == NULL)
-//        return false;
-//    
-//    __obj->AddAction(__obj->CreateActionOfScaleX(elapsed, zoom, pause));
-//    return true;
-//}
-//
-//bool CCameraControl::Rotation(string name, float rotation, size_t elapsed, bool pause, bool reset)
-//{
-//    CCamera* __obj = GetCamera(name);
-//
-//    if (__obj == NULL)
-//        return false;
-//    
-//    __obj->AddActionOfRotation(elapsed, rotation, pause, reset);
-//    return true;
-//}
-
 bool CCameraControl::UseCamera(string name)
 {
     CCamera* __obj = GetCamera(name);
@@ -108,6 +52,10 @@ bool CCameraControl::UseCamera(string name)
     if (__obj == NULL)
         return false;
 
+    map<string, CCamera*>::iterator it;
+    for ( it=_cameraList.begin(); it !=_cameraList.end(); it++ ){
+        (*it).second->UnBind();
+    }
     __obj->Bind(_display);
     return true;
 }

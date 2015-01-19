@@ -16,13 +16,16 @@
 class CCamera : public CBaiscProperties, public CConfigFile
 {
     private:
+        float               _zoom;
         sf::View            _camera;
         sf::Vector2f        _size;
+        sf::RenderTarget*   _window;
 
         bool CheckList(Object json);
         bool SetProperty(Object json);
     protected:
     public:
+        CCamera();
         static CCamera* CCamera::Create(const char* filename);
 
         void Reset(float x, float y, float w, float h);
@@ -32,6 +35,7 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void SetZoom(float zoom);
         void SetRotation(float angle);
         void Bind(sf::RenderTarget* window);
+        void UnBind();
         bool OnLoop();
         sf::Vector2f GetCenter();
         sf::Vector2f GetPosition();

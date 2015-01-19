@@ -13,7 +13,7 @@ CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause
     _val = NULL;
     if (val){
         _isRunning = false;
-        if (elapsed == 0) elapsed = 1;
+        //if (elapsed == 0) elapsed = 1;
         _val = val;
         _valOfFinish = fin;
         _pause = pause;
@@ -33,7 +33,11 @@ bool CAction::OnLoop()
     if (!_isRunning){
         _isRunning = true;
         _orgVal = *_val;
-        _incr = abs((_valOfFinish - *_val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)_elapsed));
+
+        if (_elapsed == 0)
+            *_val = _valOfFinish;
+        else
+            _incr = abs((_valOfFinish - *_val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)_elapsed));
     }
 
     if ((*_val) != _valOfFinish){
@@ -46,7 +50,7 @@ bool CAction::OnLoop()
                 goto FINISH;
             }
         }
-        else if (_incr > 0){
+        else{
             if ((*_val) < _valOfFinish){
                 (*_val) = _valOfFinish;
                 goto FINISH;
