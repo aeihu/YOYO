@@ -13,10 +13,12 @@ class CActionBaseClass
 {
     protected:
         bool        _pause;
+        bool        _skip;
     public:
-        CActionBaseClass() {_pause = false;}
+        CActionBaseClass() {_skip = _pause = false;}
         virtual bool OnLoop()=0; 
         virtual bool IsPause() {return _pause;}
+        void Skip() {_skip = true;}
 };
 
 #endif

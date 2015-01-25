@@ -15,10 +15,14 @@ CRepeatOfAction::CRepeatOfAction()
 
 bool CRepeatOfAction::OnLoop()
 {
-    if (_loopNum == 0){
+    if (_loopNum == 0 || _skip){
         for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
-            delete (*it);
-            (*it) = NULL;
+            (*it)->Skip();
+            
+            if ((*it)->OnLoop()){
+                delete (*it);
+                (*it) = NULL;
+            }
         }
         _actionList.clear();
         return true;

@@ -10,11 +10,22 @@
 
 CDeplayOfAction::CDeplayOfAction(size_t delay)
 {
+    _isRunning = false;
     _pause = true;
-    _time = CCommon::_Common.GetTicks() + delay;
+    _delay = delay;
 }
 
 bool CDeplayOfAction::OnLoop()
 {
-    return _time < CCommon::_Common.GetTicks() ? true : false;
+    if (!_isRunning){
+        _time = CCommon::_Common.GetTicks() + _delay;
+        _isRunning = true;
+    }
+
+    if (_time < CCommon::_Common.GetTicks() || _skip){
+        _isRunning = false;
+        return true;
+    }
+
+    return false;
 }

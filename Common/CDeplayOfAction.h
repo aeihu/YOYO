@@ -15,7 +15,9 @@
 class CDeplayOfAction : public CActionBaseClass
 {
     private:
+        bool            _isRunning;
         unsigned long   _time;
+        size_t          _delay;
     public:
         CDeplayOfAction(size_t delay);
         

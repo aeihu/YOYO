@@ -10,6 +10,9 @@
 
 bool CSimultaneousOfAction::IsPause()
 {
+    if (_pause)
+        return true;
+
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
         if ((*it)->IsPause())
             return true;
@@ -21,6 +24,9 @@ bool CSimultaneousOfAction::IsPause()
 bool CSimultaneousOfAction::OnLoop()
 {
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
+        if (_skip)
+            (*it)->Skip();
+
         if ((*it)->OnLoop()){
             delete (*it);
             (*it) = NULL;

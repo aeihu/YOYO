@@ -10,6 +10,24 @@
 
 bool CSequenceOfAction::OnLoop()
 {
+    if (_skip){
+        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
+            (*it)->Skip();
+
+            if ((*it)->OnLoop()){
+                delete (*it);
+                (*it) = NULL;
+                //it=_actionList.erase(it);
+                //if (it == _actionList.end())
+                //    break;
+            }
+            else{
+                ++it;
+            }
+        }
+        _actionList.clear();
+    }
+    
     if (!_actionList.empty()){
         if (_actionList.front()->OnLoop()){
             delete _actionList.front();
