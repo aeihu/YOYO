@@ -77,19 +77,19 @@ sf::Vector2f& CBaiscProperties::GetScale()
     return _scale;
 }
 
-bool CBaiscProperties::OnLoop()
-{
-    return _actList.OnLoop() ? false : _actList.IsPause();
-}
+//bool CBaiscProperties::OnLoop()
+//{
+//    return _actList.OnLoop() ? false : _actList.IsPause();
+//}
 
-bool CBaiscProperties::AddAction(CActionBaseClass* act)
-{
-    if (!act)
-        return false;
-
-    _actList.AddAction(act);
-    return true;
-}
+//bool CBaiscProperties::AddAction(CActionBaseClass* act)
+//{
+//    if (!act)
+//        return false;
+//
+//    _actList.AddAction(act);
+//    return true;
+//}
 
 CAction* CBaiscProperties::CreateActionOfRotation(size_t elapsed, float rotation, bool restore, bool pause)
 {

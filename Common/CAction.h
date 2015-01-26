@@ -19,7 +19,7 @@ class CAction : public CActionBaseClass
         CAction(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
 
         bool IsPause();
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
     private:
         bool        _restore;
         float       _orgVal;

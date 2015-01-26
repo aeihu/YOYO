@@ -10,33 +10,41 @@
 
 CRepeatOfAction::CRepeatOfAction()
 {
-    _iterator = _actionList.begin();
+    _count = _loopNum = 0;
 }
 
-bool CRepeatOfAction::OnLoop()
+bool CRepeatOfAction::OnLoop(bool cleanup)
 {
-    if (_loopNum == 0 || _skip){
-        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
-            (*it)->Skip();
-            
-            if ((*it)->OnLoop()){
-                delete (*it);
-                (*it) = NULL;
-            }
-        }
-        _actionList.clear();
-        return true;
-    }
-    
-    if (_iterator == _actionList.end()){
-        if (_loopNum > 0) 
-            --_loopNum;
+    if (!_actionList.empty()){
+        if (_skip)
+            _actionList.front()->Skip();
 
-        _iterator = _actionList.begin();
+        if (_actionList.front()->OnLoop(_count == 0 && cleanup)){
+            _tempActionList.push_back(_actionList.front());
+            _actionList.pop_front();
+        }
+        _skip = false;
     }
-    else{
-        if ((*_iterator)->OnLoop())
-            _iterator++;
+
+    if (_actionList.empty()){
+        if (_count > 0){ 
+            --_count;
+            
+            if (_count == 0){
+                if (cleanup)
+                    OnCleanup();
+                else{
+                    _actionList.swap(_tempActionList);
+                    _count = _loopNum;
+                }
+
+                return true;
+            }
+            else// bigger then 0
+                _actionList.swap(_tempActionList);
+        }
+        else// smaller then 0
+            _actionList.swap(_tempActionList);
     }
 
     return false;
@@ -44,5 +52,5 @@ bool CRepeatOfAction::OnLoop()
 
 void CRepeatOfAction::SetLoopNum(int num)
 {
-    _loopNum = num;
+    _count = _loopNum = num;
 }

@@ -19,10 +19,13 @@ class CActionSet : public CActionBaseClass
     private:
     protected:
         list<CActionBaseClass*>     _actionList;
+        list<CActionBaseClass*>     _tempActionList;
     public:
+        CActionSet();
         virtual void AddAction(CActionBaseClass* act);
-        //virtual bool OnLoop();
         virtual bool IsPause();
+
+        void OnCleanup();
 };
 
 #endif

@@ -20,7 +20,7 @@ class CSequenceOfAction : public CActionSet
 {
     protected:
     public:
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
 };
 
 #endif

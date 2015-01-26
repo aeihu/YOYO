@@ -21,23 +21,30 @@ bool CSimultaneousOfAction::IsPause()
     return false;
 }
 
-bool CSimultaneousOfAction::OnLoop()
+bool CSimultaneousOfAction::OnLoop(bool cleanup)
 {
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
         if (_skip)
             (*it)->Skip();
 
-        if ((*it)->OnLoop()){
-            delete (*it);
-            (*it) = NULL;
+        if ((*it)->OnLoop(cleanup)){
+            _tempActionList.push_back(*it);
             it=_actionList.erase(it);
-            if (it == _actionList.end())
-                break;
         }
         else{
             ++it;
         }
     }
+    _skip = false;
 
-    return _actionList.empty();
+    if (_actionList.empty()){
+        if (cleanup)
+            OnCleanup();
+        else
+            _actionList.swap(_tempActionList);
+        
+        return true;
+    }
+
+    return false;
 }

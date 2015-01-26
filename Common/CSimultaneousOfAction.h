@@ -20,7 +20,7 @@ class CSimultaneousOfAction : public CActionSet
     protected:
     public:
         virtual bool IsPause();
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
 };
 
 #endif

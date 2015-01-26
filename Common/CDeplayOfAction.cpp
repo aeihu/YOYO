@@ -15,7 +15,7 @@ CDeplayOfAction::CDeplayOfAction(size_t delay)
     _delay = delay;
 }
 
-bool CDeplayOfAction::OnLoop()
+bool CDeplayOfAction::OnLoop(bool cleanup)
 {
     if (!_isRunning){
         _time = CCommon::_Common.GetTicks() + _delay;

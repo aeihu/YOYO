@@ -8,32 +8,29 @@
 
 #include "CSequenceOfAction.h"
 
-bool CSequenceOfAction::OnLoop()
+bool CSequenceOfAction::OnLoop(bool cleanup)
 {
-    if (_skip){
-        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
-            (*it)->Skip();
-
-            if ((*it)->OnLoop()){
-                delete (*it);
-                (*it) = NULL;
-                //it=_actionList.erase(it);
-                //if (it == _actionList.end())
-                //    break;
-            }
-            else{
-                ++it;
-            }
-        }
-        _actionList.clear();
-    }
-    
     if (!_actionList.empty()){
-        if (_actionList.front()->OnLoop()){
-            delete _actionList.front();
-            _actionList.erase(_actionList.begin());
+        if (_skip)
+            _actionList.front()->Skip();
+
+        if (_actionList.front()->OnLoop(cleanup)){
+            _tempActionList.push_back(_actionList.front());
+            _actionList.pop_front();
+            //delete _actionList.front();
+            //_actionList.erase(_actionList.begin());
         }
+        _skip = false;
     }
     
-    return _actionList.empty();
+    if (_actionList.empty()){
+        if (cleanup)
+            OnCleanup();
+        else
+            _actionList.swap(_tempActionList);
+        
+        return true;
+    }
+
+    return false;
 }

@@ -21,7 +21,7 @@ class CDeplayOfAction : public CActionBaseClass
     public:
         CDeplayOfAction(size_t delay);
         
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
 };
 
 #endif

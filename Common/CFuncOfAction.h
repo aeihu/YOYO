@@ -18,7 +18,7 @@ class CFuncOfAction : public CActionBaseClass
     protected:
     public:
         CFuncOfAction(void (*func)());
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
 };
 
 #endif

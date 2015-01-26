@@ -25,7 +25,7 @@ class CBaiscProperties : public CObject
         sf::Vector2f                        _offset;
         float                               _rotation;
         
-        CSequenceOfAction                   _actList;
+        //CSequenceOfAction                   _actList;
     public:
         CBaiscProperties();
 
@@ -42,7 +42,7 @@ class CBaiscProperties : public CObject
         virtual void SetScale(float x, float y);
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
-        virtual bool AddAction(CActionBaseClass* act);
+        //virtual bool AddAction(CActionBaseClass* act);
         virtual CAction* CreateActionOfRotation(size_t elapsed, float rotation, bool restore, bool pause);
         virtual CSimultaneousOfAction* CreateActionOfScale(size_t elapsed, float x, float y, bool restore, bool pause);
         virtual CAction* CreateActionOfScaleX(size_t elapsed, float x, bool restore, bool pause);
@@ -52,7 +52,7 @@ class CBaiscProperties : public CObject
         virtual CAction* CreateActionOfMoveX(size_t elapsed, float x, bool restore, bool pause);
         virtual CAction* CreateActionOfMoveY(size_t elapsed, float y, bool restore, bool pause);
 
-        virtual bool OnLoop();
+        virtual bool OnLoop()=0;
         virtual void OnSaveData(Object& json) const;
 };
 

@@ -14,13 +14,12 @@
 class CRepeatOfAction : public CActionSet
 {
     private:
-        int                                 _loopNum;
-        list<CActionBaseClass*>::iterator   _iterator;
+        int     _count;
+        int     _loopNum;
     protected:
     public:
         CRepeatOfAction();
-
-        bool OnLoop();
+        bool OnLoop(bool cleanup=true);
         void SetLoopNum(int num);
 };
 
