@@ -11,7 +11,7 @@
 CLogBox::CLogBox()
 {
     _logRowHeight = _logMax = _visNum = 0;
-    _childrenList.push_back(&_scrollbar);
+    AddChildNode(&_scrollbar);
     //_spriteList.push_back(make_pair(&_btnArrowUp._sprite, &_btnArrowUp.GetPosition()));
     //_spriteList.push_back(make_pair(&_btnArrowDown._sprite, &_btnArrowDown.GetPosition()));
     //_spriteList.push_back(make_pair(&_btnBar._sprite, &_btnBar.GetPosition()));
@@ -124,7 +124,7 @@ bool CLogBox::SetProperty(Object json)
     _logRowHeight = json.get<Number>("LOG_ROW_HEIGHT");
     _logOffset.x = json.get<Number>("LOG_OFFSET_X");
     _logOffset.y = json.get<Number>("LOG_OFFSET_Y");
-    _scrollbar.SetOffset(json.get<Number>("SCROLLBAR_OFFSET_X"), json.get<Number>("SCROLLBAR_OFFSET_Y"));
+    //_scrollbar.SetOffset(json.get<Number>("SCROLLBAR_OFFSET_X"), json.get<Number>("SCROLLBAR_OFFSET_Y"));
 
     if (!_scrollbar.SetProperty(json))
         return false;
