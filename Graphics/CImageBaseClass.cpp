@@ -10,6 +10,7 @@
 
 CImageBaseClass::CImageBaseClass(float x, float y)
 {
+    _baseNode = NULL;
     _scale.x =
     _scale.y = 1.0f;
     _sprite.setPosition(x,y);
@@ -22,18 +23,60 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _visible = false;
     _image.setSmooth(true);
     _layerOrder = 0;
-    _flag = FLAG_POSITION | FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
+    _origin = _sprite.getOrigin();
+    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
 
 CImageBaseClass::~CImageBaseClass()
 {}
 
-void CImageBaseClass::FlipHorizontally()
+void CImageBaseClass::Flip()
 {
-    sf::Image __img = _image.copyToImage();
-    __img.flipHorizontally();
-    _image.loadFromImage(__img);
+    _sprite.setTextureRect(
+        sf::IntRect(
+            _flipX ? _sprite.getLocalBounds().width : 0,
+            _flipY ? _sprite.getLocalBounds().height : 0,
+            _flipX ? -_sprite.getLocalBounds().width : _sprite.getLocalBounds().width,
+            _flipY ? -_sprite.getLocalBounds().height : _sprite.getLocalBounds().height)
+    );
+}
+
+void CImageBaseClass::FlipX()
+{
     _flipX = !_flipX;
+    Flip();
+}
+
+void CImageBaseClass::FlipY()
+{
+    _flipY = !_flipY;
+    Flip();
+}
+
+const sf::Vector2f& CImageBaseClass::GetGlobalPosition() const
+{
+    return _sprite.getPosition();
+}
+
+bool CImageBaseClass::SetBaseNode(CImageBaseClass* baseNode)
+{
+    if (baseNode){
+        _baseNode = baseNode;
+        return true;
+    }
+
+    return false;
+}
+        
+bool CImageBaseClass::AddChildNode(CImageBaseClass* child)
+{
+    if (child){
+        child->SetBaseNode(this);
+        _childrenList.push_back(child);
+        return true;
+    }
+
+    return false;
 }
 
 void CImageBaseClass::SetFlag(char flag)
@@ -49,6 +92,12 @@ char CImageBaseClass::GetFlag() const
 void CImageBaseClass::SetLayerOrder(char order)
 {
     _layerOrder = order;
+}
+
+void CImageBaseClass::SetLayerOrder(vector<string> args)
+{
+    if (args.size() > 0)
+        _layerOrder = (char)atoi(args[0].c_str());
 }
 
 void CImageBaseClass::SetAlpha(int alpha)
@@ -81,13 +130,70 @@ void CImageBaseClass::SetScaleY(float y)
 {
     SetScale(_scale.x, y);
 }
+
+CSimultaneousOfAction* CImageBaseClass::CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore, bool pause)
+{
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CActionBy(&_origin.x, elapsed, x, restore, pause));
+    __result->AddAction(new CActionBy(&_origin.y, elapsed, y, restore, pause));
+    return __result;
+}
+
+CActionBy* CImageBaseClass::CreateActionOfOriginXBy(size_t elapsed, float x, bool restore, bool pause)
+{
+    return new CActionBy(&_origin.x, elapsed, x, restore, pause);
+}
+
+CActionBy* CImageBaseClass::CreateActionOfOriginYBy(size_t elapsed, float y, bool restore, bool pause)
+{
+    return new CActionBy(&_origin.y, elapsed, y, restore, pause);
+}
+
+CSimultaneousOfAction* CImageBaseClass::CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore, bool pause)
+{
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CActionTo(&_origin.x, elapsed, x, restore, pause));
+    __result->AddAction(new CActionTo(&_origin.y, elapsed, y, restore, pause));
+    return __result;
+}
+
+CActionTo* CImageBaseClass::CreateActionOfOriginXTo(size_t elapsed, float x, bool restore, bool pause)
+{
+    return new CActionTo(&_origin.x, elapsed, x, restore, pause);
+}
+
+CActionTo* CImageBaseClass::CreateActionOfOriginYTo(size_t elapsed, float y, bool restore, bool pause)
+{
+    return new CActionTo(&_origin.y, elapsed, y, restore, pause);
+}
         
-sf::Vector2f& CImageBaseClass::GetScale()
+const sf::Vector2f& CImageBaseClass::GetScale() const
 {
     return _scale;
 }
 
-float& CImageBaseClass::GetAlpha() 
+const sf::Vector2f& CImageBaseClass::GetOrigin() const
+{
+    return _origin;
+}
+
+void CImageBaseClass::SetOrigin(float x, float y)
+{
+    _origin.x = x;
+    _origin.y = y;
+}
+
+void CImageBaseClass::SetOriginX(float x)
+{
+    _origin.x = x;
+}
+
+void CImageBaseClass::SetOriginY(float y)
+{
+    _origin.y = y;
+}
+
+const float& CImageBaseClass::GetAlpha() const
 {
     return _alpha;
 }
@@ -148,7 +254,7 @@ void CImageBaseClass::OnRender(sf::RenderTarget* Surf_Dest)
 
 bool CImageBaseClass::OnLoop()
 {
-    bool __result = CBaiscProperties::OnLoop();//>0 ? true : false;
+    bool __result = false;//CBaiscProperties::OnLoop();//>0 ? true : false;
     _visible = _alpha > 0 ? true : false;
 
     if (_sprite.getColor().a != _alpha)
@@ -157,8 +263,19 @@ bool CImageBaseClass::OnLoop()
     if (_visible){
         __result = OnSubLoop() ? true : __result;
 
-        if (_coordinate != _sprite.getPosition())
-            _sprite.setPosition(_coordinate);
+        if (_coordinate != 
+            (_baseNode == NULL ? 
+                _sprite.getPosition() : GetGlobalPosition() - _baseNode->GetPosition())){
+
+            if (_baseNode){
+                _sprite.setPosition(_baseNode->GetGlobalPosition() + _coordinate);
+            }
+            else
+                _sprite.setPosition(_coordinate);
+        }
+        
+        if (_origin != _sprite.getOrigin())
+            _sprite.setOrigin(_origin);
         
         if (_scale != _sprite.getScale())
             _sprite.setScale(_scale);
@@ -168,17 +285,13 @@ bool CImageBaseClass::OnLoop()
         
         list<CImageBaseClass*>::iterator it;
         for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
-            if ((*it)->GetFlag() | FLAG_ALPHA)
+            if ((*it)->GetFlag() & FLAG_ALPHA)
                 (*it)->SetAlpha(_alpha);
 
-            if ((*it)->GetFlag() | FLAG_POSITION)
-                (*it)->SetPosition(_coordinate.x + (*it)->GetOffset().x ,
-                    _coordinate.y + (*it)->GetOffset().y);
-
-            if ((*it)->GetFlag() | FLAG_SCALE)
+            if ((*it)->GetFlag() & FLAG_SCALE)
                 (*it)->SetScale(_scale.x, _scale.y);
 
-            if ((*it)->GetFlag() | FLAG_ROTATION)
+            if ((*it)->GetFlag() & FLAG_ROTATION)
                 (*it)->SetRotation(_rotation);
 
             __result = (*it)->OnLoop() ? true : __result;
@@ -188,9 +301,14 @@ bool CImageBaseClass::OnLoop()
     return __result;
 }
 
-CAction* CImageBaseClass::CreateActionOfAlpha(size_t elapsed, float alpha, bool restore, bool pause)
+CActionTo* CImageBaseClass::CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause)
 {
-    return new CAction(&_alpha, elapsed, alpha, restore, pause);
+    return new CActionTo(&_alpha, elapsed, alpha, restore, pause);
+}
+
+CActionBy* CImageBaseClass::CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause)
+{
+    return new CActionBy(&_alpha, elapsed, alpha, restore, pause);
 }
 
 void CImageBaseClass::OnSaveData(Object& json) const

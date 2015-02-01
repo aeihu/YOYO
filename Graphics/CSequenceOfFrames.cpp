@@ -47,14 +47,9 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 
     if (TilesetWidth == 0)
         return;
-    //int TilesetHeight  = _tile.GetHeight() / _rect.GetHeight();
-    //size_t Width = _rect.width;
-    //size_t Height = _rect.height;
 
     _rect.left = (frame % TilesetWidth) * _rect.width;
-    //_rect.Right = _rect.Left+Width;
     _rect.top = (frame / TilesetWidth) * _rect.height;
-    //_rect.Bottom = _rect.Top+Height;
 
     if (_destTexture != NULL){
         _image.copy(_imageOfTexture, _offset.x, _offset.y, _rect);
@@ -62,13 +57,6 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
         _image.copy(_tile, 0,0 ,_rect);
         _destTexture->update(_image, _offset.x, _offset.y);
     }
-}
-
-void CSequenceOfFrames::FlipHorizontally()
-{
-    _offset.x = _imageOfTexture.getSize().x - _offset.x - _rect.width;
-    _imageOfTexture.flipHorizontally();
-    _tile.flipHorizontally();
 }
 
 sf::Vector2i CSequenceOfFrames::GetOffset()
@@ -122,8 +110,3 @@ void CSequenceOfFrames::OnLoop()
         OnAnimate(CCommon::_Common.GetTicks());
     }
 }
-//void CSequenceOfFrames::SetPosition(float x, float y)
-//{
-//    SetPosition(x, y);
-//    _sprite.setPosition(x,y);
-//}

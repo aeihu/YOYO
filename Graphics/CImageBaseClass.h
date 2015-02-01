@@ -13,28 +13,34 @@
 #include <list>
 #include "../Graphics/CSurface.h"
 #include "../Common/CBaiscProperties.h"
+#include "../Common/CActionBy.h"
 
-class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl, 
+class CImageBaseClass : public CBaiscProperties
 {
     public:
         enum ESubImageFlag{
-            FLAG_POSITION = 1,
-            FLAG_ALPHA = 2,
-            FLAG_SCALE = 4,
-            FLAG_ROTATION = 8,
+            FLAG_ALPHA = 1,
+            FLAG_SCALE = 2,
+            FLAG_ROTATION = 4,
         };
 
     private:
         char                              _layerOrder;
         char                              _flag;
         float                             _alpha;
+        list<CImageBaseClass*>            _childrenList;
+        CImageBaseClass*                  _baseNode;
+
+        void Flip();
+        friend bool CImageBaseClass::SetBaseNode(CImageBaseClass* baseNode);
+        bool SetBaseNode(CImageBaseClass* baseNode);
     protected:
         sf::Texture                       _image;
         sf::Sprite                        _sprite;
         bool                              _visible;
         bool                              _flipX;
         bool                              _flipY;
-        list<CImageBaseClass*>            _childrenList;
+        sf::Vector2f                      _origin;
 
         bool IsStandby();
         virtual bool LoadImg(const char* filename);
@@ -42,21 +48,41 @@ class CImageBaseClass : public CBaiscProperties// virtual public CAdderControl,
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
 
-        virtual void FlipHorizontally();
+        virtual void FlipX();
+        virtual void FlipY();
 
-        virtual float& GetAlpha();
+        virtual bool AddChildNode(CImageBaseClass* child);
+
+        virtual const float& GetAlpha() const;
         virtual void SetAlpha(int alpha);
         virtual void SetLayerOrder(char order);
+        virtual void SetLayerOrder(vector<string> args);
 
-        virtual sf::Vector2f& GetScale();
+        virtual const sf::Vector2f& GetScale() const;
         virtual void SetScale(float x, float y);
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
+
+        virtual const sf::Vector2f& GetOrigin() const;
+        virtual void SetOrigin(float x, float y);
+        virtual void SetOriginX(float x);
+        virtual void SetOriginY(float y);
+
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
         virtual char GetLayerOrder() const;
+        virtual const sf::Vector2f& GetGlobalPosition() const;
         static CImageBaseClass* Create(const char* filename);
-        virtual CAction* CreateActionOfAlpha(size_t elapsed, float alpha, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
+        
+        virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore, bool pause);	  
+        virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfOriginYTo(size_t elapsed, float y, bool restore, bool pause);
+        
+        virtual CSimultaneousOfAction* CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore, bool pause);	  
+        virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore, bool pause);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSubRender(sf::RenderTarget* Surf_Dest){}

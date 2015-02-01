@@ -17,8 +17,8 @@ CCamera::CCamera()
 
 void CCamera::Reset(float x, float y, float w, float h)
 {
-    _offset.x = w/2; 
-    _offset.y = h/2;
+    //_offset.x = w/2; 
+    //_offset.y = h/2;
     _coordinate.x = x;
     _coordinate.y = y;
     _size.x = w;
@@ -73,7 +73,7 @@ void CCamera::UnBind()
 
 bool CCamera::OnLoop()
 {
-    bool __result = CBaiscProperties::OnLoop();
+    bool __result = false;
     bool isChanged = false;
     
     if (_coordinate != _camera.getCenter()){
@@ -111,7 +111,7 @@ sf::Vector2f CCamera::GetCenter()
 sf::Vector2f CCamera::GetPosition()
 {
     std::cout << _camera.getCenter().x << ":" << _camera.getCenter().y << std::endl;
-    return _camera.getCenter() - _offset;
+    return _camera.getCenter();
 }
 
 void CCamera::OnSaveData(Object& json) const
