@@ -12,7 +12,7 @@
 #include "CActionBaseClass.h"
 
 template<class T>
-class CClassFunArgscOfAction : public CActionBaseClass
+class CClassFuncArgsOfAction : public CActionBaseClass
 {
     private:
         void (T::*_func)(vector<string>);
@@ -21,7 +21,7 @@ class CClassFunArgscOfAction : public CActionBaseClass
         vector<string>  _args;
     protected:
     public:
-        CClassFunArgscOfAction(T* obj, void (T::*func)(vector<string>), vector<string> args)
+        CClassFuncArgsOfAction(T* obj, void (T::*func)(vector<string>), vector<string> args)
         {
             _obj = obj;
             _func = func;

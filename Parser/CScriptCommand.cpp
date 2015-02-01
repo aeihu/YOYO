@@ -564,7 +564,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
     if (__obj){
         vector<string> __args;
         __args.push_back(args[1]);
-        act->AddAction(new CClassFunArgscOfAction<CImageBaseClass>(__obj, &CImageBaseClass::SetLayerOrder, __args));
+        act->AddAction(new CClassFuncArgsOfAction<CImageBaseClass>(__obj, &CImageBaseClass::SetLayerOrder, __args));
 
         return true;
     }
