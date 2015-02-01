@@ -6,9 +6,9 @@
 * Version 2(GPLv2) as published by the Free Software Foundation.
 */
 
-#include "CAction.h"
+#include "CActionTo.h"
 
-CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause)
+CActionTo::CActionTo(float* val, size_t elapsed, float fin, bool restore, bool pause)
 {
     _val = NULL;
     if (val){
@@ -25,7 +25,7 @@ CAction::CAction(float* val, size_t elapsed, float fin, bool restore, bool pause
 /*
     when result is true, it's mean action has finished
 */
-bool CAction::OnLoop(bool cleanup)
+bool CActionTo::OnLoop(bool cleanup)
 {
     if (_val == NULL)
         return true;
@@ -69,7 +69,7 @@ FINISH:
     }
 }
 
-bool CAction::IsPause()
+bool CActionTo::IsPause()
 {
     return _pause && _isRunning;
 }

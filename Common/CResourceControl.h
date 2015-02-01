@@ -12,7 +12,6 @@
 #include <string>
 #include "CCommon.h"
 #include "CObjectControl.h"
-#include "CPositionControl.h"
 #include "../Graphics/CCamera.h"
 #include "../Script/CScript.h"
 #include "../Sound/CSoundBank.h"
@@ -52,7 +51,7 @@ class CResourceControl : public CScript
     public:
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;
-        CPositionControl                        _PositionControl;
+        //CPositionControl                        _PositionControl;
         CDrawableObjectControl                  _DrawableObjectControl;
         CDrawableObjectControl                  _EffectObjectControl;
         CObjectControl                          _ObjectControl;

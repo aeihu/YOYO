@@ -10,7 +10,7 @@
 #ifndef _CSEQUENCEOFACTION_H_
     #define _CSEQUENCEOFACTION_H_
 
-#include "CAction.h"
+#include "CActionTo.h"
 #include <list>
 #include "CActionSet.h"
 

@@ -220,7 +220,7 @@ void CResourceControl::LoadAsset()
     CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
     if (__img != NULL){
         CSequenceOfAction* __seq = new CSequenceOfAction();
-        __seq->AddAction(__img->CreateActionOfAlpha(500,0,false,true));
+        __seq->AddAction(__img->CreateActionOfAlphaTo(500,0,false,true));
         __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
         _ActionControl.AddAction(__seq);
     }
@@ -240,7 +240,7 @@ bool CResourceControl::LoadScript(string filename)
         if (__img != NULL){
             CSequenceOfAction* __seq = new CSequenceOfAction();
             _EffectObjCtrlEnable = true;
-            __seq->AddAction(__img->CreateActionOfAlpha(500,255,false,true));
+            __seq->AddAction(__img->CreateActionOfAlphaTo(500,255,false,true));
             __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
             _ActionControl.AddAction(__seq);
             _EffectObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);

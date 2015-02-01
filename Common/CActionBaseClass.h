@@ -9,6 +9,10 @@
 #ifndef _CACTIONBASECLASS_H_
     #define _CACTIONBASECLASS_H_
 
+#include <string>
+
+using namespace std;
+
 class CActionBaseClass
 {
     protected:
@@ -16,6 +20,8 @@ class CActionBaseClass
         bool        _skip;
     public:
         CActionBaseClass() {_skip = _pause = false;}
+
+        virtual string GetName(){return "";}; 
         virtual bool OnLoop(bool cleanup=true)=0; 
         virtual void OnCleanup(){}; 
         virtual bool IsPause() {return _pause;}

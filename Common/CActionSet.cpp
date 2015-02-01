@@ -10,6 +10,7 @@
 
 CActionSet::CActionSet()
 {
+    _name = "";
 }
 
 bool CActionSet::IsPause()
@@ -17,6 +18,42 @@ bool CActionSet::IsPause()
     return _pause || 
         (_actionList.size() < 1 ? 
             false : _actionList.front()->IsPause());
+}
+
+string CActionSet::GetName() const
+{
+    return _name;
+}
+
+void CActionSet::SetName(string name)
+{
+    _name = name;
+}
+        
+bool CActionSet::DeleteAct(string name)
+{
+    if (name != ""){
+        list<CActionBaseClass*>* __list = &_actionList;
+        for (char i=0; i<2; i++){
+            if (i == 1)
+                __list = &_tempActionList;
+
+            for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end();){
+                if (name == (*it)->GetName()){
+                    (*it)->OnCleanup();
+                    delete (*it);
+                    (*it) == NULL;
+                    it = _actionList.erase(it);
+                }
+                else
+                    ++it;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void CActionSet::AddAction(CActionBaseClass* act)
@@ -30,17 +67,18 @@ void CActionSet::OnCleanup()
     if (_actionList.empty() && _tempActionList.empty())
         return;
 
-    for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
-        (*it)->OnCleanup();
-        delete (*it);
-        (*it) = NULL;
+    list<CActionBaseClass*>* __list = &_actionList;
+
+    for (char i=0; i<2; i++){
+        if (i == 1)
+            __list = &_tempActionList;
+
+        for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end(); it++){
+            (*it)->OnCleanup();
+            delete (*it);
+            (*it) = NULL;
+        }
     }
     _actionList.clear();
-
-    for (list<CActionBaseClass*>::iterator it=_tempActionList.begin();it!=_tempActionList.end(); it++){
-        (*it)->OnCleanup();
-        delete (*it);
-        (*it) = NULL;
-    }
     _tempActionList.clear();
 }

@@ -12,11 +12,11 @@
 #include "CActionBaseClass.h"
 #include "CCommon.h"
 
-class CAction : public CActionBaseClass
+class CActionTo : public CActionBaseClass
 {
     protected:
     public:
-        CAction(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
+        CActionTo(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
 
         bool IsPause();
         bool OnLoop(bool cleanup=true);

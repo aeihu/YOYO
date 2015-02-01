@@ -17,6 +17,7 @@ using namespace std;
 class CActionSet : public CActionBaseClass
 {
     private:
+        string                      _name;
     protected:
         list<CActionBaseClass*>     _actionList;
         list<CActionBaseClass*>     _tempActionList;
@@ -24,6 +25,9 @@ class CActionSet : public CActionBaseClass
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
         virtual bool IsPause();
+        string GetName() const;
+        void SetName(string name);
+        bool DeleteAct(string name);
 
         void OnCleanup();
 };
