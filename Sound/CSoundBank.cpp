@@ -9,7 +9,6 @@
 //==============================================================================
 #include "CSoundBank.h"
 
-//CSoundBank CSoundBank::_SoundControl;
 //==============================================================================
 CSoundBank::CSoundBank() {
     _voiceList.clear();

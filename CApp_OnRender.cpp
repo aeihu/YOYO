@@ -11,6 +11,9 @@
 
 //==============================================================================
 void CApp::OnRender() {
+    
+        sf::Clock _t;
+        _t.restart();
     sf_Display->clear();
     //SDL_FillRect(sf_Display, &Rect, 0);
     //
@@ -45,6 +48,7 @@ void CApp::OnRender() {
     //CResourceManager::_LogBoxControl.OnRender(sf_Display);
     CResourceControl::_ResourceManager.OnRender(sf_Display);
     sf_Display->display();
+       // std::cout << _t.getElapsedTime().asMilliseconds() << std::endl;
 }
 
 

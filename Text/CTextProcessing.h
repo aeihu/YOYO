@@ -53,6 +53,9 @@ class CTextProcessing
         sf::Vector2f GetLastCharacterPos(); 
         sf::Vector2f GetPosition();
         void SetPosition(float x, float y);
+        
+        const sf::Color& GetTextColor() const;
+        const sf::Color& GetShadowColor() const;
 };
 
 #endif

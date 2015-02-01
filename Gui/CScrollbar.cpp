@@ -14,9 +14,9 @@ CScrollbar::CScrollbar()
     _isMouseOver = false;
     _value =
     _maxValue = 0;
-    _childrenList.push_back(&_btnArrowUp);
-    _childrenList.push_back(&_btnArrowDown);
-    _childrenList.push_back(&_btnBar);
+    AddChildNode(&_btnArrowUp);
+    AddChildNode(&_btnArrowDown);
+    AddChildNode(&_btnBar);
 }
 
 bool CScrollbar::OnSubLoop()
@@ -24,11 +24,11 @@ bool CScrollbar::OnSubLoop()
     //if (_maxValue < 1)
     //    return false;
 
-    _btnArrowDown.SetOffset(0.0f, _height - _btnArrowDown.GetHeight());
-    _btnBar.SetOffset(0.0f, 
-        _btnArrowDown.GetHeight() + 
-        ((_height - _btnArrowDown.GetHeight() - _btnArrowUp.GetHeight() - _btnBar.GetHeight())/
-        (_maxValue < 1 ? 1.0f : _maxValue)*_value));
+    //_btnArrowDown.SetOffset(0.0f, _height - _btnArrowDown.GetHeight());
+    //_btnBar.SetOffset(0.0f, 
+    //    _btnArrowDown.GetHeight() + 
+    //    ((_height - _btnArrowDown.GetHeight() - _btnArrowUp.GetHeight() - _btnBar.GetHeight())/
+    //    (_maxValue < 1 ? 1.0f : _maxValue)*_value));
 
     //bool __result = CBox::OnLoop();
     return _btnBar.OnLoop() && _btnArrowDown.OnLoop() && _btnArrowUp.OnLoop();

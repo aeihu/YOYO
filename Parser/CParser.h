@@ -21,6 +21,8 @@
 #include "../Common/CCommon.h"
 #include "../Common/Cio.h"
 #include "../Common/CRepeatOfAction.h"
+#include "../Common/CDeplayOfAction.h"
+
 
 using namespace std;
 

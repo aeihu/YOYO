@@ -64,66 +64,64 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
 
         //if (__commandName == "@show_info") _pFunc = &Cmd_ShowInfo;
 
-        if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
-        else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
+        //if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
+        //else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
 
-        //else if (__commandName == "@add_chara") _pFunc = &Cmd_AddCharacterLayer;
-        //else if (__commandName == "@del_chara") _pFunc = &Cmd_DelCharacterLayer;
-        else if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
+        if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
         else if (__commandName == "@scale_chara") _pFunc = &Cmd_ScaleCharacterLayer;
         else if (__commandName == "@rota_chara") _pFunc = &Cmd_RotationCharacterLayer;
         else if (__commandName == "@face_chara") _pFunc = &Cmd_SetFaceCharacterLayer;
         else if (__commandName == "@order_chara") _pFunc = &Cmd_SetCharacterLayerOrder;
-
-        //else if (__commandName == "@add_bg") _pFunc = &Cmd_AddBackground;
+        else if (__commandName == "@flipx_chara") _pFunc = &Cmd_FlipXCharacterLayer;
+        else if (__commandName == "@flipy_chara") _pFunc = &Cmd_FlipYCharacterLayer;
+        else if (__commandName == "@origin_chara") _pFunc = &Cmd_OriginCharacterLayer;
+        
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
         else if (__commandName == "@move_bg") _pFunc = &Cmd_MoveBackground;
         else if (__commandName == "@scale_bg") _pFunc = &Cmd_ScaleBackground;
         else if (__commandName == "@rota_bg") _pFunc = &Cmd_RotationBackground;
         else if (__commandName == "@order_bg") _pFunc = &Cmd_SetBackgroundLayerOrder;
+        else if (__commandName == "@flipx_bg") _pFunc = &Cmd_FlipXBackground;
+        else if (__commandName == "@flipy_bg") _pFunc = &Cmd_FlipYBackground;
+        else if (__commandName == "@origin_bg") _pFunc = &Cmd_OriginBackground;
 
-        //else if (__commandName == "@add_img") _pFunc = &Cmd_AddImg;
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
         else if (__commandName == "@move_img") _pFunc = &Cmd_MoveImg;
         else if (__commandName == "@scale_img") _pFunc = &Cmd_ScaleImg;
         else if (__commandName == "@rota_img") _pFunc = &Cmd_RotationImg;
         else if (__commandName == "@order_img") _pFunc = &Cmd_SetImgLayerOrder;
+        else if (__commandName == "@flipx_img") _pFunc = &Cmd_FlipXImg;
+        else if (__commandName == "@flipy_img") _pFunc = &Cmd_FlipYImg;
+        else if (__commandName == "@origin_img") _pFunc = &Cmd_OriginImg;
 
-        //else if (__commandName == "@add_msgbox") _pFunc = &Cmd_AddMessageBox;
         else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
         else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;
-        //else if (__commandName == "@del_msgbox") _pFunc = &Cmd_DelMessageBox;
         else if (__commandName == "@order_msgbox") _pFunc = &Cmd_SetMessageBoxLayerOrder;
         else if (__commandName == "@msg") _pFunc = &Cmd_Message;
 
-        //else if (__commandName == "@add_logbox") _pFunc = &Cmd_AddLogBox;
         else if (__commandName == "@show_logbox") _pFunc = &Cmd_ShowLogBox;
         else if (__commandName == "@hide_logbox") _pFunc = &Cmd_HideLogBox;
-        //else if (__commandName == "@del_logbox") _pFunc = &Cmd_DelLogBox;
         else if (__commandName == "@order_logbox") _pFunc = &Cmd_SetLogBoxLayerOrder;
 
-        //else if (__commandName == "@add_se") _pFunc = &Cmd_AddSE;
-        //else if (__commandName == "@del_se") _pFunc = &Cmd_DelSE;
         else if (__commandName == "@play_se") _pFunc = &Cmd_PlaySE;
-
-        //else if (__commandName == "@add_voice") _pFunc = &Cmd_AddVoice;
-        //else if (__commandName == "@del_voice") _pFunc = &Cmd_DelVoice;
 
         else if (__commandName == "@play_bgm") _pFunc = &Cmd_PlayBGM;
         else if (__commandName == "@pause_bgm") _pFunc = &Cmd_PauseBGM;
         else if (__commandName == "@resume_bgm") _pFunc = &Cmd_ResumeBGM;
 
-        //else if (__commandName == "@add_btn") _pFunc = &Cmd_AddButton;
         else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;
         else if (__commandName == "@move_btn") _pFunc = &Cmd_MoveButton;
         else if (__commandName == "@scale_btn") _pFunc = &Cmd_ScaleButton;
         else if (__commandName == "@rota_btn") _pFunc = &Cmd_RotationButton;
         else if (__commandName == "@order_btn") _pFunc = &Cmd_SetButtonLayerOrder;
+        else if (__commandName == "@flipx_btn") _pFunc = &Cmd_FlipXButton;
+        else if (__commandName == "@flipy_btn") _pFunc = &Cmd_FlipYButton;
+        else if (__commandName == "@origin_btn") _pFunc = &Cmd_OriginButton;
         
         else if (__commandName == "@use_camera") _pFunc = &Cmd_UseCamera;
         else if (__commandName == "@move_camera") _pFunc = &Cmd_MoveCamera;
@@ -134,18 +132,21 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
         else if (__commandName == "@set_var") _pFunc = &Cmd_SetVariable;
         else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;
 
-        //else if (__commandName == "@add_font") _pFunc = &Cmd_AddFont;
-        //else if (__commandName == "@del_font") _pFunc = &Cmd_DelFont;
+        else if (__commandName == "@del_act") _pFunc = &Cmd_DelAction;
 
-        //else if (__commandName == "@add_particle") _pFunc = &Cmd_AddParticleSystem;
-        //else if (__commandName == "@del_particle") _pFunc = &Cmd_DelParticleSystem;
         else if (__commandName == "@show_particle") _pFunc = &Cmd_ShowParticleSystem;
         else if (__commandName == "@hide_particle") _pFunc = &Cmd_HideParticleSystem;
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
         else if (__commandName == "@deplay"){
-            if (__listOfCmdPara.size() == 1)
-                SetDeplay(atoi(__listOfCmdPara[0].c_str()));
+            if (__listOfCmdPara.size() == 1){
+                if (act != &CResourceControl::_ResourceManager._ActionControl && act != NULL){
+                    act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[0].c_str())));
+                }
+                else{
+                    SetDeplay(atoi(__listOfCmdPara[0].c_str()));
+                }
+            }
             else
                 cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
                     << " argument(s) in the command." <<endl;
@@ -191,6 +192,9 @@ void CParser::Continue()
         
 void CParser::ParserObject(Object& obj, CActionSet* act)
 {
+    if (!act)
+        return;
+
     if (obj.has<String>("type") && obj.has<Array>("script")){
         CActionSet* __actionSet = NULL;
 
@@ -212,6 +216,10 @@ void CParser::ParserObject(Object& obj, CActionSet* act)
         else{
             cout << "error!" << endl;
             return;
+        }
+
+        if (obj.has<String>("name")){
+            __actionSet->SetName(obj.get<String>("name"));
         }
 
         Array __arrOfScr = obj.get<Array>("script");
@@ -263,7 +271,6 @@ void CParser::OnLoop()
 void CParser::InsertCmd(Array cmd)
 {
     _cmdList.import(cmd);
-    //_cmdList.push_back(cmd);
 }
 
 int CParser::AnalysisOfParameters(string para, vector<string> &plist)

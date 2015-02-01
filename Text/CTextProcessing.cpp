@@ -143,15 +143,17 @@ void CTextProcessing::OnLoop()
 void CTextProcessing::Skip()
 {
     _isSkip = true;
+    //CTextProcessing::OnLoop();
 }
 
 void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    _sfText.setOrigin(-2.0f, -2.0f);
+    sf::Vector2f __tmp = _sfText.getOrigin();
+    _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
     _sfText.setColor(_shadowColor);
     Surf_Dest->draw(_sfText);
 
-    _sfText.setOrigin(0.0f, 0.0f);
+    _sfText.setOrigin(__tmp);
     _sfText.setColor(_textColor);
     Surf_Dest->draw(_sfText);
 }
@@ -185,4 +187,14 @@ void CTextProcessing::SetPosition(float x, float y)
 {
     _coordinate.x = x;
     _coordinate.y = y;
+}
+
+const sf::Color& CTextProcessing::GetTextColor() const
+{
+    return _textColor;
+}
+    
+const sf::Color& CTextProcessing::GetShadowColor() const
+{
+    return _shadowColor;
 }
