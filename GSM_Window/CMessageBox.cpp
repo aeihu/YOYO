@@ -17,8 +17,9 @@ CMessageBox::CMessageBox()
     _frames.SetFrameRate(10);
     _frames.SetCurrentFrame(0);
     _frames._Type = CAnimation::Oscillate;
-    _childrenList.push_back(&_frames);
+    AddChildNode(&_frames);
     _frames.SetFlag(FLAG_SCALE);
+    _isFramesChanged =
     _isPaused = false;
 }
 
@@ -139,7 +140,6 @@ bool CMessageBox::CheckList(Object json)
 
 bool CMessageBox::OnSubLoop()
 {
-   // bool __result = CBox::OnLoop();
     _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
@@ -147,22 +147,36 @@ bool CMessageBox::OnSubLoop()
         CBox::GetPosition().y + _msgOffset.y);
 
     if (IsTextAllShown() && !GetText().empty()){
-        _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f,  
-            CTextProcessing::GetLastCharacterPos().y);
-
-        _frames.SetAlpha(255);
+        if (!_isFramesChanged){
+            _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f - CBox::_coordinate.x,  
+                CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
+        
+            _frames.SetAlpha(255);
+            _frames.TurnOn(1);
+            _isFramesChanged = true;
+        }
     }
-    else
+    else{
         _frames.SetAlpha(0);
+        _frames.TurnOff();
+        _isFramesChanged = false;
+    }
 
-    //__result = __result && _frames.OnLoop();
+    //_frames.OnLoop();
     CTextProcessing::OnLoop();
     return _isPaused || !IsTextAllShown();// || __result;
 }
 
 void CMessageBox::OnSubRender(sf::RenderTarget* Surf_Dest)
 {
+    _speakerName.setOrigin(-2.0f, -2.0f);
+    _speakerName.setColor(GetShadowColor());
     Surf_Dest->draw(_speakerName);
+
+    _speakerName.setOrigin(0.0f, 0.0f);
+    _speakerName.setColor(GetTextColor());
+    Surf_Dest->draw(_speakerName);
+
     CTextProcessing::OnRender(Surf_Dest);
     _frames.OnRender(Surf_Dest);
 }

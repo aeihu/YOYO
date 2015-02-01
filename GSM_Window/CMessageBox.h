@@ -26,6 +26,7 @@ class CMessageBox : public CBox , public CTextProcessing
         sf::Text            _speakerName;
         CSequenceOfSprite   _frames;
         bool                _isPaused;
+        bool                _isFramesChanged;
 
         bool CheckList(Object json);
         bool SetProperty(Object json);
