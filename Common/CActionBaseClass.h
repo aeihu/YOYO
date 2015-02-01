@@ -21,7 +21,7 @@ class CActionBaseClass
     public:
         CActionBaseClass() {_skip = _pause = false;}
 
-        virtual string GetName(){return "";}; 
+        virtual string GetName() const {return "";}; 
         virtual bool OnLoop(bool cleanup=true)=0; 
         virtual void OnCleanup(){}; 
         virtual bool IsPause() {return _pause;}

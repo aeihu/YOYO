@@ -102,7 +102,6 @@ CActionBy* CBaiscProperties::CreateActionOfScaleYBy(size_t elapsed, float y, boo
     return new CActionBy(&_scale.y, elapsed, y, restore, pause);
 }
 
-
 CSimultaneousOfAction* CBaiscProperties::CreateActionOfMoveTo(size_t elapsed, float x, float y, bool restore, bool pause)
 {
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
