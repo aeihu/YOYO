@@ -152,7 +152,7 @@ bool CMessageBox::OnSubLoop()
                 CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
         
             _frames.SetAlpha(255);
-            _frames.TurnOn(1);
+            _frames.TurnOn();
             _isFramesChanged = true;
         }
     }
