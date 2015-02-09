@@ -143,7 +143,6 @@ void CTextProcessing::OnLoop()
 void CTextProcessing::Skip()
 {
     _isSkip = true;
-    //CTextProcessing::OnLoop();
 }
 
 void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)

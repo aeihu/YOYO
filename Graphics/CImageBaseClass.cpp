@@ -221,11 +221,6 @@ bool CImageBaseClass::GetVisible() const
     return _visible;
 }
 
-bool CImageBaseClass::IsStandby()
-{
-    return _visible;// && Count()==0;
-}
-
 bool CImageBaseClass::LoadImg(const char* fileName)
 {
     if (fileName == NULL)
@@ -317,4 +312,8 @@ void CImageBaseClass::OnSaveData(Object& json) const
     json << "layer_order" << _layerOrder;
     json << "alpha" << _alpha;
     json << "flag" << _flag;
+    json << "flip_x" << _flipX;
+    json << "flip_y" << _flipY;
+    json << "origin_x" << _origin.x;
+    json << "origin_y" << _origin.y;
 }

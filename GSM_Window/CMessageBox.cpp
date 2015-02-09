@@ -162,9 +162,8 @@ bool CMessageBox::OnSubLoop()
         _isFramesChanged = false;
     }
 
-    //_frames.OnLoop();
     CTextProcessing::OnLoop();
-    return _isPaused || !IsTextAllShown();// || __result;
+    return _isPaused || !IsTextAllShown();
 }
 
 void CMessageBox::OnSubRender(sf::RenderTarget* Surf_Dest)

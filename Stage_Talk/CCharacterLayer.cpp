@@ -41,8 +41,6 @@ void CCharacterLayer::SetVoice(string name)
 
 bool CCharacterLayer::OnSubLoop()
 {
-    //bool __result = CImageBaseClass::OnLoop();
-
     if (_visible){
         if (_isFaceEnable){
             _framesOfMouth.OnLoop();

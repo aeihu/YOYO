@@ -24,7 +24,7 @@ CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int fram
 
 bool CButtonBase::OnLButtonDown(int x, int y)
 {
-    if (IsStandby())
+    if (_visible)
         if (_isMouseOver)
         {
             _isMouseDown = true;
@@ -39,7 +39,7 @@ bool CButtonBase::OnLButtonDown(int x, int y)
 
 bool CButtonBase::OnLButtonUp(int x, int y)
 {
-    if (IsStandby()){
+    if (_visible){
         if(_isMouseOver){
             _isMouseDown = false;
             SetCurrentImageFrame(GetMaxFrames()-1);
@@ -77,7 +77,7 @@ bool CButtonBase::IsMouseDown() const
 
 bool CButtonBase::OnMouseMove(int x, int y)
 {
-    if (IsStandby()){
+    if (_visible){
         if(( x > GetPosition().x ) && ( x < GetPosition().x + GetWidth()) && 
             ( y > GetPosition().y ) && ( y < GetPosition().y + GetHeight())){
             if (!_isMouseOver)

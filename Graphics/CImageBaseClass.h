@@ -25,7 +25,7 @@ class CImageBaseClass : public CBaiscProperties
         };
 
     private:
-        char                              _layerOrder;
+        unsigned char                     _layerOrder;
         char                              _flag;
         float                             _alpha;
         list<CImageBaseClass*>            _childrenList;
@@ -42,7 +42,6 @@ class CImageBaseClass : public CBaiscProperties
         bool                              _flipY;
         sf::Vector2f                      _origin;
 
-        bool IsStandby();
         virtual bool LoadImg(const char* filename);
     public:
         CImageBaseClass(float x=0.0f, float y=0.0f);

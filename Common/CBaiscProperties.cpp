@@ -143,8 +143,6 @@ void CBaiscProperties::OnSaveData(Object& json) const
     CObject::OnSaveData(json);
     json << "x" << _coordinate.x;
     json << "y" << _coordinate.y;
-    //json << "offset_x" << _offset.x;
-    //json << "offset_y" << _offset.y;
     json << "scale_x" << _scale.x;
     json << "scale_y" << _scale.y;
     json << "rotation" << _rotation;
