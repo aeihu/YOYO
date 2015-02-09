@@ -831,12 +831,14 @@ bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
         return false;
     }
 
-    const char* filename = args[0].c_str();
-    if(!CResourceControl::_ResourceManager._SoundControl.OnLoadBGM(filename))
-        return false;
+    //const char* filename = args[0].c_str();
+    //if(!CResourceControl::_ResourceManager._SoundControl.OnLoadBGM(filename))
+    //    return false;
 
-    CResourceControl::_ResourceManager._SoundControl.PlayBgm();
-    return true;
+    if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(args[0]) == 0)
+        return true;
+    else
+        return false;
 }
 
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act)
