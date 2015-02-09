@@ -20,8 +20,8 @@
 #include "CScriptCommand.h"
 #include "../Common/CCommon.h"
 #include "../Common/Cio.h"
-#include "../Common/CRepeatOfAction.h"
-#include "../Common/CDeplayOfAction.h"
+#include "../Action/CRepeatOfAction.h"
+#include "../Action/CDeplayOfAction.h"
 
 
 using namespace std;

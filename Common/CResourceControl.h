@@ -17,7 +17,7 @@
 #include "../Sound/CSoundBank.h"
 #include "../Graphics/CDrawableObjectControl.h"
 #include "../Graphics/CCameraControl.h"
-#include "CClassFuncOfAction.h"
+#include "../Action/CClassFuncOfAction.h"
 
 using namespace std;
 

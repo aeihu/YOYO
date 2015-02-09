@@ -13,7 +13,7 @@
 #include <list>
 #include "../Graphics/CSurface.h"
 #include "../Common/CBaiscProperties.h"
-#include "../Common/CActionBy.h"
+#include "../Action/CActionBy.h"
 
 class CImageBaseClass : public CBaiscProperties
 {

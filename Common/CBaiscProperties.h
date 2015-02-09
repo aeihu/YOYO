@@ -9,12 +9,12 @@
 #ifndef _CBAISCPROPERTIES_H_
     #define _CBAISCPROPERTIES_H_
 
-#include "CSequenceOfAction.h"
-#include "CSimultaneousOfAction.h"
+#include "../Action/CSequenceOfAction.h"
+#include "../Action/CSimultaneousOfAction.h"
 #include "CObject.h"
 #include <SFML/Graphics.hpp>
 #include <list>
-#include "CActionBy.h"
+#include "../Action/CActionBy.h"
 
 using namespace std;
 

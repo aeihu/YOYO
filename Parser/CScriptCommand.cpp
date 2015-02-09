@@ -18,7 +18,7 @@
 #include "../GSM_Window/CLogBox.h"
 #include <iostream>
 #include <algorithm>
-#include "../Common/CClassFuncArgsOfAction.h"
+#include "../Action/CClassFuncArgsOfAction.h"
 
 typedef enum{
     FLAG_NECESSITY = 1,
