@@ -58,6 +58,11 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
         else if (objTypeName == "Camera"){
             _CameraControl.DelCamera(__array.get<String>(i));
         }
+        else if (objTypeName == "Music"){
+            ///////////////////////
+            //////////////////////
+            /////////////////////
+        }
         else{
             _DrawableObjectControl.DelDrawableObject(__array.get<String>(i));
         }
@@ -116,14 +121,13 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 __array.get<String>(i)))
                 return -2;
         }
-        //else if (objTypeName == "EffectImg"){
-        //    objTypeName = "Img";
-        //    if (!_EffectObjectControl.AddDrawableObject(
-        //        __assetName, 
-        //        objTypeName, 
-        //        __array.get<String>(i)))
-        //        return -2;
-        //}
+        else if (objTypeName == "Music"){
+            objTypeName = "Img";
+            if (!_SoundControl.AddBgm(
+                __assetName, 
+                __array.get<String>(i)))
+                return -2;
+        }
         else{
             if (!_DrawableObjectControl.AddDrawableObject(
                 __assetName, 
@@ -172,6 +176,7 @@ bool CResourceControl::OnInit(string filename)
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
+    //if (CheckIn(_gameBaiscAsset, "music", "Music") < 0) return false;
 
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
@@ -197,6 +202,8 @@ void CResourceControl::LoadAsset()
         CheckOut(_script, "[button]","Button");
         CheckOut(_script, "[se]", "Se");
         CheckOut(_script, "[voice]", "Voice");
+        CheckOut(_script, "[camera]", "Camera");
+        CheckOut(_script, "[music]", "Music");
         _script.reset();
     }
 
@@ -209,6 +216,7 @@ void CResourceControl::LoadAsset()
         CheckIn(_script, "se", "Se");
         CheckIn(_script, "voice", "Voice");
         CheckIn(_script, "camera", "Camera");
+        CheckIn(_script, "music", "Music");
 
         if (_script.has<Array>("script")){
             CParser::_Parser.InsertCmd(_script.get<Array>("script"));

@@ -67,7 +67,7 @@ bool CCharacterLayer::OnSubLoop()
                     _framesOfEyes.TurnOn(1);
                 
                 _timer = std::rand() % 20000 + CCommon::_Common.GetTicks();
-                cout << _timer << endl;
+                //cout << _timer << endl;
             }
         }
     }

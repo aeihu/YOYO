@@ -29,19 +29,11 @@ class CDrawableObjectControl
     public:
         inline CDrawableObjectControl() {_isNeedSort = false;}
         bool IsExists(string name);
-        //bool SetImageVisibility(string name, int alpha, size_t elapsed, bool pause, bool reset);
-        //bool SetLayerOrder(string name, char order);
         
         bool AddDrawableObject(string name, string objTypeName, string filename);
         bool DelDrawableObject(string name);
         CImageBaseClass* GetDrawableObject(string name);
         bool SetDrawableObjectLayerOrder(string name, char layer);
-
-        //bool Move(string name, float x, float y, size_t elapsed, bool pause, bool reset);
-        //bool MoveX(string name, float x, size_t elapsed, bool pause, bool reset);
-        //bool MoveY(string name, float y, size_t elapsed, bool pause, bool reset);
-        //char Show(string name, float x, float y, char type, size_t elapsed, bool pause, int alpha=255);
-        //char Hide(string name, char type, size_t elapsed, bool pause);
 
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);

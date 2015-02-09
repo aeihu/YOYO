@@ -41,17 +41,11 @@ class CResourceControl : public CScript
         bool CheckOut(Object& json, string colName, string objTypeName);
         bool OnInit(string filename);
     protected:
-        //friend bool Common_FuncOfShow(string funcName, CResourceControl* controlBase, vector<string> args);
-        //friend bool Cmd_AddVariable(vector<string> args);
-        
-        //map<string, CCamera*>                   _cameraList;
-        //CScript                                 _script;
 
         CResourceControl();
     public:
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;
-        //CPositionControl                        _PositionControl;
         CDrawableObjectControl                  _DrawableObjectControl;
         CDrawableObjectControl                  _EffectObjectControl;
         CObjectControl                          _ObjectControl;

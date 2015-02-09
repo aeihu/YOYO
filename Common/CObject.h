@@ -26,7 +26,7 @@ class CObject
         void SetPath(string path);
     public:
         CObject();
-        //virtual CObject* Create(const char* filename)=0;
+
         string GetClassName() const;
         string GetPath() const;
         virtual void OnSaveData(Object& json) const;

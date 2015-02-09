@@ -15,25 +15,49 @@ CSoundBank::CSoundBank() {
 }
 
 //------------------------------------------------------------------------------
-int CSoundBank::AddBuffer(map<string, sf::SoundBuffer>& list, string name, const char* FileName)
+int CSoundBank::AddBuffer(map<string, sf::SoundBuffer*>& bufList, string name, string filename)
 {
-    if(list.count(name) > 0)
-        return -1;
+    sf::SoundBuffer* __buffer = new sf::SoundBuffer();
 
-    sf::SoundBuffer Buffer;
-    if (!Buffer.loadFromFile(FileName))
-        return -2;
+    if (filename.find("*") == string::npos){
+        if (!__buffer->loadFromFile(filename)){
+            cout << "CSoundBank::AddBuffer(): failed to load '" << filename << "'" << endl;
+            return -2;
+        }
+    }
+    else {
+        char* __buf = NULL;
+        unsigned long __size = 0;
+        CZlib::OpenFileInZip(filename, __buf, __size);
 
-    list[name] = Buffer;
+        if (__buf != NULL){
+            if (__buffer->loadFromMemory(__buf, __size)){
+                CZlib::CloseFileInZip(__buf);
+            }
+            else{
+                CZlib::CloseFileInZip(__buf);
+                cout << "CSoundBank::AddBuffer(): failed to load '" << filename << "'" << endl;
+                return -2;
+            }
+        }
+        else{
+            CZlib::CloseFileInZip(__buf);
+            cout << "CSoundBank::AddBuffer(): failed to load '" << filename << "'" << endl;    
+            return -2;
+        }
+    }
+
+    bufList[name] = __buffer;
     return 0;
 }
 
-int CSoundBank::AddSE(string name, const char* FileName) {
-    return AddBuffer(_seList, name, FileName);
+int CSoundBank::AddSE(string name, string filename) 
+{
+    return AddBuffer(_seList, name, filename);
 }
 
-int CSoundBank::AddVoice(string name, const char* FileName) {
-    return AddBuffer(_voiceList, name, FileName);
+int CSoundBank::AddVoice(string name, string filename) {
+    return AddBuffer(_voiceList, name, filename);
 }
 
 //https://github.com/LaurentGomila/SFML/wiki/Source%3A-MP3-Player
@@ -45,6 +69,11 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
     return true;
 }
 
+void CSoundBank::SetBGMLoop(bool loop)
+{
+    _bgm.setLoop(loop);
+}
+
 //------------------------------------------------------------------------------
 void CSoundBank::OnCleanup()
 {
@@ -53,12 +82,26 @@ void CSoundBank::OnCleanup()
             delete (*it);
     }
 
+    for (map<string, sf::SoundBuffer*>::iterator it=_seList.begin() ; it !=_seList.end(); it++){
+        if ((*it).second != NULL){
+            delete (*it).second;
+            (*it).second = NULL;
+        }
+    }
+
+    for (map<string, sf::SoundBuffer*>::iterator it=_voiceList.begin() ; it !=_voiceList.end(); it++){
+        if ((*it).second != NULL){
+            delete (*it).second;
+            (*it).second = NULL;
+        }
+    }
+
     _voicePool.clear();
     _soundPool.clear();
     _seList.clear();
     _voiceList.clear();
+    _musicList.clear();
 }
-
 
 //==============================================================================
 bool CSoundBank::PlaySE(string name)
@@ -68,14 +111,14 @@ bool CSoundBank::PlaySE(string name)
 
     for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
         if ((*it).getStatus() == sf::Sound::Stopped){
-            (*it).setBuffer(_seList[name]);
+            (*it).setBuffer(*_seList[name]);
             (*it).play();
             return true;
         }
     }
 
     _soundPool.push_back(sf::Sound());
-    _soundPool.back().setBuffer(_seList[name]);
+    _soundPool.back().setBuffer(*_seList[name]);
     _soundPool.back().play();
     return true;
 }
@@ -90,7 +133,7 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
             if ((*it)->getStatus() == sf::Sound::Playing)
                 (*it)->stop();
         }
-        _voicePool.front()->Load(_voiceList[name]);
+        _voicePool.front()->Load(*_voiceList[name]);
         _voicePool.front()->_Name = name;
         _voicePool.front()->play();
         return true;
@@ -98,7 +141,7 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
     else{
         for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
             if ((*it)->getStatus() == sf::Sound::Stopped){
-                (*it)->Load(_voiceList[name]);
+                (*it)->Load(*_voiceList[name]);
                 (*it)->_Name = name;
                 (*it)->play();
                 return true;
@@ -106,19 +149,21 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
         }
 
         _voicePool.push_back(new CVoiceStream());
-        _voicePool.back()->Load(_voiceList[name]);
+        _voicePool.back()->Load(*_voiceList[name]);
         _voicePool.back()->_Name = name;
         _voicePool.back()->play();
         return true;
     }
 }
 
-bool CSoundBank::DelBuffer(map<string, sf::SoundBuffer>& list, string name)
+bool CSoundBank::DelBuffer(map<string, sf::SoundBuffer*>& bufList, string name)
 {
-    if(list.count(name) < 1)
+    if(bufList.count(name) < 1)
         return false;
 
-    list.erase(name);
+    delete bufList[name];
+    bufList[name] = NULL;
+    bufList.erase(name);
     return true;
 }
 
@@ -134,6 +179,15 @@ bool CSoundBank::DeleteVoice(string name)
 
 //==============================================================================
 
+bool CSoundBank::AddBgm(string name, string FileName) 
+{
+    if(_musicList.count(name) > 0)
+        return false;
+
+    _musicList[name] = FileName;
+    return true;
+}
+
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
     return _bgm.getStatus();
@@ -147,6 +201,43 @@ void CSoundBank::PauseBgm()
 void CSoundBank::PlayBgm()
 {
     _bgm.play();
+}
+        
+int CSoundBank::PlayBgm(string name)
+{
+    if(_musicList.count(name) < 1)
+        return -1;
+
+    if (_musicList[name].find("*") == string::npos){
+        if (!_bgm.openFromFile(_musicList[name])){
+            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;
+            return -2;
+        }
+    }
+    else {
+        char* __buf = NULL;
+        unsigned long __size = 0;
+        CZlib::OpenFileInZip(_musicList[name], __buf, __size);
+
+        if (__buf != NULL){
+            if (_bgm.openFromMemory(__buf, __size)){
+                CZlib::CloseFileInZip(__buf);
+            }
+            else{
+                CZlib::CloseFileInZip(__buf);
+                cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;
+                return -2;
+            }
+        }
+        else{
+            CZlib::CloseFileInZip(__buf);
+            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;    
+            return -2;
+        }
+    }
+    
+    _bgm.play();
+    return 0;
 }
 
 void CSoundBank::OnLoop()
@@ -244,7 +335,6 @@ bool CSoundBank::CVoiceStream::onGetData(Chunk& data)
 
     if (_m_currentSample + samplesToStream <= _m_samples.size())
     {
-        //cout << *(data.samples) << endl;
         data.sampleCount = samplesToStream;
         _m_currentSample += samplesToStream;
 

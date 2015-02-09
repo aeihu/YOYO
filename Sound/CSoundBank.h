@@ -43,11 +43,12 @@ class CSoundBank {
         list<CVoiceStream*>                             _voicePool;
         list<sf::Sound>                                 _soundPool;
         sf::Music                                       _bgm;
-        map<string, sf::SoundBuffer>                    _voiceList;
-        map<string, sf::SoundBuffer>                    _seList;
+        map<string, sf::SoundBuffer*>                   _voiceList;
+        map<string, sf::SoundBuffer*>                   _seList;
+        map<string, string>                             _musicList;
 
-        int AddBuffer(map<string, sf::SoundBuffer>& list, string name, const char* FileName);
-        bool DelBuffer(map<string, sf::SoundBuffer>& list, string name);
+        int AddBuffer(map<string, sf::SoundBuffer*>& bufList, string name, string filename);
+        bool DelBuffer(map<string, sf::SoundBuffer*>& bufList, string name);
     public:
         enum EVoiceFlag{
             VOICE_STOPPED = 1,
@@ -55,26 +56,28 @@ class CSoundBank {
             VOICE_PLAYING,
         };
 
-        //static CSoundBank                               _SoundControl;
         CSoundBank();
 
         bool OnInit();
         void OnLoop();
         void OnCleanup();
 
-        int AddSE(string name, const char* FileName) ;
+        int AddSE(string name, string filename) ;
         bool PlaySE(string name);
         bool DeleteSE(string name);
 
-        int AddVoice(string name, const char* FileName) ;
+        int AddVoice(string name, string filename) ;
         bool PlayVoice(string name, bool isSameChannel=true);
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);
-
+        
+        bool AddBgm(string name, string FileName) ;
         bool OnLoadBGM(const char* FileName);
+        void SetBGMLoop(bool loop);
         sf::Sound::Status GetBgmStatus();
         void PlayBgm();
+        int PlayBgm(string name);
         void PauseBgm();
 };
 

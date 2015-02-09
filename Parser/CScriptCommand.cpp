@@ -825,17 +825,29 @@ bool Cmd_OriginImg(vector<string>& args, CActionSet* act)
 
 bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
 {
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_PlayBGM(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
 
-    //const char* filename = args[0].c_str();
-    //if(!CResourceControl::_ResourceManager._SoundControl.OnLoadBGM(filename))
-    //    return false;
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NONPARAMETRIC));    //loop
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-o", FLAG_OPTIONAL));    //offset
 
-    if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(args[0]) == 0)
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_PlayBGM", __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0)
+        return false;
+
+    string __name = __values["-n"][0];
+    bool __loop = __values.count("-l") > 0 ? true : false;
+
+    CResourceControl::_ResourceManager._SoundControl.SetBGMLoop(__loop);
+    if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name) == 0)
         return true;
     else
         return false;
@@ -857,48 +869,6 @@ bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
     return true;
 }
 
-//bool Cmd_AddSE(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() != 2){
-//        cout << "Cmd_AddSE(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//    
-//    const char* name = args[0].c_str();
-//    const char* filename = args[1].c_str();
-//
-//    switch(CSoundBank::_SoundControl.AddSE(name, filename))
-//    {
-//        case -1:
-//            cout << "Cmd_AddSE(): SE \"" << name << "\" has existed." <<endl;
-//            return false;
-//        break;
-//        case -2:
-//            cout << "Cmd_AddSE(): failed to add SE." <<endl;
-//            return false;
-//        break;
-//    }
-//
-//    return true;
-//}
-//
-//bool Cmd_DelSE(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() < 1){
-//        cout << "Cmd_DelSE(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    for (size_t i=0; i<args.size(); i++){
-//        if (!CSoundBank::_SoundControl.DeleteSE(args[i]))
-//            cout << "Cmd_DelSE(): can't find SE \""<< args[i] << "\"." << endl;
-//    }
-//
-//    return true;
-//}
-
 bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 1){
@@ -914,58 +884,6 @@ bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
     cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
     return false;
 }
-
-//bool Cmd_AddVoice(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() != 2){
-//        cout << "Cmd_AddVoice(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//    
-//    const char* name = args[0].c_str();
-//    const char* filename = args[1].c_str();
-//
-//    switch(CSoundBank::_SoundControl.AddVoice(name, filename))
-//    {
-//        case -1:
-//            cout << "Cmd_AddVoice(): Voice \"" << name << "\" has existed." <<endl;
-//            return false;
-//        break;
-//        case -2:
-//            cout << "Cmd_AddVoice(): failed to add Voice." <<endl;
-//            return false;
-//        break;
-//    }
-//
-//    return true;
-//}
-//
-//bool Cmd_DelVoice(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() < 1){
-//        cout << "Cmd_DelVoice(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    for (size_t i=0; i<args.size(); i++){
-//        if (!CSoundBank::_SoundControl.DeleteVoice(args[i]))
-//            cout << "Cmd_DelVoice(): can't find Voice \""<< args[i] << "\"." << endl;
-//    }
-//
-//    return true;
-//}
-
-//bool Cmd_AddButton(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfAdd("Button", args);
-//}
-//
-//bool Cmd_DelButton(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("Button", args);
-//}
 
 bool Cmd_ShowButton(vector<string>& args, CActionSet* act)
 {
@@ -1097,16 +1015,6 @@ bool Cmd_Message(vector<string>& args, CActionSet* act)
     return true;
 }
 
-//bool Cmd_AddMessageBox(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfAdd("MessageBox", args);
-//}
-//
-//bool Cmd_DelMessageBox(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("MessageBox", args);
-//}
-
 bool Cmd_ShowMessageBox(vector<string>& args, CActionSet* act)
 {   
     return Common_FuncOfShow("MessageBox", args, act);
@@ -1122,11 +1030,6 @@ bool Cmd_SetMessageBoxLayerOrder(vector<string>& args, CActionSet* act)
     return Common_FuncOfLayerOrder("MessageBox", args, act);
 }
 
-//bool Cmd_AddLogBox(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfAdd("LogBox", args);
-//}
-
 bool Cmd_ShowLogBox(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfShow("LogBox", args, act);
@@ -1137,25 +1040,10 @@ bool Cmd_HideLogBox(vector<string>& args, CActionSet* act)
     return Common_FuncOfHide("LogBox", args, act);
 }
 
-//bool Cmd_DelLogBox(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("LogBox", args);
-//}
-
 bool Cmd_SetLogBoxLayerOrder(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfLayerOrder("LogBox", args, act);
 }
-
-//bool Cmd_AddParticleSystem(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfAdd("ParticleSystem", args);
-//}
-//
-//bool Cmd_DelParticleSystem(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("ParticleSystem", args);
-//}
 
 bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act)
 {

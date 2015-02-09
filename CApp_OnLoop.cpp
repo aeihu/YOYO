@@ -10,19 +10,9 @@
 #include "CApp.h"
 
 #include <iostream>
-#include <exception>
+
 //==============================================================================
 void CApp::OnLoop() {
-    //bool __isPause = false;
-
-    //CResourceManager::_BackgroundLayerControl.OnLoop(__isPause);
-    //CResourceManager::_CharacterLayerControl.OnLoop(__isPause);
-    //CResourceManager::_ImgLayerControl.OnLoop(__isPause);
-    //CResourceManager::_ParticleSystemControl.OnLoop(__isPause);
-    //CResourceManager::_MessageBoxControl.OnLoop(__isPause);
-    //CResourceManager::_ButtonControl.OnLoop(__isPause);
-    //CResourceManager::_LogBoxControl.OnLoop(__isPause);
-    //cout << "CApp::OnLoop()" << endl;
     CResourceControl::_ResourceManager.OnLoop();
 }
 

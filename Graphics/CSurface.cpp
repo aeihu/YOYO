@@ -142,7 +142,6 @@ bool CSurface::Transparent(sf::Image* Surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::U
         return false;
     }
 
-//    Surf_Dest->createMaskFromColor(sf::Color(R, G, B, A));
     return true;
 }
 
