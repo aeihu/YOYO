@@ -47,16 +47,20 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
     
     for (size_t i=0; i<__array.size(); i++){
         if (objTypeName == "Font"){
-            _ObjectControl.DelObject(__array.get<String>(i));
+            if (__array.get<Object>(i).get<bool>("isdelete"))
+                _ObjectControl.DelObject(__array.get<Object>(i).get<String>("name"));
         }
         else if (objTypeName == "Voice"){
-            _SoundControl.DeleteVoice(__array.get<String>(i));
+            if (__array.get<Object>(i).get<bool>("isdelete"))
+                _SoundControl.DeleteVoice(__array.get<Object>(i).get<String>("name"));
         }
         else if (objTypeName == "Se"){
-            _SoundControl.DeleteSE(__array.get<String>(i));
+            if (__array.get<Object>(i).get<bool>("isdelete"))
+                _SoundControl.DeleteSE(__array.get<Object>(i).get<String>("name"));
         }
         else if (objTypeName == "Camera"){
-            _CameraControl.DelCamera(__array.get<String>(i));
+            if (__array.get<Object>(i).get<bool>("isdelete"))
+                _CameraControl.DelCamera(__array.get<Object>(i).get<String>("name"));
         }
         else if (objTypeName == "Music"){
             ///////////////////////
@@ -64,7 +68,8 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
             /////////////////////
         }
         else{
-            _DrawableObjectControl.DelDrawableObject(__array.get<String>(i));
+            if (__array.get<Object>(i).get<bool>("isdelete"))
+                _DrawableObjectControl.DelDrawableObject(__array.get<Object>(i).get<String>("name"));
         }
     }
 
@@ -84,33 +89,38 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
     if (!json.has<Array>(colName))
         return -1;
 
-    Array __array = json.get<Array>(colName);
-    Array __arrayOfAssetName;
-    string __assetName = "";
+    Array& __array = json.get<Array>(colName);
+
+    string __path;
+    //string __assetName;
     
     for (size_t i=0; i<__array.size(); i++){
-        cout << "CResourceControl::CheckIn():Loading '" << __array.get<String>(i) << "'" << endl;
+        __path = __array.get<Object>(i).get<String>("path");
+        string& __assetName = __array.get<Object>(i).get<String>("name");
 
-        __assetName = GetNameInFilename(__array.get<String>(i));
+        cout << "CResourceControl::CheckIn():Loading '" << __path << "'" << endl;
+
         if (objTypeName == "Font"){
             if (!_ObjectControl.AddObject(__assetName,
                 objTypeName,
-                __array.get<String>(i)))
+                __path))
                 return -2;
+            
+            __assetName = objTypeName + ":" + __assetName;
         }
         else if (objTypeName == "Voice"){
             if (_SoundControl.AddVoice(__assetName,
-                __array.get<String>(i).c_str()) != 0)
+                __path) != 0)
                 return -2;
         }
         else if (objTypeName == "Se"){
             if (_SoundControl.AddSE(__assetName,
-                __array.get<String>(i).c_str()) != 0)
+                __path) != 0)
                 return -2;
         }
         else if (objTypeName == "Camera"){
             if (!_CameraControl.AddCamera(__assetName,
-                __array.get<String>(i).c_str()))
+                __path))
                 return -2;
         }
         else if (objTypeName == "LoadingImg"){
@@ -118,29 +128,30 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
             if (!_EffectObjectControl.AddDrawableObject(
                 __assetName, 
                 objTypeName, 
-                __array.get<String>(i)))
+                __path))
                 return -2;
+
+            __assetName = objTypeName + ":" + __assetName;
         }
         else if (objTypeName == "Music"){
-            objTypeName = "Img";
             if (!_SoundControl.AddBgm(
                 __assetName, 
-                __array.get<String>(i)))
+                __path))
                 return -2;
         }
         else{
             if (!_DrawableObjectControl.AddDrawableObject(
                 __assetName, 
                 objTypeName, 
-                __array.get<String>(i)))
+                __path))
                 return -2;
-        }
 
-        __arrayOfAssetName << objTypeName + ":" + __assetName;
+            __assetName = objTypeName + ":" + __assetName;
+        }
     }
 
-    json << "[" + colName + "]" << __arrayOfAssetName;
     
+    //string __ssss = json.json();//////////////////////////////
     if (__array.size() < 1)
         return 0;
 
@@ -160,13 +171,60 @@ bool CResourceControl::OnInit(string filename, sf::RenderTarget* display)
 
     return true;
 }
+        
+bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
+{
+    if (src.has<Array>(colName)){
+        Array __array = src.get<Array>(colName);
+        Array __arrayResult;
+
+        for (size_t i=0; i<__array.size(); i++){
+            Object __obj;
+            __obj << "name" << GetNameInFilename(__array.get<String>(i));
+            __obj << "path" << __array.get<String>(i);
+            __obj << "isdelete" << true;
+            __arrayResult << __obj;
+        }
+
+        des << colName << __arrayResult;
+        return true;
+    }
+
+    return false;
+}
+
+bool CResourceControl::LoadJson(Object& obj, string filename)
+{
+    Object __json;
+
+    if (!__json.parse(Cio::LoadTxtFile(filename)))
+        return false;
+
+    JsonProcess(__json, obj, "font");
+    JsonProcess(__json, obj, "se");
+    JsonProcess(__json, obj, "image_for_loading");
+    JsonProcess(__json, obj, "image_for_effect");
+    JsonProcess(__json, obj, "messagebox");
+    JsonProcess(__json, obj, "button");
+    JsonProcess(__json, obj, "camera");
+    JsonProcess(__json, obj, "character");
+    JsonProcess(__json, obj, "background");
+    JsonProcess(__json, obj, "cg");
+    JsonProcess(__json, obj, "voice");
+    JsonProcess(__json, obj, "music");
+
+    if (__json.has<String>("main_script"))
+        obj << "main_script" << __json.get<String>("main_script");
+
+    if (__json.has<Array>("script"))
+        obj << "script" << __json.get<Array>("script");
+    
+    return true;
+}
 
 bool CResourceControl::OnInit(string filename)
 {
-    if (!_gameBaiscAsset.parse(Cio::LoadTxtFile(filename)))
-        return false;
-    
-    if (!_gameBaiscAsset.has<String>("main_script"))
+    if (!LoadJson(_gameBaiscAsset, filename))
         return false;
     
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
@@ -191,23 +249,52 @@ void CResourceControl::EndLoadProcess()
     _EffectObjCtrlEnable = false;
 }
 
+void CResourceControl::Compare(Object& src, Object& des, string colName)
+{
+    if (src.has<Array>(colName) && des.has<Array>(colName)){
+        for (size_t i=0; i < src.get<Array>(colName).size(); i++){
+            for (size_t j=0; j < des.get<Array>(colName).size(); j++){
+                if (src.get<Array>(colName).get<Object>(i).get<String>("path")
+                    == 
+                    des.get<Array>(colName).get<Object>(j).get<String>("path")){
+                    
+                    bool& __isDelete = des.get<Array>(colName).get<Object>(j).get<bool>("isdelete");
+                    __isDelete = false;
+                }
+            }
+        }
+    }
+}
+
 void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
     _DrawableObjCtrlEnable = false;
-    if (!_script.empty()){
-        CheckOut(_script, "[character]","CharacterLayer");
-        CheckOut(_script, "[background]","Background");
-        CheckOut(_script, "[cg]","Img");
-        CheckOut(_script, "[button]","Button");
-        CheckOut(_script, "[se]", "Se");
-        CheckOut(_script, "[voice]", "Voice");
-        CheckOut(_script, "[camera]", "Camera");
-        CheckOut(_script, "[music]", "Music");
-        _script.reset();
-    }
 
-    if (_script.parse(Cio::LoadTxtFile(_fileNameOfScript))){
+    Object __obj;
+    if (LoadJson(__obj, _fileNameOfScript)){
+        if (!_script.empty()){
+            Compare(__obj, _script, "character");
+            Compare(__obj, _script, "background");
+            Compare(__obj, _script, "cg");
+            Compare(__obj, _script, "button");
+            Compare(__obj, _script, "se");
+            Compare(__obj, _script, "voice");
+            Compare(__obj, _script, "camera");
+            Compare(__obj, _script, "music");
+            
+            CheckOut(_script, "character","CharacterLayer");
+            CheckOut(_script, "background","Background");
+            CheckOut(_script, "cg","Img");
+            CheckOut(_script, "button","Button");
+            CheckOut(_script, "se", "Se");
+            CheckOut(_script, "voice", "Voice");
+            CheckOut(_script, "camera", "Camera");
+            CheckOut(_script, "music", "Music");
+            _script.reset();
+        }
+        
+        _script = __obj;
         _script << "filename" << _fileNameOfScript;
         CheckIn(_script, "character","CharacterLayer");
         CheckIn(_script, "background","Background");
@@ -220,8 +307,6 @@ void CResourceControl::LoadAsset()
 
         if (_script.has<Array>("script")){
             CParser::_Parser.InsertCmd(_script.get<Array>("script"));
-            //for (size_t i=0; i< _script.get<Array>("script").size(); i++)
-            //    CParser::_Parser.InsertCmd(_script.get<Array>("script").get<String>(i));
         }
     }
 
@@ -232,7 +317,7 @@ void CResourceControl::LoadAsset()
         __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
         _ActionControl.AddAction(__seq);
     }
-
+    
     _DrawableObjCtrlEnable = true;
     CParser::_Parser.Continue();
 }
@@ -240,9 +325,9 @@ void CResourceControl::LoadAsset()
 bool CResourceControl::LoadScript(string filename)
 {
     _fileNameOfScript = filename;
-    if (_gameBaiscAsset.has<Array>("[image_for_loading]")){
-        Array __imgs = _gameBaiscAsset.get<Array>("[image_for_loading]");
-        _nameOfLoadingImg = __imgs.get<String>(std::rand() % __imgs.size());
+    if (_gameBaiscAsset.has<Array>("image_for_loading")){
+        Array __imgs = _gameBaiscAsset.get<Array>("image_for_loading");
+        _nameOfLoadingImg = __imgs.get<Object>(std::rand() % __imgs.size()).get<String>("name");
         CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
 
         if (__img != NULL){

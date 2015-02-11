@@ -37,6 +37,11 @@ class CResourceControl : public CScript
         void BeginLoadProcess();
         void EndLoadProcess();
         void LoadAsset();
+        void Compare(Object& src, Object& des, string colName);
+
+        bool JsonProcess(Object& src, Object& des, string colName);
+        bool LoadJson(Object& obj, string filename);
+
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
         bool OnInit(string filename);
