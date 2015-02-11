@@ -188,6 +188,15 @@ bool CSoundBank::AddBgm(string name, string FileName)
     return true;
 }
 
+bool CSoundBank::DelBgm(string name)
+{
+    if(_musicList.count(name) < 1)
+        return false;
+
+    _musicList.erase(name);
+    return true;
+}
+
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
     return _bgm.getStatus();

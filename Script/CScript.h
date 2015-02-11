@@ -21,13 +21,6 @@ class CScript
     protected:
         map<string, string>         _userVariableList;
         map<string, string>         _systemVariableList;
-        //map<string, string>         _imagesInScript;
-        //map<string, string>         _backgraundInScript;
-        //map<string, string>         _musicInScript;
-        //map<string, string>         _seInScript;
-        //map<string, string>         _voiceInScript;
-        //map<string, string>         _characterInScript;
-        //map<string, string>         _buttonInScript;
     
     public:
         bool AddVariable(string name, string val);

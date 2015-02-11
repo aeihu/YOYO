@@ -38,9 +38,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
 
     if (__obj != NULL){
-        //string __name = GetNameInFilename(filename);
-        
-        if (IsExists(name)){
+        if (IsExists(objTypeName+":"+name)){
             cout << "CResourceControl::AddDrawableObject(): " 
                 << objTypeName << " \""<< name << "\" has existed." <<endl;
             delete __obj;

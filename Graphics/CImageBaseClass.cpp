@@ -97,7 +97,7 @@ void CImageBaseClass::SetLayerOrder(char order)
 void CImageBaseClass::SetLayerOrder(vector<string> args)
 {
     if (args.size() > 0)
-        _layerOrder = (char)atoi(args[0].c_str());
+        _layerOrder = (unsigned char)atoi(args[0].c_str());
 }
 
 void CImageBaseClass::SetAlpha(int alpha)

@@ -37,6 +37,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         static CCharacterLayer* Create(const char* filename);
         
         bool SetFace(string name);
+        void SetFace(vector<string> args);
+
         void SetVoice(string name);
         
         bool OnSubLoop();

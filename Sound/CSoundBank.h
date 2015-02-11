@@ -72,7 +72,8 @@ class CSoundBank {
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);
         
-        bool AddBgm(string name, string FileName) ;
+        bool AddBgm(string name, string FileName);
+        bool DelBgm(string name);
         bool OnLoadBGM(const char* FileName);
         void SetBGMLoop(bool loop);
         sf::Sound::Status GetBgmStatus();

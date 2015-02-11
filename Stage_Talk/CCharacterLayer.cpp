@@ -164,6 +164,12 @@ bool CCharacterLayer::SetProperty(Object json)
     return true;
 }
 
+void CCharacterLayer::SetFace(vector<string> args)
+{
+    if (args.size() > 0)
+        SetFace(args[0]);
+}
+
 bool CCharacterLayer::SetFace(string name)
 {
     if (_currcentFace == name)
