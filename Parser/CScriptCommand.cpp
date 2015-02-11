@@ -125,7 +125,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
         return false;
     
     bool __result = true;
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
     float __alpha = __values.count("-a") == 0 ? 255.0f : atof(__values["-a"][0].c_str());
@@ -187,7 +187,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
     
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL :
         atoi(__values["-i"][0].c_str());
 
@@ -234,7 +234,7 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
     bool __isBy = __values.count("-b") == 0 ? false : true;
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     float __x = 0;
     float __y = 0;
     char __flag = 0;
@@ -310,7 +310,7 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
 
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NONPARAMETRIC)); 
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr 
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
     __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
@@ -327,7 +327,7 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
     bool __isBy = __values.count("-b") == 0 ? false : true;
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     float __x = 0;
     float __y = 0;
     char __flag = 0;
@@ -410,7 +410,7 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
     if (__values.count("-n") == 0)
         return false;
     
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     bool __isBy = __values.count("-b") == 0 ? false : true;
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
@@ -608,40 +608,6 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
     commad of script
 ===============================================================*/
 
-//bool Cmd_AddPosition(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() != 3){
-//        cout << "Cmd_AddPosition(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    string name = args[0];
-//    float x = atof(args[1].c_str());
-//    float y = atof(args[2].c_str());
-//    CResourceControl::_ResourceManager._PositionControl.AddPosition(name, x, y);
-//    return true;
-//}
-//
-//bool Cmd_DelPosition(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() < 1){
-//        cout << "Cmd_DelPosition(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    for (size_t i=0; i<args.size(); i++){
-//        CResourceControl::_ResourceManager._PositionControl.DelPosition(args[i]);
-//    }
-//
-//    return true;
-//}
-
-//===========================================
-//
-//===========================================
-
 bool Cmd_ShowCharacterLayer(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfShow("CharacterLayer", args, act);
@@ -669,14 +635,21 @@ bool Cmd_HideCharacterLayer(vector<string>& args, CActionSet* act)
 
 bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
 {
+    if (act == NULL){
+        cout << "Cmd_SetFaceCharacterLayer(): Action Set is null." <<endl;
+        return false;
+    }
+
     if (args.size() != 2){
         cout << "Cmd_SetFaceCharacterLayer(): command invaild. can't set " << args.size()
             << " argument(s) in the command." << endl;
         return false;
     }
 
-    string __name = args[0];
-    string __face = args[1];
+    string& __name = args[0];
+    //string __face = args[1];
+    vector<string> __args;
+    __args.push_back(args[1]);
 
     if (!CResourceControl::_ResourceManager._DrawableObjectControl.IsExists("CharacterLayer:"+__name)){
         cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
@@ -685,12 +658,16 @@ bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
 
     CCharacterLayer* __chara = static_cast<CCharacterLayer*>(
         CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("CharacterLayer:"+__name));
-    if (__chara->SetFace(__face))
-        return true;
-    else{
-        cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
-        return false;
-    }
+
+    act->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetFace, __args));
+        
+    return true;
+    //if (__chara->SetFace(__face))
+    //    return true;
+    //else{
+    //    cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
+    //    return false;
+    //}
 }
 
 bool Cmd_SetCharacterLayerOrder(vector<string>& args, CActionSet* act)
@@ -1101,17 +1078,6 @@ bool Cmd_SetParticleSystemLayerOrder(vector<string>& args, CActionSet* act)
     return Common_FuncOfLayerOrder("ParticleSystem", args, act);
 }
 
-//bool Cmd_AddFont(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfAdd("Font", args);
-//}
-//
-//bool Cmd_DelFont(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("Font", args);
-//}
-
-//bool Cmd_AddVariable(string name, string val, map<string, string> &var_table)
 bool Cmd_AddVariable(vector<string>& args, CActionSet* act)
 {
     if (args.size() != 2){
@@ -1176,63 +1142,6 @@ bool Cmd_DelAction(vector<string>& args, CActionSet* act)
 
     return true;
 }
-
-//bool Cmd_AddCamera(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() < 1){
-//        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    std::list<pair<string, ENUM_FLAG> > __flags;
-//    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));   //name
-//    __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
-//    __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
-//    __flags.push_back(pair<string, ENUM_FLAG>("-w", FLAG_OPTIONAL));    //width
-//    __flags.push_back(pair<string, ENUM_FLAG>("-h", FLAG_OPTIONAL));    //height
-//    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_OPTIONAL));    //rotation
-//    __flags.push_back(pair<string, ENUM_FLAG>("-z", FLAG_OPTIONAL));    //zoom
-//    
-//    map<string, vector<string> > __values;
-//    if (!Common_ArgsToKV("Cmd_AddCamera", __flags, args, __values))
-//        return false;
-//
-//    
-//    for (size_t i=0; i<__values["-n"].size(); i++){
-//        string __name = __values["-n"][i];
-//        float __x = __values.count("-x") == 0 ? 0.0f : i < __values["-x"].size() ? 
-//            atof(__values["-x"][i].c_str()):atof(__values["-x"][__values["-x"].size()-1].c_str());
-//        float __y = __values.count("-y") == 0 ? 0.0f : i < __values["-y"].size() ? 
-//            atof(__values["-y"][i].c_str()):atof(__values["-y"][__values["-y"].size()-1].c_str());
-//        float __w = __values.count("-w") == 0 ? 0.0f : i < __values["-w"].size() ? 
-//            atof(__values["-w"][i].c_str()):atof(__values["-w"][__values["-w"].size()-1].c_str());
-//        float __h = __values.count("-h") == 0 ? 0.0f : i < __values["-h"].size() ? 
-//            atof(__values["-h"][i].c_str()):atof(__values["-h"][__values["-h"].size()-1].c_str());
-//        float __r = __values.count("-r") == 0 ? 0.0f : i < __values["-r"].size() ? 
-//            atof(__values["-r"][i].c_str()):atof(__values["-r"][__values["-r"].size()-1].c_str());
-//        float __z = __values.count("-z") == 0 ? 1.0f : i < __values["-z"].size() ? 
-//            atof(__values["-z"][i].c_str()):atof(__values["-z"][__values["-z"].size()-1].c_str());
-//
-//        CResourceControl::_ResourceManager._CameraControl.AddCamera(__name);
-//    }
-//    return true;
-//}
-//
-//bool Cmd_DelCamera(vector<string>& args, CActionSet* act)
-//{
-//    if (args.size() < 1){
-//        cout << "Cmd_AddCamera(): command invaild. can't set " << args.size()
-//            << " argument(s) in the command." <<endl;
-//        return false;
-//    }
-//
-//    for (size_t i=0; i<args.size(); i++){
-//        CResourceControl::_ResourceManager._CameraControl.DelCamera(args[i]);
-//    }
-//
-//    return true;
-//}
 
 bool Cmd_UseCamera(vector<string>& args, CActionSet* act)
 {
