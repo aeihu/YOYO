@@ -10,7 +10,7 @@ bool CObjectControl::AddObject(string name, string objTypeName, string filename)
 {
     CObject* __obj = NULL;
 
-    if (_objectList.count(name) > 0){
+    if (_objectList.count(objTypeName+":"+name) > 0){
         cout << "CObjectControl::AddObject(): " 
             << objTypeName << " \""<< name << "\" has existed." <<endl;
         delete __obj;
@@ -18,7 +18,6 @@ bool CObjectControl::AddObject(string name, string objTypeName, string filename)
     }
 
     if (objTypeName == "Font") __obj = CFont::Create(filename.c_str());
-    //else if (objTypeName == "Background") __obj = CImageBaseClass::Create(filename.c_str());
 
     if (__obj != NULL){
         _objectList[objTypeName+":"+name] = __obj;
