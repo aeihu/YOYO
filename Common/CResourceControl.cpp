@@ -46,30 +46,25 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
     Array __array = json.get<Array>(colName);
     
     for (size_t i=0; i<__array.size(); i++){
-        if (objTypeName == "Font"){
-            if (__array.get<Object>(i).get<bool>("isdelete"))
+        if (__array.get<Object>(i).get<bool>("isdelete")){
+            if (objTypeName == "Font"){
                 _ObjectControl.DelObject(__array.get<Object>(i).get<String>("name"));
-        }
-        else if (objTypeName == "Voice"){
-            if (__array.get<Object>(i).get<bool>("isdelete"))
+            }
+            else if (objTypeName == "Voice"){
                 _SoundControl.DeleteVoice(__array.get<Object>(i).get<String>("name"));
-        }
-        else if (objTypeName == "Se"){
-            if (__array.get<Object>(i).get<bool>("isdelete"))
+            }
+            else if (objTypeName == "Se"){
                 _SoundControl.DeleteSE(__array.get<Object>(i).get<String>("name"));
-        }
-        else if (objTypeName == "Camera"){
-            if (__array.get<Object>(i).get<bool>("isdelete"))
+            }
+            else if (objTypeName == "Camera"){
                 _CameraControl.DelCamera(__array.get<Object>(i).get<String>("name"));
-        }
-        else if (objTypeName == "Music"){
-            ///////////////////////
-            //////////////////////
-            /////////////////////
-        }
-        else{
-            if (__array.get<Object>(i).get<bool>("isdelete"))
+            }
+            else if (objTypeName == "Music"){
+                _SoundControl.DelBgm(__array.get<Object>(i).get<String>("name"));
+            }
+            else{
                 _DrawableObjectControl.DelDrawableObject(__array.get<Object>(i).get<String>("name"));
+            }
         }
     }
 
@@ -92,7 +87,6 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
     Array& __array = json.get<Array>(colName);
 
     string __path;
-    //string __assetName;
     
     for (size_t i=0; i<__array.size(); i++){
         __path = __array.get<Object>(i).get<String>("path");
@@ -150,8 +144,6 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
         }
     }
 
-    
-    //string __ssss = json.json();//////////////////////////////
     if (__array.size() < 1)
         return 0;
 
@@ -373,9 +365,6 @@ void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
     
     if (_EffectObjCtrlEnable)
         _EffectObjectControl.OnRender(Surf_Dest);
-    //unsigned long l = CCommon::_Common.GetTicks();
-
-    //cout << "time: " << CCommon::_Common.GetTicks()-l <<endl;
 }
 
 void CResourceControl::OnCleanup()
