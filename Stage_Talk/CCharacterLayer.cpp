@@ -11,7 +11,7 @@
 #include "../Common/Cio.h"
 #include "../Common/CResourceControl.h"
 
-CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
+CCharacterLayer::CCharacterLayer(float x, float y):CImgLayer(x,y)
 {
     _isFaceEnable = false;
     _framesOfMouth._Type = CAnimation::Oscillate;
@@ -39,8 +39,10 @@ void CCharacterLayer::SetVoice(string name)
     _currcentVoice = name;
 }
 
-bool CCharacterLayer::OnSubLoop()
+bool CCharacterLayer::OnLoop()
 {
+    bool __result = CImgLayer::OnLoop();
+
     if (_visible){
         if (_isFaceEnable){
             _framesOfMouth.OnLoop();
@@ -70,7 +72,7 @@ bool CCharacterLayer::OnSubLoop()
         }
     }
 
-    return false;
+    return __result;
 }
 
 bool CCharacterLayer::CheckList(Object json) 
@@ -214,6 +216,6 @@ bool CCharacterLayer::SetFace(string name)
 
 void CCharacterLayer::OnSaveData(Object& json) const
 {
-    CImageBaseClass::OnSaveData(json);
+    CImgLayer::OnSaveData(json);
     json << "face" << _currcentFace;
 }

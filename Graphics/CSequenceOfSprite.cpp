@@ -8,7 +8,7 @@
 
 #include "CSequenceOfSprite.h"
 
-CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int width, int height):CImageBaseClass(x,y)
+CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int width, int height):CImgLayer(x,y)
 {
     _rect.top = left;
     _rect.left = top;
@@ -18,7 +18,7 @@ CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int wi
 
 bool CSequenceOfSprite::LoadImg(const char* filename)
 {
-    if (CImageBaseClass::LoadImg(filename)){
+    if (CImgLayer::LoadImg(filename)){
         SetCurrentImageFrame(0);
         return true;
     }
@@ -68,23 +68,18 @@ int CSequenceOfSprite::GetHeight()
     return _rect.height;
 }
 
-bool CSequenceOfSprite::OnSubLoop()
+bool CSequenceOfSprite::OnLoop()
 {
-    //bool __result = CImageBaseClass::OnLoop();
+    bool __result = CImgLayer::OnLoop();
     if (GetEnable()){
         SetCurrentImageFrame(GetCurrentFrame());
         OnAnimate(CCommon::_Common.GetTicks());
     }
 
-    return false;
+    return __result;
 }
 void CSequenceOfSprite::TurnOff(int frame)
 {
     CAnimation::TurnOff(frame);
     SetCurrentImageFrame(GetCurrentFrame());
 }
-//void CSequenceOfSprite::SetPosition(float x, float y)
-//{
-//    SetPosition(x, y);
-//    _sprite.setPosition(x,y);
-//}

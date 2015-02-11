@@ -230,7 +230,7 @@ bool CParticleSystem::SetProperty(Object json)
         
 void CParticleSystem::OnSaveData(Object& json) const
 {
-    CObject::OnSaveData(json);
+    CImageBaseClass::OnSaveData(json);
     json << "layer_order" << GetLayerOrder();
     json << "enable" << _enable;
 }

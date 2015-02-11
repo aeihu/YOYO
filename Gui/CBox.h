@@ -10,12 +10,12 @@
     #define _CBOX_H_
 
 #include "../Graphics/CSurface.h"
-#include "../Graphics/CImageBaseClass.h"
 #include "../Common/CCommon.h"
 #include "CGuiCommon.h"
 #include "../Common/CConfigFile.h"
+#include "../Stage_Talk/CImgLayer.h"
 
-class CBox : public CImageBaseClass, public CConfigFile
+class CBox : public CImgLayer, public CConfigFile
 {
     private:
     protected:

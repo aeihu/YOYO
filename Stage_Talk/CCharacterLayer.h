@@ -9,7 +9,7 @@
 #ifndef _CCHARACTERLAYER_H_
     #define _CCHARACTERLAYER_H_
 
-#include "../Graphics/CImageBaseClass.h"
+#include "CImgLayer.h"
 #include "../Common/CConfigFile.h"
 #include "../Graphics/CSequenceOfFrames.h"
 #include "../Sound/CSoundBank.h"
@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class CCharacterLayer : public CImageBaseClass, public CConfigFile
+class CCharacterLayer : public CImgLayer, public CConfigFile
 {
   private:
         Object                  _faceList;
@@ -41,7 +41,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
 
         void SetVoice(string name);
         
-        bool OnSubLoop();
+        bool OnLoop();
         virtual void OnSaveData(Object& json) const;
        // void OnRender(sf::RenderTarget* Surf_Dest);
 };

@@ -8,7 +8,7 @@
 
 #include "CBox.h"
 
-CBox::CBox(float x, float y):CImageBaseClass(x,y)
+CBox::CBox(float x, float y):CImgLayer(x,y)
 {
 }
 

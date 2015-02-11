@@ -29,8 +29,8 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
 {
     CImageBaseClass* __obj = NULL;
 
-    if (objTypeName == "Img") __obj = CImageBaseClass::Create(filename.c_str());
-    else if (objTypeName == "Background") __obj = CImageBaseClass::Create(filename.c_str());
+    if (objTypeName == "Img") __obj = CImgLayer::Create(filename.c_str());
+    else if (objTypeName == "Background") __obj = CImgLayer::Create(filename.c_str());
     else if (objTypeName == "Button") __obj = CButton::Create(filename.c_str());
     else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(filename.c_str());
     else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());

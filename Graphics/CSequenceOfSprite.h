@@ -8,16 +8,16 @@
 #ifndef _CSEQUENCEOFSPRITE_H_
     #define _CSEQUENCEOFSPRITE_H_
 
-#include "CImageBaseClass.h"
+#include "../Stage_Talk/CImgLayer.h"
 #include "../Animation/CAnimation.h"
 
-class CSequenceOfSprite : public CImageBaseClass, public CAnimation
+class CSequenceOfSprite : public CImgLayer, public CAnimation
 {
     private:
         sf::IntRect        _rect;
     public:
-        using CImageBaseClass::_image;
-        using CImageBaseClass::_sprite;
+        using CImgLayer::_image;
+        using CImgLayer::_sprite;
 
         CSequenceOfSprite(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);
@@ -30,7 +30,7 @@ class CSequenceOfSprite : public CImageBaseClass, public CAnimation
         int GetHeight();
         void TurnOff(int frame = 0);
 
-        bool OnSubLoop();
+        bool OnLoop();
 };
 
 #endif

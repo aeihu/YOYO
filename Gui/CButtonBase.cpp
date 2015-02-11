@@ -54,12 +54,10 @@ bool CButtonBase::OnLButtonUp(int x, int y)
     return false;
 }
 
-bool CButtonBase::OnSubLoop()
+bool CButtonBase::OnLoop()
 {
-    //bool __result = CImageBaseClass::OnLoop();
-
     if (!_isMouseDown){
-        return CSequenceOfSprite::OnSubLoop();
+        return CSequenceOfSprite::OnLoop();
     }
 
     return false;

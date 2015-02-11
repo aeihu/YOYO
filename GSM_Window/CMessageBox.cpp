@@ -138,8 +138,9 @@ bool CMessageBox::CheckList(Object json)
     return result;
 }
 
-bool CMessageBox::OnSubLoop()
+bool CMessageBox::OnLoop()
 {
+    bool __result = CBox::OnLoop();
     _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
@@ -163,11 +164,12 @@ bool CMessageBox::OnSubLoop()
     }
 
     CTextProcessing::OnLoop();
-    return _isPaused || !IsTextAllShown();
+    return __result || _isPaused || !IsTextAllShown();
 }
 
-void CMessageBox::OnSubRender(sf::RenderTarget* Surf_Dest)
+void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
+    CBox::OnRender(Surf_Dest);
     _speakerName.setOrigin(-2.0f, -2.0f);
     _speakerName.setColor(GetShadowColor());
     Surf_Dest->draw(_speakerName);

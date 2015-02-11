@@ -45,7 +45,7 @@ class CMessageBox : public CBox , public CTextProcessing
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
-        bool OnSubLoop();
-        void OnSubRender(sf::RenderTarget* Surf_Dest);
+        bool OnLoop();
+        void OnRender(sf::RenderTarget* Surf_Dest);
 };
 #endif

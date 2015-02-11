@@ -589,14 +589,15 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
         return false;
     }
 
-    CImageBaseClass* __obj = NULL;
-    __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]);
+    CImgLayer* __obj = NULL;
+    __obj = static_cast<CImgLayer*>(
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]));
 
     if (__obj){
         if (flipx)
-            act->AddAction(new CClassFuncOfAction<CImageBaseClass>(__obj, &CImageBaseClass::FlipX));
+            act->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipX));
         else
-            act->AddAction(new CClassFuncOfAction<CImageBaseClass>(__obj, &CImageBaseClass::FlipY));
+            act->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipY));
 
         return true;
     }

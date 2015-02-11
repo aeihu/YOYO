@@ -27,30 +27,13 @@ class CImageBaseClass : public CBaiscProperties
     private:
         unsigned char                     _layerOrder;
         char                              _flag;
-        float                             _alpha;
-        list<CImageBaseClass*>            _childrenList;
-        CImageBaseClass*                  _baseNode;
-
-        void Flip();
-        friend bool CImageBaseClass::SetBaseNode(CImageBaseClass* baseNode);
-        bool SetBaseNode(CImageBaseClass* baseNode);
     protected:
-        sf::Texture                       _image;
-        sf::Sprite                        _sprite;
         bool                              _visible;
-        bool                              _flipX;
-        bool                              _flipY;
         sf::Vector2f                      _origin;
-
-        virtual bool LoadImg(const char* filename);
+        float                             _alpha;
     public:
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
-
-        virtual void FlipX();
-        virtual void FlipY();
-
-        virtual bool AddChildNode(CImageBaseClass* child);
 
         virtual const float& GetAlpha() const;
         virtual void SetAlpha(int alpha);
@@ -70,8 +53,7 @@ class CImageBaseClass : public CBaiscProperties
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
         virtual char GetLayerOrder() const;
-        virtual const sf::Vector2f& GetGlobalPosition() const;
-        static CImageBaseClass* Create(const char* filename);
+ 
         virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
         virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
         
@@ -83,11 +65,8 @@ class CImageBaseClass : public CBaiscProperties
         virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore, bool pause);
         virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore, bool pause);
 
-        virtual void OnRender(sf::RenderTarget* Surf_Dest);
-        virtual void OnSubRender(sf::RenderTarget* Surf_Dest){}
-
-        virtual bool OnLoop();
-        virtual bool OnSubLoop(){return false;}
+        virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
+        virtual bool OnLoop()=0;
 
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}
