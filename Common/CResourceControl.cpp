@@ -62,6 +62,9 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
             else if (objTypeName == "Music"){
                 _SoundControl.DelBgm(__array.get<Object>(i).get<String>("name"));
             }
+            else if (objTypeName == "Text"){
+                _DrawableObjectControl.DelDrawableObject(__array.get<Object>(i).get<String>("name"));
+            }
             else{
                 _DrawableObjectControl.DelDrawableObject(__array.get<Object>(i).get<String>("name"));
             }
@@ -92,7 +95,7 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
         __path = __array.get<Object>(i).get<String>("path");
         string& __assetName = __array.get<Object>(i).get<String>("name");
 
-        cout << "CResourceControl::CheckIn():Loading '" << __path << "'" << endl;
+        cout << "CResourceControl::CheckIn():Loading '" << __assetName << "':'" << __path << "'" << endl;
 
         if (objTypeName == "Font"){
             if (!_ObjectControl.AddObject(__assetName,
@@ -133,6 +136,15 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 __path))
                 return -2;
         }
+        else if (objTypeName == "Text"){
+            if (!_DrawableObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __path))
+                return -2;
+
+            __assetName = objTypeName + ":" + __assetName;
+        }
         else{
             if (!_DrawableObjectControl.AddDrawableObject(
                 __assetName, 
@@ -170,12 +182,28 @@ bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
         Array __array = src.get<Array>(colName);
         Array __arrayResult;
 
-        for (size_t i=0; i<__array.size(); i++){
-            Object __obj;
-            __obj << "name" << GetNameInFilename(__array.get<String>(i));
-            __obj << "path" << __array.get<String>(i);
-            __obj << "isdelete" << true;
-            __arrayResult << __obj;
+        if (colName == "text"){
+            for (size_t i=0; i<__array.size(); i++){
+                if (__array.get<Object>(i).has<String>("name")
+                    &&
+                    __array.get<Object>(i).has<String>("font")){
+
+                    Object __obj;
+                    __obj << "name" << __array.get<Object>(i).get<String>("name");
+                    __obj << "path" << __array.get<Object>(i).get<String>("font");
+                    __obj << "isdelete" << true;
+                    __arrayResult << __obj;
+                }
+            }
+        }
+        else{
+            for (size_t i=0; i<__array.size(); i++){
+                Object __obj;
+                __obj << "name" << GetNameInFilename(__array.get<String>(i));
+                __obj << "path" << __array.get<String>(i);
+                __obj << "isdelete" << true;
+                __arrayResult << __obj;
+            }
         }
 
         des << colName << __arrayResult;
@@ -204,6 +232,7 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     JsonProcess(__json, obj, "cg");
     JsonProcess(__json, obj, "voice");
     JsonProcess(__json, obj, "music");
+    JsonProcess(__json, obj, "text");
 
     if (__json.has<String>("main_script"))
         obj << "main_script" << __json.get<String>("main_script");
@@ -220,6 +249,7 @@ bool CResourceControl::OnInit(string filename)
         return false;
     
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "image_for_loading", "LoadingImg") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "Img") < 0) return false;
@@ -246,9 +276,9 @@ void CResourceControl::Compare(Object& src, Object& des, string colName)
     if (src.has<Array>(colName) && des.has<Array>(colName)){
         for (size_t i=0; i < src.get<Array>(colName).size(); i++){
             for (size_t j=0; j < des.get<Array>(colName).size(); j++){
-                if (src.get<Array>(colName).get<Object>(i).get<String>("path")
+                if (src.get<Array>(colName).get<Object>(i).get<String>("name")
                     == 
-                    des.get<Array>(colName).get<Object>(j).get<String>("path")){
+                    des.get<Array>(colName).get<Object>(j).get<String>("name")){
                     
                     bool& __isDelete = des.get<Array>(colName).get<Object>(j).get<bool>("isdelete");
                     __isDelete = false;
@@ -275,6 +305,7 @@ void CResourceControl::LoadAsset()
             Compare(__obj, _script, "camera");
             Compare(__obj, _script, "music");
             
+            CheckOut(_script, "text", "Text");
             CheckOut(_script, "character","CharacterLayer");
             CheckOut(_script, "background","Background");
             CheckOut(_script, "cg","Img");
@@ -288,6 +319,8 @@ void CResourceControl::LoadAsset()
         
         _script = __obj;
         _script << "filename" << _fileNameOfScript;
+
+        CheckIn(_script, "text", "Text");
         CheckIn(_script, "character","CharacterLayer");
         CheckIn(_script, "background","Background");
         CheckIn(_script, "cg","Img");

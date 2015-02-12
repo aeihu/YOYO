@@ -17,6 +17,9 @@ CSoundBank::CSoundBank() {
 //------------------------------------------------------------------------------
 int CSoundBank::AddBuffer(map<string, sf::SoundBuffer*>& bufList, string name, string filename)
 {
+    if (bufList.count(name) > 0)
+        return -1;
+
     sf::SoundBuffer* __buffer = new sf::SoundBuffer();
 
     if (filename.find("*") == string::npos){

@@ -11,6 +11,7 @@
 #include "../Stage_Talk/CCharacterLayer.h"
 #include "../Sound/CSoundBank.h"
 #include "../Gui/CButton.h"
+#include "../Gui/CText.h"
 #include "../Stage_Talk/CCharacterLayer.h"
 #include "../Effect/CParticleSystem.h"
 #include "../GSM_Window/CLogBox.h"
@@ -22,11 +23,15 @@ bool CDrawableObjectControl::IsExists(string name)
             return true;
     }
 
-    return false;//_objectList.count(name) > 0;
+    return false;
 }
 
 bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, string filename)
 {
+    if (IsExists(objTypeName+":"+name)){
+        return false;
+    }
+
     CImageBaseClass* __obj = NULL;
 
     if (objTypeName == "Img") __obj = CImgLayer::Create(filename.c_str());
@@ -36,15 +41,21 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
     else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(filename.c_str());
     else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
+    else if (objTypeName == "Text"){ 
+        __obj = CText::Create();
+        CText* __txt = static_cast<CText*>(__obj);
+        
+        CFont* __fnt = NULL;
+        CObject* __object = 
+            CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:"+filename);
+   
+        if (__object != NULL){
+            __fnt = static_cast<CFont*>(__object);
+            __txt->SetFont(__fnt->GetFont());
+        }
+    }
 
     if (__obj != NULL){
-        if (IsExists(objTypeName+":"+name)){
-            cout << "CResourceControl::AddDrawableObject(): " 
-                << objTypeName << " \""<< name << "\" has existed." <<endl;
-            delete __obj;
-            return false;
-        }
-
         _drawableObjectList.push_back(make_pair(objTypeName+":"+name, __obj));
         _isNeedSort = true;
         return true;

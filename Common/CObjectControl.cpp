@@ -8,15 +8,13 @@ bool CObjectControl::IsExists(string name)
 
 bool CObjectControl::AddObject(string name, string objTypeName, string filename)
 {
-    CObject* __obj = NULL;
-
     if (_objectList.count(objTypeName+":"+name) > 0){
-        cout << "CObjectControl::AddObject(): " 
-            << objTypeName << " \""<< name << "\" has existed." <<endl;
-        delete __obj;
+        //cout << "CObjectControl::AddObject(): " 
+        //    << objTypeName << " \""<< name << "\" has existed." <<endl;
         return false;
     }
-
+    
+    CObject* __obj = NULL;
     if (objTypeName == "Font") __obj = CFont::Create(filename.c_str());
 
     if (__obj != NULL){

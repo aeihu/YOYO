@@ -59,11 +59,6 @@ void CTextProcessing::Clear()
 
 void CTextProcessing::SetText(string msg)
 {
-    //if (isAppend){
-    //    if (!_textOfShown.empty())
-    //        _textOfShown += "\n\n";
-    //}
-    //else
     _textOfShown = "";
     _length =
     _index = 0;

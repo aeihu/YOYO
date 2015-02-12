@@ -38,14 +38,8 @@ class CCommon
         string GAME_ICON;
         string GAME_SYSDATA;
 
-        //bool APPLY_ALPHA;
-
         int MAX_FPS;
-        //int COLOR_KEY_RED;
-        //int COLOR_KEY_GREEN;
-        //int COLOR_KEY_BLUE;
 
-        //size_t INCREMENT;//    25
         size_t INTERVAL;//    25
 
         //<config>
@@ -54,15 +48,15 @@ class CCommon
         int  WHEIGHT;//        600
         int  FONT_SIZE;//   16
         //string  FONT_PATH;//   "C://WINDOWS//Fonts//MSGOTHIC.TTC"
-        char   CHAR_COLOR_RED;
-        char   CHAR_COLOR_GREEN;
-        char   CHAR_COLOR_BLUE;
-        char   CHAR_COLOR_ALPHA;//10
+        unsigned char   CHAR_COLOR_RED;
+        unsigned char   CHAR_COLOR_GREEN;
+        unsigned char   CHAR_COLOR_BLUE;
+        unsigned char   CHAR_COLOR_ALPHA;//10
         //char   FONT_SHADOW;//10
-        char   CHAR_SHADOW_COLOR_RED ;//10
-        char   CHAR_SHADOW_COLOR_GREEN ;//10
-        char   CHAR_SHADOW_COLOR_BLUE ;//10
-        char   CHAR_SHADOW_COLOR_ALPHA ;//10
+        unsigned char   CHAR_SHADOW_COLOR_RED ;//10
+        unsigned char   CHAR_SHADOW_COLOR_GREEN ;//10
+        unsigned char   CHAR_SHADOW_COLOR_BLUE ;//10
+        unsigned char   CHAR_SHADOW_COLOR_ALPHA ;//10
         
         unsigned char   SOUND_POOL_NUM ;//5
         unsigned char   VOICE_POOL_NUM ;//3
