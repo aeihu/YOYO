@@ -42,7 +42,7 @@ bool CActionSet::DeleteAct(string name)
                 if (name == (*it)->GetName()){
                     (*it)->OnCleanup();
                     delete (*it);
-                    (*it) == NULL;
+                    (*it) = NULL;
                     it = _actionList.erase(it);
                 }
                 else
