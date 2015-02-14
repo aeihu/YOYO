@@ -361,7 +361,8 @@ bool CResourceControl::LoadScript(string filename)
             __seq->AddAction(__img->CreateActionOfAlphaTo(500,255,false,true));
             __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
             _ActionControl.AddAction(__seq);
-            _EffectObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
+            __img->SetLayerOrder(120);
+            //_EffectObjectControl.SetDrawableObjectLayerOrder(_nameOfLoadingImg, 120);
         }
     }
 
