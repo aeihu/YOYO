@@ -21,6 +21,11 @@ CText::CText()
     _shadowColor.a = CCommon::_Common.CHAR_SHADOW_COLOR_ALPHA;
 }
         
+sf::Color CText::GetColor() const
+{
+    return _textColor;
+}
+
 void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
 {
     _textColor.r = r;
@@ -29,15 +34,40 @@ void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
 
     _sfText.setColor(_textColor);
 }
+        
+void CText::SetColor(vector<string> args)
+{
+    if (args.size() < 3){
+        SetColor(
+            atoi(args[0].c_str()),
+            atoi(args[1].c_str()),
+            atoi(args[2].c_str()));
+    }
+}
+        
 
 void CText::SetString(string str)
 {
-    _sfText.setString(str);
+    CTextFunction::SetString(_sfText, str);
+}
+        
+void CText::SetString(vector<string> args)
+{
+    if (args.size() < 1){
+        SetString(args[0]);
+    }
 }
         
 void CText::SetCharacterSize(size_t size)
 {
     _sfText.setCharacterSize(size);
+}
+
+void CText::SetCharacterSize(vector<string> args)
+{
+    if (args.size() < 1){
+        SetCharacterSize(atoi(args[0].c_str()));
+    }
 }
 
 CText* CText::Create()
@@ -49,14 +79,49 @@ CText* CText::Create()
     return __text;
 }
 
-void CText::SetFont(sf::Font& font)
+void CText::SetFont(string name)
 {
-    _sfText.setFont(font);
+    CFont* __fnt = NULL;
+    CObject* __object = 
+        CResourceControl::_ResourceManager._ObjectControl.GetObject(name);
+   
+    if (__object != NULL){
+        __fnt = static_cast<CFont*>(__object);
+         _sfText.setFont(__fnt->GetFont());
+    }
+}
+
+void CText::SetFont(vector<string> args)
+{
+    if (args.size() < 1){
+        SetFont(args[0]);
+    }
 }
         
 void CText::SetStyle(size_t flag)
 {
     _sfText.setStyle(flag);
+}
+        
+void CText::SetStyle(vector<string> args)
+{
+    if (args.size() < 1){
+        size_t __flag = 0;
+
+        for (size_t i=0; i<args.size(); i++){
+            if (args[i] == "-sb")
+                __flag |= sf::Text::Bold;
+            else if (args[i] == "-si")
+                __flag |= sf::Text::Italic;
+            else if (args[i] == "-su")
+                __flag |= sf::Text::Underlined;
+            else if (args[i] == "-ss")
+                __flag |= sf::Text::StrikeThrough;
+            else if (args[i] == "-sr")
+                __flag = sf::Text::Regular;
+        }
+        SetStyle(__flag);
+    }
 }
 
 bool CText::OnLoop()

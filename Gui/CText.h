@@ -11,6 +11,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "../Graphics/CImageBaseClass.h"
+#include "../Text/CFont.h"
+#include "../Text/CTextFunction.h"
+#include "../Common/CResourceControl.h"
 
 class CText : public CImageBaseClass
 {
@@ -28,11 +31,23 @@ class CText : public CImageBaseClass
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual bool OnLoop();
         
-        void SetFont(sf::Font& font);
+        sf::Color GetColor() const;
+
+        void SetFont(string name);
+        void SetFont(vector<string> args);
+
         void SetStyle(size_t flag);
+        void SetStyle(vector<string> args);
+
         void SetString(string str);
+        void SetString(vector<string> args);
+
         void SetCharacterSize(size_t size);
+        void SetCharacterSize(vector<string> args);
+
         void SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b); 
+        void SetColor(vector<string> args);
+
 };
 
 #endif
