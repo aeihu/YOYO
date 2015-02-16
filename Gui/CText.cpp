@@ -132,11 +132,7 @@ bool CText::OnLoop()
     _visible = _alpha > 0 ? true : false;
 
     if (_sfText.getColor().a != _alpha)
-        _sfText.setColor(sf::Color(
-            _sfText.getColor().r,
-            _sfText.getColor().g,
-            _sfText.getColor().b,
-            _alpha));
+        _shadowColor.a = _textColor.a = _alpha;
 
     if (_visible){
         if (_coordinate != _sfText.getPosition())
