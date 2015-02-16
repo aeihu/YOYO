@@ -74,30 +74,30 @@ void CCamera::UnBind()
 bool CCamera::OnLoop()
 {
     bool __result = false;
-    bool isChanged = false;
+    bool __isChanged = false;
     
     if (_coordinate != _camera.getCenter()){
         _camera.setCenter(_coordinate.x, _coordinate.y);
-        isChanged = true;
+        __isChanged = true;
     }
 
     if (_rotation != _camera.getRotation()){
         _camera.setRotation(_rotation);
-        isChanged = true;
+        __isChanged = true;
     }
 
     if (_size != _camera.getSize()){
         _camera.setSize(_size);
-        isChanged = true;
+        __isChanged = true;
     }
 
     if (_zoom != _scale.x){
         _zoom = _scale.x;
         _camera.zoom(_scale.x);
-        isChanged = true;
+        __isChanged = true;
     }
 
-    if (isChanged && _window != NULL)
+    if (__isChanged && _window != NULL)
         _window->setView(_camera);
     
     return __result;
@@ -171,7 +171,7 @@ bool CCamera::SetProperty(Object json)
     }
 
     if (json.has<Number>("HEIGHT")){
-        __h = json.get<Number>("WIDTH");
+        __h = json.get<Number>("HEIGHT");
     }
 
     Reset(json.get<Number>("X"), json.get<Number>("Y"), __w, __h);

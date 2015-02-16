@@ -14,6 +14,8 @@
 class CDrawableObjectControl
 {
     private:
+        friend void CImageBaseClass::SetLayerOrder(char order);
+
         struct CCmp{
             bool operator()(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
             {
@@ -33,7 +35,7 @@ class CDrawableObjectControl
         bool AddDrawableObject(string name, string objTypeName, string filename);
         bool DelDrawableObject(string name);
         CImageBaseClass* GetDrawableObject(string name);
-        bool SetDrawableObjectLayerOrder(string name, char layer);
+        //bool SetDrawableObjectLayerOrder(string name, char layer);
 
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);

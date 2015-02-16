@@ -464,6 +464,7 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
         __flags.push_back(pair<string, ENUM_FLAG>("-z", FLAG_NECESSITY));
     }
     else{
+        __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));
         __flags.push_back(pair<string, ENUM_FLAG>("-x", FLAG_OPTIONAL));    //x
         __flags.push_back(pair<string, ENUM_FLAG>("-y", FLAG_OPTIONAL));    //y
     }
@@ -491,14 +492,20 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
         __flag |= 0x1;
     }
     else{
-        if (__values.count("-x") > 0){
-            __x = atof(__values["-x"][0].c_str());
-            __flag |= 0x1;
+        if (__values.count("-s") > 0){
+            __x = __y = atof(__values["-s"][0].c_str());
+            __flag = 3;
         }
+        else{
+            if (__values.count("-x") > 0){
+                __x = atof(__values["-x"][0].c_str());
+                __flag |= 0x1;
+            }
 
-        if (__values.count("-y") > 0){
-            __y = atof(__values["-y"][0].c_str());
-            __flag |= 0x2;
+            if (__values.count("-y") > 0){
+                __y = atof(__values["-y"][0].c_str());
+                __flag |= 0x2;
+            }
         }
         
         if (__flag == 0){
@@ -649,7 +656,6 @@ bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
     }
 
     string& __name = args[0];
-    //string __face = args[1];
     vector<string> __args;
     __args.push_back(args[1]);
 
@@ -664,12 +670,6 @@ bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
     act->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetFace, __args));
         
     return true;
-    //if (__chara->SetFace(__face))
-    //    return true;
-    //else{
-    //    cout << "Cmd_SetFaceCharacterLayer(): can't find face layer \""<< __face << "\"." <<endl;
-    //    return false;
-    //}
 }
 
 bool Cmd_SetCharacterLayerOrder(vector<string>& args, CActionSet* act)

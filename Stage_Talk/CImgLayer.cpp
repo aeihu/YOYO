@@ -56,17 +56,6 @@ const sf::Vector2f& CImgLayer::GetGlobalPosition() const
     return _sprite.getPosition();
 }
 
-void CImgLayer::SetScale(float x, float y)
-{
-    _scale.x = x;
-    _scale.y = y;
-
-    if (x > 1.0f || y > 1.0f)
-        _image.setSmooth(true);
-    else
-        _image.setSmooth(false);
-}
-
 bool CImgLayer::LoadImg(const char* fileName)
 {
     if (fileName == NULL)
@@ -116,8 +105,14 @@ bool CImgLayer::OnLoop()
         if (_origin != _sprite.getOrigin())
             _sprite.setOrigin(_origin);
         
-        if (_scale != _sprite.getScale())
+        if (_scale != _sprite.getScale()){
+            if (_scale.x == 1.0f && _scale.y  == 1.0f)
+                _image.setSmooth(false);
+            else
+                _image.setSmooth(true);
+
             _sprite.setScale(_scale);
+        }
 
         if (_rotation != _sprite.getRotation())
             _sprite.setRotation(_rotation);

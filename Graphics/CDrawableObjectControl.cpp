@@ -44,15 +44,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     else if (objTypeName == "Text"){ 
         __obj = CText::Create();
         CText* __txt = static_cast<CText*>(__obj);
-        
-        CFont* __fnt = NULL;
-        CObject* __object = 
-            CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:"+filename);
-   
-        if (__object != NULL){
-            __fnt = static_cast<CFont*>(__object);
-            __txt->SetFont(__fnt->GetFont());
-        }
+        __txt->SetFont("Font:"+filename);
     }
 
     if (__obj != NULL){
@@ -90,17 +82,17 @@ CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
     return NULL;
 }
 
-bool CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
-{
-    for (size_t i=0; i<_drawableObjectList.size(); i++){
-        if (_drawableObjectList[i].first == name){
-            _drawableObjectList[i].second->SetLayerOrder(layer);
-            _isNeedSort = true;
-            return true;
-        }
-    }
-    return false;
-}
+//bool CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
+//{
+//    for (size_t i=0; i<_drawableObjectList.size(); i++){
+//        if (_drawableObjectList[i].first == name){
+//            _drawableObjectList[i].second->SetLayerOrder(layer);
+//            _isNeedSort = true;
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
 {

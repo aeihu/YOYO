@@ -40,11 +40,6 @@ class CImageBaseClass : public CBaiscProperties
         virtual void SetLayerOrder(char order);
         virtual void SetLayerOrder(vector<string> args);
 
-        virtual const sf::Vector2f& GetScale() const;
-        virtual void SetScale(float x, float y);
-        virtual void SetScaleX(float x);
-        virtual void SetScaleY(float y);
-
         virtual const sf::Vector2f& GetOrigin() const;
         virtual void SetOrigin(float x, float y);
         virtual void SetOriginX(float x);

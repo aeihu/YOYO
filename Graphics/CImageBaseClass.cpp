@@ -7,6 +7,7 @@
 */
 
 #include "CImageBaseClass.h"
+#include "../Common/CResourceControl.h"
 
 CImageBaseClass::CImageBaseClass(float x, float y)
 {
@@ -37,12 +38,13 @@ char CImageBaseClass::GetFlag() const
 void CImageBaseClass::SetLayerOrder(char order)
 {
     _layerOrder = order;
+    CResourceControl::_ResourceManager._DrawableObjectControl._isNeedSort = true;
 }
 
 void CImageBaseClass::SetLayerOrder(vector<string> args)
 {
     if (args.size() > 0)
-        _layerOrder = (unsigned char)atoi(args[0].c_str());
+        SetLayerOrder((unsigned char)atoi(args[0].c_str()));
 }
 
 void CImageBaseClass::SetAlpha(int alpha)
@@ -53,22 +55,6 @@ void CImageBaseClass::SetAlpha(int alpha)
         alpha = 0;
 
     _alpha = alpha;
-}
-
-void CImageBaseClass::SetScale(float x, float y)
-{
-    _scale.x = x;
-    _scale.y = y;
-}
-
-void CImageBaseClass::SetScaleX(float x)
-{
-    SetScale(x, _scale.y);
-}
-
-void CImageBaseClass::SetScaleY(float y)
-{
-    SetScale(_scale.x, y);
 }
 
 CSimultaneousOfAction* CImageBaseClass::CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore, bool pause)
@@ -105,11 +91,6 @@ CActionTo* CImageBaseClass::CreateActionOfOriginXTo(size_t elapsed, float x, boo
 CActionTo* CImageBaseClass::CreateActionOfOriginYTo(size_t elapsed, float y, bool restore, bool pause)
 {
     return new CActionTo(&_origin.y, elapsed, y, restore, pause);
-}
-        
-const sf::Vector2f& CImageBaseClass::GetScale() const
-{
-    return _scale;
 }
 
 const sf::Vector2f& CImageBaseClass::GetOrigin() const

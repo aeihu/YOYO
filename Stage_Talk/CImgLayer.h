@@ -38,7 +38,6 @@ class CImgLayer : public CImageBaseClass
         virtual void FlipY();
         virtual bool AddChildNode(CImgLayer* child);
         virtual const sf::Vector2f& GetGlobalPosition() const;
-        virtual void SetScale(float x, float y);
 
         virtual bool OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
