@@ -21,6 +21,7 @@ class CText : public CImageBaseClass
         sf::Text            _sfText;
         sf::Color           _textColor;
         sf::Color           _shadowColor;
+        bool                _shadowEnable;
     protected:
         
     public:

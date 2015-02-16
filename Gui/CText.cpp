@@ -19,6 +19,8 @@ CText::CText()
     _shadowColor.g = CCommon::_Common.CHAR_SHADOW_COLOR_GREEN;
     _shadowColor.b = CCommon::_Common.CHAR_SHADOW_COLOR_BLUE;
     _shadowColor.a = CCommon::_Common.CHAR_SHADOW_COLOR_ALPHA;
+
+    _shadowEnable = true;
 }
         
 sf::Color CText::GetColor() const
@@ -37,7 +39,7 @@ void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
         
 void CText::SetColor(vector<string> args)
 {
-    if (args.size() < 3){
+    if (args.size() > 0){
         SetColor(
             atoi(args[0].c_str()),
             atoi(args[1].c_str()),
@@ -53,7 +55,7 @@ void CText::SetString(string str)
         
 void CText::SetString(vector<string> args)
 {
-    if (args.size() < 1){
+    if (args.size() > 0){
         SetString(args[0]);
     }
 }
@@ -65,7 +67,7 @@ void CText::SetCharacterSize(size_t size)
 
 void CText::SetCharacterSize(vector<string> args)
 {
-    if (args.size() < 1){
+    if (args.size() > 0){
         SetCharacterSize(atoi(args[0].c_str()));
     }
 }
@@ -93,7 +95,7 @@ void CText::SetFont(string name)
 
 void CText::SetFont(vector<string> args)
 {
-    if (args.size() < 1){
+    if (args.size() > 0){
         SetFont(args[0]);
     }
 }
@@ -105,7 +107,7 @@ void CText::SetStyle(size_t flag)
         
 void CText::SetStyle(vector<string> args)
 {
-    if (args.size() < 1){
+    if (args.size() > 0){
         size_t __flag = 0;
 
         for (size_t i=0; i<args.size(); i++){
@@ -156,12 +158,15 @@ bool CText::OnLoop()
 void CText::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (_visible){
-        sf::Vector2f __tmp = _sfText.getOrigin();
-        _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
-        _sfText.setColor(_shadowColor);
-        Surf_Dest->draw(_sfText);
+        if (_shadowEnable){
+            sf::Vector2f __tmp = _sfText.getOrigin();
+            _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
+            _sfText.setColor(_shadowColor);
+            Surf_Dest->draw(_sfText);
 
-        _sfText.setOrigin(__tmp);
+            _sfText.setOrigin(__tmp);
+        }
+
         _sfText.setColor(_textColor);
         Surf_Dest->draw(_sfText);
     }
