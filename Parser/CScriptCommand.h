@@ -46,6 +46,15 @@ bool Cmd_FlipXImg(vector<string>& args, CActionSet* act);
 bool Cmd_FlipYImg(vector<string>& args, CActionSet* act);
 bool Cmd_OriginImg(vector<string>& args, CActionSet* act);
 
+bool Cmd_ShowText(vector<string>& args, CActionSet* act);
+bool Cmd_HideText(vector<string>& args, CActionSet* act);
+bool Cmd_MoveText(vector<string>& args, CActionSet* act);
+bool Cmd_ScaleText(vector<string>& args, CActionSet* act);
+bool Cmd_RotationText(vector<string>& args, CActionSet* act);
+bool Cmd_SetTextLayerOrder(vector<string>& args, CActionSet* act);
+bool Cmd_OriginText(vector<string>& args, CActionSet* act);
+bool Cmd_SetText(vector<string>& args, CActionSet* act);
+
 bool Cmd_PlayBGM(vector<string>& args, CActionSet* act);//(const char* filename);
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act);//();
 bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act);//();

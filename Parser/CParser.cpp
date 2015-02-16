@@ -97,6 +97,17 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
         else if (__commandName == "@flipx_img") _pFunc = &Cmd_FlipXImg;
         else if (__commandName == "@flipy_img") _pFunc = &Cmd_FlipYImg;
         else if (__commandName == "@origin_img") _pFunc = &Cmd_OriginImg;
+        
+        else if (__commandName == "@show_txt") _pFunc = &Cmd_ShowText;
+        else if (__commandName == "@hide_txt") _pFunc = &Cmd_HideText;
+        else if (__commandName == "@move_img") _pFunc = &Cmd_MoveText;
+        else if (__commandName == "@scale_txt") _pFunc = &Cmd_ScaleText;
+        else if (__commandName == "@rota_txt") _pFunc = &Cmd_RotationText;
+        else if (__commandName == "@order_txt") _pFunc = &Cmd_SetTextLayerOrder;
+        //else if (__commandName == "@flipx_txt") _pFunc = &Cmd_FlipXImg;
+        //else if (__commandName == "@flipy_txt") _pFunc = &Cmd_FlipYImg;
+        else if (__commandName == "@origin_txt") _pFunc = &Cmd_OriginText;
+        else if (__commandName == "@set_txt") _pFunc = &Cmd_SetText;
 
         else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
         else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;

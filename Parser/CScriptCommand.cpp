@@ -19,6 +19,7 @@
 #include <iostream>
 #include <algorithm>
 #include "../Action/CClassFuncArgsOfAction.h"
+#include "../Gui/CText.h"
 
 typedef enum{
     FLAG_NECESSITY = 1,
@@ -137,8 +138,9 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
             CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
 
         if (__values.count("-l") > 0){
-            CResourceControl::_ResourceManager._DrawableObjectControl.SetDrawableObjectLayerOrder(
-                objTypeName+":"+__name, atoi(__values["-l"][0].c_str()));
+            __obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
+            //CResourceControl::_ResourceManager._DrawableObjectControl.SetDrawableObjectLayerOrder(
+            //    objTypeName+":"+__name, atoi(__values["-l"][0].c_str()));
         }
 
         float* __x = &__obj->GetPosition().x;
@@ -557,7 +559,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
             << " argument(s) in the command." <<endl;
         return false;
     }
-   
+
     CImageBaseClass* __obj = NULL;
     __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]);
 
@@ -568,10 +570,9 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
 
         return true;
     }
-    else
-        cout << __funcName <<"(): " << objTypeName << " \""<< args[0] << "\" has no existed." <<endl;
-
-    return true;
+        
+    cout << __funcName <<"(): " << objTypeName << " \""<< args[0] << "\" has no existed." <<endl;
+    return false;
 }
 
 bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act, bool flipx = true)
@@ -799,6 +800,154 @@ bool Cmd_FlipYImg(vector<string>& args, CActionSet* act)
 bool Cmd_OriginImg(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfOrigin("Img", args, act);
+}
+
+bool Cmd_ShowText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfShow("Text", args, act);
+}
+
+bool Cmd_HideText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfHide("Text", args, act);
+}
+
+bool Cmd_MoveText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfMove("Text", args, act);
+}
+
+bool Cmd_ScaleText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScale("Text", args, act);
+}
+
+bool Cmd_RotationText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfRotation("Text", args, act);
+}
+
+bool Cmd_SetTextLayerOrder(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfLayerOrder("Text", args, act);
+}
+
+bool Cmd_OriginText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfOrigin("Text", args, act);
+}
+
+bool Cmd_SetText(vector<string>& args, CActionSet* act)
+{
+    if (args.size() < 1){
+        cout << "Cmd_SetText(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-f", FLAG_OPTIONAL));    //font
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));   //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //size
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //text
+    
+    __flags.push_back(pair<string, ENUM_FLAG>("-cr", FLAG_OPTIONAL));    //color red
+    __flags.push_back(pair<string, ENUM_FLAG>("-cg", FLAG_OPTIONAL));    //color green
+    __flags.push_back(pair<string, ENUM_FLAG>("-cb", FLAG_OPTIONAL));    //color blue
+
+    __flags.push_back(pair<string, ENUM_FLAG>("-sr", FLAG_NONPARAMETRIC));  //style regular 
+    __flags.push_back(pair<string, ENUM_FLAG>("-sb", FLAG_NONPARAMETRIC));  //style bold
+    __flags.push_back(pair<string, ENUM_FLAG>("-si", FLAG_NONPARAMETRIC));  //style italic
+    __flags.push_back(pair<string, ENUM_FLAG>("-su", FLAG_NONPARAMETRIC));  //style underlined
+    __flags.push_back(pair<string, ENUM_FLAG>("-ss", FLAG_NONPARAMETRIC));  //style strikeThrough 
+    
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_SetText", __flags, args, __values))
+        return false;
+    
+    string __name = __values["-n"][0];
+    
+    if (!CResourceControl::_ResourceManager._DrawableObjectControl.IsExists("Text:"+__name)){
+        cout << "Cmd_SetText(): can't find text \""<< __name << "\"." <<endl;
+        return false;
+    }
+    
+    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
+    vector<string> __args;
+    CText* __txt = static_cast<CText*>(
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("Text:"+__name));
+    
+    if (__values.count("-f") > 0){
+        __args.push_back(__values["-f"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetFont, __args));
+    }
+
+    if (__values.count("-s") > 0){
+        __args.clear();
+        __args.push_back(__values["-s"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetCharacterSize, __args));
+    }
+    
+    if (__values.count("-t") > 0){
+        __args.clear();
+        __args.push_back(__values["-t"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetString, __args));
+    }
+    
+    if (__values.count("-cr") > 0 ||
+        __values.count("-cg") > 0 ||
+        __values.count("-cb") > 0){
+        
+        sf::Color __color = __txt->GetColor();
+        
+        if (__values.count("-cr") > 0){
+            __color.r = atoi(__values["-cr"][0].c_str());
+        }
+
+        if (__values.count("-cg") > 0){
+            __color.g = atoi(__values["-cg"][0].c_str());
+        }
+
+        if (__values.count("-cb") > 0){
+            __color.b = atoi(__values["-cb"][0].c_str());
+        }
+
+        __args.clear();
+        __args.push_back(__values["-cr"][0]);
+        __args.push_back(__values["-cg"][0]);
+        __args.push_back(__values["-cb"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+    }
+
+    
+    if (__values.count("-sr") > 0 ||
+        __values.count("-sb") > 0 ||
+        __values.count("-si") > 0 ||
+        __values.count("-su") > 0 ||
+        __values.count("-ss") > 0){
+            
+        __args.clear();
+        if (__values.count("-sr") > 0){
+            __args.push_back("-sr");
+            __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+        }else{
+            if (__values.count("-sb") > 0)
+                __args.push_back("-sb");
+
+            if (__values.count("-si") > 0)
+                __args.push_back("-si");
+
+            if (__values.count("-su") > 0)
+                __args.push_back("-su");
+
+            if (__values.count("-ss") > 0)
+                __args.push_back("-ss");
+
+            __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+        }
+    }
+    act->AddAction(__sim);
+    return true;
 }
 
 bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
