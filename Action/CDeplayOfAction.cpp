@@ -11,7 +11,6 @@
 CDeplayOfAction::CDeplayOfAction(size_t delay)
 {
     _isRunning = false;
-    _pause = true;
     _delay = delay;
 }
 

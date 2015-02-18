@@ -119,7 +119,7 @@ const float& CImageBaseClass::GetAlpha() const
     return _alpha;
 }
 
-char CImageBaseClass::GetLayerOrder() const
+unsigned char CImageBaseClass::GetLayerOrder() const
 {
     return _layerOrder;
 }

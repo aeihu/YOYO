@@ -28,8 +28,7 @@ using namespace std;
 
 class CParser
 {
-    private:        
-        //vector<string>          _cmdList;
+    private:
         Array                   _cmdList;
         unsigned long           _delay;
         bool*                   _pRunning;
@@ -40,7 +39,6 @@ class CParser
         void ParserObject(Object& obj, CActionSet* act);
 
         bool (*_pFunc)(vector<string>&, CActionSet*);
-        //bool (*_pFunc)(vector<string>&);
     public:
         static CParser _Parser;
         CParser();

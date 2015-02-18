@@ -58,6 +58,8 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
         }
         cout << endl;
 #endif
+        if (act == NULL)
+            act = &CResourceControl::_ResourceManager._ActionControl;
 
         string __commandName = __listOfCmdPara[0];
         __listOfCmdPara.erase(__listOfCmdPara.begin());
@@ -151,7 +153,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
 
         else if (__commandName == "@deplay"){
             if (__listOfCmdPara.size() == 1){
-                if (act != &CResourceControl::_ResourceManager._ActionControl && act != NULL){
+                if (act != &CResourceControl::_ResourceManager._ActionControl){
                     act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[0].c_str())));
                 }
                 else{
@@ -265,7 +267,6 @@ void CParser::OnLoop()
             else if (_cmdList.has<Object>(_index)){
                 Object __obj = _cmdList.get<Object>(_index);
                 ParserObject(__obj, &CResourceControl::_ResourceManager._ActionControl);
-                
             }else{
                     cout << "error!" << endl;
             }

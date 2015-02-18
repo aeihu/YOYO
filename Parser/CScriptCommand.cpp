@@ -139,8 +139,6 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
 
         if (__values.count("-l") > 0){
             __obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
-            //CResourceControl::_ResourceManager._DrawableObjectControl.SetDrawableObjectLayerOrder(
-            //    objTypeName+":"+__name, atoi(__values["-l"][0].c_str()));
         }
 
         float* __x = &__obj->GetPosition().x;

@@ -47,7 +47,7 @@ class CImageBaseClass : public CBaiscProperties
 
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
-        virtual char GetLayerOrder() const;
+        virtual unsigned char GetLayerOrder() const;
  
         virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
         virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
