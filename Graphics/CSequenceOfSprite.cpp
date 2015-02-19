@@ -27,7 +27,7 @@ bool CSequenceOfSprite::LoadImg(const char* filename)
 
 void CSequenceOfSprite::SetCurrentImageFrame(int frame)
 {
-    size_t TilesetWidth  = _image.getSize().x / _rect.width;
+    size_t TilesetWidth  = _texture.getSize().x / _rect.width;
 
     if (TilesetWidth == 0)
         return;
@@ -68,16 +68,15 @@ int CSequenceOfSprite::GetHeight()
     return _rect.height;
 }
 
-bool CSequenceOfSprite::OnLoop()
+void CSequenceOfSprite::OnLoop()
 {
-    bool __result = CImgLayer::OnLoop();
+    CImgLayer::OnLoop();
     if (GetEnable()){
         SetCurrentImageFrame(GetCurrentFrame());
         OnAnimate(CCommon::_Common.GetTicks());
     }
-
-    return __result;
 }
+
 void CSequenceOfSprite::TurnOff(int frame)
 {
     CAnimation::TurnOff(frame);

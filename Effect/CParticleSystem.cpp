@@ -55,7 +55,7 @@ void CParticleSystem::SetEmitter(sf::Vector2f position)
     _emitter = position;
 }
 
-bool CParticleSystem::OnLoop()
+void CParticleSystem::OnLoop()
 {
     sf::Time elapsed = sf::milliseconds(11);
     if (_enable)
@@ -88,8 +88,6 @@ bool CParticleSystem::OnLoop()
         _particles[i-1]._Rectangle.setRotation(_ratio*_rotation*1000);
         _particles[i-1]._Rectangle.setFillColor(sf::Color(255,255,255,static_cast<sf::Uint8>(_ratio * 255)));
     }
-
-    return false;
 }
 
 void CParticleSystem::OnRender(sf::RenderTarget* Surf_Dest)
@@ -230,7 +228,6 @@ bool CParticleSystem::SetProperty(Object json)
         
 void CParticleSystem::OnSaveData(Object& json) const
 {
-    CImageBaseClass::OnSaveData(json);
-    json << "layer_order" << GetLayerOrder();
+    CDrawableClass::OnSaveData(json);
     json << "enable" << _enable;
 }

@@ -13,18 +13,24 @@
 
 class CImgLayer : public CImageBaseClass
 {
+    public:
+        enum ESubImageFlag{
+            FLAG_ALPHA = 1,
+            FLAG_SCALE = 2,
+            FLAG_ROTATION = 4,
+        };
+
     private:
+        char                        _flag;
         CImgLayer*                  _baseNode;
-        list<CImageBaseClass*>      _childrenList;
+        list<CImgLayer*>            _childrenList;
 
         friend bool CImgLayer::SetBaseNode(CImgLayer* baseNode);
         bool SetBaseNode(CImgLayer* baseNode);
         void Flip();
     protected:
-        sf::Texture         _image;
+        sf::Texture         _texture;
         sf::Sprite          _sprite;
-        bool                _flipX;
-        bool                _flipY;
 
         virtual bool LoadImg(const char* filename);
     public:
@@ -32,14 +38,18 @@ class CImgLayer : public CImageBaseClass
         ~CImgLayer(){};
         CImgLayer(float x, float y);
         
-        static CImgLayer* CImgLayer::Create(const char* filename);
+        static CImgLayer* Create(const char* filename);
         
         virtual void FlipX();
         virtual void FlipY();
-        virtual bool AddChildNode(CImgLayer* child);
-        virtual const sf::Vector2f& GetGlobalPosition() const;
 
-        virtual bool OnLoop();
+        virtual void SetFlag(char flag);
+        virtual char GetFlag() const;
+
+        virtual bool AddChildNode(CImgLayer* child);
+        const sf::Vector2f& GetGlobalPosition() const;
+
+        virtual void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
 };

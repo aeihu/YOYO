@@ -134,7 +134,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
         atof(__values["-i"][0].c_str());
 
     if (CResourceControl::_ResourceManager._DrawableObjectControl.IsExists(objTypeName+":"+__name)){
-        CImageBaseClass* __obj = 
+        CDrawableClass* __obj = 
             CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
 
         if (__values.count("-l") > 0){
@@ -191,7 +191,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL :
         atoi(__values["-i"][0].c_str());
 
-    CImageBaseClass* __obj = 
+    CDrawableClass* __obj = 
         CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
 
     if (__obj != NULL){
@@ -351,7 +351,8 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
     
     CImageBaseClass* __obj = NULL;
 
-    __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    __obj = static_cast<CImageBaseClass*>(
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name));
 
     if (__obj != NULL){
         switch (__flag)
@@ -565,13 +566,13 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
         return false;
     }
 
-    CImageBaseClass* __obj = NULL;
+    CDrawableClass* __obj = NULL;
     __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]);
 
     if (__obj){
         vector<string> __args;
         __args.push_back(args[1]);
-        act->AddAction(new CClassFuncArgsOfAction<CImageBaseClass>(__obj, &CImageBaseClass::SetLayerOrder, __args));
+        act->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CImageBaseClass::SetLayerOrder, __args));
 
         return true;
     }
@@ -1097,7 +1098,9 @@ bool Cmd_Message(vector<string>& args, CActionSet* act)
     string __speakerName = __values.count("-s") == 0 ? "" : __values["-s"][0];
     string __voice = __values.count("-v") == 0 ? "" : __values["-v"][0];
 
-    CImageBaseClass* __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:"+__msgBoxName);
+    CDrawableClass* __obj = 
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:"+__msgBoxName);
+
     if(__obj == NULL){
         cout << "Cmd_Message(): MessageBox \"" << __msgBoxName << "\" has no existed." <<endl;
         return false;

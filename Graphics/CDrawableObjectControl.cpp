@@ -32,7 +32,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
         return false;
     }
 
-    CImageBaseClass* __obj = NULL;
+    CDrawableClass* __obj = NULL;
 
     if (objTypeName == "Img") __obj = CImgLayer::Create(filename.c_str());
     else if (objTypeName == "Background") __obj = CImgLayer::Create(filename.c_str());
@@ -72,7 +72,7 @@ bool CDrawableObjectControl::DelDrawableObject(string name)
     return true;
 }
 
-CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
+CDrawableClass* CDrawableObjectControl::GetDrawableObject(string name)
 {
     for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name)
@@ -82,21 +82,9 @@ CImageBaseClass* CDrawableObjectControl::GetDrawableObject(string name)
     return NULL;
 }
 
-//bool CDrawableObjectControl::SetDrawableObjectLayerOrder(string name, char layer)
-//{
-//    for (size_t i=0; i<_drawableObjectList.size(); i++){
-//        if (_drawableObjectList[i].first == name){
-//            _drawableObjectList[i].second->SetLayerOrder(layer);
-//            _isNeedSort = true;
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
 bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
         if ((*it).second->OnLButtonUp(mX, mY))
             return true;
 
@@ -105,7 +93,7 @@ bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
 
 bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
 {
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
         if ((*it).second->OnLButtonDown(mX, mY))
             return true;
 
@@ -114,32 +102,30 @@ bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
 
 bool CDrawableObjectControl::OnMouseMove(int mX, int mY)
 {
-    //for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
-    //    if ((*it).second->OnLButtonDown(mX, mY))
-    //        return true;
+    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+        if ((*it).second->OnMouseMove(mX, mY))
+            return true;
 
     return false;
 }
 
-void CDrawableObjectControl::OnLoop(bool &pause)
+void CDrawableObjectControl::OnLoop()
 {
     if (_isNeedSort){
         std::sort(_drawableObjectList.begin(), _drawableObjectList.end(), _sort);
         _isNeedSort = false;
     }
 
-    vector<pair<string, CImageBaseClass*> >::iterator it;
-    for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ ){
-        if((*it).second->OnLoop()) 
-            pause=true;
-    }
+    vector<pair<string, CDrawableClass*> >::iterator it;
+    for ( it=_drawableObjectList.begin(); it !=_drawableObjectList.end(); it++ )
+        (*it).second->OnLoop();
 }
 
 void CDrawableObjectControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
     sf::View __tmpView = Surf_Dest->getView();
     bool __b = true;
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
+    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
             if ((*it).second->GetLayerOrder() < 100){
                 (*it).second->OnRender(Surf_Dest);
@@ -157,7 +143,7 @@ void CDrawableObjectControl::OnRender(sf::RenderTarget* Surf_Dest)
 
 void CDrawableObjectControl::OnCleanup()
 {
-    for (vector<pair<string, CImageBaseClass*> >::iterator it=_drawableObjectList.begin(); 
+    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
             delete (*it).second;
     }

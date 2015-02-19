@@ -36,13 +36,11 @@ CCamera* CCameraControl::GetCamera(string name)
     return NULL;
 }
 
-void CCameraControl::OnLoop(bool &pause)
+void CCameraControl::OnLoop()
 {
     map<string, CCamera*>::iterator it;
-    for ( it=_cameraList.begin(); it !=_cameraList.end(); it++ ){
-        if((*it).second->OnLoop()) 
-            pause=true;
-    }
+    for ( it=_cameraList.begin(); it !=_cameraList.end(); it++ )
+        (*it).second->OnLoop();
 }
 
 bool CCameraControl::UseCamera(string name)

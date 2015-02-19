@@ -335,7 +335,7 @@ void CResourceControl::LoadAsset()
         }
     }
 
-    CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
+    CDrawableClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
     if (__img != NULL){
         CSequenceOfAction* __seq = new CSequenceOfAction();
         __seq->AddAction(__img->CreateActionOfAlphaTo(500,0,false,true));
@@ -353,7 +353,7 @@ bool CResourceControl::LoadScript(string filename)
     if (_gameBaiscAsset.has<Array>("image_for_loading")){
         Array __imgs = _gameBaiscAsset.get<Array>("image_for_loading");
         _nameOfLoadingImg = __imgs.get<Object>(std::rand() % __imgs.size()).get<String>("name");
-        CImageBaseClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
+        CDrawableClass* __img = _EffectObjectControl.GetDrawableObject(_nameOfLoadingImg);
 
         if (__img != NULL){
             CSequenceOfAction* __seq = new CSequenceOfAction();
@@ -371,22 +371,19 @@ bool CResourceControl::LoadScript(string filename)
 
 void CResourceControl::OnLoop()
 {
-    bool __pause = false;
-    _CameraControl.OnLoop(__pause);
+    _CameraControl.OnLoop();
 
     if (_DrawableObjCtrlEnable)
-        _DrawableObjectControl.OnLoop(__pause);
+        _DrawableObjectControl.OnLoop();
 
     if (_EffectObjCtrlEnable)
-        _EffectObjectControl.OnLoop(__pause);
+        _EffectObjectControl.OnLoop();
 
     _SoundControl.OnLoop();
     
     _ActionControl.OnLoop();
-    if (_ActionControl.IsPause()) 
-        __pause = true;
 
-    if (__pause)
+    if (_ActionControl.IsPause())
         return;
     
     CParser::_Parser.OnLoop();

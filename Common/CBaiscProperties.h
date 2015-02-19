@@ -57,7 +57,7 @@ class CBaiscProperties : public CObject
         virtual CActionBy* CreateActionOfMoveXBy(size_t elapsed, float x, bool restore, bool pause);
         virtual CActionBy* CreateActionOfMoveYBy(size_t elapsed, float y, bool restore, bool pause);
 
-        virtual bool OnLoop()=0;
+        virtual void OnLoop()=0;
         virtual void OnSaveData(Object& json) const;
 };
 

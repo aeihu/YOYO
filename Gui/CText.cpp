@@ -27,6 +27,11 @@ sf::Color CText::GetColor() const
 {
     return _textColor;
 }
+        
+const sf::Vector2f& CText::GetGlobalPosition() const
+{
+    return _sfText.getPosition();
+}
 
 void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
 {
@@ -126,9 +131,8 @@ void CText::SetStyle(vector<string> args)
     }
 }
 
-bool CText::OnLoop()
+void CText::OnLoop()
 {
-    bool __result = false;
     _visible = _alpha > 0 ? true : false;
 
     if (_sfText.getColor().a != _alpha)
@@ -147,8 +151,6 @@ bool CText::OnLoop()
         if (_rotation != _sfText.getRotation())
             _sfText.setRotation(_rotation);
     }
-
-    return __result;
 }
 
 void CText::OnRender(sf::RenderTarget* Surf_Dest)

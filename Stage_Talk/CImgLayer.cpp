@@ -14,8 +14,9 @@ CImgLayer::CImgLayer()
     _baseNode = NULL;
     _flipX =
     _flipY = false;
-    _image.setSmooth(true);
+    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
+    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
 
 CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
@@ -24,8 +25,9 @@ CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
     _flipX =
     _flipY = false;
     _sprite.setPosition(x,y);
-    _image.setSmooth(true);
+    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
+    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
 
 void CImgLayer::Flip()
@@ -51,6 +53,16 @@ void CImgLayer::FlipY()
     Flip();
 }
 
+void CImgLayer::SetFlag(char flag)
+{
+    _flag = flag;
+}
+
+char CImgLayer::GetFlag() const
+{
+    return _flag;
+}
+
 const sf::Vector2f& CImgLayer::GetGlobalPosition() const
 {
     return _sprite.getPosition();
@@ -61,10 +73,10 @@ bool CImgLayer::LoadImg(const char* fileName)
     if (fileName == NULL)
         return false;
 
-    if (!CSurface::OnLoad(fileName, _image))
+    if (!CSurface::OnLoad(fileName, _texture))
         return false;
 
-    _sprite.setTexture(_image);
+    _sprite.setTexture(_texture);
     return true;
 }
 
@@ -81,9 +93,8 @@ CImgLayer* CImgLayer::Create(const char* filename)
     return NULL;
 }
 
-bool CImgLayer::OnLoop()
+void CImgLayer::OnLoop()
 {
-    bool __result = false;
     _visible = _alpha > 0 ? true : false;
 
     if (_sprite.getColor().a != _alpha)
@@ -111,7 +122,7 @@ bool CImgLayer::OnLoop()
         if (_rotation != _sprite.getRotation())
             _sprite.setRotation(_rotation);
         
-        list<CImageBaseClass*>::iterator it;
+        list<CImgLayer*>::iterator it;
         for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
             if ((*it)->GetFlag() & FLAG_ALPHA)
                 (*it)->SetAlpha(_alpha);
@@ -122,18 +133,15 @@ bool CImgLayer::OnLoop()
             if ((*it)->GetFlag() & FLAG_ROTATION)
                 (*it)->SetRotation(_rotation);
 
-            __result = (*it)->OnLoop() ? true : __result;
+            (*it)->OnLoop();
         }
     }
-
-    return __result;
 }
 
 void CImgLayer::OnSaveData(Object& json) const
 {
     CImageBaseClass::OnSaveData(json);
-    json << "flip_x" << _flipX;
-    json << "flip_y" << _flipY;
+    json << "flag" << _flag;
 }
 
 bool CImgLayer::SetBaseNode(CImgLayer* baseNode)
@@ -162,7 +170,7 @@ void CImgLayer::OnRender(sf::RenderTarget* Surf_Dest)
     if (_visible){
         Surf_Dest->draw(_sprite);
 
-        list<CImageBaseClass*>::iterator it;
+        list<CImgLayer*>::iterator it;
         for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
             (*it)->OnRender(Surf_Dest);
         }

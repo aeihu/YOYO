@@ -37,7 +37,7 @@ class CButtonBase : public CSequenceOfSprite , public CConfigFile
         bool IsMouseOver() const;
         bool IsMouseDown() const;
 
-        virtual bool OnLoop();
+        virtual void OnLoop();
         virtual bool OnMouseMove(int x, int y);
         virtual bool OnLButtonDown(int x, int y);
         virtual bool OnLButtonUp(int x, int y);

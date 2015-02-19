@@ -7,7 +7,6 @@
 */
 
 #include "CCamera.h"
-//#include <iostream>
 
 CCamera::CCamera()
 {
@@ -17,13 +16,11 @@ CCamera::CCamera()
 
 void CCamera::Reset(float x, float y, float w, float h)
 {
-    //_offset.x = w/2; 
-    //_offset.y = h/2;
     _coordinate.x = x;
     _coordinate.y = y;
     _size.x = w;
     _size.y = h;
-    //std::cout << _offset.x << ":" << _offset.y << std::endl;
+    _orgSize = _size;
     _camera.reset(sf::FloatRect(x, y, w, h));
 }
 
@@ -36,26 +33,26 @@ void CCamera::SetCenter(float x, float y)
 {
     _coordinate.x = x;
     _coordinate.y = y;
-    //_camera.setCenter(_size);
 }
     
 void CCamera::SetSize(float w, float h)
 {
     _size.x = w;
     _size.y = h;
-    //_camera.setSize(_size);
+    _orgSize = _size;
 }
     
 void CCamera::SetZoom(float zoom)
 {
-    _scale.x = zoom;
+    _camera.setSize(_orgSize);
+    _zoom = _scale.x = zoom;
     _camera.zoom(zoom);
+    _size = _camera.getSize();
 }
 
 void CCamera::SetRotation(float angle)
 {
     _rotation = angle;
-    //_camera.setRotation(_rotation);
 }
 
 void CCamera::Bind(sf::RenderTarget* window)
@@ -71,9 +68,8 @@ void CCamera::UnBind()
     _window = NULL;
 }
 
-bool CCamera::OnLoop()
+void CCamera::OnLoop()
 {
-    bool __result = false;
     bool __isChanged = false;
     
     if (_coordinate != _camera.getCenter()){
@@ -92,16 +88,12 @@ bool CCamera::OnLoop()
     }
 
     if (_zoom != _scale.x){
-        _zoom = _scale.x;
-        _camera.zoom(_scale.x);
-        _size = _camera.getSize();
+        SetZoom(_scale.x);
         __isChanged = true;
     }
 
     if (__isChanged && _window != NULL)
         _window->setView(_camera);
-    
-    return __result;
 }
 
 sf::Vector2f CCamera::GetCenter()

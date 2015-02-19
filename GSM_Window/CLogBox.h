@@ -38,7 +38,7 @@ class CLogBox : public CBox
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
-        bool OnSubLoop();
+        void OnSubLoop();
         void OnSubRender(sf::RenderTarget* Surf_Dest);
         void OnCleanup();
 

@@ -30,9 +30,13 @@ class CText : public CImageBaseClass
         static CText* Create();
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
-        virtual bool OnLoop();
+        virtual void OnLoop();
         
         sf::Color GetColor() const;
+        const sf::Vector2f& GetGlobalPosition() const;
+
+        void CText::FlipX();
+        void CText::FlipY();
 
         void SetFont(string name);
         void SetFont(vector<string> args);

@@ -69,12 +69,12 @@ bool CBox::SetProperty(Object json)
             &__dest, &__tileset, json.get<String>("MAP_PATH").c_str(), json.get<Number>("TILE_SIZE")))
             return false;
 
-        _image.loadFromImage(__dest);
+        _texture.loadFromImage(__dest);
     }
     else
-        _image.loadFromImage(__tileset);
+        _texture.loadFromImage(__tileset);
 
-    _sprite.setTexture(_image);
+    _sprite.setTexture(_texture);
 
     return true;
 }

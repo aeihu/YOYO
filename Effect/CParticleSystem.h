@@ -14,9 +14,9 @@
 #include "../Common/CObject.h"
 #include "../Common/CConfigFile.h"
 #include "../Graphics/CSurface.h"
-#include "../Graphics/CImageBaseClass.h"
+#include "../Graphics/CDrawableClass.h"
 
-class CParticleSystem : public CImageBaseClass, public CConfigFile
+class CParticleSystem : public CDrawableClass, public CConfigFile
 {
     private:
         struct Particle
@@ -53,7 +53,7 @@ class CParticleSystem : public CImageBaseClass, public CConfigFile
         static CParticleSystem* Create(const char* filename);
         bool SetTexture(string filename);
         void SetEmitter(sf::Vector2f position);
-        bool OnLoop();
+        void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
         bool GetEnable() const;

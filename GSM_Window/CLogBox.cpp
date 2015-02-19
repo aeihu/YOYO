@@ -31,7 +31,7 @@ CLogBox* CLogBox::Create(const char* filename)
     return NULL;
 }
 
-bool CLogBox::OnSubLoop()
+void CLogBox::OnSubLoop()
 {
     for (size_t __i = 0; __i < _visNum; __i++){
         if (_scrollbar.GetValue()+__i < _logList.size()){
@@ -46,7 +46,7 @@ bool CLogBox::OnSubLoop()
 
     //bool __result = CBox::OnLoop();
 
-    return _scrollbar.OnLoop();
+    _scrollbar.OnLoop();
 }
 
 void CLogBox::OnSubRender(sf::RenderTarget* Surf_Dest)

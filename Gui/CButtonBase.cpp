@@ -54,13 +54,11 @@ bool CButtonBase::OnLButtonUp(int x, int y)
     return false;
 }
 
-bool CButtonBase::OnLoop()
+void CButtonBase::OnLoop()
 {
     if (!_isMouseDown){
-        return CSequenceOfSprite::OnLoop();
+        CSequenceOfSprite::OnLoop();
     }
-
-    return false;
 }
 
 bool CButtonBase::IsMouseOver() const

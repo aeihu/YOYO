@@ -7,7 +7,6 @@
 */
 
 #include "CImageBaseClass.h"
-#include "../Common/CResourceControl.h"
 
 CImageBaseClass::CImageBaseClass(float x, float y)
 {
@@ -18,33 +17,19 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _coordinate.y = y;
     _alpha = 0.0f;
     _visible = false;
-    _layerOrder = 0;
-    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
 
 CImageBaseClass::~CImageBaseClass()
 {}
-
-void CImageBaseClass::SetFlag(char flag)
+         
+void CImageBaseClass::FlipX()
 {
-    _flag = flag;
+    _flipX = !_flipX;
 }
-
-char CImageBaseClass::GetFlag() const
+        
+void CImageBaseClass::FlipY()
 {
-    return _flag;
-}
-
-void CImageBaseClass::SetLayerOrder(char order)
-{
-    _layerOrder = order;
-    CResourceControl::_ResourceManager._DrawableObjectControl._isNeedSort = true;
-}
-
-void CImageBaseClass::SetLayerOrder(vector<string> args)
-{
-    if (args.size() > 0)
-        SetLayerOrder((unsigned char)atoi(args[0].c_str()));
+    _flipY = !_flipY;
 }
 
 void CImageBaseClass::SetAlpha(int alpha)
@@ -119,32 +104,16 @@ const float& CImageBaseClass::GetAlpha() const
     return _alpha;
 }
 
-unsigned char CImageBaseClass::GetLayerOrder() const
-{
-    return _layerOrder;
-}
-
 bool CImageBaseClass::GetVisible() const
 {
     return _visible;
 }
 
-CActionTo* CImageBaseClass::CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause)
-{
-    return new CActionTo(&_alpha, elapsed, alpha, restore, pause);
-}
-
-CActionBy* CImageBaseClass::CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause)
-{
-    return new CActionBy(&_alpha, elapsed, alpha, restore, pause);
-}
-
 void CImageBaseClass::OnSaveData(Object& json) const
 {
-    CBaiscProperties::OnSaveData(json);
-    json << "layer_order" << _layerOrder;
-    json << "alpha" << _alpha;
-    json << "flag" << _flag;
+    CDrawableClass::OnSaveData(json);
     json << "origin_x" << _origin.x;
     json << "origin_y" << _origin.y;
+    json << "flip_x" << _flipX;
+    json << "flip_y" << _flipY;
 }

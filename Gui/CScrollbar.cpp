@@ -19,7 +19,7 @@ CScrollbar::CScrollbar()
     AddChildNode(&_btnBar);
 }
 
-bool CScrollbar::OnSubLoop()
+void CScrollbar::OnSubLoop()
 {
     //if (_maxValue < 1)
     //    return false;
@@ -31,7 +31,8 @@ bool CScrollbar::OnSubLoop()
     //    (_maxValue < 1 ? 1.0f : _maxValue)*_value));
 
     //bool __result = CBox::OnLoop();
-    return _btnBar.OnLoop() && _btnArrowDown.OnLoop() && _btnArrowUp.OnLoop();
+
+    //return _btnBar.OnLoop() && _btnArrowDown.OnLoop() && _btnArrowUp.OnLoop();
 }
 
 

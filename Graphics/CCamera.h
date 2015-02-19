@@ -18,6 +18,7 @@ class CCamera : public CBaiscProperties, public CConfigFile
     private:
         float               _zoom;
         sf::View            _camera;
+        sf::Vector2f        _orgSize;
         sf::Vector2f        _size;
         sf::RenderTarget*   _window;
 
@@ -36,7 +37,7 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void SetRotation(float angle);
         void Bind(sf::RenderTarget* window);
         void UnBind();
-        bool OnLoop();
+        void OnLoop();
         sf::Vector2f GetCenter();
         sf::Vector2f GetPosition();
         virtual void OnSaveData(Object& json) const;

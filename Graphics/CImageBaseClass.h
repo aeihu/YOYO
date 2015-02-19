@@ -12,45 +12,30 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include "../Graphics/CSurface.h"
-#include "../Common/CBaiscProperties.h"
 #include "../Action/CActionBy.h"
+#include "../Graphics/CDrawableClass.h"
 
-class CImageBaseClass : public CBaiscProperties
+class CImageBaseClass : public CDrawableClass
 {
-    public:
-        enum ESubImageFlag{
-            FLAG_ALPHA = 1,
-            FLAG_SCALE = 2,
-            FLAG_ROTATION = 4,
-        };
-
-    private:
-        unsigned char                     _layerOrder;
-        char                              _flag;
     protected:
-        bool                              _visible;
         sf::Vector2f                      _origin;
-        float                             _alpha;
+        bool                              _flipX;
+        bool                              _flipY;
     public:
         CImageBaseClass(float x=0.0f, float y=0.0f);
         virtual ~CImageBaseClass();
+        
+        virtual void FlipX();
+        virtual void FlipY();
+        virtual const sf::Vector2f& GetGlobalPosition() const =0;
 
         virtual const float& GetAlpha() const;
         virtual void SetAlpha(int alpha);
-        virtual void SetLayerOrder(char order);
-        virtual void SetLayerOrder(vector<string> args);
 
         virtual const sf::Vector2f& GetOrigin() const;
         virtual void SetOrigin(float x, float y);
         virtual void SetOriginX(float x);
         virtual void SetOriginY(float y);
-
-        virtual void SetFlag(char flag);
-        virtual char GetFlag() const;
-        virtual unsigned char GetLayerOrder() const;
- 
-        virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
         
         virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore, bool pause);	  
         virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore, bool pause);
@@ -61,11 +46,7 @@ class CImageBaseClass : public CBaiscProperties
         virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore, bool pause);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
-        virtual bool OnLoop()=0;
-
-        virtual bool OnLButtonUp(int mX, int mY){return false;}
-        virtual bool OnLButtonDown(int mX, int mY){return false;}
-        virtual bool OnMouseMove(int mX, int mY){return false;}
+        virtual void OnLoop()=0;
         
         virtual void OnSaveData(Object& json) const;
         virtual bool GetVisible() const;

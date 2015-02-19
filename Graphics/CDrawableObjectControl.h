@@ -9,15 +9,15 @@
 #ifndef _CDRAWABLEOBJECTCONTROL_H_
     #define _CDRAWABLEOBJECTCONTROL_H_
 
-#include "../Graphics/CImageBaseClass.h"
+#include "../Graphics/CDrawableClass.h"
 
 class CDrawableObjectControl
 {
     private:
-        friend void CImageBaseClass::SetLayerOrder(char order);
+        friend void CDrawableClass::SetLayerOrder(char order);
 
         struct CCmp{
-            bool operator()(pair<string,CImageBaseClass*> obj1, pair<string,CImageBaseClass*> obj2)
+            bool operator()(pair<string,CDrawableClass*> obj1, pair<string,CDrawableClass*> obj2)
             {
                 return obj1.second->GetLayerOrder() < obj2.second->GetLayerOrder();
             }
@@ -25,7 +25,7 @@ class CDrawableObjectControl
         
         bool                                    _isNeedSort;
 
-        vector<pair<string, CImageBaseClass*> > _drawableObjectList;
+        vector<pair<string, CDrawableClass*> > _drawableObjectList;
 
     protected:
     public:
@@ -34,13 +34,12 @@ class CDrawableObjectControl
         
         bool AddDrawableObject(string name, string objTypeName, string filename);
         bool DelDrawableObject(string name);
-        CImageBaseClass* GetDrawableObject(string name);
-        //bool SetDrawableObjectLayerOrder(string name, char layer);
+        CDrawableClass* GetDrawableObject(string name);
 
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);
         bool OnMouseMove(int mX, int mY);
-        void OnLoop(bool &pause);
+        void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
         void OnCleanup();
 };

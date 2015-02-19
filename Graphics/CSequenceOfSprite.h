@@ -16,7 +16,7 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
     private:
         sf::IntRect        _rect;
     public:
-        using CImgLayer::_image;
+        using CImgLayer::_texture;
         using CImgLayer::_sprite;
 
         CSequenceOfSprite(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
@@ -30,7 +30,7 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
         int GetHeight();
         void TurnOff(int frame = 0);
 
-        bool OnLoop();
+        void OnLoop();
 };
 
 #endif
