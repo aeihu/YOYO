@@ -64,7 +64,6 @@ bool CImgLayer::LoadImg(const char* fileName)
     if (!CSurface::OnLoad(fileName, _image))
         return false;
 
-    _image.setSmooth(false);
     _sprite.setTexture(_image);
     return true;
 }
@@ -106,11 +105,6 @@ bool CImgLayer::OnLoop()
             _sprite.setOrigin(_origin);
         
         if (_scale != _sprite.getScale()){
-            if (_scale.x == 1.0f && _scale.y  == 1.0f)
-                _image.setSmooth(false);
-            else
-                _image.setSmooth(true);
-
             _sprite.setScale(_scale);
         }
 

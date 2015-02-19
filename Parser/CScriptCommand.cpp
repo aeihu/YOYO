@@ -421,7 +421,7 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
     CBaiscProperties* __obj = NULL;
 
     if (objTypeName == "Camera"){
-        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(objTypeName+":"+__name);//Camera
+        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
         __obj = 
@@ -515,7 +515,7 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     CBaiscProperties* __obj = NULL;
 
     if (objTypeName == "Camera"){
-        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(objTypeName+":"+__name);//Camera
+        __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
         __obj = 
