@@ -94,6 +94,7 @@ bool CCamera::OnLoop()
     if (_zoom != _scale.x){
         _zoom = _scale.x;
         _camera.zoom(_scale.x);
+        _size = _camera.getSize();
         __isChanged = true;
     }
 
