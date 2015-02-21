@@ -31,6 +31,7 @@ class CSequenceOfFrames : public CAnimation
         void SetOffsetY(int y);
         void SetSize(int w, int h);
         void SetDestTexture(sf::Texture* pTexture);
+        void SetTexture(sf::Image& image);
         bool LoadImg(const char* filename);
 
         int GetWidth() const;

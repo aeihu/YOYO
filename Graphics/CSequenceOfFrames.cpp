@@ -34,6 +34,11 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
     return true;
 }
 
+void CSequenceOfFrames::SetTexture(sf::Image& image)
+{
+    _tile = image;
+}
+
 void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
 {
     _destTexture = pTexture;
