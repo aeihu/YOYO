@@ -37,30 +37,32 @@ bool CSequenceOfFrames::LoadImg(const char* filename)
 void CSequenceOfFrames::SetTexture(sf::Image& image)
 {
     _tile = image;
+    SetCurrentImageFrame(GetCurrentFrame());
 }
 
 void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
 {
     _destTexture = pTexture;
-    if (pTexture)
-        _imageOfTexture = pTexture->copyToImage();
 }
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
-    size_t TilesetWidth  = _tile.getSize().x / _rect.width;
-
-    if (TilesetWidth == 0)
-        return;
-
-    _rect.left = (frame % TilesetWidth) * _rect.width;
-    _rect.top = (frame / TilesetWidth) * _rect.height;
-
     if (_destTexture != NULL){
-        _image.copy(_imageOfTexture, _offset.x, _offset.y, _rect);
-        _destTexture->update(_image, _offset.x, _offset.y);
-        _image.copy(_tile, 0,0 ,_rect);
-        _destTexture->update(_image, _offset.x, _offset.y);
+        size_t TilesetWidth  = _tile.getSize().x / _rect.width;
+
+        if (TilesetWidth == 0)
+            return;
+
+        _rect.left = (frame % TilesetWidth) * _rect.width;
+        _rect.top = (frame / TilesetWidth) * _rect.height;
+
+        if ((_tile.getSize().x >= _rect.left + _rect.width)
+            &&
+            (_tile.getSize().y >= _rect.top + _rect.height)){
+            
+            _image.copy(_tile, 0,0 ,_rect);
+            _destTexture->update(_image, _offset.x, _offset.y);
+        }
     }
 }
 

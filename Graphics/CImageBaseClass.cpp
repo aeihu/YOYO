@@ -16,7 +16,7 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _coordinate.x = x;
     _coordinate.y = y;
     _alpha = 0.0f;
-    _visible = false;
+    _flipX = _flipY = _visible = false;
 }
 
 CImageBaseClass::~CImageBaseClass()
