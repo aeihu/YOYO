@@ -13,29 +13,9 @@ CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this)
 {
-    _EffectObjCtrlEnable = _DrawableObjCtrlEnable = false;
+    _effectObjCtrlEnable = _drawableObjCtrlEnable = false;
     _script.reset();
     _fileNameOfScript = "";
-}
-
-string CResourceControl::GetNameInFilename(string filename)
-{
-    size_t __last_x_pos = filename.find_last_of('/');
-    size_t __last_s_pos = filename.find_last_of('*');
-    __last_x_pos = __last_x_pos == string::npos ? 0 : __last_x_pos;
-    __last_s_pos = __last_s_pos == string::npos ? 0 : __last_s_pos;
-    string __result = "";
-
-    if (__last_s_pos > __last_x_pos)
-        __result = filename.substr(__last_s_pos+1);
-    else
-        __result = filename.substr(__last_x_pos+1);
-    
-    size_t __last_p_pos = __result.find_last_of('.');
-    if (__last_p_pos != string::npos)
-        __result = __result.substr(0, __last_p_pos);
-
-    return __result;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -153,6 +133,11 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 return -2;
 
             __assetName = objTypeName + ":" + __assetName;
+
+            if (objTypeName == "MessageBox"){
+                CMessageBox* __msg = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__assetName));
+                __msg->SetControl(&_pause);
+            }
         }
     }
 
@@ -199,7 +184,7 @@ bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
         else{
             for (size_t i=0; i<__array.size(); i++){
                 Object __obj;
-                __obj << "name" << GetNameInFilename(__array.get<String>(i));
+                __obj << "name" << CTextFunction::GetNameInFilename(__array.get<String>(i));
                 __obj << "path" << __array.get<String>(i);
                 __obj << "isdelete" << true;
                 __arrayResult << __obj;
@@ -268,7 +253,7 @@ void CResourceControl::BeginLoadProcess()
 
 void CResourceControl::EndLoadProcess()
 {
-    _EffectObjCtrlEnable = false;
+    _effectObjCtrlEnable = false;
 }
 
 void CResourceControl::Compare(Object& src, Object& des, string colName)
@@ -291,7 +276,7 @@ void CResourceControl::Compare(Object& src, Object& des, string colName)
 void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
-    _DrawableObjCtrlEnable = false;
+    _drawableObjCtrlEnable = false;
 
     Object __obj;
     if (LoadJson(__obj, _fileNameOfScript)){
@@ -343,7 +328,7 @@ void CResourceControl::LoadAsset()
         _ActionControl.AddAction(__seq);
     }
     
-    _DrawableObjCtrlEnable = true;
+    _drawableObjCtrlEnable = true;
     CParser::_Parser.Continue();
 }
 
@@ -357,7 +342,7 @@ bool CResourceControl::LoadScript(string filename)
 
         if (__img != NULL){
             CSequenceOfAction* __seq = new CSequenceOfAction();
-            _EffectObjCtrlEnable = true;
+            _effectObjCtrlEnable = true;
             __seq->AddAction(__img->CreateActionOfAlphaTo(500,255,false,true));
             __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
             _ActionControl.AddAction(__seq);
@@ -371,30 +356,28 @@ bool CResourceControl::LoadScript(string filename)
 
 void CResourceControl::OnLoop()
 {
-    _CameraControl.OnLoop();
+    _ActionControl.OnLoop();
+    _pause = _ActionControl.IsPause();
 
-    if (_DrawableObjCtrlEnable)
+    if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnLoop();
 
-    if (_EffectObjCtrlEnable)
+    if (_effectObjCtrlEnable)
         _EffectObjectControl.OnLoop();
-
+    
+    _CameraControl.OnLoop();
     _SoundControl.OnLoop();
     
-    _ActionControl.OnLoop();
-
-    if (_ActionControl.IsPause())
-        return;
-    
-    CParser::_Parser.OnLoop();
+    if (!_pause)
+        CParser::_Parser.OnLoop();
 }
 
 void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_DrawableObjCtrlEnable)
+    if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnRender(Surf_Dest);
     
-    if (_EffectObjCtrlEnable)
+    if (_effectObjCtrlEnable)
         _EffectObjectControl.OnRender(Surf_Dest);
 }
 

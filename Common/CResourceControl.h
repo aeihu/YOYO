@@ -30,10 +30,10 @@ class CResourceControl : public CScript
         Object                                  _script;
         Object                                  _gameBaiscAsset;
         sf::Thread                              _threadOfLoading;
-        bool                                    _DrawableObjCtrlEnable;
-        bool                                    _EffectObjCtrlEnable;
+        bool                                    _drawableObjCtrlEnable;
+        bool                                    _effectObjCtrlEnable;
+        bool                                    _pause;
 
-        string GetNameInFilename(string filename);
         void BeginLoadProcess();
         void EndLoadProcess();
         void LoadAsset();
