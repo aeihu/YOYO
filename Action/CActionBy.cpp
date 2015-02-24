@@ -13,10 +13,8 @@ CActionBy::CActionBy(float* val, size_t elapsed, float fin, bool restore, bool p
     _val = NULL;
     if (val){
         _isRunning = false;
-        //if (elapsed == 0) elapsed = 1;
         _val = val;
         _byVal = fin;
-        //_valOfFinish = fin;
         _pause = pause;
         _restore = restore;
         _elapsed = elapsed;
@@ -43,9 +41,14 @@ bool CActionBy::OnLoop(bool cleanup)
     }
 
     if ((*_val) != _valOfFinish){
+        if (_skip){
+            *_val = _valOfFinish;
+            goto FINISH;
+        }
+
         bool __b = (*_val) < _valOfFinish ? true:false; 
-        (*_val) += (__b ? _incr : -_incr) * (_skip ? 10 : 1);
-        _skip = false;
+        //(*_val) += (__b ? _incr : -_incr) * (_skip ? 10 : 1);
+        //_skip = false;
 
         if (__b){
             if ((*_val) > _valOfFinish){
