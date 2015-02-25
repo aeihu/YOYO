@@ -95,6 +95,9 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> >& flags
 
 bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act)
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Show" + objTypeName;
 
     if (act == NULL){
@@ -133,9 +136,14 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
         atof(__values["-i"][0].c_str());
 
-    if (CResourceControl::_ResourceManager._DrawableObjectControl.IsExists(objTypeName+":"+__name)){
-        CDrawableClass* __obj = 
-            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+
+    if (__doc->IsExists(objTypeName+":"+__name)){
+        CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
         if (__values.count("-l") > 0){
             __obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
@@ -159,6 +167,9 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
 
 bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act)
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Hide" + objTypeName;
 
     if (act == NULL){
@@ -190,9 +201,13 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
     string& __name = __values["-n"][0];
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL :
         atoi(__values["-i"][0].c_str());
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    CDrawableClass* __obj = 
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+    CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
     if (__obj != NULL){
         act->AddAction(__obj->CreateActionOfAlphaTo(__inte, 0, __reset, __pause));
@@ -203,6 +218,9 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
 
 bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act)
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Move" + objTypeName;
     if (act == NULL){
         cout << __funcName << "(): Action Set is null." <<endl;
@@ -262,8 +280,12 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        __obj = 
-            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+        CDrawableObjectControl* __doc = __isEffect ? 
+            &CResourceControl::_ResourceManager._EffectObjectControl
+                :
+            &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+        __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
     }
 
     if (__obj != NULL){
@@ -296,6 +318,9 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
 
 bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* act)
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Origin" + objTypeName;
     if (act == NULL){
         cout << __funcName << "(): Action Set is null." <<endl;
@@ -349,10 +374,14 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
         return false;
     }
     
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
     CImageBaseClass* __obj = NULL;
 
-    __obj = static_cast<CImageBaseClass*>(
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name));
+    __obj = static_cast<CImageBaseClass*>(__doc->GetDrawableObject(objTypeName+":"+__name));
 
     if (__obj != NULL){
         switch (__flag)
@@ -384,6 +413,9 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
 
 bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet* act)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Rotation" + objTypeName;
     if (act == NULL){
         cout << __funcName << "(): Action Set is null." <<endl;
@@ -425,8 +457,12 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        __obj = 
-            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+        CDrawableObjectControl* __doc = __isEffect ? 
+            &CResourceControl::_ResourceManager._EffectObjectControl
+                :
+            &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+        __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
     }
 
     if (__obj != NULL){
@@ -441,6 +477,9 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
 
 bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* act)
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Scale" + objTypeName;
     if (act == NULL){
         cout << __funcName << "(): Action Set is null." <<endl;
@@ -519,8 +558,12 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        __obj = 
-            CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+__name);
+        CDrawableObjectControl* __doc = __isEffect ? 
+            &CResourceControl::_ResourceManager._EffectObjectControl
+                :
+            &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+        __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
     }
 
     if (__obj != NULL){
@@ -551,8 +594,11 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     return false;
 }
 
-bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSet* act)
+bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSet* act )
 { 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_SetLayerOrder" + objTypeName;
     
     if (act == NULL){
@@ -565,9 +611,14 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
     CDrawableClass* __obj = NULL;
-    __obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]);
+    __obj = __doc->GetDrawableObject(objTypeName+":"+args[0]);
 
     if (__obj){
         vector<string> __args;
@@ -581,8 +632,11 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
     return false;
 }
 
-bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act, bool flipx = true)
+bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act, bool flipx=true)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     string __funcName = "Cmd_Flip" + flipx ? "X" : "Y" + objTypeName;
     
     if (act == NULL){
@@ -595,10 +649,14 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
     CImgLayer* __obj = NULL;
-    __obj = static_cast<CImgLayer*>(
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(objTypeName+":"+args[0]));
+    __obj = static_cast<CImgLayer*>(__doc->GetDrawableObject(objTypeName+":"+args[0]));
 
     if (__obj){
         if (flipx)
@@ -641,32 +699,58 @@ bool Cmd_HideCharacterLayer(vector<string>& args, CActionSet* act)
     return Common_FuncOfHide("CharacterLayer", args, act);
 }
 
-bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act)
+bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     if (act == NULL){
-        cout << "Cmd_SetFaceCharacterLayer(): Action Set is null." <<endl;
+        cout << "Cmd_SetPoseCharacterLayer(): Action Set is null." <<endl;
+        return false;
+    }
+    
+    if (args.size() < 1){
+        cout << "Cmd_SetPoseCharacterLayer(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
         return false;
     }
 
-    if (args.size() != 2){
-        cout << "Cmd_SetFaceCharacterLayer(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." << endl;
-        return false;
-    }
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_OPTIONAL));    //body
+    __flags.push_back(pair<string, ENUM_FLAG>("-e", FLAG_OPTIONAL));    //eye
+    __flags.push_back(pair<string, ENUM_FLAG>("-m", FLAG_OPTIONAL));    //mouth
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
 
-    string& __name = args[0];
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_SetPoseCharacterLayer", __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0)
+        return false;
+    
+    string& __body = __values.count("-b") > 0 ? __values["-b"][0] : ""; 
+    string& __eye = __values.count("-e") > 0 ? __values["-e"][0] : ""; 
+    string& __mouth = __values.count("-m") > 0 ? __values["-m"][0] : ""; 
+
+    string& __name = __values["-n"][0];
     vector<string> __args;
-    __args.push_back(args[1]);
+    __args.push_back(__body);
+    __args.push_back(__eye);
+    __args.push_back(__mouth);
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    if (!CResourceControl::_ResourceManager._DrawableObjectControl.IsExists("CharacterLayer:"+__name)){
-        cout << "Cmd_SetFaceCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
+    if (!__doc->IsExists("CharacterLayer:"+__name)){
+        cout << "Cmd_SetPoseCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
         return false;
     }
 
-    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("CharacterLayer:"+__name));
+    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__doc->GetDrawableObject("CharacterLayer:"+__name));
 
-    act->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetFace, __args));
+    act->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetPose, __args));
         
     return true;
 }
@@ -838,6 +922,9 @@ bool Cmd_OriginText(vector<string>& args, CActionSet* act)
 
 bool Cmd_SetText(vector<string>& args, CActionSet* act)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     if (args.size() < 1){
         cout << "Cmd_SetText(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -866,15 +953,19 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     
     string __name = __values["-n"][0];
     
-    if (!CResourceControl::_ResourceManager._DrawableObjectControl.IsExists("Text:"+__name)){
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+    if (!__doc->IsExists("Text:"+__name)){
         cout << "Cmd_SetText(): can't find text \""<< __name << "\"." <<endl;
         return false;
     }
     
     CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
     vector<string> __args;
-    CText* __txt = static_cast<CText*>(
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("Text:"+__name));
+    CText* __txt = static_cast<CText*>(__doc->GetDrawableObject("Text:"+__name));
     
     if (__values.count("-f") > 0){
         __args.push_back(__values["-f"][0]);
@@ -951,6 +1042,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
 
 bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() < 1){
         cout << "Cmd_PlayBGM(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -997,6 +1089,7 @@ bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 
 bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() != 1){
         cout << "Cmd_PlaySE(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -1082,6 +1175,7 @@ bool Cmd_OriginButton(vector<string>& args, CActionSet* act)
 //
 bool Cmd_Message(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //MessageBoxName
     __flags.push_back(pair<string, ENUM_FLAG>("-c", FLAG_OPTIONAL));    //character
@@ -1175,18 +1269,26 @@ bool Cmd_SetLogBoxLayerOrder(vector<string>& args, CActionSet* act)
 
 bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     if (args.size() < 1){
         cout << "Cmd_ShowParticleSystem(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
     for (size_t i=0; i<args.size(); i++){
-        if (CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("ParticleSystem:"+args[i]) == NULL){
+        if (!__doc->IsExists("ParticleSystem:"+args[i])){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
         else{
-            CParticleSystem* __par = static_cast<CParticleSystem*>(CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("ParticleSystem:"+args[i]));
+            CParticleSystem* __par = static_cast<CParticleSystem*>(__doc->GetDrawableObject("ParticleSystem:"+args[i]));
             
             if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
@@ -1200,19 +1302,26 @@ bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act)
 
 bool Cmd_HideParticleSystem(vector<string>& args, CActionSet* act)
 {
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
     if (args.size() < 1){
         cout << "Cmd_HideParticleSystem(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
+
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
     
     for (size_t i=0; i<args.size(); i++){
-        if (CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(args[i]) == NULL){
+        if (!__doc->IsExists("ParticleSystem:"+args[i])){
             cout << "Cmd_ShowParticleSystem(): can't find ParticleSystem \"" << args[i] << "\"." <<endl;
         }
         else{
-            CParticleSystem* __par = static_cast<CParticleSystem*>(
-                CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject(args[i]));
+            CParticleSystem* __par = static_cast<CParticleSystem*>(__doc->GetDrawableObject(args[i]));
             
             if (__par->GetEnable())
                 cout << "Cmd_ShowParticleSystem(): ParticleSystem \"" << args[i] << "\" has showed." << endl;
@@ -1231,6 +1340,7 @@ bool Cmd_SetParticleSystemLayerOrder(vector<string>& args, CActionSet* act)
 
 bool Cmd_AddVariable(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() != 2){
         cout << "Cmd_AddVariable(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -1246,6 +1356,7 @@ bool Cmd_AddVariable(vector<string>& args, CActionSet* act)
 
 bool Cmd_SetVariable(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() != 2){
         cout << "Cmd_SetVariable(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -1261,6 +1372,7 @@ bool Cmd_SetVariable(vector<string>& args, CActionSet* act)
 
 bool Cmd_DelVariable(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() < 1){
         cout << "Cmd_DelVariable(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -1276,6 +1388,7 @@ bool Cmd_DelVariable(vector<string>& args, CActionSet* act)
 
 bool Cmd_DelAction(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() < 1){
         cout << "Cmd_DelVariable(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
@@ -1296,6 +1409,7 @@ bool Cmd_DelAction(vector<string>& args, CActionSet* act)
 
 bool Cmd_UseCamera(vector<string>& args, CActionSet* act)
 {
+    args.erase(args.begin());
     if (args.size() == 0){
         CResourceControl::_ResourceManager._CameraControl.UseDefaultCamera();
     }

@@ -20,7 +20,7 @@ bool Cmd_HideCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_MoveCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_ScaleCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_RotationCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_SetFaceCharacterLayer(vector<string>& args, CActionSet* act);
+bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_SetCharacterLayerOrder(vector<string>& args, CActionSet* act);
 bool Cmd_FlipXCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_FlipYCharacterLayer(vector<string>& args, CActionSet* act);

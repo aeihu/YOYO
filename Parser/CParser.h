@@ -10,7 +10,6 @@
     #define _CPARSER_H_
 
 #include <string>
-//#include <list>
 #include <vector>
 #include <map>
 #include <iostream>
@@ -51,7 +50,7 @@ class CParser
         void OnLoop();
         void OnCleanup();
 
-        void ExecuteCmd(string cmd, CActionSet* act=NULL);
+        void ExecuteCmd(string cmd, CActionSet* act, bool isEffect);
         void InsertCmd(Array cmd);
         void SetDeplay(int ms);
 

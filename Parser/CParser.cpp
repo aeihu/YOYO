@@ -47,7 +47,7 @@ void CParser::OnCleanup()
     _pRunning = NULL;
 }
 
-void CParser::ExecuteCmd(string cmd, CActionSet* act)
+void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
 {
     vector<string> __listOfCmdPara;
     if (AnalysisOfParameters(cmd, __listOfCmdPara) > 0){
@@ -62,19 +62,18 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act)
             act = &CResourceControl::_ResourceManager._ActionControl;
 
         string __commandName = __listOfCmdPara[0];
-        __listOfCmdPara.erase(__listOfCmdPara.begin());
+        if (isEffect)
+            __listOfCmdPara[0] = "q(-_-)p";
+        //__listOfCmdPara.erase(__listOfCmdPara.begin());
 
         //if (__commandName == "@show_info") _pFunc = &Cmd_ShowInfo;
-
-        //if (__commandName == "@add_position") _pFunc = &Cmd_AddPosition;
-        //else if (__commandName == "@del_position") _pFunc = &Cmd_DelPosition;
 
         if (__commandName == "@show_chara") _pFunc = &Cmd_ShowCharacterLayer;
         else if (__commandName == "@hide_chara") _pFunc = &Cmd_HideCharacterLayer;
         else if (__commandName == "@move_chara") _pFunc = &Cmd_MoveCharacterLayer;
         else if (__commandName == "@scale_chara") _pFunc = &Cmd_ScaleCharacterLayer;
         else if (__commandName == "@rota_chara") _pFunc = &Cmd_RotationCharacterLayer;
-        else if (__commandName == "@face_chara") _pFunc = &Cmd_SetFaceCharacterLayer;
+        else if (__commandName == "@pose_chara") _pFunc = &Cmd_SetPoseCharacterLayer;
         else if (__commandName == "@order_chara") _pFunc = &Cmd_SetCharacterLayerOrder;
         else if (__commandName == "@flipx_chara") _pFunc = &Cmd_FlipXCharacterLayer;
         else if (__commandName == "@flipy_chara") _pFunc = &Cmd_FlipYCharacterLayer;
@@ -239,7 +238,7 @@ void CParser::ParserObject(Object& obj, CActionSet* act)
 
         for (size_t i=0; i<__arrOfScr.size(); i++){
             if (__arrOfScr.has<String>(i)){
-                ExecuteCmd(__arrOfScr.get<String>(i), __actionSet);
+                ExecuteCmd(__arrOfScr.get<String>(i), __actionSet, false);
             }
             else if (__arrOfScr.has<Object>(i)){
                 ParserObject(__arrOfScr.get<Object>(i), __actionSet);
@@ -262,7 +261,7 @@ void CParser::OnLoop()
 
         if (_cmdList.size() > _index){
             if (_cmdList.has<String>(_index)){
-                ExecuteCmd(_cmdList.get<String>(_index), &CResourceControl::_ResourceManager._ActionControl);
+                ExecuteCmd(_cmdList.get<String>(_index), &CResourceControl::_ResourceManager._ActionControl, false);
             }
             else if (_cmdList.has<Object>(_index)){
                 Object __obj = _cmdList.get<Object>(_index);
@@ -333,14 +332,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
     }
 
     for (size_t i = 1; i < plist.size(); i++)
-    {
-        if(plist[i].at(0) == '$'){
-            //if (CCommon::_Common._PlayerVariableTable.count(plist[i]) > 0){
-                //plist[i] = CCommon::_Common._PlayerVariableTable[plist[i]];
-            //}
+        if(plist[i].at(0) == '$')
             plist[i] = CResourceControl::_ResourceManager.GetVariable(plist[i]);
-        }
-    }
 
     return plist.size();
 }
