@@ -18,6 +18,7 @@ class CTextFunction
         static void SetString(sf::Text& text, std::string str);
         static size_t SizeOfCharWithUTF8(char Char);
         static size_t StringLengthWithUTF8(std::string str);
+        static std::string GetNameInFilename(std::string filename);
 };
 
 #endif

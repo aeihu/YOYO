@@ -26,6 +26,26 @@ size_t CTextFunction::SizeOfCharWithUTF8(char Char)
     return 1;
 }
 
+std::string CTextFunction::GetNameInFilename(std::string filename)
+{
+    size_t __last_x_pos = filename.find_last_of('/');
+    size_t __last_s_pos = filename.find_last_of('*');
+    __last_x_pos = __last_x_pos == std::string::npos ? 0 : __last_x_pos;
+    __last_s_pos = __last_s_pos == std::string::npos ? 0 : __last_s_pos;
+    std::string __result = "";
+
+    if (__last_s_pos > __last_x_pos)
+        __result = filename.substr(__last_s_pos+1);
+    else
+        __result = filename.substr(__last_x_pos+1);
+    
+    size_t __last_p_pos = __result.find_last_of('.');
+    if (__last_p_pos != std::string::npos)
+        __result = __result.substr(0, __last_p_pos);
+
+    return __result;
+}
+
 size_t CTextFunction::StringLengthWithUTF8(std::string str)
 {
     size_t __index = 0;
