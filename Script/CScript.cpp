@@ -8,62 +8,33 @@
 
 #include "CScript.h"
 #include "../Common/Cio.h"
+#include "../Parser/CParser.h"
 
-bool CScript::AddVariable(string name, string val)
+bool CScript::AddScript(string name, Array scr)
 {
-    if(_userVariableList.count("$"+name) > 0)
+    if (_scriptList.count(name) > 0)
         return false;
+    
+    _scriptList[name] = CSequenceOfAction();
 
-    _userVariableList["$"+name] = val;
+    for (size_t i=0; i<scr.size(); i++){
+        CParser::_Parser.ExecuteCmd(scr.get<String>(i),
+            &_scriptList[name], true);
+    }
+        
     return true;
 }
-
-bool CScript::SetVariable(string name, string val)
+        
+bool CScript::DelScript(string name)
 {
-    if(_userVariableList.count("$"+name) > 0){
-        _userVariableList["$"+name] = val;
-        return true;
-    }
+    if (_scriptList.count(name) < 1)
+        return false;
 
-    return false;
+    _scriptList.erase(name);
+    return true;
 }
-
-string CScript::GetVariable(string name)
-{
-    if(_userVariableList.count(name) > 0){
-        return _userVariableList[name];
-    }
-
-    return "";
-}
-
-bool CScript::DelVariable(string name)
-{
-    if(_userVariableList.count("$"+name) > 0){
-        _userVariableList.erase("$"+name);
-        return true;
-    }
-
-    return false;
-}
-//bool CScript::OnInit(string filename)
-//{
-//    Object json;
-//    if (!json.parse(Cio::LoadTxtFile(filename)))
-//        return false;
-//    
-//
-//    return true;
-//
-//}
-//
-//bool CScript::LoadScript(string filename)
+        
+//const CSequenceOfAction& CScript::GetScript(string name) const
 //{
 //    
-//    Object json;
-//    if (!json.parse(Cio::LoadTxtFile(filename)))
-//        return false;
-//        
-//    //SetValue(json);
-//    return true;
 //}

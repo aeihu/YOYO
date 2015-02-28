@@ -13,36 +13,47 @@
 #include "../Common/CConfigFile.h"
 #include "../Graphics/CSequenceOfFrames.h"
 #include "../Sound/CSoundBank.h"
+#include "../Text/CTextFunction.h"
 #include <map>
 #include <string>
 
 using namespace std;
 
-class CCharacterLayer : public CImgLayer, public CConfigFile
+class CCharacterLayer : public CImageBaseClass, public CConfigFile
 {
   private:
-        Object                  _faceList;
-        bool                    _isFaceEnable;
-        CSequenceOfFrames       _framesOfMouth;
-        CSequenceOfFrames       _framesOfEyes;
-        string                  _currcentFace;
-        string                  _currcentVoice;
-        unsigned long           _timer;
+        CSequenceOfFrames                       _framesOfEyes;
+        CSequenceOfFrames                       _framesOfMouth;
+        string                                  _currcentBody;
+        string                                  _currcentEyes;
+        string                                  _currcentMouth;
+        string                                  _currcentVoice;
+        unsigned long                           _timer;
+        map<string, pair<sf::Image, int> >      _mouthList;
+        map<string, pair<sf::Image, int> >      _eyeList;
+        map<string, sf::Texture>                _textureList;
+        sf::Sprite                              _sprite;
         
         bool CheckList(Object json);
         bool SetProperty(Object json);
+        void Flip();
   public:
         CCharacterLayer(float x=0.0f, float y=0.0f);
+
+        virtual void FlipX();
+        virtual void FlipY();
+        const sf::Vector2f& GetGlobalPosition() const;
         
         static CCharacterLayer* Create(const char* filename);
         
-        bool SetFace(string name);
-        void SetFace(vector<string> args);
+        //bool SetPose(string eye);
+        bool SetPose(string body, string eye, string mouth);
+        void SetPose(vector<string> args);
 
         void SetVoice(string name);
         
-        bool OnLoop();
+        void OnLoop();
+        virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
-       // void OnRender(sf::RenderTarget* Surf_Dest);
 };
 #endif

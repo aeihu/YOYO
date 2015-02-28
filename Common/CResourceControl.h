@@ -24,15 +24,16 @@ using namespace std;
 class CResourceControl : public CScript
 {
     private:
-        string                                  _fileNameOfScript;
-        string                                  _nameOfLoadingImg;
+        string                          _fileNameOfScript;
 
-        Object                                  _script;
-        Object                                  _gameBaiscAsset;
-        sf::Thread                              _threadOfLoading;
-        bool                                    _drawableObjCtrlEnable;
-        bool                                    _effectObjCtrlEnable;
-        bool                                    _pause;
+        Object                          _script;
+        Object                          _gameBaiscAsset;
+        sf::Thread                      _threadOfLoading;
+        bool                            _drawableObjCtrlEnable;
+        bool                            _effectObjCtrlEnable;
+        bool                            _pause;
+        map<string, string>             _userVariableList;
+        map<string, string>             _systemVariableList;
 
         void BeginLoadProcess();
         void EndLoadProcess();
@@ -57,6 +58,11 @@ class CResourceControl : public CScript
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;
         
+        bool AddVariable(string name, string val);
+        bool SetVariable(string name, string val);
+        string GetVariable(string name);
+        bool DelVariable(string name);
+
         bool OnInit(string filename, sf::RenderTarget* display);
         bool LoadScript(string filename);
         void OnLoop();

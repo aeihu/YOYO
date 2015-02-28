@@ -169,3 +169,13 @@ void CText::OnRender(sf::RenderTarget* Surf_Dest)
         Surf_Dest->draw(_sfText);
     }
 }
+
+//void CText::FlipX()
+//{
+//
+//}
+//
+//void CText::FlipY()
+//{
+//
+//}

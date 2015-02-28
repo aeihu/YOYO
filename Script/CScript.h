@@ -12,6 +12,7 @@
 #include <string>
 #include <map>
 #include "jsonxx.h"
+#include "..\Action\CSequenceOfAction.h"
 
 using namespace jsonxx;
 using namespace std;
@@ -19,17 +20,12 @@ using namespace std;
 class CScript
 {
     protected:
-        map<string, string>         _userVariableList;
-        map<string, string>         _systemVariableList;
+        map<string, CSequenceOfAction>  _scriptList;
     
     public:
-        bool AddVariable(string name, string val);
-        bool SetVariable(string name, string val);
-        string GetVariable(string name);
-        bool DelVariable(string name);
-        
-        virtual bool OnInit(string filename)=0;
-        virtual bool LoadScript(string filename)=0;
+        bool AddScript(string name, Array scr);
+        bool DelScript(string name);
+        //const CSequenceOfAction& GetScript(string name) const;
 };
 
 #endif

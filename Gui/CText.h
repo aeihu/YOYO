@@ -35,8 +35,8 @@ class CText : public CImageBaseClass
         sf::Color GetColor() const;
         const sf::Vector2f& GetGlobalPosition() const;
 
-        void CText::FlipX();
-        void CText::FlipY();
+        //void FlipX();
+        //void FlipY();
 
         void SetFont(string name);
         void SetFont(vector<string> args);
