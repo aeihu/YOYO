@@ -20,7 +20,7 @@ CMessageBox::CMessageBox()
     AddChildNode(&_frames);
     _frames.SetFlag(FLAG_SCALE);
     _isFramesChanged =
-    _isPaused = false;
+    _pause = false;
 }
 
 CMessageBox* CMessageBox::Create(const char* filename)
@@ -138,9 +138,9 @@ bool CMessageBox::CheckList(Object json)
     return result;
 }
 
-bool CMessageBox::OnLoop()
+void CMessageBox::OnLoop()
 {
-    bool __result = CBox::OnLoop();
+    CBox::OnLoop();
     _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
     CTextProcessing::SetPosition(
@@ -164,7 +164,14 @@ bool CMessageBox::OnLoop()
     }
 
     CTextProcessing::OnLoop();
-    return __result || _isPaused || !IsTextAllShown();
+    
+    if (_pauseControl)
+        *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
+}
+        
+void CMessageBox::SetControl(bool* p)
+{
+    _pauseControl = p;
 }
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
@@ -189,14 +196,15 @@ void CMessageBox::SetSpeakerName(string name)
 
 void CMessageBox::SetText(string msg)
 {
-    _isPaused = true;
+    _pause = true;
     CTextProcessing::SetText(msg);
 }
 
 bool CMessageBox::OnLButtonDown(int x, int y)
 {
-    if (IsTextAllShown())
-        _isPaused = false;
+    if (IsTextAllShown()){
+        _pause = false;
+    }
     else
         Skip();
 

@@ -25,7 +25,8 @@ class CMessageBox : public CBox , public CTextProcessing
         sf::Vector2f        _msgOffset;
         sf::Text            _speakerName;
         CSequenceOfSprite   _frames;
-        bool                _isPaused;
+        bool                _pause;
+        bool*               _pauseControl;
         bool                _isFramesChanged;
 
         bool CheckList(Object json);
@@ -39,13 +40,14 @@ class CMessageBox : public CBox , public CTextProcessing
         void SetText(string msg);
         void SetFont(sf::Font& font);
         void SetSpeakerName(string name);
+        void SetControl(bool* p);
 
         //bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);
         bool OnRButtonUp(int x, int y);
-        bool OnLoop();
+        void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
 };
 #endif
