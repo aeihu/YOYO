@@ -24,7 +24,7 @@ class CActionBaseClass
         virtual string GetName() const {return "";}; 
         virtual bool OnLoop(bool cleanup=true)=0; 
         virtual void OnCleanup(){}; 
-        virtual bool IsPause() {return _pause;}
+        virtual bool IsPause() const {return _pause;} 
         void Skip() {_skip = true;}
 };
 

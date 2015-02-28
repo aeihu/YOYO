@@ -8,12 +8,12 @@
 
 #include "CSimultaneousOfAction.h"
 
-bool CSimultaneousOfAction::IsPause()
+bool CSimultaneousOfAction::IsPause() const
 {
     if (_pause)
         return true;
 
-    for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++){
+    for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
         if ((*it)->IsPause())
             return true;
     }

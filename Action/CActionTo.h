@@ -18,7 +18,7 @@ class CActionTo : public CActionBaseClass
     public:
         CActionTo(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
 
-        bool IsPause();
+        bool IsPause() const;
         bool OnLoop(bool cleanup=true);
     private:
         bool        _restore;

@@ -47,6 +47,7 @@ bool CActionBy::OnLoop(bool cleanup)
         }
 
         bool __b = (*_val) < _valOfFinish ? true:false; 
+        (*_val) += __b ? _incr : -_incr;
         //(*_val) += (__b ? _incr : -_incr) * (_skip ? 10 : 1);
         //_skip = false;
 
@@ -74,7 +75,8 @@ FINISH:
     }
 }
 
-bool CActionBy::IsPause()
+bool CActionBy::IsPause() const
 {
     return _pause && _isRunning;
 }
+

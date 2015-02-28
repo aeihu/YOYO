@@ -15,16 +15,19 @@ CRepeatOfAction::CRepeatOfAction()
 
 bool CRepeatOfAction::OnLoop(bool cleanup)
 {
-    if (!_actionList.empty()){
-        if (_skip)
-            _actionList.front()->Skip();
+    do {
+        if (!_actionList.empty()){
+            if (_skip)
+                _actionList.front()->Skip();
 
-        if (_actionList.front()->OnLoop(_count == 0 && cleanup)){
-            _tempActionList.push_back(_actionList.front());
-            _actionList.pop_front();
+            if (_actionList.front()->OnLoop(_count == 0 && cleanup)){
+                _tempActionList.push_back(_actionList.front());
+                _actionList.pop_front();
+            }
         }
-        _skip = false;
-    }
+        else
+            _skip = false;
+    } while (_skip);
 
     if (_actionList.empty()){
         if (_count > 0){ 

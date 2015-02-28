@@ -19,7 +19,7 @@ class CSimultaneousOfAction : public CActionSet
     private:
     protected:
     public:
-        virtual bool IsPause();
+        virtual bool IsPause() const;
         bool OnLoop(bool cleanup=true);
 };
 

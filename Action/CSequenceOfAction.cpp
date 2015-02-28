@@ -10,18 +10,21 @@
 
 bool CSequenceOfAction::OnLoop(bool cleanup)
 {
-    if (!_actionList.empty()){
-        if (_skip)
-            _actionList.front()->Skip();
+    do {
+        if (!_actionList.empty()){
+            if (_skip)
+                _actionList.front()->Skip();
 
-        if (_actionList.front()->OnLoop(cleanup)){
-            _tempActionList.push_back(_actionList.front());
-            _actionList.pop_front();
-            //delete _actionList.front();
-            //_actionList.erase(_actionList.begin());
+            if (_actionList.front()->OnLoop(cleanup)){
+                _tempActionList.push_back(_actionList.front());
+                _actionList.pop_front();
+                //delete _actionList.front();
+                //_actionList.erase(_actionList.begin());
+            }
         }
-        _skip = false;
-    }
+        else
+            _skip = false;
+    } while (_skip);
     
     if (_actionList.empty()){
         if (cleanup)

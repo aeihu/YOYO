@@ -13,7 +13,7 @@ CActionSet::CActionSet()
     _name = "";
 }
 
-bool CActionSet::IsPause()
+bool CActionSet::IsPause() const
 {
     return _pause || 
         (_actionList.size() < 1 ? 
@@ -40,6 +40,8 @@ bool CActionSet::DeleteAct(string name)
 
             for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end();){
                 if (name == (*it)->GetName()){
+                    (*it)->Skip();
+                    (*it)->OnLoop();
                     (*it)->OnCleanup();
                     delete (*it);
                     (*it) = NULL;
