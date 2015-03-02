@@ -18,6 +18,9 @@
 class CImageBaseClass : public CDrawableClass
 {
     protected:
+        float                             _red;
+        float                             _green;
+        float                             _blue;
         sf::Vector2f                      _origin;
         bool                              _flipX;
         bool                              _flipY;
@@ -36,6 +39,16 @@ class CImageBaseClass : public CDrawableClass
         virtual void SetOrigin(float x, float y);
         virtual void SetOriginX(float x);
         virtual void SetOriginY(float y);
+
+        virtual CSimultaneousOfAction* CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore, bool pause);	  
+        virtual CActionTo* CreateActionOfColorRedTo(size_t elapsed, float r, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore, bool pause);
+
+        virtual CSimultaneousOfAction* CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore, bool pause);	  
+        virtual CActionBy* CreateActionOfColorRedBy(size_t elapsed, float r, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore, bool pause);
         
         virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore, bool pause);	  
         virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore, bool pause);

@@ -137,6 +137,14 @@ void CText::OnLoop()
 
     if (_sfText.getColor().a != _alpha)
         _shadowColor.a = _textColor.a = _alpha;
+    
+    if (_sfText.getColor().r != _red ||
+        _sfText.getColor().g != _green ||
+        _sfText.getColor().b != _blue){
+        _textColor.r = _red; 
+        _textColor.g = _green;
+        _textColor.b = _blue;
+    }
 
     if (_visible){
         if (_coordinate != _sfText.getPosition())

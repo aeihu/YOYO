@@ -78,6 +78,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@flipx_chara") _pFunc = &Cmd_FlipXCharacterLayer;
         else if (__commandName == "@flipy_chara") _pFunc = &Cmd_FlipYCharacterLayer;
         else if (__commandName == "@origin_chara") _pFunc = &Cmd_OriginCharacterLayer;
+        else if (__commandName == "@color_chara") _pFunc = &Cmd_ColorCharacterLayer;
         
         else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
         else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
@@ -88,6 +89,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@flipx_bg") _pFunc = &Cmd_FlipXBackground;
         else if (__commandName == "@flipy_bg") _pFunc = &Cmd_FlipYBackground;
         else if (__commandName == "@origin_bg") _pFunc = &Cmd_OriginBackground;
+        else if (__commandName == "@color_bg") _pFunc = &Cmd_ColorBackground;
 
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
@@ -98,6 +100,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@flipx_img") _pFunc = &Cmd_FlipXImg;
         else if (__commandName == "@flipy_img") _pFunc = &Cmd_FlipYImg;
         else if (__commandName == "@origin_img") _pFunc = &Cmd_OriginImg;
+        else if (__commandName == "@color_img") _pFunc = &Cmd_ColorImg;
         
         else if (__commandName == "@show_txt") _pFunc = &Cmd_ShowText;
         else if (__commandName == "@hide_txt") _pFunc = &Cmd_HideText;
@@ -109,6 +112,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         //else if (__commandName == "@flipy_txt") _pFunc = &Cmd_FlipYImg;
         else if (__commandName == "@origin_txt") _pFunc = &Cmd_OriginText;
         else if (__commandName == "@set_txt") _pFunc = &Cmd_SetText;
+        else if (__commandName == "@color_txt") _pFunc = &Cmd_ColorText;
 
         else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
         else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;
@@ -134,6 +138,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@flipx_btn") _pFunc = &Cmd_FlipXButton;
         else if (__commandName == "@flipy_btn") _pFunc = &Cmd_FlipYButton;
         else if (__commandName == "@origin_btn") _pFunc = &Cmd_OriginButton;
+        else if (__commandName == "@color_btn") _pFunc = &Cmd_ColorButton;
         
         else if (__commandName == "@use_camera") _pFunc = &Cmd_UseCamera;
         else if (__commandName == "@move_camera") _pFunc = &Cmd_MoveCamera;

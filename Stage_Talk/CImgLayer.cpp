@@ -96,9 +96,12 @@ CImgLayer* CImgLayer::Create(const char* filename)
 void CImgLayer::OnLoop()
 {
     _visible = _alpha > 0 ? true : false;
-
-    if (_sprite.getColor().a != _alpha)
-        _sprite.setColor(sf::Color(255,255,255,_alpha));
+    
+    if (_sprite.getColor().a != _alpha ||
+        _sprite.getColor().r != _red ||
+        _sprite.getColor().g != _green ||
+        _sprite.getColor().b != _blue)
+        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
 
     if (_visible){
         if (_coordinate != 

@@ -71,8 +71,11 @@ void CCharacterLayer::OnLoop()
 {
     _visible = _alpha > 0 ? true : false;
 
-    if (_sprite.getColor().a != _alpha)
-        _sprite.setColor(sf::Color(255,255,255,_alpha));
+    if (_sprite.getColor().a != _alpha ||
+        _sprite.getColor().r != _red ||
+        _sprite.getColor().g != _green ||
+        _sprite.getColor().b != _blue)
+        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
 
     if (_visible){
         if (_coordinate != _sprite.getPosition())
@@ -266,7 +269,8 @@ bool CCharacterLayer::SetProperty(Object json)
 
             if (!CSurface::OnLoad(__body.get<String>("BODY_PATH").c_str(), _textureList[__name]))
                 return false;
-
+            
+            _textureList[__name].setSmooth(true);
             if (i == 0){
                 _currcentBody = __name;
                 _sprite.setTexture(_textureList[__name]);

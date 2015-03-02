@@ -12,8 +12,8 @@
 //==============================================================================
 void CApp::OnRender() {
     
-    sf::Clock _t;
-    _t.restart();
+    //sf::Clock _t;
+    //_t.restart();
     sf_Display->clear();
  
     CResourceControl::_ResourceManager.OnRender(sf_Display);

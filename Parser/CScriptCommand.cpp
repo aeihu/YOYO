@@ -93,6 +93,93 @@ bool Common_ArgsToKV(const char* funcName, list<pair<string, ENUM_FLAG> >& flags
     return true;
 }
 
+bool Common_FuncOfColor(string objTypeName, vector<string>& args, CActionSet* act)
+{ 
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
+    string __funcName = "Cmd_Color" + objTypeName;
+
+    if (act == NULL){
+        cout << __funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << __funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));        //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));       //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-cr", FLAG_OPTIONAL));        //red
+    __flags.push_back(pair<string, ENUM_FLAG>("-cg", FLAG_OPTIONAL));        //green
+    __flags.push_back(pair<string, ENUM_FLAG>("-cb", FLAG_OPTIONAL));        //blue
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));   //reset
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));   //pause
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
+        return false;
+
+    if (__values.count("-n") == 0 || 
+        (__values.count("-cr") == 0 &&
+        __values.count("-cg") == 0 &&
+        __values.count("-cb") == 0))
+        return false;
+
+    string& __name = __values["-n"][0];
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
+
+    size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
+        atof(__values["-i"][0].c_str());
+
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+
+    if (__doc->IsExists(objTypeName+":"+__name)){
+        CImageBaseClass* __obj = static_cast<CImageBaseClass*>(__doc->GetDrawableObject(objTypeName+":"+__name));
+
+        if (__values.count("-cr") > 0 &&
+            __values.count("-cg") > 0 &&
+            __values.count("-cb") > 0){
+                act->AddAction(__obj->CreateActionOfColorTo(
+                    __inte, 
+                    atof(__values["-cr"][0].c_str()), 
+                    atof(__values["-cg"][0].c_str()), 
+                    atof(__values["-cb"][0].c_str()), 
+                    __reset, 
+                    __pause));
+        }
+        else{
+            CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
+
+            if (__values.count("-cr") > 0)
+                __sim->AddAction(__obj->CreateActionOfColorRedTo(__inte, atof(__values["-cr"][0].c_str()), __reset, __pause));
+            
+            if (__values.count("-cg") > 0)
+                __sim->AddAction(__obj->CreateActionOfColorGreenTo(__inte, atof(__values["-cg"][0].c_str()), __reset, __pause));
+            
+            if (__values.count("-cb") > 0)
+                __sim->AddAction(__obj->CreateActionOfColorBlueTo(__inte, atof(__values["-cb"][0].c_str()), __reset, __pause));
+
+            act->AddAction(__sim);
+        }
+        
+        return true;
+    }
+    else
+        cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
+
+    return false;
+}
+
 bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act)
 { 
     bool __isEffect = args[0] == "q(-_-)p";
@@ -128,7 +215,6 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
     if (__values.count("-n") == 0)
         return false;
     
-    bool __result = true;
     string& __name = __values["-n"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __reset = __values.count("-r") == 0 ? false : true;
@@ -775,6 +861,11 @@ bool Cmd_OriginCharacterLayer(vector<string>& args, CActionSet* act)
     return Common_FuncOfOrigin("CharacterLayer", args, act);
 }
 
+bool Cmd_ColorCharacterLayer(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfColor("CharacterLayer", args, act);
+}
+
 //===========================================
 //
 //===========================================
@@ -827,6 +918,11 @@ bool Cmd_FlipYBackground(vector<string>& args, CActionSet* act)
 bool Cmd_OriginBackground(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfOrigin("Background", args, act);
+}
+
+bool Cmd_ColorBackground(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfColor("Background", args, act);
 }
 /*
     Cmd_AddImg: comand of add image.
@@ -885,6 +981,11 @@ bool Cmd_OriginImg(vector<string>& args, CActionSet* act)
     return Common_FuncOfOrigin("Img", args, act);
 }
 
+bool Cmd_ColorImg(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfColor("Img", args, act);
+}
+
 bool Cmd_ShowText(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfShow("Text", args, act);
@@ -918,6 +1019,11 @@ bool Cmd_SetTextLayerOrder(vector<string>& args, CActionSet* act)
 bool Cmd_OriginText(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfOrigin("Text", args, act);
+}
+
+bool Cmd_ColorText(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfColor("Text", args, act);
 }
 
 bool Cmd_SetText(vector<string>& args, CActionSet* act)
@@ -1147,6 +1253,11 @@ bool Cmd_FlipYButton(vector<string>& args, CActionSet* act)
 bool Cmd_OriginButton(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfOrigin("Button", args, act);
+}
+
+bool Cmd_ColorButton(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfColor("Button", args, act);
 }
 //
 //
