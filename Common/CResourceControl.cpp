@@ -334,7 +334,6 @@ void CResourceControl::LoadAsset()
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
     *__seq = _scriptList["loading_end_script"];
-    //__seq->AddAction(__img->CreateActionOfAlphaTo(500,0,false,true));
     __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
     _ActionControl.AddAction(__seq);
     
@@ -349,7 +348,6 @@ bool CResourceControl::LoadScript(string filename)
     CSequenceOfAction* __seq = new CSequenceOfAction();
     _effectObjCtrlEnable = true;
     *__seq = _scriptList["loading_start_script"];
-    //__seq->AddAction(__img->CreateActionOfAlphaTo(500,255,false,true));
     __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
     _ActionControl.AddAction(__seq);
 

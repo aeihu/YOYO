@@ -296,7 +296,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
     CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
     if (__obj != NULL){
-        act->AddAction(__obj->CreateActionOfAlphaTo(__inte, 0, __reset, __pause));
+        act->AddAction(__obj->CreateActionOfAlphaTo(__inte, 0.0f, __reset, __pause));
         return true;
     }
     return false;

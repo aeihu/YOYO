@@ -52,7 +52,8 @@ class CText : public CImageBaseClass
 
         void SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b); 
         void SetColor(vector<string> args);
-
+        
+        virtual void OnSaveData(Object& json) const;
 };
 
 #endif

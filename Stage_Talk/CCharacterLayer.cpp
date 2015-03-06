@@ -69,13 +69,14 @@ void CCharacterLayer::SetVoice(string name)
 
 void CCharacterLayer::OnLoop()
 {
-    _visible = _alpha > 0 ? true : false;
+    float __a = _alpha * _argOfCtrlForAlpha;
+    _visible = __a > 0 ? true : false;
 
-    if (_sprite.getColor().a != _alpha ||
+    if (_sprite.getColor().a != __a ||
         _sprite.getColor().r != _red ||
         _sprite.getColor().g != _green ||
         _sprite.getColor().b != _blue)
-        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
+        _sprite.setColor(sf::Color(_red, _green, _blue, __a));
 
     if (_visible){
         if (_coordinate != _sprite.getPosition())
@@ -90,7 +91,6 @@ void CCharacterLayer::OnLoop()
         if (_rotation != _sprite.getRotation())
             _sprite.setRotation(_rotation);
 
-        //if (_isFaceEnable){
         _framesOfMouth.OnLoop();
         _framesOfEyes.OnLoop();
 
@@ -115,7 +115,6 @@ void CCharacterLayer::OnLoop()
             _timer = std::rand() % 20000 + CCommon::_Common.GetTicks();
             //cout << _timer << endl;
         }
-        //}
     }
 }
          
@@ -370,6 +369,8 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth)
 void CCharacterLayer::OnSaveData(Object& json) const
 {
     CImageBaseClass::OnSaveData(json);
+    json << "body" << _currcentBody;
     json << "eye" << _currcentEyes;
     json << "mouth" << _currcentMouth;
+    json << "voice" << _currcentVoice;
 }

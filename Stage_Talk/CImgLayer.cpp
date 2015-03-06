@@ -95,13 +95,14 @@ CImgLayer* CImgLayer::Create(const char* filename)
 
 void CImgLayer::OnLoop()
 {
-    _visible = _alpha > 0 ? true : false;
+    float __a = _alpha * _argOfCtrlForAlpha;
+    _visible = __a > 0 ? true : false;
     
-    if (_sprite.getColor().a != _alpha ||
+    if (_sprite.getColor().a != __a ||
         _sprite.getColor().r != _red ||
         _sprite.getColor().g != _green ||
         _sprite.getColor().b != _blue)
-        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
+        _sprite.setColor(sf::Color(_red, _green, _blue, __a));
 
     if (_visible){
         if (_coordinate != 
@@ -128,7 +129,7 @@ void CImgLayer::OnLoop()
         list<CImgLayer*>::iterator it;
         for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
             if ((*it)->GetFlag() & FLAG_ALPHA)
-                (*it)->SetAlpha(_alpha);
+                (*it)->SetAlpha(_alpha * _argOfCtrlForAlpha);
 
             if ((*it)->GetFlag() & FLAG_SCALE)
                 (*it)->SetScale(_scale.x, _scale.y);

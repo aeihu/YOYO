@@ -15,7 +15,6 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _rotation = 0.0f;
     _coordinate.x = x;
     _coordinate.y = y;
-    _alpha = 0.0f;
     _flipX = _flipY = _visible = false;
     _red = _green = _blue = 255.0f;
 }
@@ -45,6 +44,21 @@ void CImageBaseClass::SetAlpha(int alpha)
 
 CSimultaneousOfAction* CImageBaseClass::CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore, bool pause)
 {
+    if (r > 255.0f)
+        r = 255.0f;
+    else if (r < 0.0f)
+        r = 0.0f;
+    
+    if (g > 255.0f)
+        g = 255.0f;
+    else if (g < 0.0f)
+        g = 0.0f;
+
+    if (b > 255.0f)
+        b = 255.0f;
+    else if (b < 0.0f)
+        b = 0.0f;
+
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->AddAction(new CActionTo(&_red, elapsed, r, restore, pause));
     __result->AddAction(new CActionTo(&_green, elapsed, g, restore, pause));
@@ -54,21 +68,51 @@ CSimultaneousOfAction* CImageBaseClass::CreateActionOfColorTo(size_t elapsed, fl
 
 CActionTo* CImageBaseClass::CreateActionOfColorRedTo(size_t elapsed, float r, bool restore, bool pause)
 {
+    if (r > 255.0f)
+        r = 255.0f;
+    else if (r < 0.0f)
+        r = 0.0f;
+
     return new CActionTo(&_red, elapsed, r, restore, pause);
 }
 
 CActionTo* CImageBaseClass::CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore, bool pause)
 {
+    if (g > 255.0f)
+        g = 255.0f;
+    else if (g < 0.0f)
+        g = 0.0f;
+
     return new CActionTo(&_green, elapsed, g, restore, pause);
 }
 
 CActionTo* CImageBaseClass::CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore, bool pause)
 {
+    if (b > 255.0f)
+        b = 255.0f;
+    else if (b < 0.0f)
+        b = 0.0f;
+
     return new CActionTo(&_blue, elapsed, b, restore, pause);
 }
 
 CSimultaneousOfAction* CImageBaseClass::CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore, bool pause)
 {
+    if (r + _red > 255.0f)
+        r = 255.0f - _red;
+    else if (r + _red < 0.0f)
+        r = _red;
+
+    if (g + _green > 255.0f)
+        g = 255.0f - _green;
+    else if (g + _green < 0.0f)
+        g = _green;
+    
+    if (b + _blue > 255.0f)
+        b = 255.0f - _blue;
+    else if (b + _blue < 0.0f)
+        b = _blue;
+
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->AddAction(new CActionBy(&_red, elapsed, r, restore, pause));
     __result->AddAction(new CActionBy(&_green, elapsed, g, restore, pause));
@@ -78,16 +122,31 @@ CSimultaneousOfAction* CImageBaseClass::CreateActionOfColorBy(size_t elapsed, fl
 
 CActionBy* CImageBaseClass::CreateActionOfColorRedBy(size_t elapsed, float r, bool restore, bool pause)
 {
+    if (r + _red > 255.0f)
+        r = 255.0f - _red;
+    else if (r + _red < 0.0f)
+        r = _red;
+
     return new CActionBy(&_red, elapsed, r, restore, pause);
 }
 
 CActionBy* CImageBaseClass::CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore, bool pause)
 {
+    if (g + _green > 255.0f)
+        g = 255.0f - _green;
+    else if (g + _green < 0.0f)
+        g = _green;
+
     return new CActionBy(&_green, elapsed, g, restore, pause);
 }
 
 CActionBy* CImageBaseClass::CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore, bool pause)
 {
+    if (b + _blue > 255.0f)
+        b = 255.0f - _blue;
+    else if (b + _blue < 0.0f)
+        b = _blue;
+
     return new CActionBy(&_blue, elapsed, b, restore, pause);
 }
 
@@ -165,4 +224,7 @@ void CImageBaseClass::OnSaveData(Object& json) const
     json << "origin_y" << _origin.y;
     json << "flip_x" << _flipX;
     json << "flip_y" << _flipY;
+    json << "red" << _red;
+    json << "green" << _green;
+    json << "blue" << _blue;
 }

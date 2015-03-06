@@ -133,10 +133,11 @@ void CText::SetStyle(vector<string> args)
 
 void CText::OnLoop()
 {
-    _visible = _alpha > 0 ? true : false;
+    float __a = _alpha * _argOfCtrlForAlpha;
+    _visible = __a > 0 ? true : false;
 
-    if (_sfText.getColor().a != _alpha)
-        _shadowColor.a = _textColor.a = _alpha;
+    if (_sfText.getColor().a != __a)
+        _shadowColor.a = _textColor.a = __a;
     
     if (_sfText.getColor().r != _red ||
         _sfText.getColor().g != _green ||
@@ -187,3 +188,12 @@ void CText::OnRender(sf::RenderTarget* Surf_Dest)
 //{
 //
 //}
+
+void CText::OnSaveData(Object& json) const
+{
+    CImageBaseClass::OnSaveData(json);
+    json << "shadow_enable" << _shadowEnable;
+    json << "shadow_red" << _shadowColor.r;
+    json << "shadow_green" << _shadowColor.g;
+    json << "shadow_blue" << _shadowColor.b;
+}

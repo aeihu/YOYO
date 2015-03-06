@@ -18,6 +18,7 @@ class CDrawableClass : public CBaiscProperties
     protected:
         bool                              _visible;
         float                             _alpha;
+        float                             _argOfCtrlForAlpha;
     public:
         CDrawableClass();
         

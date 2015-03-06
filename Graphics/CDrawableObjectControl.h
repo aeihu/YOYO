@@ -25,7 +25,7 @@ class CDrawableObjectControl
         
         bool                                    _isNeedSort;
 
-        vector<pair<string, CDrawableClass*> > _drawableObjectList;
+        vector<pair<string, CDrawableClass*> >  _drawableObjectList;
 
     protected:
     public:
