@@ -40,7 +40,7 @@ class CDrawableObjectControl
         bool OnLButtonDown(int mX, int mY);
         bool OnMouseMove(int mX, int mY);
         void OnLoop();
-        void OnRender(sf::RenderTarget* Surf_Dest);
+        void OnRender(sf::RenderTarget* Surf_Down, sf::RenderTarget* Surf_Up);
         void OnCleanup();
 };
 
