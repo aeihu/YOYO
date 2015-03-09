@@ -143,29 +143,6 @@ list<string> Cio::LoadTxtFile(string filename, string symbol)
         (*it) = DeleteComment(*it);
     }
 
-/*  end as ;
-	list<string> __result;
-	string __expression = "";
-    bool __isEnd = true;
-	
-	while(!__data.empty()){
-		if (__data.find_first_of(symbol) != string::npos){
-			__expression.append(__data, 0, __data.find_first_of(symbol)+_offset);
-			__data.erase(0,__data.find_first_of(symbol)+1);
-
-            __isEnd = CounterOfString(__expression, "\"") % 2 == 0 ? true : false;
-		}
-		else{
-			__expression = __data;
-			__data = "";
-		}
-
-		if (!__expression.empty() && __isEnd){
-			__result.push_back(__expression);
-            __expression = "";
-        }
-	}*/
-
 	return __result;
 }
 
@@ -219,7 +196,6 @@ list<string> Cio::SplitString(string str, string symbol)
 		str.erase(0, str.find_first_of(symbol)+1);
     }
 
-    //if (IsNested(str, '"', '"'))
     __result.push_back(str);
 
     return __result;

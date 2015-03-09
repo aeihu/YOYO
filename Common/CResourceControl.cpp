@@ -152,18 +152,40 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
     return 1;
 }
 
-bool CResourceControl::OnInit(string filename, sf::RenderTarget* display)
+bool CResourceControl::OnInit(string filename)
 {
-    if (!_CameraControl.OnInit(display))
+    if (!_renderTextureUp.create(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT))
+        return false;
+
+    if (!_renderTextureDown.create(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT))
+        return false;
+
+    if (!_CameraControl.OnInit(&_renderTextureDown))
         return false;
 
     if (!_SoundControl.OnInit())
         return false;
-
-    if (!OnInit(filename))
+    
+    if (!LoadJson(_gameBaiscAsset, filename))
         return false;
+    
+    if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "loading_start_script", "Script") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "loading_end_script", "Script") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
+    //if (CheckIn(_gameBaiscAsset, "music", "Music") < 0) return false;
 
-    return true;
+    return LoadScript(_gameBaiscAsset.get<String>("main_script"));
+
+    //if (!OnInit(filename))
+    //    return false;
+
+    //return true;
 }
         
 bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
@@ -237,25 +259,6 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
         obj << "loading_end_script" << __json.get<Array>("loading_end_script");
     
     return true;
-}
-
-bool CResourceControl::OnInit(string filename)
-{
-    if (!LoadJson(_gameBaiscAsset, filename))
-        return false;
-    
-    if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "loading_start_script", "Script") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "loading_end_script", "Script") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
-    //if (CheckIn(_gameBaiscAsset, "music", "Music") < 0) return false;
-
-    return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
 
 void CResourceControl::BeginLoadProcess()
@@ -374,11 +377,26 @@ void CResourceControl::OnLoop()
 
 void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 {
+    //sf::Clock _c;
+    //_c.restart();
+    _renderTextureDown.clear();
+    _renderTextureUp.clear(sf::Color(0,0,0,0));
+
     if (_drawableObjCtrlEnable)
-        _DrawableObjectControl.OnRender(Surf_Dest);
+        _DrawableObjectControl.OnRender(&_renderTextureDown, &_renderTextureUp);
     
     if (_effectObjCtrlEnable)
-        _EffectObjectControl.OnRender(Surf_Dest);
+        _EffectObjectControl.OnRender(&_renderTextureDown, &_renderTextureUp);
+    
+    _renderTextureDown.display();
+    _renderTextureUp.display();
+
+    _spriteDown.setTexture(_renderTextureDown.getTexture());
+    _spriteUp.setTexture(_renderTextureUp.getTexture());
+
+    Surf_Dest->draw(_spriteDown);
+    Surf_Dest->draw(_spriteUp);
+    //cout<< _c.getElapsedTime().asMilliseconds()<<endl;
 }
 
 void CResourceControl::OnCleanup()
@@ -438,7 +456,7 @@ string CResourceControl::GetVariable(string name)
         return _userVariableList[name];
     }
 
-    return "";
+    return name;
 }
 
 bool CResourceControl::DelVariable(string name)

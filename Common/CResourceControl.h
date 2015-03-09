@@ -24,6 +24,11 @@ using namespace std;
 class CResourceControl : public CScript
 {
     private:
+        sf::RenderTexture               _renderTextureUp;
+        sf::RenderTexture               _renderTextureDown;
+        sf::Sprite                      _spriteUp;
+        sf::Sprite                      _spriteDown;
+
         string                          _fileNameOfScript;
 
         Object                          _script;
@@ -45,7 +50,6 @@ class CResourceControl : public CScript
 
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
-        bool OnInit(string filename);
     protected:
 
         CResourceControl();
@@ -63,7 +67,7 @@ class CResourceControl : public CScript
         string GetVariable(string name);
         bool DelVariable(string name);
 
-        bool OnInit(string filename, sf::RenderTarget* display);
+        bool OnInit(string filename);
         bool LoadScript(string filename);
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
