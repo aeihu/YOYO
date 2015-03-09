@@ -1164,11 +1164,8 @@ bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
     if (!Common_ArgsToKV("Cmd_PlayBGM", __flags, args, __values))
         return false;
 
-    if (__values.count("-n") == 0)
-        return false;
-
     string __name = __values["-n"][0];
-    bool __loop = __values.count("-l") > 0 ? true : false;
+    bool __loop = __values.count("-l") == 0 ? false : true;
 
     CResourceControl::_ResourceManager._SoundControl.SetBGMLoop(__loop);
     if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name) == 0)
@@ -1196,17 +1193,29 @@ bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
 {
     args.erase(args.begin());
-    if (args.size() != 1){
+    if (args.size() < 1){
         cout << "Cmd_PlaySE(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
-    string name = args[0].c_str();
 
-    if(CResourceControl::_ResourceManager._SoundControl.PlaySE(name))
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NONPARAMETRIC));    //loop
+    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alias
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_PlaySE", __flags, args, __values))
+        return false;
+
+    string _name = __values["-n"][0];
+    string _alias = __values.count("-a") == 0 ? "" : __values["-a"][0];
+    bool _loop = __values.count("-l") == 0 ? false : true;
+
+    if(CResourceControl::_ResourceManager._SoundControl.PlaySE(_name, _alias, _loop))
         return true;
 
-    cout << "Cmd_DelSE(): can't find SE \""<< name << "\"." << endl;
+    cout << "Cmd_PlaySE(): can't find SE \""<< _name << "\"." << endl;
     return false;
 }
 

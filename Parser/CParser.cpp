@@ -156,12 +156,12 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
         else if (__commandName == "@deplay"){
-            if (__listOfCmdPara.size() == 1){
+            if (__listOfCmdPara.size() == 2){
                 if (act != &CResourceControl::_ResourceManager._ActionControl){
-                    act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[0].c_str())));
+                    act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[1].c_str())));
                 }
                 else{
-                    SetDeplay(atoi(__listOfCmdPara[0].c_str()));
+                    SetDeplay(atoi(__listOfCmdPara[1].c_str()));
                 }
             }
             else
