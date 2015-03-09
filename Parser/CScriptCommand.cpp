@@ -1042,6 +1042,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));   //name
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //size
     __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //text
+    __flags.push_back(pair<string, ENUM_FLAG>("-h", FLAG_NONPARAMETRIC)); //shadow
     
     __flags.push_back(pair<string, ENUM_FLAG>("-cr", FLAG_OPTIONAL));    //color red
     __flags.push_back(pair<string, ENUM_FLAG>("-cg", FLAG_OPTIONAL));    //color green
@@ -1057,7 +1058,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     if (!Common_ArgsToKV("Cmd_SetText", __flags, args, __values))
         return false;
     
-    string __name = __values["-n"][0];
+    string& __name = __values["-n"][0];
     
     CDrawableObjectControl* __doc = __isEffect ? 
         &CResourceControl::_ResourceManager._EffectObjectControl
@@ -1073,7 +1074,13 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     vector<string> __args;
     CText* __txt = static_cast<CText*>(__doc->GetDrawableObject("Text:"+__name));
     
+    if (__values.count("-h") > 0){
+        __args.push_back("");
+    }
+    __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetShadowEnable, __args));
+
     if (__values.count("-f") > 0){
+        __args.clear();
         __args.push_back(__values["-f"][0]);
         __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetFont, __args));
     }
@@ -1208,8 +1215,8 @@ bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
     if (!Common_ArgsToKV("Cmd_PlaySE", __flags, args, __values))
         return false;
 
-    string _name = __values["-n"][0];
-    string _alias = __values.count("-a") == 0 ? "" : __values["-a"][0];
+    string& _name = __values["-n"][0];
+    string& _alias = __values.count("-a") == 0 ? "" : __values["-a"][0];
     bool _loop = __values.count("-l") == 0 ? false : true;
 
     if(CResourceControl::_ResourceManager._SoundControl.PlaySE(_name, _alias, _loop))

@@ -104,7 +104,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         
         else if (__commandName == "@show_txt") _pFunc = &Cmd_ShowText;
         else if (__commandName == "@hide_txt") _pFunc = &Cmd_HideText;
-        else if (__commandName == "@move_img") _pFunc = &Cmd_MoveText;
+        else if (__commandName == "@move_txt") _pFunc = &Cmd_MoveText;
         else if (__commandName == "@scale_txt") _pFunc = &Cmd_ScaleText;
         else if (__commandName == "@rota_txt") _pFunc = &Cmd_RotationText;
         else if (__commandName == "@order_txt") _pFunc = &Cmd_SetTextLayerOrder;
@@ -302,7 +302,7 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
                 
                 __index = 0;
                 do{
-                     __index = para.find("'", __index == 0 ? 0 : __index+1);
+                     __index = para.find("'", __index == 0 ? 0 : __index);
                     if (__index != string::npos && __index > 0){
                         if (para[__index-1] != '\\'){
                             __tmp.insert (0, para, 0, __index);
@@ -310,6 +310,9 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
                             __tmp.clear();
                             para.erase(0, __index + 1);
                             break;
+                        }
+                        else{
+                            para.erase(__index-1,1);
                         }
                     }
                     else{
@@ -328,8 +331,8 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
         }
         else{
             if (!__tmp.empty()){
-                    plist.push_back(__tmp);
-                    __tmp.clear();
+                plist.push_back(__tmp);
+                __tmp.clear();
             }
 
             para.erase(0,1);
