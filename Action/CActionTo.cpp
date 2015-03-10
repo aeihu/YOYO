@@ -51,13 +51,13 @@ bool CActionTo::OnLoop(bool cleanup)
         //_skip = false;
 
         if (__b){
-            if ((*_val) > _valOfFinish){
+            if ((*_val) >= _valOfFinish){
                 (*_val) = _valOfFinish;
                 goto FINISH;
             }
         }
         else{
-            if ((*_val) < _valOfFinish){
+            if ((*_val) <= _valOfFinish){
                 (*_val) = _valOfFinish;
                 goto FINISH;
             }
