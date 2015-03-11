@@ -13,7 +13,6 @@ CDrawableClass::CDrawableClass()
 {
     _layerOrder = 0;
     _alpha = 0.0f;
-    _argOfCtrlForAlpha = 1.0f;
 }
 
 unsigned char CDrawableClass::GetLayerOrder() const
@@ -58,5 +57,4 @@ void CDrawableClass::OnSaveData(Object& json) const
     CBaiscProperties::OnSaveData(json);
     json << "layer_order" << _layerOrder;
     json << "alpha" << _alpha;
-    json << "alpha_ctrl" << _argOfCtrlForAlpha;
 }
