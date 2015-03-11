@@ -32,7 +32,12 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         map<string, pair<sf::Image, int> >      _mouthList;
         map<string, pair<sf::Image, int> >      _eyeList;
         map<string, sf::Texture>                _textureList;
+
+        float                                   _alphaOfSwap;
+        sf::Sprite                              _swapSprite;
         sf::Sprite                              _sprite;
+        CSimultaneousOfAction                   _simAct;
+        bool                                    _isBodyChangeing;
         
         bool CheckList(Object json);
         bool SetProperty(Object json);
@@ -47,7 +52,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         static CCharacterLayer* Create(const char* filename);
         
         //bool SetPose(string eye);
-        bool SetPose(string body, string eye, string mouth);
+        bool SetPose(string body, string eye, string mouth, bool isEffect);
         void SetPose(vector<string> args);
 
         void SetVoice(string name);

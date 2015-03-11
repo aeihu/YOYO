@@ -13,11 +13,12 @@
 
 CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 {
-    //_isFaceEnable = false;
+    _isBodyChangeing = false;
     _framesOfMouth._Type = CAnimation::Oscillate;
     _framesOfEyes._Type = CAnimation::Oscillate;
     _currcentBody = _currcentMouth = _currcentEyes = _currcentVoice = "";
     _timer = 0;
+    _alphaOfSwap = 1.0f;
 }
 
 CCharacterLayer* CCharacterLayer::Create(const char* filename)
@@ -69,27 +70,43 @@ void CCharacterLayer::SetVoice(string name)
 
 void CCharacterLayer::OnLoop()
 {
-    float __a = _alpha * _argOfCtrlForAlpha;
-    _visible = __a > 0 ? true : false;
+    if (_isBodyChangeing){ 
+        if (_simAct.OnLoop()){
+            _isBodyChangeing = false;
+            _sprite.setTexture(_textureList[_currcentBody]);
+        }
+        
+        _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
+    }
 
-    if (_sprite.getColor().a != __a ||
+    _visible = _alpha > 0 ? true : false;
+
+    if (_sprite.getColor().a != _alpha ||
         _sprite.getColor().r != _red ||
         _sprite.getColor().g != _green ||
         _sprite.getColor().b != _blue)
-        _sprite.setColor(sf::Color(_red, _green, _blue, __a));
+        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha*_alphaOfSwap));
 
     if (_visible){
-        if (_coordinate != _sprite.getPosition())
+        if (_coordinate != _sprite.getPosition()){
             _sprite.setPosition(_coordinate);
+            _swapSprite.setPosition(_coordinate);
+        }
         
-        if (_origin != _sprite.getOrigin())
+        if (_origin != _sprite.getOrigin()){
             _sprite.setOrigin(_origin);
+            _swapSprite.setOrigin(_origin);
+        }
         
-        if (_scale != _sprite.getScale())
+        if (_scale != _sprite.getScale()){
             _sprite.setScale(_scale);
+            _swapSprite.setScale(_scale);
+        }
 
-        if (_rotation != _sprite.getRotation())
+        if (_rotation != _sprite.getRotation()){
             _sprite.setRotation(_rotation);
+            _swapSprite.setRotation(_rotation);
+        }
 
         _framesOfMouth.OnLoop();
         _framesOfEyes.OnLoop();
@@ -122,6 +139,9 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (_visible)
         Surf_Dest->draw(_sprite);
+
+    if (_isBodyChangeing)
+        Surf_Dest->draw(_swapSprite);
 }
 
 bool CCharacterLayer::CheckList(Object json) 
@@ -326,15 +346,30 @@ bool CCharacterLayer::SetProperty(Object json)
 
 void CCharacterLayer::SetPose(vector<string> args)
 {
-    if (args.size() > 1)
-        SetPose(args[0], args[1], args[2]);
+    if (args.size() >= 3)
+        SetPose(args[0], args[1], args[2], args.size()==3);
 }
 
-bool CCharacterLayer::SetPose(string body, string eye, string mouth)
+bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffect)
 {
-    if (_currcentBody != body && !body.empty() && _textureList.count(body) > 0){
-        _sprite.setTexture(_textureList[body]);
+    bool __isBodyChanged = _currcentBody != body;
+    if (__isBodyChanged && !body.empty() && _textureList.count(body) > 0){
         _currcentBody = body;
+        
+        if (_visible && isEffect){
+            _swapSprite.setTexture(_textureList[body]);
+            _alphaOfSwap = 1.0f;
+            _simAct.OnCleanup();
+            _simAct.AddAction(new CActionTo(&_alphaOfSwap, 400, 0, true));
+            _isBodyChangeing = true;
+            _timer += 1000;
+        }
+        else{
+            _alphaOfSwap = 1.0f;
+            _simAct.OnCleanup();
+            _sprite.setTexture(_textureList[body]);
+        }
+
         _framesOfEyes.SetDestTexture(&_textureList[body]);
         _framesOfMouth.SetDestTexture(&_textureList[body]);
     }
@@ -343,7 +378,10 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth)
         return false;
     }
 
-    if (_currcentEyes != eye && !eye.empty() && _eyeList.count(eye) > 0){
+    if ((__isBodyChanged || _currcentEyes != eye) && 
+        !eye.empty() && 
+        _eyeList.count(eye) > 0){
+
         _framesOfEyes.SetTexture(_eyeList[eye].first);
         _framesOfEyes.SetMaxFrames(_eyeList[eye].second);
         _currcentEyes = eye;
@@ -353,7 +391,10 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth)
         return false;
     }
 
-    if (_currcentMouth != mouth && !mouth.empty() && _mouthList.count(mouth) > 0){
+    if ((__isBodyChanged || _currcentMouth != mouth) && 
+        !mouth.empty() && 
+        _mouthList.count(mouth) > 0){
+
         _framesOfMouth.SetTexture(_mouthList[mouth].first);
         _framesOfMouth.SetMaxFrames(_mouthList[mouth].second);
         _currcentMouth = mouth;
