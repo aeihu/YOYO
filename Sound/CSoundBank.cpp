@@ -107,15 +107,16 @@ void CSoundBank::OnCleanup()
 }
 
 //==============================================================================
-bool CSoundBank::PlaySE(string name, string alias, bool loop)
+bool CSoundBank::PlaySE(string name, string alias, float vol, bool loop)
 {
     if (_seList.count(name) < 1)
         return false;
-
+    
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
             (*it).second.setBuffer(*_seList[name]);
             (*it).second.setLoop(loop);
+            (*it).second.setVolume(vol * CCommon::_Common.SE_VOLUME);
             (*it).second.play();
             return true;
         }
@@ -124,6 +125,7 @@ bool CSoundBank::PlaySE(string name, string alias, bool loop)
     _soundPool.push_back(make_pair(alias, sf::Sound()));
     _soundPool.back().second.setBuffer(*_seList[name]);
     _soundPool.back().second.setLoop(loop);
+    _soundPool.back().second.setVolume(vol * CCommon::_Common.SE_VOLUME);
     _soundPool.back().second.play();
     return true;
 }
@@ -140,6 +142,7 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
         }
         _voicePool.front()->Load(*_voiceList[name]);
         _voicePool.front()->_Name = name;
+        _voicePool.front()->setVolume(CCommon::_Common.VOICE_VOLUME);
         _voicePool.front()->play();
         return true;
     }
@@ -148,6 +151,7 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
             if ((*it)->getStatus() == sf::Sound::Stopped){
                 (*it)->Load(*_voiceList[name]);
                 (*it)->_Name = name;
+                (*it)->setVolume(CCommon::_Common.VOICE_VOLUME);
                 (*it)->play();
                 return true;
             }
@@ -156,6 +160,7 @@ bool CSoundBank::PlayVoice(string name, bool isSameChannel)
         _voicePool.push_back(new CVoiceStream());
         _voicePool.back()->Load(*_voiceList[name]);
         _voicePool.back()->_Name = name;
+        _voicePool.back()->setVolume(CCommon::_Common.VOICE_VOLUME);
         _voicePool.back()->play();
         return true;
     }
@@ -229,7 +234,7 @@ void CSoundBank::PlayBgm()
     _bgm.play();
 }
         
-int CSoundBank::PlayBgm(string name)
+int CSoundBank::PlayBgm(string name, float vol)
 {
     if(_musicList.count(name) < 1)
         return -1;
@@ -261,7 +266,8 @@ int CSoundBank::PlayBgm(string name)
             return -2;
         }
     }
-    
+
+    _bgm.setVolume(vol * CCommon::_Common.BGM_VOLUME);
     _bgm.play();
     return 0;
 }

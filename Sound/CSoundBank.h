@@ -40,6 +40,9 @@ class CSoundBank {
                 virtual void onSeek(sf::Time timeOffset);
         };
 
+        float                                           _musicVolume;
+        float                                           _voiceVolume;
+        float                                           _soundVolume;
         list<CVoiceStream*>                             _voicePool;
         list<pair<string, sf::Sound> >                  _soundPool;
         sf::Music                                       _bgm;
@@ -63,7 +66,7 @@ class CSoundBank {
         void OnCleanup();
 
         int AddSE(string name, string filename) ;
-        bool PlaySE(string name, string alias, bool loop);
+        bool PlaySE(string name, string alias, float vol, bool loop);
         bool DeleteSE(string name);
         void StopSE(string alias);
 
@@ -79,7 +82,7 @@ class CSoundBank {
         void SetBGMLoop(bool loop);
         sf::Sound::Status GetBgmStatus();
         void PlayBgm();
-        int PlayBgm(string name);
+        int PlayBgm(string name, float vol);
         void PauseBgm();
 };
 
