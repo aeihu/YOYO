@@ -107,22 +107,24 @@ void CSoundBank::OnCleanup()
 }
 
 //==============================================================================
-bool CSoundBank::PlaySE(string name)
+bool CSoundBank::PlaySE(string name, string alias, bool loop)
 {
     if (_seList.count(name) < 1)
         return false;
 
-    for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
-        if ((*it).getStatus() == sf::Sound::Stopped){
-            (*it).setBuffer(*_seList[name]);
-            (*it).play();
+    for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
+        if ((*it).second.getStatus() == sf::Sound::Stopped){
+            (*it).second.setBuffer(*_seList[name]);
+            (*it).second.setLoop(loop);
+            (*it).second.play();
             return true;
         }
     }
 
-    _soundPool.push_back(sf::Sound());
-    _soundPool.back().setBuffer(*_seList[name]);
-    _soundPool.back().play();
+    _soundPool.push_back(make_pair(alias, sf::Sound()));
+    _soundPool.back().second.setBuffer(*_seList[name]);
+    _soundPool.back().second.setLoop(loop);
+    _soundPool.back().second.play();
     return true;
 }
 
@@ -173,6 +175,18 @@ bool CSoundBank::DelBuffer(map<string, sf::SoundBuffer*>& bufList, string name)
 bool CSoundBank::DeleteSE(string name)
 {
     return DelBuffer(_seList, name);
+}
+
+void CSoundBank::StopSE(string alias)
+{
+    if (alias.empty())
+        return;
+
+    for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();it++){
+        if ((*it).first == alias){
+            (*it).second.stop();
+        }
+    }
 }
 
 bool CSoundBank::DeleteVoice(string name)
@@ -254,20 +268,19 @@ int CSoundBank::PlayBgm(string name)
 
 void CSoundBank::OnLoop()
 {
-    if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
-        for (list<sf::Sound>::iterator it=_soundPool.begin() ; it != _soundPool.end();){
-            if ((*it).getStatus() == sf::Sound::Stopped){
+    for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();){
+        if ((*it).second.getStatus() == sf::Sound::Stopped){
+            if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
                 it=_soundPool.erase(it);
-
-                if (it == _soundPool.end() ||
-                    _soundPool.size() <= CCommon::_Common.SOUND_POOL_NUM)
-                    break;
+                continue;
             }
-            else
-                it++;
+            else{
+                (*it).first = "";
+            }
         }
+        ++it;
     }
-
+    
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); ){
         if ((*it)->getStatus() == sf::Sound::Stopped){
             if (_voicePool.size() > CCommon::_Common.VOICE_POOL_NUM){
@@ -321,7 +334,7 @@ bool CSoundBank::GetVoiceStatus(string name)
 bool CSoundBank::OnInit()
 {
     for (unsigned char i=0; i<CCommon::_Common.SOUND_POOL_NUM; i++){
-        _soundPool.push_back(sf::Sound());
+        _soundPool.push_back(make_pair("", sf::Sound()));
     }
 
     for (unsigned char i=0; i<CCommon::_Common.VOICE_POOL_NUM; i++){

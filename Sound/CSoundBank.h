@@ -41,7 +41,7 @@ class CSoundBank {
         };
 
         list<CVoiceStream*>                             _voicePool;
-        list<sf::Sound>                                 _soundPool;
+        list<pair<string, sf::Sound> >                  _soundPool;
         sf::Music                                       _bgm;
         map<string, sf::SoundBuffer*>                   _voiceList;
         map<string, sf::SoundBuffer*>                   _seList;
@@ -63,8 +63,9 @@ class CSoundBank {
         void OnCleanup();
 
         int AddSE(string name, string filename) ;
-        bool PlaySE(string name);
+        bool PlaySE(string name, string alias, bool loop);
         bool DeleteSE(string name);
+        void StopSE(string alias);
 
         int AddVoice(string name, string filename) ;
         bool PlayVoice(string name, bool isSameChannel=true);
