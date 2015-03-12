@@ -74,7 +74,7 @@ bool CBox::SetProperty(Object json)
     else
         _texture.loadFromImage(__tileset);
 
-    _sprite.setTexture(_texture);
+    _sprite.setTexture(_texture,true);
 
     return true;
 }

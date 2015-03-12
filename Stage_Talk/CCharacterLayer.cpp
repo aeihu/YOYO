@@ -73,7 +73,7 @@ void CCharacterLayer::OnLoop()
     if (_isBodyChangeing){ 
         if (_simAct.OnLoop()){
             _isBodyChangeing = false;
-            _sprite.setTexture(_textureList[_currcentBody]);
+            _sprite.setTexture(_textureList[_currcentBody],true);
         }
         
         _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
@@ -93,9 +93,12 @@ void CCharacterLayer::OnLoop()
             _swapSprite.setPosition(_coordinate);
         }
         
-        if (_origin != _sprite.getOrigin()){
-            _sprite.setOrigin(_origin);
-            _swapSprite.setOrigin(_origin);
+        if ((_origin.x * _sprite.getLocalBounds().width != _sprite.getOrigin().x) ||
+            (_origin.y * _sprite.getLocalBounds().height != _sprite.getOrigin().y)){
+            _sprite.setOrigin(_origin.x * _sprite.getLocalBounds().width,
+                _origin.y * _sprite.getLocalBounds().height);
+
+            _swapSprite.setOrigin(_sprite.getOrigin());
         }
         
         if (_scale != _sprite.getScale()){
@@ -292,7 +295,7 @@ bool CCharacterLayer::SetProperty(Object json)
             _textureList[__name].setSmooth(true);
             if (i == 0){
                 _currcentBody = __name;
-                _sprite.setTexture(_textureList[__name]);
+                _sprite.setTexture(_textureList[__name],true);
                 
                 _framesOfMouth.SetOffset(__body.get<Number>("MOUTH_OFFSET_X"), __body.get<Number>("MOUTH_OFFSET_Y"));
                 _framesOfMouth.SetSize(__body.get<Number>("MOUTH_WIDTH"), __body.get<Number>("MOUTH_HEIGHT"));
@@ -357,7 +360,7 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
         _currcentBody = body;
         
         if (_visible && isEffect){
-            _swapSprite.setTexture(_textureList[body]);
+            _swapSprite.setTexture(_textureList[body],true);
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
             _simAct.AddAction(new CActionTo(&_alphaOfSwap, 400, 0, true));
@@ -367,7 +370,7 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
         else{
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
-            _sprite.setTexture(_textureList[body]);
+            _sprite.setTexture(_textureList[body],true);
         }
 
         _framesOfEyes.SetDestTexture(&_textureList[body]);

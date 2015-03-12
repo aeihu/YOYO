@@ -47,12 +47,12 @@ class CCommon
         int  WWIDTH;//        800
         int  WHEIGHT;//        600
         int  FONT_SIZE;//   16
-        //string  FONT_PATH;//   "C://WINDOWS//Fonts//MSGOTHIC.TTC"
+
         unsigned char   CHAR_COLOR_RED;
         unsigned char   CHAR_COLOR_GREEN;
         unsigned char   CHAR_COLOR_BLUE;
         unsigned char   CHAR_COLOR_ALPHA;//10
-        //char   FONT_SHADOW;//10
+
         unsigned char   CHAR_SHADOW_COLOR_RED ;//10
         unsigned char   CHAR_SHADOW_COLOR_GREEN ;//10
         unsigned char   CHAR_SHADOW_COLOR_BLUE ;//10

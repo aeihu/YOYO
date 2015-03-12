@@ -37,6 +37,9 @@ class CText : public CImageBaseClass
 
         //void FlipX();
         //void FlipY();
+        
+        void SetShadowEnable(bool b);
+        void SetShadowEnable(vector<string> args);
 
         void SetFont(string name);
         void SetFont(vector<string> args);

@@ -104,6 +104,19 @@ void CText::SetFont(vector<string> args)
         SetFont(args[0]);
     }
 }
+
+void CText::SetShadowEnable(bool b)
+{
+    _shadowEnable = b;
+}
+
+void CText::SetShadowEnable(vector<string> args)
+{
+    if (args.size() > 0)
+        SetShadowEnable(true);
+    else
+        SetShadowEnable(false);
+}
         
 void CText::SetStyle(size_t flag)
 {
@@ -133,11 +146,10 @@ void CText::SetStyle(vector<string> args)
 
 void CText::OnLoop()
 {
-    float __a = _alpha * _argOfCtrlForAlpha;
-    _visible = __a > 0 ? true : false;
+    _visible = _alpha > 0 ? true : false;
 
-    if (_sfText.getColor().a != __a)
-        _shadowColor.a = _textColor.a = __a;
+    if (_sfText.getColor().a != _alpha)
+        _shadowColor.a = _textColor.a = _alpha;
     
     if (_sfText.getColor().r != _red ||
         _sfText.getColor().g != _green ||
@@ -151,8 +163,11 @@ void CText::OnLoop()
         if (_coordinate != _sfText.getPosition())
             _sfText.setPosition(_coordinate);
         
-        if (_origin != _sfText.getOrigin())
-            _sfText.setOrigin(_origin);
+        if ((_origin.x * _sfText.getLocalBounds().width != _sfText.getOrigin().x) ||
+            (_origin.y * _sfText.getLocalBounds().height != _sfText.getOrigin().y)){
+            _sfText.setOrigin(_origin.x * _sfText.getLocalBounds().width,
+                _origin.y * _sfText.getLocalBounds().height);
+        }
         
         if (_scale != _sfText.getScale())
             _sfText.setScale(_scale);

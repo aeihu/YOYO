@@ -806,6 +806,7 @@ bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act)
     __flags.push_back(pair<string, ENUM_FLAG>("-e", FLAG_OPTIONAL));    //eye
     __flags.push_back(pair<string, ENUM_FLAG>("-m", FLAG_OPTIONAL));    //mouth
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
+    __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_NONPARAMETRIC));    //skip
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_SetPoseCharacterLayer", __flags, args, __values))
@@ -823,6 +824,9 @@ bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act)
     __args.push_back(__body);
     __args.push_back(__eye);
     __args.push_back(__mouth);
+
+    if (__values.count("-s") > 0)
+        __args.push_back("");
     
     CDrawableObjectControl* __doc = __isEffect ? 
         &CResourceControl::_ResourceManager._EffectObjectControl

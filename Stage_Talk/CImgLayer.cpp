@@ -76,7 +76,7 @@ bool CImgLayer::LoadImg(const char* fileName)
     if (!CSurface::OnLoad(fileName, _texture))
         return false;
 
-    _sprite.setTexture(_texture);
+    _sprite.setTexture(_texture,true);
     return true;
 }
 
@@ -115,8 +115,11 @@ void CImgLayer::OnLoop()
                 _sprite.setPosition(_coordinate);
         }
         
-        if (_origin != _sprite.getOrigin())
-            _sprite.setOrigin(_origin);
+        if ((_origin.x * _sprite.getLocalBounds().width != _sprite.getOrigin().x) ||
+            (_origin.y * _sprite.getLocalBounds().height != _sprite.getOrigin().y)){
+            _sprite.setOrigin(_origin.x * _sprite.getLocalBounds().width,
+                _origin.y * _sprite.getLocalBounds().height);
+        }
         
         if (_scale != _sprite.getScale()){
             _sprite.setScale(_scale);
