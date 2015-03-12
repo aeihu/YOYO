@@ -107,7 +107,13 @@ void CSoundBank::OnCleanup()
 }
 
 //==============================================================================
-bool CSoundBank::PlaySE(string name, string alias, float vol, bool loop)
+void CSoundBank::PlaySE(vector<string> args)
+{
+    if (args.size() >= 2)
+        PlaySE(args[0], atof(args[1].c_str()), args.size() > 2);
+}
+
+bool CSoundBank::PlaySE(string name, float vol, bool loop)
 {
     if (_seList.count(name) < 1)
         return false;
@@ -122,7 +128,7 @@ bool CSoundBank::PlaySE(string name, string alias, float vol, bool loop)
         }
     }
 
-    _soundPool.push_back(make_pair(alias, sf::Sound()));
+    _soundPool.push_back(make_pair(name, sf::Sound()));
     _soundPool.back().second.setBuffer(*_seList[name]);
     _soundPool.back().second.setLoop(loop);
     _soundPool.back().second.setVolume(vol * CCommon::_Common.SE_VOLUME);
@@ -182,13 +188,19 @@ bool CSoundBank::DeleteSE(string name)
     return DelBuffer(_seList, name);
 }
 
-void CSoundBank::StopSE(string alias)
+void CSoundBank::StopSE(vector<string> args)
 {
-    if (alias.empty())
+    if (args.size() >= 1)
+        StopSE(args[0]);
+}
+
+void CSoundBank::StopSE(string name)
+{
+    if (name.empty())
         return;
 
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();it++){
-        if ((*it).first == alias){
+        if ((*it).first == name){
             (*it).second.stop();
         }
     }
@@ -228,13 +240,24 @@ void CSoundBank::PauseBgm()
 {
     _bgm.pause();
 }
+        
+void CSoundBank::StopBgm()
+{
+    _bgm.stop();
+}
 
 void CSoundBank::PlayBgm()
 {
     _bgm.play();
 }
         
-int CSoundBank::PlayBgm(string name, float vol)
+void CSoundBank::PlayBgm(vector<string> args)
+{
+    if (args.size() >= 2)
+        PlayBgm(args[0], atof(args[1].c_str()), args.size() > 2);
+}
+
+int CSoundBank::PlayBgm(string name, float vol, bool loop)
 {
     if(_musicList.count(name) < 1)
         return -1;
@@ -267,6 +290,7 @@ int CSoundBank::PlayBgm(string name, float vol)
         }
     }
 
+    _bgm.setLoop(loop);
     _bgm.setVolume(vol * CCommon::_Common.BGM_VOLUME);
     _bgm.play();
     return 0;

@@ -66,9 +66,13 @@ class CSoundBank {
         void OnCleanup();
 
         int AddSE(string name, string filename) ;
-        bool PlaySE(string name, string alias, float vol, bool loop);
         bool DeleteSE(string name);
-        void StopSE(string alias);
+
+        void PlaySE(vector<string> args);
+        bool PlaySE(string name, float vol, bool loop);
+
+        void StopSE(vector<string> args);
+        void StopSE(string name);
 
         int AddVoice(string name, string filename) ;
         bool PlayVoice(string name, bool isSameChannel=true);
@@ -81,9 +85,12 @@ class CSoundBank {
         bool OnLoadBGM(const char* FileName);
         void SetBGMLoop(bool loop);
         sf::Sound::Status GetBgmStatus();
+
         void PlayBgm();
-        int PlayBgm(string name, float vol);
+        void PlayBgm(vector<string> args);
+        int PlayBgm(string name, float vol, bool loop);
         void PauseBgm();
+        void StopBgm();
 };
 
 //==============================================================================

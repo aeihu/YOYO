@@ -1169,34 +1169,73 @@ bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NONPARAMETRIC));    //loop
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-o", FLAG_OPTIONAL));    //offset
+    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //vol
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_PlayBGM", __flags, args, __values))
         return false;
 
-    string __name = __values["-n"][0];
-    bool __loop = __values.count("-l") == 0 ? false : true;
+    string& __name = __values["-n"][0];
+    string& __vol = __values.count("-v") == 0 ? "1" : __values["-v"][0];
+    
+    vector<string> __args;
+    __args.push_back(__name);
+    __args.push_back(__vol);
+    if (__values.count("-l") > 0)
+        __args.push_back("");
 
-    CResourceControl::_ResourceManager._SoundControl.SetBGMLoop(__loop);
-    if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name) == 0)
-        return true;
-    else
-        return false;
+    act->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm, __args));
+    
+    return true;
+    //CResourceControl::_ResourceManager._SoundControl.SetBGMLoop(__loop);
+    //if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name) == 0)
+    //    return true;
+    //else
+    //    return false;
 }
 
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act)
 {
-    if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Playing)
-        CResourceControl::_ResourceManager._SoundControl.PauseBgm();
+    act->AddAction(new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PauseBgm));
+    //if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Playing)
+    //    CResourceControl::_ResourceManager._SoundControl.PauseBgm();
 
     return true;
 }
 
 bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 {
-    if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Paused)
-        CResourceControl::_ResourceManager._SoundControl.PlayBgm();
+    act->AddAction(new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm));
+    //if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Paused)
+    //    CResourceControl::_ResourceManager._SoundControl.PlayBgm();
+
+    return true;
+}
+
+bool Cmd_StopBGM(vector<string>& args, CActionSet* act)
+{
+    act->AddAction(new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
+    
+    return true;
+}
+
+bool Cmd_StopSE(vector<string>& args, CActionSet* act)
+{
+    args.erase(args.begin());
+    if (args.size() < 1){
+        cout << "Cmd_StopSE(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    vector<string> __args;
+    __args.push_back(args[0]);
+    act->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopSE, __args));
 
     return true;
 }
@@ -1209,25 +1248,32 @@ bool Cmd_PlaySE(vector<string>& args, CActionSet* act)
             << " argument(s) in the command." <<endl;
         return false;
     }
-
+    
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NONPARAMETRIC));    //loop
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-a", FLAG_OPTIONAL));    //alias
+    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //vol
 
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV("Cmd_PlaySE", __flags, args, __values))
         return false;
 
-    string& _name = __values["-n"][0];
-    string& _alias = __values.count("-a") == 0 ? "" : __values["-a"][0];
-    bool _loop = __values.count("-l") == 0 ? false : true;
+    string& __name = __values["-n"][0];
+    string& __vol = __values.count("-v") == 0 ? "1" : __values["-v"][0];
+    
+    vector<string> __args;
+    __args.push_back(__name);
+    __args.push_back(__vol);
+    if (__values.count("-l") > 0)
+        __args.push_back("");
 
-    if(CResourceControl::_ResourceManager._SoundControl.PlaySE(_name, _alias, _loop))
-        return true;
+    act->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlaySE, __args));
 
-    cout << "Cmd_PlaySE(): can't find SE \""<< _name << "\"." << endl;
-    return false;
+    return true;
+
+    //cout << "Cmd_PlaySE(): can't find SE \""<< _name << "\"." << endl;
+    //return false;
 }
 
 bool Cmd_ShowButton(vector<string>& args, CActionSet* act)

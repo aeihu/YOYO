@@ -124,10 +124,12 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@order_logbox") _pFunc = &Cmd_SetLogBoxLayerOrder;
 
         else if (__commandName == "@play_se") _pFunc = &Cmd_PlaySE;
+        else if (__commandName == "@stop_se") _pFunc = &Cmd_StopSE;
 
         else if (__commandName == "@play_bgm") _pFunc = &Cmd_PlayBGM;
         else if (__commandName == "@pause_bgm") _pFunc = &Cmd_PauseBGM;
         else if (__commandName == "@resume_bgm") _pFunc = &Cmd_ResumeBGM;
+        else if (__commandName == "@stop_bgm") _pFunc = &Cmd_StopBGM;
 
         else if (__commandName == "@show_btn") _pFunc = &Cmd_ShowButton;
         else if (__commandName == "@hide_btn") _pFunc = &Cmd_HideButton;

@@ -46,8 +46,10 @@ CCommon::CCommon()
 
     //<option>
     TEXT_FRAMERATE = 10;
-    BGM_VOLUME = 10;
-    SE_VOLUME = 10;
+
+    VOICE_VOLUME =
+    BGM_VOLUME = 
+    SE_VOLUME = 100.0f;
     //</option>
 
     MOUSEOVER_SE = "MOUSEOVER";
@@ -116,7 +118,8 @@ void CCommon::SetValue(Object json)
       
     if (json.has<Number>("TEXT_FRAMERATE")) TEXT_FRAMERATE = json.get<Number>("TEXT_FRAMERATE");
     if (json.has<Number>("BGM_VOLUME")) BGM_VOLUME = json.get<Number>("BGM_VOLUME");
-    if (json.has<Number>("SE_VOLUME")) BGM_VOLUME = json.get<Number>("SE_VOLUME");
+    if (json.has<Number>("SE_VOLUME")) SE_VOLUME = json.get<Number>("SE_VOLUME");
+    if (json.has<Number>("VOICE_VOLUME")) VOICE_VOLUME = json.get<Number>("VOICE_VOLUME");
     
     if (json.has<String>("MOUSEOVER_SE")) MOUSEOVER_SE = json.get<String>("MOUSEOVER_SE");
     if (json.has<String>("MOUSEDOWN_SE")) MOUSEDOWN_SE = json.get<String>("MOUSEDOWN_SE");

@@ -64,8 +64,9 @@ class CCommon
 
         //<option>
         int  TEXT_FRAMERATE ;//10
-        int  BGM_VOLUME;// 10
-        int  SE_VOLUME;// 10
+        float  BGM_VOLUME;// 10
+        float  SE_VOLUME;// 10
+        float  VOICE_VOLUME;// 10
         //</option>
 
         string MOUSEOVER_SE;// "MOUSEOVER"
