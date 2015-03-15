@@ -12,9 +12,22 @@ CRepeatOfAction::CRepeatOfAction()
 {
     _count = _loopNum = 0;
 }
+        
+bool CRepeatOfAction::IsPause() const
+{
+    if (_actionList.size() < 1 || _count == 0)
+        return false;
+
+    return _pause || _actionList.front()->IsPause();
+}
 
 bool CRepeatOfAction::OnLoop(bool cleanup)
 {
+    if (_loopNum == 0){
+        OnCleanup();
+        return false;
+    }
+
     do {
         if (!_actionList.empty()){
             if (_skip)
@@ -34,8 +47,9 @@ bool CRepeatOfAction::OnLoop(bool cleanup)
             --_count;
             
             if (_count == 0){
-                if (cleanup)
+                if (cleanup){
                     OnCleanup();
+                }
                 else{
                     _actionList.swap(_tempActionList);
                     _count = _loopNum;

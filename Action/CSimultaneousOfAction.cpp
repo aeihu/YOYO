@@ -8,19 +8,6 @@
 
 #include "CSimultaneousOfAction.h"
 
-bool CSimultaneousOfAction::IsPause() const
-{
-    if (_pause)
-        return true;
-
-    for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
-        if ((*it)->IsPause())
-            return true;
-    }
-
-    return false;
-}
-
 bool CSimultaneousOfAction::OnLoop(bool cleanup)
 {
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
@@ -44,6 +31,22 @@ bool CSimultaneousOfAction::OnLoop(bool cleanup)
             _actionList.swap(_tempActionList);
         
         return true;
+    }
+
+    return false;
+}
+
+bool CSimultaneousOfAction::IsPause() const
+{
+    if (_actionList.size() < 1)
+        return false;
+
+    if (_pause)
+        return true;
+
+    for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
+        if ((*it)->IsPause())
+            return true;
     }
 
     return false;

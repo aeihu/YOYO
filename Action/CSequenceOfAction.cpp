@@ -18,8 +18,6 @@ bool CSequenceOfAction::OnLoop(bool cleanup)
             if (_actionList.front()->OnLoop(cleanup)){
                 _tempActionList.push_back(_actionList.front());
                 _actionList.pop_front();
-                //delete _actionList.front();
-                //_actionList.erase(_actionList.begin());
             }
         }
         else
@@ -36,4 +34,12 @@ bool CSequenceOfAction::OnLoop(bool cleanup)
     }
 
     return false;
+}
+
+bool CSequenceOfAction::IsPause() const
+{
+    if (_actionList.size() < 1)
+        return false;
+
+    return _pause || _actionList.front()->IsPause();
 }

@@ -20,6 +20,7 @@ class CSequenceOfAction : public CActionSet
 {
     protected:
     public:
+        bool IsPause() const;
         bool OnLoop(bool cleanup=true);
 };
 

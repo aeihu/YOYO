@@ -13,12 +13,6 @@ CActionSet::CActionSet()
     _name = "";
 }
 
-bool CActionSet::IsPause() const
-{
-    return _pause || 
-        (_actionList.size() < 1 ? 
-            false : _actionList.front()->IsPause());
-}
 
 string CActionSet::GetName() const
 {

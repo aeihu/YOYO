@@ -21,6 +21,7 @@ class CRepeatOfAction : public CActionSet
         CRepeatOfAction();
         bool OnLoop(bool cleanup=true);
         void SetLoopNum(int num);
+        bool IsPause() const;
 };
 
 #endif
