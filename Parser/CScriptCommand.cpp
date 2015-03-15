@@ -1588,10 +1588,14 @@ bool Cmd_UseCamera(vector<string>& args, CActionSet* act)
 {
     args.erase(args.begin());
     if (args.size() == 0){
-        CResourceControl::_ResourceManager._CameraControl.UseDefaultCamera();
+        act->AddAction(new CClassFuncOfAction<CCameraControl>(
+            &CResourceControl::_ResourceManager._CameraControl,
+            &CCameraControl::UseDefaultCamera));
     }
     else{
-        return CResourceControl::_ResourceManager._CameraControl.UseCamera(args[0]);
+        act->AddAction(new CClassFuncArgsOfAction<CCameraControl>(
+            &CResourceControl::_ResourceManager._CameraControl, 
+            &CCameraControl::UseCamera, args));
     }
     return true;
 }

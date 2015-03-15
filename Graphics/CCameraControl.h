@@ -21,9 +21,10 @@ class CCameraControl
         bool AddCamera(string name, string filename);
         bool DelCamera(string name);
         CCamera* GetCamera(string name);
-
+        
+        void UseCamera(vector<string> args);
         bool UseCamera(string name);
-        bool UseDefaultCamera();
+        void UseDefaultCamera();
 
         bool OnInit(sf::RenderTarget* display);
         void OnLoop();

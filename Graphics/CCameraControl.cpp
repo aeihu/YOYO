@@ -43,6 +43,12 @@ void CCameraControl::OnLoop()
         (*it).second->OnLoop();
 }
 
+void CCameraControl::UseCamera(vector<string> args)
+{
+    if (args.size() >= 1)
+        UseCamera(args[0]);
+}
+
 bool CCameraControl::UseCamera(string name)
 {
     CCamera* __obj = GetCamera(name);
@@ -68,11 +74,10 @@ bool CCameraControl::OnInit(sf::RenderTarget* display)
     return false;
 }
         
-bool CCameraControl::UseDefaultCamera()
+void CCameraControl::UseDefaultCamera()
 {
     if (_display == NULL)
-        return false;
+        return;
 
     _display->setView(_display->getDefaultView());
-    return true;
 }
