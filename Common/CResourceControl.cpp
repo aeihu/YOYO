@@ -241,7 +241,7 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     JsonProcess(__json, obj, "camera");
     JsonProcess(__json, obj, "character");
     JsonProcess(__json, obj, "background");
-    JsonProcess(__json, obj, "cg");
+    JsonProcess(__json, obj, "img");
     JsonProcess(__json, obj, "voice");
     JsonProcess(__json, obj, "music");
     JsonProcess(__json, obj, "text");
@@ -298,7 +298,7 @@ void CResourceControl::LoadAsset()
         if (!_script.empty()){
             Compare(__obj, _script, "character");
             Compare(__obj, _script, "background");
-            Compare(__obj, _script, "cg");
+            Compare(__obj, _script, "img");
             Compare(__obj, _script, "button");
             Compare(__obj, _script, "se");
             Compare(__obj, _script, "voice");
@@ -308,7 +308,7 @@ void CResourceControl::LoadAsset()
             CheckOut(_script, "text", "Text");
             CheckOut(_script, "character","CharacterLayer");
             CheckOut(_script, "background","Background");
-            CheckOut(_script, "cg","Img");
+            CheckOut(_script, "img","Img");
             CheckOut(_script, "button","Button");
             CheckOut(_script, "se", "Se");
             CheckOut(_script, "voice", "Voice");
@@ -323,7 +323,7 @@ void CResourceControl::LoadAsset()
         CheckIn(_script, "text", "Text");
         CheckIn(_script, "character","CharacterLayer");
         CheckIn(_script, "background","Background");
-        CheckIn(_script, "cg","Img");
+        CheckIn(_script, "img","Img");
         CheckIn(_script, "button","Button");
         CheckIn(_script, "se", "Se");
         CheckIn(_script, "voice", "Voice");
@@ -396,7 +396,7 @@ void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
 
     Surf_Dest->draw(_spriteDown);
     Surf_Dest->draw(_spriteUp);
-    //cout<< _c.getElapsedTime().asMilliseconds()<<endl;
+    //cout<< _c.getElapsedTime().asMicroseconds()<<endl;
 }
 
 void CResourceControl::OnCleanup()
