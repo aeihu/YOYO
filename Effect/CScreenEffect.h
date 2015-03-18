@@ -1,0 +1,44 @@
+/*
+* Copyright (C) 2012-2015, <Aeihu.z, aeihu.z@gmail.com>.
+*
+* Game Scenario Maker is a free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* Version 2(GPLv2) as published by the Free Software Foundation.
+*/
+
+#ifndef _CSCREENEFFECT_H_
+    #define _CSCREENEFFECT_H_
+
+#include "../Graphics/CDrawableClass.h"
+#include "../Action/CSimultaneousOfAction.h"
+#include "../Action/CSequenceOfAction.h"
+#include "../Action/CDeplayOfAction.h"
+#include "../Action/CClassFuncOfAction.h"
+
+class CScreenEffect : public CDrawableClass
+{
+    private:
+        class PData{
+            public:
+                float   _x;
+                float   _y;
+                float   _alpha;
+                
+                PData();
+        };
+
+        vector<PData>           _vertexData;
+        sf::VertexArray         _vertexArray;
+        CSimultaneousOfAction*  _act;
+        
+        void SetShow();
+        void SetHide();
+    public:
+        void OnInit(size_t num, float distance, float height);
+        void OnLoop();
+        void OnRender(sf::RenderTarget* Surf_Dest);
+        CSimultaneousOfAction* CreateActionLeftToRight(size_t elapsed, bool L2R);
+        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool L2R, bool slide);
+};
+
+#endif
