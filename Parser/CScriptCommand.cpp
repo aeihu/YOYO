@@ -756,6 +756,72 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
     return false;
 }
 
+bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
+{
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+    CScreenEffect* __obj = NULL;
+    string __funName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
+    if (__doc->IsExists("ScrEffect:screen")){
+        __obj = static_cast<CScreenEffect*>(__doc->GetDrawableObject("ScrEffect:screen"));
+
+        if (__obj->GetVisible() == isShow)
+            return true;
+    }
+    else{
+        cout << __funName << "(): can't find ScrEffect \"screen\"." <<endl;
+        return false;
+    }
+
+    if (act == NULL){
+        cout << __funName << "(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << __funName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));        //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));        //type
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));   //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));   //right
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_ShowCurtain", __flags, args, __values))
+        return false;
+
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __right = __values.count("-r") == 0 ? false : true;
+    string __Type = __values.count("-t") == 0 ? "0" : __values["-t"][0];
+
+    size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
+        atof(__values["-i"][0].c_str());
+
+    if (__Type == "1"){
+        act->AddAction(__obj->CreateActionGradient(__inte, __right));
+    }
+    else if (__Type == "2"){
+        act->AddAction(__obj->CreateActionLouver(__inte, __right, false));
+    }
+    else if (__Type == "3"){
+        act->AddAction(__obj->CreateActionLouver(__inte, __right, true));
+    }
+    else{
+        act->AddAction(__obj->CreateActionShowOrHide(__inte));
+    }
+
+    return true;
+}
 /*==============================================================
     commad of script
 ===============================================================*/
@@ -1582,6 +1648,80 @@ bool Cmd_DelAction(vector<string>& args, CActionSet* act)
     }
 
     return true;
+}
+
+bool Cmd_ShowCurtain(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScreen(args, act, true);
+}
+
+bool Cmd_HideCurtain(vector<string>& args, CActionSet* act)
+{
+    return Common_FuncOfScreen(args, act, false);
+}
+
+bool Cmd_ColorCurtain(vector<string>& args, CActionSet* act)
+{
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
+    if (act == NULL){
+        cout << "Cmd_ColorCurtain(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << "Cmd_ColorCurtain(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-cr", FLAG_OPTIONAL));        //red
+    __flags.push_back(pair<string, ENUM_FLAG>("-cg", FLAG_OPTIONAL));        //green
+    __flags.push_back(pair<string, ENUM_FLAG>("-cb", FLAG_OPTIONAL));        //blue
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_ColorCurtain", __flags, args, __values))
+        return false;
+
+    if (__values.count("-cr") == 0 &&
+        __values.count("-cg") == 0 &&
+        __values.count("-cb") == 0)
+        return false;
+
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
+
+
+    if (__doc->IsExists("ScrEffect:screen")){
+        CScreenEffect* __obj = static_cast<CScreenEffect*>(__doc->GetDrawableObject("ScrEffect:screen"));
+        vector<string> __args;
+        
+        if (__values.count("-cr") > 0)
+            __args.push_back(__values["-cr"][0]);
+        else
+            __args.push_back("-1");
+
+        if (__values.count("-cg") > 0)
+            __args.push_back(__values["-cg"][0]);
+        else
+            __args.push_back("-1");
+
+        if (__values.count("-cb") > 0)
+            __args.push_back(__values["-cb"][0]);
+        else
+            __args.push_back("-1");
+
+        act->AddAction(new CClassFuncArgsOfAction<CScreenEffect>(__obj, &CScreenEffect::SetColor, __args));
+        return true;
+    }
+    else
+        cout << "Cmd_ColorCurtain(): can't find ScrEffect \"screen\"." <<endl;
+
+    return false;
 }
 
 bool Cmd_UseCamera(vector<string>& args, CActionSet* act)

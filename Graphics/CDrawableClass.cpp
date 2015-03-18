@@ -13,6 +13,7 @@ CDrawableClass::CDrawableClass()
 {
     _layerOrder = 0;
     _alpha = 0.0f;
+    _visible = false;
 }
 
 unsigned char CDrawableClass::GetLayerOrder() const

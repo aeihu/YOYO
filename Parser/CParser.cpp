@@ -153,6 +153,10 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
 
         else if (__commandName == "@del_act") _pFunc = &Cmd_DelAction;
 
+        else if (__commandName == "@show_curtain") _pFunc = &Cmd_ShowCurtain;
+        else if (__commandName == "@hide_curtain") _pFunc = &Cmd_HideCurtain;
+        else if (__commandName == "@color_curtain") _pFunc = &Cmd_ColorCurtain;
+        
         else if (__commandName == "@show_particle") _pFunc = &Cmd_ShowParticleSystem;
         else if (__commandName == "@hide_particle") _pFunc = &Cmd_HideParticleSystem;
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;

@@ -41,6 +41,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
     else if (objTypeName == "MessageBox") __obj = CMessageBox::Create(filename.c_str());
     else if (objTypeName == "ParticleSystem") __obj = CParticleSystem::Create(filename.c_str());
+    else if (objTypeName == "ScrEffect") __obj = CScreenEffect::Create(CCommon::_Common.SCREEN_PIECE_NUM, CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT);
     else if (objTypeName == "Text"){ 
         __obj = CText::Create();
         CText* __txt = static_cast<CText*>(__obj);

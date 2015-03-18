@@ -60,6 +60,8 @@ class CCommon
         
         unsigned char   SOUND_POOL_NUM ;//5
         unsigned char   VOICE_POOL_NUM ;//3
+
+        size_t          SCREEN_PIECE_NUM;//   16
         //</config>
 
         //<option>

@@ -52,7 +52,6 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
     }
 
     return true;
-    
 }
 
 //
@@ -166,6 +165,8 @@ bool CResourceControl::OnInit(string filename)
     if (!_SoundControl.OnInit())
         return false;
     
+    _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
+
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
     
@@ -178,14 +179,8 @@ bool CResourceControl::OnInit(string filename)
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
-    //if (CheckIn(_gameBaiscAsset, "music", "Music") < 0) return false;
 
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
-
-    //if (!OnInit(filename))
-    //    return false;
-
-    //return true;
 }
         
 bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
@@ -234,7 +229,6 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
 
     JsonProcess(__json, obj, "font");
     JsonProcess(__json, obj, "se");
-    //JsonProcess(__json, obj, "image_for_loading");
     JsonProcess(__json, obj, "image_for_effect");
     JsonProcess(__json, obj, "messagebox");
     JsonProcess(__json, obj, "button");

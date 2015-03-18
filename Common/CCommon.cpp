@@ -41,6 +41,8 @@ CCommon::CCommon()
     CHAR_SHADOW_COLOR_ALPHA = 120;
     SOUND_POOL_NUM = 5;
     VOICE_POOL_NUM = 3;
+        
+    SCREEN_PIECE_NUM = 20;//   16
     //FONT_PATH =  "C://WINDOWS//Fonts//MSGOTHIC.TTC";
     //</config>
 
@@ -115,6 +117,8 @@ void CCommon::SetValue(Object json)
 
     if (json.has<Number>("SOUND_POOL_NUM")) SOUND_POOL_NUM = json.get<Number>("SOUND_POOL_NUM");
     if (json.has<Number>("VOICE_POOL_NUM")) VOICE_POOL_NUM = json.get<Number>("VOICE_POOL_NUM");
+
+    if (json.has<Number>("SCREEN_PIECE_NUM")) SCREEN_PIECE_NUM = json.get<Number>("SCREEN_PIECE_NUM");
       
     if (json.has<Number>("TEXT_FRAMERATE")) TEXT_FRAMERATE = json.get<Number>("TEXT_FRAMERATE");
     if (json.has<Number>("BGM_VOLUME")) BGM_VOLUME = json.get<Number>("BGM_VOLUME");

@@ -18,6 +18,8 @@
 class CScreenEffect : public CDrawableClass
 {
     private:
+        friend static CScreenEffect* CScreenEffect::Create(size_t num, float width, float height);
+
         class PData{
             public:
                 float   _x;
@@ -34,10 +36,16 @@ class CScreenEffect : public CDrawableClass
         void SetShow();
         void SetHide();
     public:
-        void OnInit(size_t num, float distance, float height);
+        static CScreenEffect* Create(size_t num, float width, float height);
+
+        bool GetVisible() const;
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
-        CSimultaneousOfAction* CreateActionLeftToRight(size_t elapsed, bool L2R);
+
+        void SetColor(vector<string> args);
+
+        CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed);
+        CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool L2R);
         CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool L2R, bool slide);
 };
 

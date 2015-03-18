@@ -18,6 +18,7 @@
 #include "../Graphics/CDrawableObjectControl.h"
 #include "../Graphics/CCameraControl.h"
 #include "../Action/CClassFuncOfAction.h"
+#include "../Effect/CScreenEffect.h"
 
 using namespace std;
 

@@ -8,6 +8,11 @@
 
 #include "CScreenEffect.h"
 
+bool CScreenEffect::GetVisible() const
+{
+    return _visible;
+}
+
 void CScreenEffect::SetShow()
 {
     _visible = true;
@@ -16,6 +21,46 @@ void CScreenEffect::SetShow()
 void CScreenEffect::SetHide()
 {
     _visible = false;
+}
+
+void CScreenEffect::SetColor(vector<string> args)
+{
+    if (args.size() > 2){
+        int __r = atoi(args[0].c_str());
+        int __g = atoi(args[1].c_str());
+        int __b = atoi(args[2].c_str());
+
+        if (__r > 255) __r = 255;
+        if (__g > 255) __r = 255;
+        if (__b > 255) __r = 255;
+
+        for (size_t i=0; i<_vertexArray.getVertexCount(); i++){
+            if (__r >=0 ) _vertexArray[i].color.r = __r;
+            if (__g >=0 ) _vertexArray[i].color.g = __g;
+            if (__b >=0 ) _vertexArray[i].color.b = __b;
+        }
+    }
+}
+
+CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed)
+{
+    float __alpha = _visible ? 0.0f : 255.0f;
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    
+    if (!_visible && _vertexArray.getVertexCount() > 0)
+        __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
+
+    for (size_t i=0; i<_vertexArray.getVertexCount(); i++){
+        if (_visible && i == _vertexArray.getVertexCount()-1){
+            CSequenceOfAction* __seq = new CSequenceOfAction();
+            __seq->AddAction(new CActionTo(&_vertexData[i]._alpha, elapsed, __alpha));
+            __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
+            __result->AddAction(__seq);
+        }
+        else
+            __result->AddAction(new CActionTo(&_vertexData[i]._alpha, elapsed, __alpha));
+    }
+    return __result;
 }
 
 CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2R, bool slide)
@@ -55,7 +100,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2
     return __result;
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionLeftToRight(size_t elapsed, bool L2R)
+CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool L2R)
 {
     size_t __count = _vertexData.size() >> 1; // __count mean's how many point in line
     size_t __t = elapsed / ((__count>>1)+8); // how long each of timepoint
@@ -94,18 +139,26 @@ CScreenEffect::PData::PData()
     _alpha = 255.0f;
 }
 
-void CScreenEffect::OnInit(size_t num, float distance, float height)
+CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
 {
-    num *= 4;
+    if (num==0)
+        return NULL;
 
-    _vertexArray.resize(num);
-    _vertexData.resize(num);
-    _vertexArray.setPrimitiveType(sf::Quads);
+    CScreenEffect* __result = new CScreenEffect();
+    float distance = width / (float)num;
+    num *= 4;
+    __result->_vertexArray.resize(num);
+    __result->_vertexData.resize(num);
+    __result->_vertexArray.setPrimitiveType(sf::Quads);
+    __result->SetLayerOrder(100);
     for (size_t i=0; i<num; i++){
-        _vertexData[i]._x = ((i+2)>>2)*distance;
-        _vertexData[i]._y = (i>>1)%2 == i%2 ? 0:height;
-        _vertexArray[i].color = sf::Color::White;
+        __result->_vertexData[i]._x = ((i+2)>>2)*distance;
+        __result->_vertexData[i]._y = (i>>1)%2 == i%2 ? 0:height;
+        __result->_vertexData[i]._alpha = 0.0f;
+        __result->_vertexArray[i].color = sf::Color(0,0,0);
     }
+
+    return __result;
 }
 
 void CScreenEffect::OnLoop()
