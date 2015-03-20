@@ -19,8 +19,9 @@ class CDeplayOfAction : public CActionBaseClass
         unsigned long   _time;
         size_t          _delay;
     public:
-        CDeplayOfAction(size_t delay);
+        CDeplayOfAction(size_t delay, bool pause=false);
         
+        bool IsPause() const;
         bool OnLoop(bool cleanup=true);
 };
 

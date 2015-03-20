@@ -166,6 +166,7 @@ bool CResourceControl::OnInit(string filename)
         return false;
     
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
+    _EffectObjectControl.AddDrawableObject("screen","ScrEffect","");
 
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;

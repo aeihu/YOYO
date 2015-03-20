@@ -44,9 +44,9 @@ class CScreenEffect : public CDrawableClass
 
         void SetColor(vector<string> args);
 
-        CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed);
-        CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool L2R);
-        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool L2R, bool slide);
+        CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed, bool pause);
+        CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool L2R, bool pause);
+        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool L2R, bool slide, bool pause);
 };
 
 #endif

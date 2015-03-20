@@ -135,7 +135,7 @@ bool Common_FuncOfColor(string objTypeName, vector<string>& args, CActionSet* ac
     bool __reset = __values.count("-r") == 0 ? false : true;
 
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
-        atof(__values["-i"][0].c_str());
+        atoi(__values["-i"][0].c_str());
 
     CDrawableObjectControl* __doc = __isEffect ? 
         &CResourceControl::_ResourceManager._EffectObjectControl
@@ -220,7 +220,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
     bool __reset = __values.count("-r") == 0 ? false : true;
     float __alpha = __values.count("-a") == 0 ? 255.0f : atof(__values["-a"][0].c_str());
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
-        atof(__values["-i"][0].c_str());
+        atoi(__values["-i"][0].c_str());
 
     CDrawableObjectControl* __doc = __isEffect ? 
         &CResourceControl::_ResourceManager._EffectObjectControl
@@ -801,23 +801,45 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
         return false;
 
     bool __pause = __values.count("-p") == 0 ? false : true;
-    bool __right = __values.count("-r") == 0 ? false : true;
+    bool __left = __values.count("-r") == 0 ? true : false;
     string __Type = __values.count("-t") == 0 ? "0" : __values["-t"][0];
 
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
-        atof(__values["-i"][0].c_str());
+        atoi(__values["-i"][0].c_str());
 
     if (__Type == "1"){
-        act->AddAction(__obj->CreateActionGradient(__inte, __right));
+        act->AddAction(__obj->CreateActionGradient(__inte, __left, __pause));
     }
     else if (__Type == "2"){
-        act->AddAction(__obj->CreateActionLouver(__inte, __right, false));
+        act->AddAction(__obj->CreateActionLouver(__inte, __left, false, __pause));
     }
     else if (__Type == "3"){
-        act->AddAction(__obj->CreateActionLouver(__inte, __right, true));
+        act->AddAction(__obj->CreateActionLouver(__inte, __left, true, __pause));
     }
     else{
-        act->AddAction(__obj->CreateActionShowOrHide(__inte));
+        act->AddAction(__obj->CreateActionShowOrHide(__inte, __pause));
+    }
+
+    return true;
+}
+
+bool Cmd_FuncOfActionForDeleteOrSkip(string funcName, vector<string>& args, CActionSet* act, bool skip)
+{
+    args.erase(args.begin());
+
+    if (args.size() < 1){
+        cout << funcName << "(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    if (act == NULL){
+        cout << funcName << "(): Action Set is null." <<endl;
+        return false;
+    }
+    
+    for (size_t i=0; i<args.size(); i++){
+        act->DeleteAct(args[i], skip);
     }
 
     return true;
@@ -1631,23 +1653,12 @@ bool Cmd_DelVariable(vector<string>& args, CActionSet* act)
 
 bool Cmd_DelAction(vector<string>& args, CActionSet* act)
 {
-    args.erase(args.begin());
-    if (args.size() < 1){
-        cout << "Cmd_DelVariable(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_DelAction", args, act, false);
+}
 
-    if (act == NULL){
-        cout << "Cmd_DelAction(): Action Set is null." <<endl;
-        return false;
-    }
-    
-    for (size_t i=0; i<args.size(); i++){
-        act->DeleteAct(args[i]);
-    }
-
-    return true;
+bool Cmd_SkipAction(vector<string>& args, CActionSet* act)
+{
+    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_SkipAction", args, act, true);
 }
 
 bool Cmd_ShowCurtain(vector<string>& args, CActionSet* act)
@@ -1753,4 +1764,35 @@ bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act)
 bool Cmd_RotationCamera(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfRotation("Camera", args, act);
+}
+
+bool Cmd_Delay(vector<string>& args, CActionSet* act)
+{
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
+    if (act == NULL){
+        cout << "Cmd_ColorCurtain(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << "Cmd_ColorCurtain(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_NECESSITY));   
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_Deplay", __flags, args, __values))
+        return false;
+    
+    size_t __inte = atoi(__values["-i"][0].c_str());
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    act->AddAction(new CDeplayOfAction(__inte, __pause));
+
+    return true;
 }

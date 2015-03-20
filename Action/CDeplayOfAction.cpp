@@ -8,10 +8,11 @@
 
 #include "CDeplayOfAction.h"
 
-CDeplayOfAction::CDeplayOfAction(size_t delay)
+CDeplayOfAction::CDeplayOfAction(size_t delay, bool pause)
 {
     _isRunning = false;
     _delay = delay;
+    _pause = pause;
 }
 
 bool CDeplayOfAction::OnLoop(bool cleanup)
@@ -27,4 +28,9 @@ bool CDeplayOfAction::OnLoop(bool cleanup)
     }
 
     return false;
+}
+
+bool CDeplayOfAction::IsPause() const
+{
+    return _pause && _isRunning;
 }

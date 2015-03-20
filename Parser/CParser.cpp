@@ -152,6 +152,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@del_var") _pFunc = &Cmd_DelVariable;
 
         else if (__commandName == "@del_act") _pFunc = &Cmd_DelAction;
+        else if (__commandName == "@skip_act") _pFunc = &Cmd_SkipAction;
 
         else if (__commandName == "@show_curtain") _pFunc = &Cmd_ShowCurtain;
         else if (__commandName == "@hide_curtain") _pFunc = &Cmd_HideCurtain;
@@ -161,19 +162,20 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@hide_particle") _pFunc = &Cmd_HideParticleSystem;
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
-        else if (__commandName == "@deplay"){
-            if (__listOfCmdPara.size() == 2){
-                if (act != &CResourceControl::_ResourceManager._ActionControl){
-                    act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[1].c_str())));
-                }
-                else{
-                    SetDeplay(atoi(__listOfCmdPara[1].c_str()));
-                }
-            }
-            else
-                cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
-                    << " argument(s) in the command." <<endl;
-        }
+        else if (__commandName == "@delay")_pFunc = &Cmd_Delay; 
+        //{
+        //    if (__listOfCmdPara.size() == 2){
+        //        if (act != &CResourceControl::_ResourceManager._ActionControl){
+        //            act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[1].c_str())));
+        //        }
+        //        else{
+        //            SetDeplay(atoi(__listOfCmdPara[1].c_str()));
+        //        }
+        //    }
+        //    else
+        //        cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
+        //            << " argument(s) in the command." <<endl;
+        //}
         //else if (__commandName == "@reload"){
         //    
         //}
@@ -243,6 +245,10 @@ void CParser::ParserObject(Object& obj, CActionSet* act)
 
         if (obj.has<String>("name")){
             __actionSet->SetName(obj.get<String>("name"));
+        }
+
+        if (obj.has<String>("pause")){
+            __actionSet->SetPause(obj.get<Boolean>("pause"));
         }
 
         Array __arrOfScr = obj.get<Array>("script");

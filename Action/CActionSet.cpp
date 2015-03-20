@@ -23,8 +23,13 @@ void CActionSet::SetName(string name)
 {
     _name = name;
 }
+
+void CActionSet::SetPause(bool pause)
+{
+    _pause = pause;
+}
         
-bool CActionSet::DeleteAct(string name)
+bool CActionSet::DeleteAct(string name, bool skip)
 {
     if (name != ""){
         list<CActionBaseClass*>* __list = &_actionList;
@@ -34,8 +39,11 @@ bool CActionSet::DeleteAct(string name)
 
             for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end();){
                 if (name == (*it)->GetName()){
-                    (*it)->Skip();
-                    (*it)->OnLoop();
+                    if (skip){
+                        (*it)->Skip();
+                        (*it)->OnLoop();
+                    }
+
                     (*it)->OnCleanup();
                     delete (*it);
                     (*it) = NULL;

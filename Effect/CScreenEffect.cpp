@@ -42,10 +42,11 @@ void CScreenEffect::SetColor(vector<string> args)
     }
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed)
+CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed, bool pause)
 {
     float __alpha = _visible ? 0.0f : 255.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->SetPause(pause);
     
     if (!_visible && _vertexArray.getVertexCount() > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
@@ -63,13 +64,14 @@ CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed)
     return __result;
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2R, bool slide)
+CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2R, bool slide, bool pause)
 {
     size_t __count = _vertexData.size() >> 1;
     size_t __t = slide ? elapsed / ((__count>>1)+8) : elapsed;
     size_t __index = 0;
     float __alpha = _visible ? 0.0f : 255.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->SetPause(pause);
     
     if (!_visible && __count > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
@@ -100,13 +102,14 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2
     return __result;
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool L2R)
+CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool L2R, bool pause)
 {
     size_t __count = _vertexData.size() >> 1; // __count mean's how many point in line
     size_t __t = elapsed / ((__count>>1)+8); // how long each of timepoint
     size_t __index = 0;
     float __alpha = _visible ? 0.0f : 255.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->SetPause(pause);
     
     if (!_visible && __count > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));

@@ -96,6 +96,7 @@ bool Cmd_SetVariable(vector<string>& args, CActionSet* act);
 bool Cmd_DelVariable(vector<string>& args, CActionSet* act);
 
 bool Cmd_DelAction(vector<string>& args, CActionSet* act);
+bool Cmd_SkipAction(vector<string>& args, CActionSet* act);
 
 bool Cmd_ShowCurtain(vector<string>& args, CActionSet* act);
 bool Cmd_HideCurtain(vector<string>& args, CActionSet* act);
@@ -105,5 +106,7 @@ bool Cmd_UseCamera(vector<string>& args, CActionSet* act);
 bool Cmd_MoveCamera(vector<string>& args, CActionSet* act);
 bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act);
 bool Cmd_RotationCamera(vector<string>& args, CActionSet* act);
+
+bool Cmd_Delay(vector<string>& args, CActionSet* act);
 
 #endif
