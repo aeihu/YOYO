@@ -79,6 +79,7 @@ class CSoundBank {
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);
+        void StopVoice();
         
         bool AddBgm(string name, string FileName);
         bool DelBgm(string name);

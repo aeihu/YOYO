@@ -163,22 +163,6 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
         else if (__commandName == "@delay")_pFunc = &Cmd_Delay; 
-        //{
-        //    if (__listOfCmdPara.size() == 2){
-        //        if (act != &CResourceControl::_ResourceManager._ActionControl){
-        //            act->AddAction(new CDeplayOfAction(atoi(__listOfCmdPara[1].c_str())));
-        //        }
-        //        else{
-        //            SetDeplay(atoi(__listOfCmdPara[1].c_str()));
-        //        }
-        //    }
-        //    else
-        //        cout << "Cmd_Deplay(): command invaild. can't set " << __listOfCmdPara.size()
-        //            << " argument(s) in the command." <<endl;
-        //}
-        //else if (__commandName == "@reload"){
-        //    
-        //}
         else if (__commandName == "@exit"){
             if (_pRunning != NULL)
                 *_pRunning = false;
@@ -277,6 +261,8 @@ void CParser::OnLoop()
             return;
 
         if (_cmdList.size() > _index){
+            CResourceControl::_ResourceManager._SoundControl.StopVoice();
+
             if (_cmdList.has<String>(_index)){
                 ExecuteCmd(_cmdList.get<String>(_index), &CResourceControl::_ResourceManager._ActionControl, false);
             }
