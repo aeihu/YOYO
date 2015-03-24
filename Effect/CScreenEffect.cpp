@@ -42,17 +42,17 @@ void CScreenEffect::SetColor(vector<string> args)
     }
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed, bool pause)
+CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed, bool isShow, bool pause)
 {
-    float __alpha = _visible ? 0.0f : 255.0f;
+    float __alpha = isShow ? 255.0f : 0.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->SetPause(pause);
     
-    if (!_visible && _vertexArray.getVertexCount() > 0)
+    if (isShow && _vertexArray.getVertexCount() > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<_vertexArray.getVertexCount(); i++){
-        if (_visible && i == _vertexArray.getVertexCount()-1){
+        if (!isShow && i == _vertexArray.getVertexCount()-1){
             CSequenceOfAction* __seq = new CSequenceOfAction();
             __seq->AddAction(new CActionTo(&_vertexData[i]._alpha, elapsed, __alpha));
             __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
@@ -64,16 +64,16 @@ CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed, boo
     return __result;
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2R, bool slide, bool pause)
+CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause)
 {
     size_t __count = _vertexData.size() >> 1;
     size_t __t = slide ? elapsed / ((__count>>1)+8) : elapsed;
     size_t __index = 0;
-    float __alpha = _visible ? 0.0f : 255.0f;
+    float __alpha = isShow ? 255.0f : 0.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->SetPause(pause);
     
-    if (!_visible && __count > 0)
+    if (isShow && __count > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<__count; i++){
@@ -93,7 +93,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2
         __sim->AddAction(new CActionTo(&_vertexData[__index+1]._alpha, (i%2==0)?__t:__t<<3, __alpha));
         __seq->AddAction(__sim);
         
-        if (_visible && i == __count-1)
+        if (!isShow && i == __count-1)
             __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
 
         __result->AddAction(__seq);
@@ -102,16 +102,16 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool L2
     return __result;
 }
 
-CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool L2R, bool pause)
+CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool isShow, bool L2R, bool pause)
 {
     size_t __count = _vertexData.size() >> 1; // __count mean's how many point in line
     size_t __t = elapsed / ((__count>>1)+8); // how long each of timepoint
     size_t __index = 0;
-    float __alpha = _visible ? 0.0f : 255.0f;
+    float __alpha = isShow ? 255.0f : 0.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->SetPause(pause);
     
-    if (!_visible && __count > 0)
+    if (isShow && __count > 0)
         __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<__count; i++){
@@ -128,7 +128,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool 
         __sim->AddAction(new CActionTo(&_vertexData[__index+1]._alpha, __t<<3, __alpha));
         __seq->AddAction(__sim);
 
-        if (_visible && i == __count-1)
+        if (!isShow && i == __count-1)
             __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
 
         __result->AddAction(__seq);
