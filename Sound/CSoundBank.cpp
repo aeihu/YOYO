@@ -144,7 +144,13 @@ void CSoundBank::StopVoice()
     }
 }
 
-bool CSoundBank::PlayVoice(string name, bool isSameChannel)
+void CSoundBank::PlayVoice(vector<string> args)
+{
+    if (args.size() > 0)
+        PlayVoice(args[0]);
+}
+
+bool CSoundBank::PlayVoice(string name)
 {
     if (_voiceList.count(name) < 1)
         return false;

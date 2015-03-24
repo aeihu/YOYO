@@ -27,7 +27,6 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
     if (__chr->LoadConfigFile(filename)){
         __chr->SetClassName("character");
         __chr->SetPath(filename);
-        __chr->SetLayerOrder(2);
         return __chr;
     }
     
@@ -66,6 +65,12 @@ const sf::Vector2f& CCharacterLayer::GetGlobalPosition() const
 void CCharacterLayer::SetVoice(string name)
 {
     _currcentVoice = name;
+}
+        
+void CCharacterLayer::SetVoice(vector<string> args)
+{
+    if (args.size() > 0)
+        SetVoice(args[0]);
 }
 
 void CCharacterLayer::OnLoop()
@@ -149,16 +154,21 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 
 bool CCharacterLayer::CheckList(Object json) 
 {
-    bool result = true;
+    bool __result = true;
     string __name;
+    if (!json.has<Number>("ORDER")){
+        cout << "can't find value of ORDER." << endl;
+        __result = false;
+    }
+    
     if (!json.has<Array>("BODY")){
         cout << "can't find value of BODY." << endl;
-        result = false;
+        __result = false;
     }
     else{
         if (json.get<Array>("BODY").size() < 1){
             cout << "value of BODY must be has one." << endl;
-            result = false;
+            __result = false;
         }
 
         Object __body;
@@ -166,62 +176,62 @@ bool CCharacterLayer::CheckList(Object json)
             __body = json.get<Array>("BODY").get<Object>(i);
             if (!__body.has<String>("BODY_PATH")){
                 cout << "can't find value of BODY_PATH." << endl;
-                result = false;
+                __result = false;
             }
 
             __name = CTextFunction::GetNameInFilename(__body.get<String>("BODY_PATH"));
             if (!__body.has<Number>("EYE_OFFSET_X")){
                 cout << "BODY '" << __name << "' can't find value of EYE_OFFSET_X." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("EYE_OFFSET_Y")){
                 cout << "BODY '" << __name << "' can't find value of EYE_OFFSET_Y." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("EYE_WIDTH")){
                 cout << "BODY '" << __name << "' can't find value of EYE_WIDTH." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("EYE_HEIGHT")){
                 cout << "BODY '" << __name << "' can't find value of EYE_HEIGHT." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("EYE_FRAME_RATE")){
                 cout << "BODY '" << __name << "' can't find value of EYE_FRAME_RATE." << endl;
-                result = false;
+                __result = false;
             }
 
             if (!__body.has<Number>("MOUTH_OFFSET_X")){
                 cout << "BODY '" << __name << "' can't find value of MOUTH_OFFSET_X." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("MOUTH_OFFSET_Y")){
                 cout << "BODY '" << __name << "' can't find value of MOUTH_OFFSET_Y." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("MOUTH_WIDTH")){
                 cout << "BODY '" << __name << "' can't find value of MOUTH_WIDTH." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("MOUTH_HEIGHT")){
                 cout << "BODY '" << __name << "' can't find value of MOUTH_HEIGHT." << endl;
-                result = false;
+                __result = false;
             }
             if (!__body.has<Number>("MOUTH_FRAME_RATE")){
                 cout << "BODY '" << __name << "' can't find value of MOUTH_FRAME_RATE." << endl;
-                result = false;
+                __result = false;
             }    
         }
     }
 
     if (!json.has<Array>("EYE")){
         cout << "can't find value of EYE." << endl;
-        result = false;
+        __result = false;
     }
     else{
         for (size_t i=0; i<json.get<Array>("EYE").size(); i++){
             if (!json.get<Array>("EYE").has<Object>(i)){
-                result = false;
+                __result = false;
                 continue;
             }
 
@@ -229,24 +239,24 @@ bool CCharacterLayer::CheckList(Object json)
 
             if (!json.get<Array>("EYE").get<Object>(i).has<String>("PATH")){
                 cout << "EYE '" << __name << "' can't find value of PATH." << endl;
-                result = false;
+                __result = false;
             }
 
             if (!json.get<Array>("EYE").get<Object>(i).has<Number>("MAX_FRAMES")){
                 cout << "EYE '" << __name << "' can't find value of MAX_FRAMES." << endl;
-                result = false;
+                __result = false;
             }
         }
     }
 
     if (!json.has<Array>("MOUTH")){
         cout << "can't find value of MOUTH." << endl;
-        result = false;
+        __result = false;
     }
     else{
         for (size_t i=0; i<json.get<Array>("MOUTH").size(); i++){
             if (!json.get<Array>("MOUTH").has<Object>(i)){
-                result = false;
+                __result = false;
                 continue;
             }
 
@@ -254,17 +264,17 @@ bool CCharacterLayer::CheckList(Object json)
 
             if (!json.get<Array>("MOUTH").get<Object>(i).has<String>("PATH")){
                 cout << "MOUTH '" << __name << "' can't find value of PATH." << endl;
-                result = false;
+                __result = false;
             }
 
             if (!json.get<Array>("MOUTH").get<Object>(i).has<Number>("MAX_FRAMES")){
                 cout << "MOUTH '" << __name << "' can't find value of MAX_FRAMES." << endl;
-                result = false;
+                __result = false;
             }
         }
     }
 
-    return result;
+    return __result;
 }
 
 bool CCharacterLayer::SetProperty(Object json)
@@ -343,7 +353,8 @@ bool CCharacterLayer::SetProperty(Object json)
                 return false;
         }
     }
-
+    
+    SetLayerOrder(json.get<Number>("ORDER"));
     return true;
 }
 

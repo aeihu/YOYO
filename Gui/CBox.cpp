@@ -19,6 +19,11 @@ CBox::~CBox()
 bool CBox::CheckList(Object json)
 {
     bool __result = true;
+    
+    if (!json.has<Number>("ORDER")){
+        cout << "can't find value of ORDER." << endl;
+        __result = false;
+    }
 
     if (!json.has<String>("TILESET_PATH")){
         cout << "can't find value of TILESET_PATH." << endl;
@@ -75,6 +80,6 @@ bool CBox::SetProperty(Object json)
         _texture.loadFromImage(__tileset);
 
     _sprite.setTexture(_texture,true);
-
+    SetLayerOrder(json.get<Number>("ORDER"));
     return true;
 }

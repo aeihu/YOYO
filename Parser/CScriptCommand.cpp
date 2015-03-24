@@ -515,7 +515,7 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
     }
 
     std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_OPTIONAL));
+    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NONPARAMETRIC));
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
@@ -1409,6 +1409,8 @@ bool Cmd_Message(vector<string>& args, CActionSet* act)
     }
     
     CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
+    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
+    vector<string> __args;
 
     if (__values.count("-c") != 0){
         for (size_t i=0; i<__values["-c"].size(); i++){
@@ -1418,19 +1420,35 @@ bool Cmd_Message(vector<string>& args, CActionSet* act)
                     cout << "Cmd_Message(): CharacterLayer \"" << __values["-c"][i] << "\" has no existed." <<endl;
                 else{
                     CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__obj);
-                    __chara->SetVoice(__voice);
+                    //__chara->SetVoice(__voice);
+                    __args.push_back(__voice);
+                    __sim->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetVoice, __args));
                 }
             }
         }
     }
+    
+    __args.clear();
+    __args.push_back(__msg);
+    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox>(__msgbox, &CMessageBox::SetText, __args));
+    //__msgbox->SetText(__msg);
 
-    __msgbox->SetText(__msg);
-    __msgbox->SetSpeakerName(__speakerName);
+    __args.clear();
+    __args.push_back(__speakerName);
+    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox>(__msgbox, &CMessageBox::SetSpeakerName, __args));
+    //__msgbox->SetSpeakerName(__speakerName);
 
     if (__voice != ""){
-        if (!CResourceControl::_ResourceManager._SoundControl.PlayVoice(__voice))
-            cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
+        __args.clear();
+        __args.push_back(__voice);
+        __sim->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
+            &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayVoice, __args));
+
+        //if (!CResourceControl::_ResourceManager._SoundControl.PlayVoice(__voice))
+        //    cout << "Cmd_Message(): Voice \"" << __voice << "\" has no existed." <<endl;
     }
+
+    act->AddAction(__sim);
 
     //__obj = CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("LogBox:log");
     //if(__obj == NULL){

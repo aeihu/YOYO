@@ -37,9 +37,15 @@ class CMessageBox : public CBox , public CTextProcessing
         CMessageBox();
         
         static CMessageBox* Create(const char* filename);
+
+        void SetText(vector<string> args);
         void SetText(string msg);
+
         void SetFont(sf::Font& font);
+
+        void SetSpeakerName(vector<string> args);
         void SetSpeakerName(string name);
+
         void SetControl(bool* p);
 
         //bool OnMouseMove(int x, int y);

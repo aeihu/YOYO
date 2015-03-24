@@ -101,6 +101,29 @@ bool CImgLayer::SetProperty(Object json)
 {
     if (LoadImg(json.get<String>("PATH").c_str())){
         SetLayerOrder(json.get<Number>("ORDER"));
+
+        if (json.has<Number>("SCALE")){
+            _scale.y = _scale.x = json.get<Number>("SCALE");
+        }
+        else{
+            if (json.has<Number>("SCALE_X"))
+                _scale.x = json.get<Number>("SCALE_X");
+
+            if (json.has<Number>("SCALE_Y"))
+                _scale.y = json.get<Number>("SCALE_Y");
+        }
+        
+        if (json.has<Number>("ROTATION")){
+            _rotation = json.get<Number>("ROTATION");
+        }
+        
+        if (json.has<Number>("ORIGIN_X")){
+            _origin.x = json.get<Number>("ORIGIN_X");
+        }
+
+        if (json.has<Number>("ORIGIN_Y")){
+            _origin.y = json.get<Number>("ORIGIN_Y");
+        }
         return true;
     }
         

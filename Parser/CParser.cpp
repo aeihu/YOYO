@@ -220,7 +220,7 @@ void CParser::ParserObject(Object& obj, CActionSet* act)
             __actionSet->SetName(obj.get<String>("name"));
         }
 
-        if (obj.has<String>("pause")){
+        if (obj.has<Boolean>("pause")){
             __actionSet->SetPause(obj.get<Boolean>("pause"));
         }
 

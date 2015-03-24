@@ -51,11 +51,11 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         
         static CCharacterLayer* Create(const char* filename);
         
-        //bool SetPose(string eye);
         bool SetPose(string body, string eye, string mouth, bool isEffect);
         void SetPose(vector<string> args);
 
         void SetVoice(string name);
+        void SetVoice(vector<string> args);
         
         void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);

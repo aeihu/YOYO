@@ -29,7 +29,6 @@ CMessageBox* CMessageBox::Create(const char* filename)
     if (__msgbox->LoadConfigFile(filename)){
         __msgbox->SetClassName("msgbox");
         __msgbox->SetPath(filename);
-        __msgbox->SetLayerOrder(104);
         return __msgbox;
     }
     
@@ -189,9 +188,21 @@ void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
     _frames.OnRender(Surf_Dest);
 }
 
+void CMessageBox::SetSpeakerName(vector<string> args)
+{
+    if (args.size() > 0)
+        SetSpeakerName(args[0]);
+}
+
 void CMessageBox::SetSpeakerName(string name)
 {
     CTextFunction::SetString(_speakerName, name.c_str());
+}
+
+void CMessageBox::SetText(vector<string> args)
+{
+    if (args.size() > 0)
+        SetText(args[0]);
 }
 
 void CMessageBox::SetText(string msg)

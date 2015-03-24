@@ -74,8 +74,9 @@ class CSoundBank {
         void StopSE(vector<string> args);
         void StopSE(string name);
 
-        int AddVoice(string name, string filename) ;
-        bool PlayVoice(string name, bool isSameChannel=true);
+        int AddVoice(string name, string filename);
+        void PlayVoice(vector<string> args);
+        bool PlayVoice(string name);
         bool DeleteVoice(string name);
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);
