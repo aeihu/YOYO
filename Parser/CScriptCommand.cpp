@@ -959,60 +959,6 @@ bool Cmd_ColorCharacterLayer(vector<string>& args, CActionSet* act)
 //
 //===========================================
 
-bool Cmd_ShowBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfShow("Background", args, act);
-}
-
-//bool Cmd_DelBackground(vector<string>& args, CActionSet* act)
-//{
-//    return Common_FuncOfDelete("Background", args);
-//}
-
-bool Cmd_HideBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfHide("Background", args, act);
-}
-
-bool Cmd_MoveBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfMove("Background", args, act);
-}
-
-bool Cmd_ScaleBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfScale("Background", args, act);
-}
-
-bool Cmd_RotationBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfRotation("Background", args, act);
-}
-
-bool Cmd_SetBackgroundLayerOrder(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfLayerOrder("Background", args, act);
-}
-
-bool Cmd_FlipXBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfFlip("Background", args, act);
-}
-
-bool Cmd_FlipYBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfFlip("Background", args, act, false);
-}
-
-bool Cmd_OriginBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfOrigin("Background", args, act);
-}
-
-bool Cmd_ColorBackground(vector<string>& args, CActionSet* act)
-{
-    return Common_FuncOfColor("Background", args, act);
-}
 /*
     Cmd_AddImg: comand of add image.
     args[0]: set image name.

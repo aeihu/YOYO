@@ -235,7 +235,6 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     JsonProcess(__json, obj, "button");
     JsonProcess(__json, obj, "camera");
     JsonProcess(__json, obj, "character");
-    JsonProcess(__json, obj, "background");
     JsonProcess(__json, obj, "img");
     JsonProcess(__json, obj, "voice");
     JsonProcess(__json, obj, "music");
@@ -292,7 +291,6 @@ void CResourceControl::LoadAsset()
     if (LoadJson(__obj, _fileNameOfScript)){
         if (!_script.empty()){
             Compare(__obj, _script, "character");
-            Compare(__obj, _script, "background");
             Compare(__obj, _script, "img");
             Compare(__obj, _script, "button");
             Compare(__obj, _script, "se");
@@ -302,7 +300,6 @@ void CResourceControl::LoadAsset()
             
             CheckOut(_script, "text", "Text");
             CheckOut(_script, "character","CharacterLayer");
-            CheckOut(_script, "background","Background");
             CheckOut(_script, "img","Img");
             CheckOut(_script, "button","Button");
             CheckOut(_script, "se", "Se");
@@ -317,7 +314,6 @@ void CResourceControl::LoadAsset()
 
         CheckIn(_script, "text", "Text");
         CheckIn(_script, "character","CharacterLayer");
-        CheckIn(_script, "background","Background");
         CheckIn(_script, "img","Img");
         CheckIn(_script, "button","Button");
         CheckIn(_script, "se", "Se");

@@ -35,7 +35,6 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     CDrawableClass* __obj = NULL;
 
     if (objTypeName == "Img") __obj = CImgLayer::Create(filename.c_str());
-    else if (objTypeName == "Background") __obj = CImgLayer::Create(filename.c_str());
     else if (objTypeName == "Button") __obj = CButton::Create(filename.c_str());
     else if (objTypeName == "CharacterLayer") __obj = CCharacterLayer::Create(filename.c_str());
     else if (objTypeName == "LogBox") __obj = CLogBox::Create(filename.c_str());
@@ -55,7 +54,7 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
     }
     else
         cout << "CResourceControl::AddDrawableObject(): failed to create " 
-            << objTypeName << "\"" << name << "\"." <<endl;
+            << objTypeName << " \"" << name << "\"." <<endl;
 
     return false;
 }

@@ -80,10 +80,38 @@ bool CImgLayer::LoadImg(const char* fileName)
     return true;
 }
 
+bool CImgLayer::CheckList(Object json)
+{
+    bool __result = true;
+
+    if (!json.has<String>("PATH")){
+        cout << "can't find value of PATH." << endl;
+        __result = false;
+    }
+
+    if (!json.has<Number>("ORDER")){
+        cout << "can't find value of ORDER." << endl;
+        __result = false;
+    }
+
+    return __result;
+}
+
+bool CImgLayer::SetProperty(Object json)
+{
+    if (LoadImg(json.get<String>("PATH").c_str())){
+        SetLayerOrder(json.get<Number>("ORDER"));
+        return true;
+    }
+        
+    return false;
+}
+
+
 CImgLayer* CImgLayer::Create(const char* filename)
 {
     CImgLayer* __img = new CImgLayer();
-    if (__img->LoadImg(filename)){
+    if (__img->LoadConfigFile(filename)){
         __img->SetClassName("image");
         __img->SetPath(filename);
         return __img;

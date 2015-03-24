@@ -27,17 +27,6 @@ bool Cmd_FlipYCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_OriginCharacterLayer(vector<string>& args, CActionSet* act);
 bool Cmd_ColorCharacterLayer(vector<string>& args, CActionSet* act);
 
-bool Cmd_ShowBackground(vector<string>& args, CActionSet* act);
-bool Cmd_HideBackground(vector<string>& args, CActionSet* act);
-bool Cmd_MoveBackground(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleBackground(vector<string>& args, CActionSet* act);
-bool Cmd_RotationBackground(vector<string>& args, CActionSet* act);
-bool Cmd_SetBackgroundLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_FlipXBackground(vector<string>& args, CActionSet* act);
-bool Cmd_FlipYBackground(vector<string>& args, CActionSet* act);
-bool Cmd_OriginBackground(vector<string>& args, CActionSet* act);
-bool Cmd_ColorBackground(vector<string>& args, CActionSet* act);
-
 bool Cmd_ShowImg(vector<string>& args, CActionSet* act);
 bool Cmd_HideImg(vector<string>& args, CActionSet* act);
 bool Cmd_MoveImg(vector<string>& args, CActionSet* act);

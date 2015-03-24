@@ -10,8 +10,9 @@
     #define _CIMGLAYER_H_
 
 #include "../Graphics/CImageBaseClass.h"
+#include "../Common/CConfigFile.h"
 
-class CImgLayer : public CImageBaseClass
+class CImgLayer : public CImageBaseClass, public CConfigFile
 {
     public:
         enum ESubImageFlag{
@@ -33,6 +34,8 @@ class CImgLayer : public CImageBaseClass
         sf::Sprite          _sprite;
 
         virtual bool LoadImg(const char* filename);
+        virtual bool CheckList(Object json);
+        virtual bool SetProperty(Object json);
     public:
         CImgLayer();
         ~CImgLayer(){};

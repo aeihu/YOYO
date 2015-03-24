@@ -80,17 +80,6 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@origin_chara") _pFunc = &Cmd_OriginCharacterLayer;
         else if (__commandName == "@color_chara") _pFunc = &Cmd_ColorCharacterLayer;
         
-        else if (__commandName == "@show_bg") _pFunc = &Cmd_ShowBackground;
-        else if (__commandName == "@hide_bg") _pFunc = &Cmd_HideBackground;
-        else if (__commandName == "@move_bg") _pFunc = &Cmd_MoveBackground;
-        else if (__commandName == "@scale_bg") _pFunc = &Cmd_ScaleBackground;
-        else if (__commandName == "@rota_bg") _pFunc = &Cmd_RotationBackground;
-        else if (__commandName == "@order_bg") _pFunc = &Cmd_SetBackgroundLayerOrder;
-        else if (__commandName == "@flipx_bg") _pFunc = &Cmd_FlipXBackground;
-        else if (__commandName == "@flipy_bg") _pFunc = &Cmd_FlipYBackground;
-        else if (__commandName == "@origin_bg") _pFunc = &Cmd_OriginBackground;
-        else if (__commandName == "@color_bg") _pFunc = &Cmd_ColorBackground;
-
         else if (__commandName == "@show_img") _pFunc = &Cmd_ShowImg;
         else if (__commandName == "@hide_img") _pFunc = &Cmd_HideImg;
         else if (__commandName == "@move_img") _pFunc = &Cmd_MoveImg;

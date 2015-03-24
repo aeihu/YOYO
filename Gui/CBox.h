@@ -15,7 +15,7 @@
 #include "../Common/CConfigFile.h"
 #include "../Stage_Talk/CImgLayer.h"
 
-class CBox : public CImgLayer, public CConfigFile
+class CBox : public CImgLayer
 {
     private:
     protected:

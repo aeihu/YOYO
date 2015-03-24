@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class CButtonBase : public CSequenceOfSprite , public CConfigFile
+class CButtonBase : public CSequenceOfSprite
 {
     private:
         bool            _isMouseOver;
