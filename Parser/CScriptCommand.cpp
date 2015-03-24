@@ -760,24 +760,7 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
 {
     bool __isEffect = args[0] == "q(-_-)p";
     args.erase(args.begin());
-
-    CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
-            :
-        &CResourceControl::_ResourceManager._DrawableObjectControl;
-
-    CScreenEffect* __obj = NULL;
     string __funName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
-    if (__doc->IsExists("ScrEffect:screen")){
-        __obj = static_cast<CScreenEffect*>(__doc->GetDrawableObject("ScrEffect:screen"));
-
-        if (__obj->GetVisible() == isShow)
-            return true;
-    }
-    else{
-        cout << __funName << "(): can't find ScrEffect \"screen\"." <<endl;
-        return false;
-    }
 
     if (act == NULL){
         cout << __funName << "(): Action Set is null." <<endl;
@@ -806,18 +789,32 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
 
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
         atoi(__values["-i"][0].c_str());
+    
+    CDrawableObjectControl* __doc = __isEffect ? 
+        &CResourceControl::_ResourceManager._EffectObjectControl
+            :
+        &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    if (__Type == "1"){
-        act->AddAction(__obj->CreateActionGradient(__inte, __left, __pause));
-    }
-    else if (__Type == "2"){
-        act->AddAction(__obj->CreateActionLouver(__inte, __left, false, __pause));
-    }
-    else if (__Type == "3"){
-        act->AddAction(__obj->CreateActionLouver(__inte, __left, true, __pause));
+    CScreenEffect* __obj = NULL;
+    if (__doc->IsExists("ScrEffect:screen")){
+        __obj = static_cast<CScreenEffect*>(__doc->GetDrawableObject("ScrEffect:screen"));
     }
     else{
-        act->AddAction(__obj->CreateActionShowOrHide(__inte, __pause));
+        cout << __funName << "(): can't find ScrEffect \"screen\"." <<endl;
+        return false;
+    }
+
+    if (__Type == "1"){
+        act->AddAction(__obj->CreateActionGradient(__inte, isShow, __left, __pause));
+    }
+    else if (__Type == "2"){
+        act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, false, __pause));
+    }
+    else if (__Type == "3"){
+        act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, true, __pause));
+    }
+    else{
+        act->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
     }
 
     return true;
