@@ -21,8 +21,6 @@
 using namespace std;
 using namespace jsonxx;
 
-typedef enum {BUTTON_FOCUS, MAP_FOCUS, MESSAGEBOX_FOCUS, MENUBOX_FOCUS, LOGBOX_FOCUS, BUTTON_STATE} eEventFocus;
-
 class CCommon
 {
     private:
@@ -30,8 +28,6 @@ class CCommon
 
         void SetValue(Object json);
     public:
-        eEventFocus                _EventFocus;
-
         string CONFIG_PATH;
         string GAME_PATH;
         string GAME_NAME;

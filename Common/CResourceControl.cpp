@@ -16,6 +16,7 @@ CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAss
     _effectObjCtrlEnable = _drawableObjCtrlEnable = false;
     _script.reset();
     _fileNameOfScript = "";
+    _pauseOfAction = _pauseOfMsg = false;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -139,7 +140,7 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
 
                 if (objTypeName == "MessageBox"){
                     CMessageBox* __msg = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__assetName));
-                    __msg->SetControl(&_pause);
+                    __msg->SetControl(&_pauseOfMsg);
                 }
             }
         }
@@ -225,8 +226,10 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
 {
     Object __json;
 
-    if (!__json.parse(Cio::LoadTxtFile(filename)))
+    if (!__json.parse(Cio::LoadTxtFile(filename))){
+        cout << "sysntax error: " << filename << endl;
         return false;
+    }
 
     JsonProcess(__json, obj, "font");
     JsonProcess(__json, obj, "se");
@@ -351,7 +354,8 @@ bool CResourceControl::LoadScript(string filename)
 void CResourceControl::OnLoop()
 {
     _ActionControl.OnLoop();
-    _pause = _ActionControl.IsPause();
+    _pauseOfMsg = false;
+    _pauseOfAction = _ActionControl.IsPause();
 
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnLoop();
@@ -362,8 +366,10 @@ void CResourceControl::OnLoop()
     _CameraControl.OnLoop();
     _SoundControl.OnLoop();
     
-    if (!_pause)
-        CParser::_Parser.OnLoop();
+    if (_pauseOfAction || _pauseOfMsg)
+        return;
+
+    CParser::_Parser.OnLoop();
 }
 
 void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)

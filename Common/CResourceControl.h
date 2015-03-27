@@ -11,6 +11,7 @@
 
 #include <string>
 #include "CCommon.h"
+#include "CEvent.h"
 #include "CObjectControl.h"
 #include "../Graphics/CCamera.h"
 #include "../Script/CScript.h"
@@ -22,7 +23,7 @@
 
 using namespace std;
 
-class CResourceControl : public CScript
+class CResourceControl : public CScript, public CEvent
 {
     private:
         sf::RenderTexture               _renderTextureUp;
@@ -37,7 +38,8 @@ class CResourceControl : public CScript
         sf::Thread                      _threadOfLoading;
         bool                            _drawableObjCtrlEnable;
         bool                            _effectObjCtrlEnable;
-        bool                            _pause;
+        bool                            _pauseOfAction;
+        bool                            _pauseOfMsg;
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;
 
@@ -51,6 +53,15 @@ class CResourceControl : public CScript
 
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
+
+        void OnKeyDown(sf::Event::KeyEvent key);
+        void OnKeyUp(sf::Event::KeyEvent key);
+        void OnLButtonDown(int mX, int mY);
+        void OnLButtonUp(int mX, int mY);
+        void OnRButtonDown(int mX, int mY);
+        void OnRButtonUp(int mX, int mY);
+        void OnMouseMove(int mX, int mY);
+        void OnExit();
     protected:
 
         CResourceControl();
@@ -75,6 +86,8 @@ class CResourceControl : public CScript
         void OnCleanup();
         void OnSaveData();
         void OnLoadData();
+
+        void OnEvent(sf::Event* Event);
 };
 
 #endif
