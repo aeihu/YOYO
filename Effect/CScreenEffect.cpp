@@ -69,6 +69,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool is
     size_t __count = _vertexData.size() >> 1;
     size_t __t = slide ? elapsed / ((__count>>1)+8) : elapsed;
     size_t __index = 0;
+    size_t __incr = 0;
     float __alpha = isShow ? 255.0f : 0.0f;
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
     __result->SetPause(pause);
@@ -89,8 +90,9 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool is
             }
         }
 
-        __sim->AddAction(new CActionTo(&_vertexData[__index]._alpha, (i%2==0)?__t:__t<<3, __alpha));
-        __sim->AddAction(new CActionTo(&_vertexData[__index+1]._alpha, (i%2==0)?__t:__t<<3, __alpha));
+        __incr = slide ? ((i%2==0)?__t:__t<<3) : ((i%2==0)?__t>>3:__t);
+        __sim->AddAction(new CActionTo(&_vertexData[__index]._alpha, __incr, __alpha));
+        __sim->AddAction(new CActionTo(&_vertexData[__index+1]._alpha, __incr, __alpha));
         __seq->AddAction(__sim);
         
         if (!isShow && i == __count-1)
