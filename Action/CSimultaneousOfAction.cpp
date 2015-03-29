@@ -15,7 +15,9 @@ bool CSimultaneousOfAction::OnLoop(bool cleanup)
             (*it)->Skip();
 
         if ((*it)->OnLoop(cleanup)){
-            _tempActionList.push_back(*it);
+            if (!cleanup)
+                _tempActionList.push_back(*it);
+
             it=_actionList.erase(it);
         }
         else{

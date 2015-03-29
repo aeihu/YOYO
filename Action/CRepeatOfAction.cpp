@@ -34,7 +34,9 @@ bool CRepeatOfAction::OnLoop(bool cleanup)
                 _actionList.front()->Skip();
 
             if (_actionList.front()->OnLoop(_count == 0 && cleanup)){
-                _tempActionList.push_back(_actionList.front());
+                if (!cleanup || _count != 0)
+                    _tempActionList.push_back(_actionList.front());
+
                 _actionList.pop_front();
             }
         }

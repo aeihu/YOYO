@@ -16,8 +16,10 @@ bool CSequenceOfAction::OnLoop(bool cleanup)
                 _actionList.front()->Skip();
 
             if (_actionList.front()->OnLoop(cleanup)){
-                _tempActionList.push_back(_actionList.front());
-                _actionList.pop_front();
+                if (!cleanup)
+                    _tempActionList.push_back(_actionList.front());
+
+                 _actionList.pop_front();
             }
         }
         else

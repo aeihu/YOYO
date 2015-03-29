@@ -32,26 +32,20 @@ void CActionSet::SetPause(bool pause)
 bool CActionSet::DeleteAct(string name, bool skip)
 {
     if (name != ""){
-        list<CActionBaseClass*>* __list = &_actionList;
-        for (char i=0; i<2; i++){
-            if (i == 1)
-                __list = &_tempActionList;
-
-            for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end();){
-                if (name == (*it)->GetName()){
-                    if (skip){
-                        (*it)->Skip();
-                        (*it)->OnLoop();
-                    }
-
-                    (*it)->OnCleanup();
-                    delete (*it);
-                    (*it) = NULL;
-                    it = _actionList.erase(it);
+        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end();){
+            if (name == (*it)->GetName()){
+                if (skip){
+                    (*it)->Skip();
+                    (*it)->OnLoop();
                 }
-                else
-                    ++it;
+
+                (*it)->OnCleanup();
+                delete (*it);
+                (*it) = NULL;
+                it = _actionList.erase(it);
             }
+            else
+                ++it;
         }
 
         return true;
