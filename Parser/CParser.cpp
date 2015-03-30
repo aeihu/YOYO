@@ -51,13 +51,12 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
 {
     vector<string> __listOfCmdPara;
     if (AnalysisOfParameters(cmd, __listOfCmdPara) > 0){
-
-#ifdef _DEBUG
+        cout << "Line " << _index << ": [";
         for (size_t i=0; i<__listOfCmdPara.size(); i++){
             cout << i << ": " << __listOfCmdPara[i] << " ";
         }
-        cout << endl;
-#endif
+        cout << "]"<< endl;
+
         if (act == NULL)
             act = &CResourceControl::_ResourceManager._ActionControl;
 
