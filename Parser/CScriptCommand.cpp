@@ -232,7 +232,6 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
         CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
         if (__values.count("-l") > 0){
-            //__obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
             vector<string> __args;
             __args.push_back(__values["-l"][0]);
             __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
@@ -781,6 +780,7 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
     std::list<pair<string, ENUM_FLAG> > __flags;
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));        //incr
     __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));        //type
+    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_OPTIONAL));        //layer
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));   //pause
     __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));   //right
 
@@ -791,7 +791,6 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
     bool __pause = __values.count("-p") == 0 ? false : true;
     bool __left = __values.count("-r") == 0 ? true : false;
     string __Type = __values.count("-t") == 0 ? "0" : __values["-t"][0];
-
     size_t __inte = __values.count("-i") == 0 ? (float)CCommon::_Common.INTERVAL : 
         atoi(__values["-i"][0].c_str());
     
@@ -808,18 +807,33 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
         cout << __funName << "(): can't find ScrEffect \"screen\"." <<endl;
         return false;
     }
+    
+    if (__values.count("-l") > 0){
+        CSimultaneousOfAction*__sim = new CSimultaneousOfAction();
+        vector<string> __args;
+        __args.push_back(__values["-l"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
+        
+        if (__Type == "1")
+            __sim->AddAction(__obj->CreateActionGradient(__inte, isShow, __left, __pause));
+        else if (__Type == "2")
+            __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, false, __pause));
+        else if (__Type == "3")
+            __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, true, __pause));
+        else
+            __sim->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
 
-    if (__Type == "1"){
-        act->AddAction(__obj->CreateActionGradient(__inte, isShow, __left, __pause));
-    }
-    else if (__Type == "2"){
-        act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, false, __pause));
-    }
-    else if (__Type == "3"){
-        act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, true, __pause));
+        act->AddAction(__sim);
     }
     else{
-        act->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
+        if (__Type == "1")
+            act->AddAction(__obj->CreateActionGradient(__inte, isShow, __left, __pause));
+        else if (__Type == "2")
+            act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, false, __pause));
+        else if (__Type == "3")
+            act->AddAction(__obj->CreateActionLouver(__inte, isShow, __left, true, __pause));
+        else
+            act->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
     }
 
     return true;
@@ -1233,6 +1247,41 @@ bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
     return true;
 }
 
+bool Cmd_SetBGMVolume(vector<string>& args, CActionSet* act)
+{
+    args.erase(args.begin());
+    if (args.size() < 1){
+        cout << "Cmd_SetBGMVolume(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NONPARAMETRIC)); 
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
+    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_NECESSITY));    //vol
+    __flags.push_back(pair<string, ENUM_FLAG>("-r", FLAG_NONPARAMETRIC));    //reset
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_SetBGMVolume", __flags, args, __values))
+        return false;
+
+    float __vol = atof(__values["-v"][0].c_str());
+    size_t __inte = __values.count("-i") == 0 ? 
+        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
+    bool __isBy = __values.count("-b") == 0 ? false : true;
+    bool __pause = __values.count("-p") == 0 ? false : true;
+    bool __reset = __values.count("-r") == 0 ? false : true;
+
+    if (__isBy)
+        act->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(__inte, __vol, __reset, __pause));
+    else
+        act->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, __vol, __reset, __pause));
+
+    return true;
+}
+
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act)
 {
     act->AddAction(new CClassFuncOfAction<CSoundBank>(
@@ -1251,9 +1300,32 @@ bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 
 bool Cmd_StopBGM(vector<string>& args, CActionSet* act)
 {
-    act->AddAction(new CClassFuncOfAction<CSoundBank>(
+    args.erase(args.begin());
+    if (args.size() < 1){
+        act->AddAction(new CClassFuncOfAction<CSoundBank>(
+            &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
+
+        return true;
+    }
+
+    std::list<pair<string, ENUM_FLAG> > __flags;
+    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
+    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));        //incr
+
+    map<string, vector<string> > __values;
+    if (!Common_ArgsToKV("Cmd_SetBGMVolume", __flags, args, __values))
+        return false;
+
+    size_t __inte = __values.count("-i") == 0 ? 
+        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
+    bool __pause = __values.count("-p") == 0 ? false : true;
+
+    CSequenceOfAction* __seq = new CSequenceOfAction();
+    __seq->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, 0.0f, false, __pause));
+    __seq->AddAction(new CClassFuncOfAction<CSoundBank>(
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
     
+    act->AddAction(__seq);
     return true;
 }
 

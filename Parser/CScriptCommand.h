@@ -49,6 +49,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act);
 bool Cmd_ColorText(vector<string>& args, CActionSet* act);
 
 bool Cmd_PlayBGM(vector<string>& args, CActionSet* act);
+bool Cmd_SetBGMVolume(vector<string>& args, CActionSet* act);
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act);
 bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act);
 bool Cmd_StopBGM(vector<string>& args, CActionSet* act);
