@@ -29,16 +29,6 @@ CCommon::CCommon()
     TILE_SIZE    = 32;
     WWIDTH = 800;
     WHEIGHT    =    600;
-    FONT_SIZE =  16;
-    CHAR_COLOR_RED = 254;
-    CHAR_COLOR_GREEN = 254;
-    CHAR_COLOR_BLUE = 254;
-    CHAR_COLOR_ALPHA = 255;
-    //FONT_SHADOW = 1;
-    CHAR_SHADOW_COLOR_RED = 10;
-    CHAR_SHADOW_COLOR_GREEN = 10;
-    CHAR_SHADOW_COLOR_BLUE = 10;
-    CHAR_SHADOW_COLOR_ALPHA = 120;
     SOUND_POOL_NUM = 5;
     VOICE_POOL_NUM = 3;
         
@@ -102,18 +92,6 @@ void CCommon::SetValue(Object json)
     if (json.has<Number>("WWIDTH")) WWIDTH = json.get<Number>("WWIDTH");
     if (json.has<Number>("WHEIGHT")) WHEIGHT = json.get<Number>("WHEIGHT");
     if (json.has<Number>("INTERVAL")) INTERVAL = json.get<Number>("INTERVAL");
-    
-    if (json.has<Number>("FONT_SIZE")) FONT_SIZE = json.get<Number>("FONT_SIZE");
-    //if (json.has<String>("FONT_PATH")) FONT_PATH = json.get<String>("FONT_PATH");
-    if (json.has<Number>("CHAR_COLOR_RED")) CHAR_COLOR_RED = json.get<Number>("CHAR_COLOR_RED");
-    if (json.has<Number>("CHAR_COLOR_GREEN")) CHAR_COLOR_GREEN = json.get<Number>("CHAR_COLOR_GREEN");
-    if (json.has<Number>("CHAR_COLOR_BLUE")) CHAR_COLOR_BLUE = json.get<Number>("CHAR_COLOR_BLUE");
-    if (json.has<Number>("CHAR_COLOR_ALPHA")) CHAR_COLOR_ALPHA = json.get<Number>("CHAR_COLOR_ALPHA");
-
-    if (json.has<Number>("CHAR_SHADOW_COLOR_RED")) CHAR_SHADOW_COLOR_RED = json.get<Number>("CHAR_SHADOW_COLOR_RED");
-    if (json.has<Number>("CHAR_SHADOW_COLOR_GREEN")) CHAR_SHADOW_COLOR_GREEN = json.get<Number>("CHAR_SHADOW_COLOR_GREEN");
-    if (json.has<Number>("CHAR_SHADOW_COLOR_BLUE")) CHAR_SHADOW_COLOR_BLUE = json.get<Number>("CHAR_SHADOW_COLOR_BLUE");
-    if (json.has<Number>("CHAR_SHADOW_COLOR_ALPHA")) CHAR_SHADOW_COLOR_ALPHA = json.get<Number>("CHAR_SHADOW_COLOR_ALPHA");
 
     if (json.has<Number>("SOUND_POOL_NUM")) SOUND_POOL_NUM = json.get<Number>("SOUND_POOL_NUM");
     if (json.has<Number>("VOICE_POOL_NUM")) VOICE_POOL_NUM = json.get<Number>("VOICE_POOL_NUM");

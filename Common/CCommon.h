@@ -34,25 +34,14 @@ class CCommon
         string GAME_ICON;
         string GAME_SYSDATA;
 
-        int MAX_FPS;
+        size_t MAX_FPS;
 
         size_t INTERVAL;//    25
 
         //<config>
-        int  TILE_SIZE;//    32
-        int  WWIDTH;//        800
-        int  WHEIGHT;//        600
-        int  FONT_SIZE;//   16
-
-        unsigned char   CHAR_COLOR_RED;
-        unsigned char   CHAR_COLOR_GREEN;
-        unsigned char   CHAR_COLOR_BLUE;
-        unsigned char   CHAR_COLOR_ALPHA;//10
-
-        unsigned char   CHAR_SHADOW_COLOR_RED ;//10
-        unsigned char   CHAR_SHADOW_COLOR_GREEN ;//10
-        unsigned char   CHAR_SHADOW_COLOR_BLUE ;//10
-        unsigned char   CHAR_SHADOW_COLOR_ALPHA ;//10
+        size_t  TILE_SIZE;//    32
+        size_t  WWIDTH;//        800
+        size_t  WHEIGHT;//        600
         
         unsigned char   SOUND_POOL_NUM ;//5
         unsigned char   VOICE_POOL_NUM ;//3
@@ -61,7 +50,7 @@ class CCommon
         //</config>
 
         //<option>
-        int  TEXT_FRAMERATE ;//10
+        size_t  TEXT_FRAMERATE ;//10
         float  BGM_VOLUME;// 10
         float  SE_VOLUME;// 10
         float  VOICE_VOLUME;// 10
@@ -70,8 +59,6 @@ class CCommon
         string MOUSEOVER_SE;// "MOUSEOVER"
         string MOUSEDOWN_SE;// "MOUSEDOWN"
         string BOXCLOSED_SE;// "BOXCLOSED"
-
-        //float CHARACTER_LAYER_MOVE_BUFFER;// 30
 
         static CCommon _Common;
 

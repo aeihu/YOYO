@@ -220,7 +220,7 @@ void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
         CBox::OnRender(Surf_Dest);
         _speakerName.setOrigin(-2.0f, -2.0f);
         _speakerName.setColor(
-            sf::Color(GetShadowColor().r, GetShadowColor().g, GetShadowColor().b, _alpha));
+            sf::Color(GetShadowColor().r, GetShadowColor().g, GetShadowColor().b, _alpha * GetShadowPercent()));
         Surf_Dest->draw(_speakerName);
 
         _speakerName.setOrigin(0.0f, 0.0f);

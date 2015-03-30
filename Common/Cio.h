@@ -21,6 +21,7 @@ using namespace std;
 class Cio
 {
     public:
+        static string ClearBom(string &str);
         static bool IsOneWord(string &str, string valid_characters);
         static bool IsNested(string &str, char first_symbol, char last_symbol);
         static size_t CounterOfString(string str, string symbol, size_t pos=0);

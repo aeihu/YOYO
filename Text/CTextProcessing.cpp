@@ -79,6 +79,16 @@ void CTextProcessing::SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
         
 void CTextProcessing::SetShadowPercent(float percent)
 {
+    if (percent < 0.0f){
+        _shadowPercent = 0.0f;
+        return;
+    }
+
+    if (percent > 1.0f){
+        _shadowPercent = 1.0f;
+        return;
+    }
+
     _shadowPercent = percent;
 }
 

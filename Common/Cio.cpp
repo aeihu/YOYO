@@ -61,6 +61,17 @@ size_t Cio::CounterOfString(string str, string symbol, size_t pos)
     else
         return 1 + CounterOfString(str, symbol, __pos+1);
 }
+        
+string Cio::ClearBom(string &str)
+{
+    if (str.length() > 3)
+        if ((unsigned char)str[0] == 0xEF && 
+            (unsigned char)str[1] == 0xBB && 
+            (unsigned char)str[2] == 0xBF)
+            str = str.erase(0,3);
+
+    return str;
+}
 
 string Cio::LoadTxtFile(string filename)
 {
@@ -68,9 +79,17 @@ string Cio::LoadTxtFile(string filename)
 		char* __file = NULL;
 		unsigned long __size = 0;
 		CZlib::OpenFileInZip(filename, __file, __size);
-		string __result = __file;
-		CZlib::CloseFileInZip(__file);
-		return __result;
+
+        if (__file){
+		    string __result = __file;
+            ClearBom(__result);
+		    CZlib::CloseFileInZip(__file);
+		    return __result;
+        }
+        else{
+            cout << "Cio::LoadTxtFile(): can't open file \'" << filename << "\'." << endl;
+            return "";
+        }
 	}
 	else{
 		string __result = "";
@@ -94,12 +113,7 @@ string Cio::LoadTxtFile(string filename)
             //char BOM[3] = {0xEF,0xBB,0xBF};
 			if (__is){
 				__result = __buffer;
-                
-                if (__result.length() > 3)
-                    if ((unsigned char)__result[0] == 0xEF && 
-                        (unsigned char)__result[1] == 0xBB && 
-                        (unsigned char)__result[2] == 0xBF)
-                        __result = __result.erase(0,3);
+                ClearBom(__result);
             }
 			else
 				cout << "Cio::LoadTxtFile(): only " << __is.gcount() << " could be read";
