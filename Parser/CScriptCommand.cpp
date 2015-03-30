@@ -124,10 +124,9 @@ bool Common_FuncOfColor(string objTypeName, vector<string>& args, CActionSet* ac
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
 
-    if (__values.count("-n") == 0 || 
-        (__values.count("-cr") == 0 &&
+    if (__values.count("-cr") == 0 &&
         __values.count("-cg") == 0 &&
-        __values.count("-cb") == 0))
+        __values.count("-cb") == 0)
         return false;
 
     string& __name = __values["-n"][0];
@@ -1084,6 +1083,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     __flags.push_back(pair<string, ENUM_FLAG>("-s", FLAG_OPTIONAL));    //size
     __flags.push_back(pair<string, ENUM_FLAG>("-t", FLAG_OPTIONAL));    //text
     __flags.push_back(pair<string, ENUM_FLAG>("-h", FLAG_NONPARAMETRIC)); //shadow
+    __flags.push_back(pair<string, ENUM_FLAG>("-c", FLAG_OPTIONAL));    //shadowpercent
     
     __flags.push_back(pair<string, ENUM_FLAG>("-cr", FLAG_OPTIONAL));    //color red
     __flags.push_back(pair<string, ENUM_FLAG>("-cg", FLAG_OPTIONAL));    //color green
@@ -1119,6 +1119,12 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
         __args.push_back("");
     }
     __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetShadowEnable, __args));
+
+    if (__values.count("-c") > 0){
+        __args.clear();
+        __args.push_back(__values["-c"][0]);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetShadowPercent, __args));
+    }
 
     if (__values.count("-f") > 0){
         __args.clear();
