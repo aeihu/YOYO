@@ -15,6 +15,8 @@
 #include <string>
 #include <iostream>
 #include "../Common/CCommon.h"
+#include "../Action/CActionTo.h"
+#include "../Action/CActionBy.h"
 
 using namespace std;
 //==============================================================================
@@ -40,15 +42,23 @@ class CSoundBank {
                 virtual void onSeek(sf::Time timeOffset);
         };
 
+        class CMusicData
+        {
+            public:
+                string          _Path;
+                char*           _Data;
+                unsigned long   _Size;
+
+                CMusicData();
+        };
+
         float                                           _musicVolume;
-        float                                           _voiceVolume;
-        float                                           _soundVolume;
         list<CVoiceStream*>                             _voicePool;
         list<pair<string, sf::Sound> >                  _soundPool;
         sf::Music                                       _bgm;
         map<string, sf::SoundBuffer*>                   _voiceList;
         map<string, sf::SoundBuffer*>                   _seList;
-        map<string, string>                             _musicList;
+        map<string, CMusicData>                         _musicList;
 
         int AddBuffer(map<string, sf::SoundBuffer*>& bufList, string name, string filename);
         bool DelBuffer(map<string, sf::SoundBuffer*>& bufList, string name);
@@ -93,6 +103,9 @@ class CSoundBank {
         int PlayBgm(string name, float vol, bool loop);
         void PauseBgm();
         void StopBgm();
+
+        CActionTo* CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore, bool pause);
+        CActionBy* CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore, bool pause);
 };
 
 //==============================================================================

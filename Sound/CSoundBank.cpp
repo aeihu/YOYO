@@ -98,6 +98,10 @@ void CSoundBank::OnCleanup()
             (*it).second = NULL;
         }
     }
+    
+    for (map<string, CMusicData>::iterator it=_musicList.begin() ; it !=_musicList.end(); it++){
+        DelBgm((*it).first);
+    }
 
     _voicePool.clear();
     _soundPool.clear();
@@ -221,7 +225,22 @@ bool CSoundBank::AddBgm(string name, string FileName)
     if(_musicList.count(name) > 0)
         return false;
 
-    _musicList[name] = FileName;
+    _musicList[name] = CMusicData();
+    _musicList[name]._Path = FileName;
+    
+    if (_musicList[name]._Path.find("*") != string::npos) {
+        CZlib::OpenFileInZip(_musicList[name]._Path, 
+            _musicList[name]._Data, 
+            _musicList[name]._Size);
+
+        if (_musicList[name]._Data == NULL){
+            CZlib::CloseFileInZip(_musicList[name]._Data);
+            cout << "CSoundBank::AddBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
+            _musicList.erase(name);
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -229,6 +248,9 @@ bool CSoundBank::DelBgm(string name)
 {
     if(_musicList.count(name) < 1)
         return false;
+
+    if (_musicList[name]._Data != NULL)
+        CZlib::CloseFileInZip(_musicList[name]._Data);
 
     _musicList.erase(name);
     return true;
@@ -265,42 +287,41 @@ int CSoundBank::PlayBgm(string name, float vol, bool loop)
     if(_musicList.count(name) < 1)
         return -1;
 
-    if (_musicList[name].find("*") == string::npos){
-        if (!_bgm.openFromFile(_musicList[name])){
-            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;
+    if (_musicList[name]._Path.find("*") == string::npos){
+        if (!_bgm.openFromFile(_musicList[name]._Path)){
+            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
     }
     else {
-        char* __buf = NULL;
-        unsigned long __size = 0;
-        CZlib::OpenFileInZip(_musicList[name], __buf, __size);
-
-        if (__buf != NULL){
-            if (_bgm.openFromMemory(__buf, __size)){
-                CZlib::CloseFileInZip(__buf);
-            }
-            else{
-                CZlib::CloseFileInZip(__buf);
-                cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;
-                return -2;
-            }
-        }
-        else{
-            CZlib::CloseFileInZip(__buf);
-            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name] << "'" << endl;    
+        if (!_bgm.openFromMemory(_musicList[name]._Data, _musicList[name]._Size)){
+            cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
     }
-
+    
+    _musicVolume = vol;
     _bgm.setLoop(loop);
-    _bgm.setVolume(vol * CCommon::_Common.BGM_VOLUME);
+    _bgm.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
     _bgm.play();
     return 0;
 }
 
+CActionTo* CSoundBank::CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore, bool pause)
+{
+    return new CActionTo(&_musicVolume, elapsed, vol, restore, pause);
+}
+
+CActionBy* CSoundBank::CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore, bool pause)
+{
+    return new CActionBy(&_musicVolume, elapsed, vol, restore, pause);
+}
+
 void CSoundBank::OnLoop()
 {
+    if (_musicVolume * CCommon::_Common.BGM_VOLUME != _bgm.getVolume())
+        _bgm.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
+
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
             if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
@@ -423,4 +444,11 @@ void CSoundBank::CVoiceStream::onSeek(sf::Time timeOffset)
 bool CSoundBank::CVoiceStream::IsSilence() const
 {
     return _isSilence;
+}
+
+CSoundBank::CMusicData::CMusicData()
+{
+    _Path = "";
+    _Data = NULL;
+    _Size = 0;
 }
