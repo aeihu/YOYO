@@ -13,6 +13,7 @@ using namespace std;
 
 CTextProcessing::CTextProcessing()
 {
+    _pAlpha = NULL;
     _coordinate.x = _coordinate.y = 0.0f;
     _isSkip = false;
     _rowWidth =
@@ -22,20 +23,34 @@ CTextProcessing::CTextProcessing()
 
     _textOfShown =
     _text = "";
-    _textColor.r = CCommon::_Common.CHAR_COLOR_RED;
-    _textColor.g = CCommon::_Common.CHAR_COLOR_GREEN;
-    _textColor.b = CCommon::_Common.CHAR_COLOR_BLUE;
-    _textColor.a = CCommon::_Common.CHAR_COLOR_ALPHA;
+    _textColor.r = 255;
+    _textColor.g = 255;
+    _textColor.b = 255;
+    _textColor.a = 255;
     
-    _shadowColor.r = CCommon::_Common.CHAR_SHADOW_COLOR_RED;
-    _shadowColor.g = CCommon::_Common.CHAR_SHADOW_COLOR_GREEN;
-    _shadowColor.b = CCommon::_Common.CHAR_SHADOW_COLOR_BLUE;
-    _shadowColor.a = CCommon::_Common.CHAR_SHADOW_COLOR_ALPHA;
+    _shadowColor.r = 10;
+    _shadowColor.g = 10;
+    _shadowColor.b = 10;
+    _shadowColor.a = 200;
+
+    _shadowPercent = 1.0f;
 }
 
 bool CTextProcessing::isWordOrNumber(char c)
 {
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 121) || (c >= 43 && c <= 58);
+}
+
+
+void CTextProcessing::SetCharacterSize(size_t size)
+{
+    _sfText.setCharacterSize(size);
+}
+
+void CTextProcessing::SetPointAlpha(float* alpha)
+{
+    if (alpha)
+        _pAlpha = alpha;
 }
 
 void CTextProcessing::SetRowWidth(size_t width)
@@ -46,6 +61,30 @@ void CTextProcessing::SetRowWidth(size_t width)
 void CTextProcessing::SetFont(sf::Font& font)
 {
     _sfText.setFont(font);
+}
+        
+void CTextProcessing::SetTextColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
+{
+    _textColor.r = r;
+    _textColor.g = g;
+    _textColor.b = b;
+}
+        
+void CTextProcessing::SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
+{
+    _shadowColor.r = r;
+    _shadowColor.g = g;
+    _shadowColor.b = b;
+}
+        
+void CTextProcessing::SetShadowPercent(float percent)
+{
+    _shadowPercent = percent;
+}
+
+float CTextProcessing::GetShadowPercent() const
+{
+    return _shadowPercent;
 }
 
 void CTextProcessing::Clear()
@@ -144,11 +183,11 @@ void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)
 {
     sf::Vector2f __tmp = _sfText.getOrigin();
     _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
-    _sfText.setColor(_shadowColor);
+    _sfText.setColor(sf::Color(_shadowColor.r, _shadowColor.g, _shadowColor.b, _pAlpha == NULL ? 200 : *_pAlpha * _shadowPercent));
     Surf_Dest->draw(_sfText);
 
     _sfText.setOrigin(__tmp);
-    _sfText.setColor(_textColor);
+    _sfText.setColor(sf::Color(_textColor.r, _textColor.g, _textColor.b, _pAlpha == NULL ? 255 : *_pAlpha));
     Surf_Dest->draw(_sfText);
 }
 

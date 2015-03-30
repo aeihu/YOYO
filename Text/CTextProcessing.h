@@ -32,12 +32,16 @@ class CTextProcessing
         sf::Color           _textColor;
         sf::Color           _shadowColor;
         unsigned long       _oldTime;
+        float               _shadowPercent;
+        float*              _pAlpha;
 
         bool isWordOrNumber(char c);
         void Process();
     public:
         CTextProcessing();
 
+        void SetCharacterSize(size_t size);
+        void SetPointAlpha(float* alpha);
         void SetRowWidth(size_t width);
         virtual void SetFont(sf::Font& font);
         void OnLoop();
@@ -54,6 +58,11 @@ class CTextProcessing
         sf::Vector2f GetPosition();
         void SetPosition(float x, float y);
         
+        void SetShadowPercent(float percent);
+        float GetShadowPercent() const;
+
+        void SetTextColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b);
+        void SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b);
         const sf::Color& GetTextColor() const;
         const sf::Color& GetShadowColor() const;
 };
