@@ -22,6 +22,7 @@ class CText : public CImageBaseClass
         sf::Color           _textColor;
         sf::Color           _shadowColor;
         bool                _shadowEnable;
+        float               _shadowPercent;
     protected:
         
     public:
@@ -40,6 +41,9 @@ class CText : public CImageBaseClass
         
         void SetShadowEnable(bool b);
         void SetShadowEnable(vector<string> args);
+
+        void SetShadowPercent(float percent);
+        void SetShadowPercent(vector<string> args);
 
         void SetFont(string name);
         void SetFont(vector<string> args);

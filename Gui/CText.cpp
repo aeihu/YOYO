@@ -10,17 +10,18 @@
 
 CText::CText()
 {
-    _textColor.r = CCommon::_Common.CHAR_COLOR_RED;
-    _textColor.g = CCommon::_Common.CHAR_COLOR_GREEN;
-    _textColor.b = CCommon::_Common.CHAR_COLOR_BLUE;
-    _textColor.a = CCommon::_Common.CHAR_COLOR_ALPHA;
+    _textColor.r = 255;
+    _textColor.g = 255;
+    _textColor.b = 255;
+    _textColor.a = 255;
     
-    _shadowColor.r = CCommon::_Common.CHAR_SHADOW_COLOR_RED;
-    _shadowColor.g = CCommon::_Common.CHAR_SHADOW_COLOR_GREEN;
-    _shadowColor.b = CCommon::_Common.CHAR_SHADOW_COLOR_BLUE;
-    _shadowColor.a = CCommon::_Common.CHAR_SHADOW_COLOR_ALPHA;
+    _shadowColor.r = 10;
+    _shadowColor.g = 10;
+    _shadowColor.b = 10;
+    _shadowColor.a = 200;
 
     _shadowEnable = true;
+    _shadowPercent = 1.0f;
 }
         
 sf::Color CText::GetColor() const
@@ -74,6 +75,28 @@ void CText::SetCharacterSize(vector<string> args)
 {
     if (args.size() > 0){
         SetCharacterSize(atoi(args[0].c_str()));
+    }
+}
+        
+void CText::SetShadowPercent(float percent)
+{
+    if (percent < 0.0f){
+        _shadowPercent = 0.0f;
+        return;
+    }
+
+    if (percent > 1.0f){
+        _shadowPercent = 1.0f;
+        return;
+    }
+
+    _shadowPercent = percent;
+}
+        
+void CText::SetShadowPercent(vector<string> args)
+{
+    if (args.size() > 0){
+        SetShadowPercent(atof(args[0].c_str()));
     }
 }
 
@@ -148,8 +171,10 @@ void CText::OnLoop()
 {
     _visible = _alpha > 0 ? true : false;
 
-    if (_sfText.getColor().a != _alpha)
-        _shadowColor.a = _textColor.a = _alpha;
+    if (_sfText.getColor().a != _alpha){
+        _textColor.a = _alpha;
+        _shadowColor.a = _alpha * _shadowPercent;
+    }
     
     if (_sfText.getColor().r != _red ||
         _sfText.getColor().g != _green ||
