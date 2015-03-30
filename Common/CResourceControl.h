@@ -23,19 +23,19 @@
 
 using namespace std;
 
-class CResourceControl : public CScript, public CEvent
+class CResourceControl : public CScript
 {
     private:
         sf::RenderTexture               _renderTextureUp;
         sf::RenderTexture               _renderTextureDown;
         sf::Sprite                      _spriteUp;
         sf::Sprite                      _spriteDown;
+        sf::Thread                      _threadOfLoading;
 
         string                          _fileNameOfScript;
-
         Object                          _script;
         Object                          _gameBaiscAsset;
-        sf::Thread                      _threadOfLoading;
+
         bool                            _drawableObjCtrlEnable;
         bool                            _effectObjCtrlEnable;
         bool                            _pauseOfAction;
@@ -54,14 +54,6 @@ class CResourceControl : public CScript, public CEvent
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
 
-        void OnKeyDown(sf::Event::KeyEvent key);
-        void OnKeyUp(sf::Event::KeyEvent key);
-        void OnLButtonDown(int mX, int mY);
-        void OnLButtonUp(int mX, int mY);
-        void OnRButtonDown(int mX, int mY);
-        void OnRButtonUp(int mX, int mY);
-        void OnMouseMove(int mX, int mY);
-        void OnExit();
     protected:
 
         CResourceControl();
@@ -86,8 +78,12 @@ class CResourceControl : public CScript, public CEvent
         void OnCleanup();
         void OnSaveData();
         void OnLoadData();
-
-        void OnEvent(sf::Event* Event);
+        
+        void OnLButtonDown(int mX, int mY);
+        void OnLButtonUp(int mX, int mY);
+        void OnRButtonDown(int mX, int mY);
+        void OnRButtonUp(int mX, int mY);
+        void OnMouseMove(int mX, int mY);
 };
 
 #endif

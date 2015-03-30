@@ -124,6 +124,14 @@ bool CImgLayer::SetProperty(Object json)
         if (json.has<Number>("ORIGIN_Y")){
             _origin.y = json.get<Number>("ORIGIN_Y");
         }
+        
+        if (json.has<Number>("X")){
+            _coordinate.x = json.get<Number>("X");
+        }
+
+        if (json.has<Number>("Y")){
+            _coordinate.y = json.get<Number>("Y");
+        }
         return true;
     }
         

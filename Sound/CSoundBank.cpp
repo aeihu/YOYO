@@ -120,6 +120,7 @@ bool CSoundBank::PlaySE(string name, float vol, bool loop)
     
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end(); it++){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
+            (*it).first = name;
             (*it).second.setBuffer(*_seList[name]);
             (*it).second.setLoop(loop);
             (*it).second.setVolume(vol * CCommon::_Common.SE_VOLUME);
@@ -129,6 +130,7 @@ bool CSoundBank::PlaySE(string name, float vol, bool loop)
     }
 
     _soundPool.push_back(make_pair(name, sf::Sound()));
+    _soundPool.back().first = name;
     _soundPool.back().second.setBuffer(*_seList[name]);
     _soundPool.back().second.setLoop(loop);
     _soundPool.back().second.setVolume(vol * CCommon::_Common.SE_VOLUME);

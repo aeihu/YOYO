@@ -227,12 +227,17 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-
+    
+    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
     if (__doc->IsExists(objTypeName+":"+__name)){
         CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
         if (__values.count("-l") > 0){
-            __obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
+            //__obj->SetLayerOrder(atoi(__values["-l"][0].c_str()));
+            vector<string> __args;
+            __args.push_back(__values["-l"][0]);
+            __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
+
         }
 
         float* __x = &__obj->GetPosition().x;
@@ -241,7 +246,8 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
         *__x = __values.count("-x") == 0 ? *__x : atof(__values["-x"][0].c_str());
         *__y = __values.count("-y") == 0 ? *__y : atof(__values["-y"][0].c_str());
         
-        act->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset, __pause));
+        __sim->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset, __pause));
+        act->AddAction(__sim);
         __obj->SetPosition(*__x, *__y);
         return true;
     }
@@ -579,7 +585,7 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     }
 
     std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_OPTIONAL));
+    __flags.push_back(pair<string, ENUM_FLAG>("-b", FLAG_NONPARAMETRIC));
     __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));    //incr
     __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
     __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
@@ -1219,19 +1225,12 @@ bool Cmd_PlayBGM(vector<string>& args, CActionSet* act)
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm, __args));
     
     return true;
-    //CResourceControl::_ResourceManager._SoundControl.SetBGMLoop(__loop);
-    //if (CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name) == 0)
-    //    return true;
-    //else
-    //    return false;
 }
 
 bool Cmd_PauseBGM(vector<string>& args, CActionSet* act)
 {
     act->AddAction(new CClassFuncOfAction<CSoundBank>(
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PauseBgm));
-    //if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Playing)
-    //    CResourceControl::_ResourceManager._SoundControl.PauseBgm();
 
     return true;
 }
@@ -1240,8 +1239,6 @@ bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act)
 {
     act->AddAction(new CClassFuncOfAction<CSoundBank>(
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm));
-    //if (CResourceControl::_ResourceManager._SoundControl.GetBgmStatus() == sf::Music::Paused)
-    //    CResourceControl::_ResourceManager._SoundControl.PlayBgm();
 
     return true;
 }

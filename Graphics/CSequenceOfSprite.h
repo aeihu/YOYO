@@ -15,6 +15,9 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
 {
     private:
         sf::IntRect        _rect;
+    protected:
+        virtual bool CheckList(Object json);
+        virtual bool SetProperty(Object json);
     public:
         using CImgLayer::_texture;
         using CImgLayer::_sprite;
