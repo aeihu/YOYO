@@ -71,7 +71,12 @@ bool CMessageBox::SetProperty(Object json)
     }
     else
         return false;
+    
+    SetTextColor(json.get<Number>("CHAR_COLOR_RED"), json.get<Number>("CHAR_COLOR_GREEN"), json.get<Number>("CHAR_COLOR_BLUE"));
+    SetShadowColor(json.get<Number>("CHAR_SHADOW_COLOR_RED"), json.get<Number>("CHAR_SHADOW_COLOR_GREEN"), json.get<Number>("CHAR_SHADOW_COLOR_BLUE"));
+    SetShadowPercent(json.get<Number>("CHAR_SHADOW_PERCENT"));
 
+    SetPointAlpha(&_alpha);
     return CBox::SetProperty(json);
 }
 
@@ -134,6 +139,41 @@ bool CMessageBox::CheckList(Object json)
         result = false;
     }
 
+    if (!json.has<Number>("CHAR_COLOR_RED")){
+        cout << "can't find value of CHAR_COLOR_RED." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_COLOR_GREEN")){
+        cout << "can't find value of CHAR_COLOR_GREEN." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_COLOR_BLUE")){
+        cout << "can't find value of CHAR_COLOR_BLUE." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_SHADOW_COLOR_RED")){
+        cout << "can't find value of CHAR_SHADOW_COLOR_RED." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_SHADOW_COLOR_GREEN")){
+        cout << "can't find value of CHAR_SHADOW_COLOR_GREEN." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_SHADOW_COLOR_BLUE")){
+        cout << "can't find value of CHAR_SHADOW_COLOR_BLUE." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("CHAR_SHADOW_PERCENT")){
+        cout << "can't find value of CHAR_SHADOW_PERCENT." << endl;
+        result = false;
+    }
+
     return result;
 }
 
@@ -151,10 +191,11 @@ void CMessageBox::OnLoop()
             _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f - CBox::_coordinate.x,  
                 CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
         
-            _frames.SetAlpha(255);
             _frames.TurnOn();
             _isFramesChanged = true;
         }
+            
+        _frames.SetAlpha(_alpha);
     }
     else{
         _frames.SetAlpha(0);
@@ -175,17 +216,21 @@ void CMessageBox::SetControl(bool* p)
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    CBox::OnRender(Surf_Dest);
-    _speakerName.setOrigin(-2.0f, -2.0f);
-    _speakerName.setColor(GetShadowColor());
-    Surf_Dest->draw(_speakerName);
+    if (_visible){
+        CBox::OnRender(Surf_Dest);
+        _speakerName.setOrigin(-2.0f, -2.0f);
+        _speakerName.setColor(
+            sf::Color(GetShadowColor().r, GetShadowColor().g, GetShadowColor().b, _alpha));
+        Surf_Dest->draw(_speakerName);
 
-    _speakerName.setOrigin(0.0f, 0.0f);
-    _speakerName.setColor(GetTextColor());
-    Surf_Dest->draw(_speakerName);
+        _speakerName.setOrigin(0.0f, 0.0f);
+        _speakerName.setColor(
+            sf::Color(GetTextColor().r, GetTextColor().g, GetTextColor().b, _alpha));
+        Surf_Dest->draw(_speakerName);
 
-    CTextProcessing::OnRender(Surf_Dest);
-    _frames.OnRender(Surf_Dest);
+        CTextProcessing::OnRender(Surf_Dest);
+        _frames.OnRender(Surf_Dest);
+    }
 }
 
 void CMessageBox::SetSpeakerName(vector<string> args)
