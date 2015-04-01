@@ -19,6 +19,7 @@ CCommon::CCommon()
     GAME_NAME = "Game Scenario Maker";
     GAME_ICON = "./icon.ico";
     GAME_SYSDATA = "./sys.dat";
+    FULL_SCREEN = false;
 
     MAX_FPS = 60;
 
@@ -28,7 +29,7 @@ CCommon::CCommon()
     //<config>
     TILE_SIZE    = 32;
     WWIDTH = 800;
-    WHEIGHT    =    600;
+    WHEIGHT = 600;
     SOUND_POOL_NUM = 5;
     VOICE_POOL_NUM = 3;
         
@@ -47,8 +48,6 @@ CCommon::CCommon()
     MOUSEOVER_SE = "MOUSEOVER";
     MOUSEDOWN_SE = "MOUSEDOWN";
     BOXCLOSED_SE = "BOXCLOSED";
-
-    //CHARACTER_LAYER_MOVE_BUFFER = 300.0f;
 }
 
 bool CCommon::OnInit()
@@ -85,6 +84,7 @@ void CCommon::SetValue(Object json)
     if (json.has<String>("GAME_NAME")) GAME_NAME = json.get<String>("GAME_NAME");
     if (json.has<String>("GAME_ICON")) GAME_ICON = json.get<String>("GAME_ICON");
     if (json.has<String>("GAME_SYSDATA")) GAME_SYSDATA = json.get<String>("GAME_SYSDATA");
+    if (json.has<Boolean>("FULL_SCREEN")) FULL_SCREEN = json.get<Boolean>("FULL_SCREEN");
 
     if (json.has<Number>("MAX_FPS")) MAX_FPS = json.get<Number>("MAX_FPS");
     if (json.has<Number>("INTERVAL")) INTERVAL = json.get<Number>("INTERVAL");

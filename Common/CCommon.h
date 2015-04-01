@@ -33,6 +33,7 @@ class CCommon
         string GAME_NAME;
         string GAME_ICON;
         string GAME_SYSDATA;
+        bool FULL_SCREEN;
 
         size_t MAX_FPS;
 
