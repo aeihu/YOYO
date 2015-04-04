@@ -16,7 +16,7 @@ class CDrawableClass : public CBaiscProperties
     private:
         unsigned char                     _layerOrder;
     protected:
-        bool                              _visible;
+        bool                              _isShowed;
         float                             _alpha;
     public:
         CDrawableClass();
