@@ -152,15 +152,9 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
     return 1;
 }
 
-bool CResourceControl::OnInit(string filename)
+bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
 {
-    if (!_renderTextureUp.create(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT))
-        return false;
-
-    if (!_renderTextureDown.create(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT))
-        return false;
-
-    if (!_CameraControl.OnInit(&_renderTextureDown))
+    if (!_CameraControl.OnInit(Window))
         return false;
 
     if (!_SoundControl.OnInit())
@@ -356,13 +350,15 @@ void CResourceControl::OnLoop()
     _ActionControl.OnLoop();
     _pauseOfMsg = false;
     _pauseOfAction = _ActionControl.IsPause();
+    
+    if (_effectObjCtrlEnable){
+        _EffectObjectControl.OnLoop();
+        return;
+    }
 
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnLoop();
 
-    if (_effectObjCtrlEnable)
-        _EffectObjectControl.OnLoop();
-    
     _CameraControl.OnLoop();
     _SoundControl.OnLoop();
     
@@ -372,28 +368,13 @@ void CResourceControl::OnLoop()
     CParser::_Parser.OnLoop();
 }
 
-void CResourceControl::OnRender(sf::RenderTarget* Surf_Dest)
+void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    //sf::Clock _c;
-    //_c.restart();
-    _renderTextureDown.clear();
-    _renderTextureUp.clear(sf::Color(0,0,0,0));
-
     if (_drawableObjCtrlEnable)
-        _DrawableObjectControl.OnRender(&_renderTextureDown, &_renderTextureUp);
+        _DrawableObjectControl.OnRender(Surf_Dest);
     
     if (_effectObjCtrlEnable)
-        _EffectObjectControl.OnRender(&_renderTextureDown, &_renderTextureUp);
-    
-    _renderTextureDown.display();
-    _renderTextureUp.display();
-
-    _spriteDown.setTexture(_renderTextureDown.getTexture());
-    _spriteUp.setTexture(_renderTextureUp.getTexture());
-
-    Surf_Dest->draw(_spriteDown);
-    Surf_Dest->draw(_spriteUp);
-    //cout<< _c.getElapsedTime().asMicroseconds()<<endl;
+        _EffectObjectControl.OnRender(Surf_Dest);
 }
 
 void CResourceControl::OnCleanup()

@@ -121,24 +121,24 @@ void CDrawableObjectControl::OnLoop()
         (*it).second->OnLoop();
 }
 
-void CDrawableObjectControl::OnRender(sf::RenderTarget* Surf_Down, sf::RenderTarget* Surf_Up)
+void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Down)
 {
-    //sf::View __tmpView = Surf_Dest->getView();
-    //bool __b = true;
+    sf::View __tmpView = Surf_Down->getView();
+    bool __b = true;
     for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
             if ((*it).second->GetLayerOrder() < 100){
                 (*it).second->OnRender(Surf_Down);
             }
             else{
-                //if (__b){
-                //    Surf_Dest->setView(Surf_Dest->getDefaultView());
-                //    __b = false;
-                //}
-                (*it).second->OnRender(Surf_Up);
+                if (__b){
+                    Surf_Down->setView(Surf_Down->getDefaultView());
+                    __b = false;
+                }
+                (*it).second->OnRender(Surf_Down);
             }
     }
-    //Surf_Dest->setView(__tmpView);
+    Surf_Down->setView(__tmpView);
 }
 
 void CDrawableObjectControl::OnCleanup()

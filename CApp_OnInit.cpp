@@ -17,18 +17,16 @@ bool CApp::OnInit()
     if (!CCommon::_Common.OnInit())
         return false;
 
-    CParser::_Parser.SetRunning(&Running);
-    
-    sf_Display->create(
-        sf::VideoMode(CCommon::_Common.WWIDTH, CCommon::_Common.WHEIGHT, 32), 
-        CCommon::_Common.GAME_NAME,sf::Style::Close);
+    CParser::_Parser.SetRunning(&_running);
 
-    sf_Display->setFramerateLimit(CCommon::_Common.MAX_FPS);
+    if (CCommon::_Common.FULL_SCREEN)
+        SetFullScreen(true);
+    else
+        SetWindow(true);
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str()))
-    {
+    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str(), sf_Display)){
         cout << "CApp::OnInit(): can't find script file \"" 
             << CCommon::_Common.GAME_PATH.c_str() << "\"." << endl;
         return false;

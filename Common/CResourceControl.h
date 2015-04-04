@@ -26,8 +26,6 @@ using namespace std;
 class CResourceControl : public CScript
 {
     private:
-        sf::RenderTexture               _renderTextureUp;
-        sf::RenderTexture               _renderTextureDown;
         sf::Sprite                      _spriteUp;
         sf::Sprite                      _spriteDown;
         sf::Thread                      _threadOfLoading;
@@ -71,10 +69,10 @@ class CResourceControl : public CScript
         string GetVariable(string name);
         bool DelVariable(string name);
 
-        bool OnInit(string filename);
+        bool OnInit(string filename, sf::RenderWindow* Window);
         bool LoadScript(string filename);
         void OnLoop();
-        void OnRender(sf::RenderTarget* Surf_Dest);
+        void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
         void OnSaveData();
         void OnLoadData();
