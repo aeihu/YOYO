@@ -10,17 +10,17 @@
 
 bool CScreenEffect::GetVisible() const
 {
-    return _visible;
+    return _isShowed;
 }
 
 void CScreenEffect::SetShow()
 {
-    _visible = true;
+    _isShowed = true;
 }
         
 void CScreenEffect::SetHide()
 {
-    _visible = false;
+    _isShowed = false;
 }
 
 void CScreenEffect::SetColor(vector<string> args)
@@ -168,7 +168,7 @@ CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
 
 void CScreenEffect::OnLoop()
 {
-    if (!_visible)
+    if (!_isShowed)
         return;
 
     for (size_t i=0; i<_vertexArray.getVertexCount(); i++){
@@ -185,6 +185,6 @@ void CScreenEffect::OnLoop()
 
 void CScreenEffect::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_visible)
+    if (_isShowed)
         Surf_Dest->draw(_vertexArray);
 }

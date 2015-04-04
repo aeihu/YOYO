@@ -15,7 +15,7 @@ CImageBaseClass::CImageBaseClass(float x, float y)
     _rotation = 0.0f;
     _coordinate.x = x;
     _coordinate.y = y;
-    _flipX = _flipY = _visible = false;
+    _flipX = _flipY = _isShowed = false;
     _red = _green = _blue = 255.0f;
 }
 
@@ -214,7 +214,7 @@ const float& CImageBaseClass::GetAlpha() const
 
 bool CImageBaseClass::GetVisible() const
 {
-    return _visible;
+    return _isShowed;
 }
 
 void CImageBaseClass::OnSaveData(Object& json) const

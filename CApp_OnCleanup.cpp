@@ -13,9 +13,9 @@
 void CApp::OnCleanup() {
     CResourceControl::_ResourceManager.OnCleanup();
 
-    sf_Display->close();
-    delete sf_Display;
-    sf_Display = NULL;
+    _display->close();
+    delete _display;
+    _display = NULL;
 }
 
 //==============================================================================

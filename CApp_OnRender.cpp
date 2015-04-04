@@ -14,10 +14,10 @@ void CApp::OnRender() {
     
     //sf::Clock _t;
     //_t.restart();
-    sf_Display->clear();
- 
-    CResourceControl::_ResourceManager.OnRender(sf_Display);
-    sf_Display->display();
+    _display->clear();
+
+    CResourceControl::_ResourceManager.OnRender(_display);
+    _display->display();
        // std::cout << _t.getElapsedTime().asMilliseconds() << std::endl;
 }
 

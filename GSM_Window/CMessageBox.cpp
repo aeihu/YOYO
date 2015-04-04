@@ -208,7 +208,7 @@ void CMessageBox::OnLoop()
     if (_pauseControl)
         *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
 }
-        
+
 void CMessageBox::SetControl(bool* p)
 {
     _pauseControl = p;
@@ -216,7 +216,7 @@ void CMessageBox::SetControl(bool* p)
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_visible){
+    if (_isShowed){
         CBox::OnRender(Surf_Dest);
         _speakerName.setOrigin(-2.0f, -2.0f);
         _speakerName.setColor(

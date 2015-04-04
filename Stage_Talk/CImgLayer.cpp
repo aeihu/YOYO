@@ -154,7 +154,7 @@ CImgLayer* CImgLayer::Create(const char* filename)
 
 void CImgLayer::OnLoop()
 {
-    _visible = _alpha > 0 ? true : false;
+    _isShowed = _alpha > 0 ? true : false;
     
     if (_sprite.getColor().a != _alpha ||
         _sprite.getColor().r != _red ||
@@ -162,7 +162,7 @@ void CImgLayer::OnLoop()
         _sprite.getColor().b != _blue)
         _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
 
-    if (_visible){
+    if (_isShowed){
         if (_coordinate != 
             (_baseNode == NULL ? 
                 _sprite.getPosition() : GetGlobalPosition() - _baseNode->GetPosition())){
@@ -232,7 +232,7 @@ bool CImgLayer::AddChildNode(CImgLayer* child)
 
 void CImgLayer::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_visible){
+    if (_isShowed){
         Surf_Dest->draw(_sprite);
 
         list<CImgLayer*>::iterator it;

@@ -23,7 +23,6 @@ CLogBox* CLogBox::Create(const char* filename)
     if (__logBox->LoadConfigFile(filename)){
         __logBox->SetClassName("logbox");
         __logBox->SetPath(filename);
-        __logBox->SetLayerOrder(7);
         return __logBox;
     }
     

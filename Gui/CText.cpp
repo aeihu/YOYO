@@ -169,7 +169,7 @@ void CText::SetStyle(vector<string> args)
 
 void CText::OnLoop()
 {
-    _visible = _alpha > 0 ? true : false;
+    _isShowed = _alpha > 0 ? true : false;
 
     if (_sfText.getColor().a != _alpha){
         _textColor.a = _alpha;
@@ -184,7 +184,7 @@ void CText::OnLoop()
         _textColor.b = _blue;
     }
 
-    if (_visible){
+    if (_isShowed){
         if (_coordinate != _sfText.getPosition())
             _sfText.setPosition(_coordinate);
         
@@ -204,7 +204,7 @@ void CText::OnLoop()
 
 void CText::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_visible){
+    if (_isShowed){
         if (_shadowEnable){
             sf::Vector2f __tmp = _sfText.getOrigin();
             _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);

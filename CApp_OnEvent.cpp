@@ -51,10 +51,10 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
         }
         
         case sf::Keyboard::F4: {
-            if (!_fullScreen)
-                SetFullScreen();
-            else
+            if (CCommon::_Common.FULL_SCREEN)
                 SetWindow();
+            else
+                SetFullScreen();
             
             break;
         }

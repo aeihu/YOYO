@@ -12,10 +12,7 @@
 #include <SFML/Window.hpp>
 #include "Common/CCommon.h"
 #include <algorithm>
-//#include "Common/CFPS.h"
-//#include "Common/Define.h"
 #include "Common/CEvent.h"
-//#include "CSurface.h"
 #include "GSM_Window/CMessageBox.h"
 #include "Stage_Talk/CCharacterLayer.h"
 #include "Parser/CParser.h"
@@ -30,10 +27,13 @@
 
 class CApp : public CEvent {
     private:
-        bool                        Running;
-        bool                        FullScreen;
+        bool                        _running;
+        bool                        _EndableOfIcon;
+        sf::RenderWindow*           _display;
+        sf::Image                   _icon;
 
-        sf::RenderWindow*           sf_Display;
+        void SetWindow(bool isFirst=false);
+        void SetFullScreen(bool isFirstt=false);
     public:
         CApp();
 

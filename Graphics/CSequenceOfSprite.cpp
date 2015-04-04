@@ -16,6 +16,48 @@ CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int wi
     _rect.height = height;
 }
 
+bool CSequenceOfSprite::CheckList(Object json)
+{
+    bool __result = true;
+
+    if (!json.has<String>("TILESET_PATH")){
+        cout << "can't find value of TILESET_PATH." << endl;
+        __result = false;
+    }
+
+    if (!json.has<Number>("ORDER")){
+        cout << "can't find value of ORDER." << endl;
+        __result = false;
+    }
+
+    return __result;
+}
+
+bool CSequenceOfSprite::SetProperty(Object json)
+{
+    if (LoadImg(json.get<String>("TILESET_PATH").c_str())){
+        SetLayerOrder(json.get<Number>("ORDER"));
+
+        if (json.has<Number>("SCALE")){
+            _scale.y = _scale.x = json.get<Number>("SCALE");
+        }
+        else{
+            if (json.has<Number>("SCALE_X"))
+                _scale.x = json.get<Number>("SCALE_X");
+
+            if (json.has<Number>("SCALE_Y"))
+                _scale.y = json.get<Number>("SCALE_Y");
+        }
+
+        if (json.has<Number>("ROTATION")){
+            _rotation = json.get<Number>("ROTATION");
+        }
+        return true;
+    }
+
+    return false;
+}
+
 bool CSequenceOfSprite::LoadImg(const char* filename)
 {
     if (CImgLayer::LoadImg(filename)){

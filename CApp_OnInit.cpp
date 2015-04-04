@@ -12,12 +12,13 @@
 //==============================================================================
 bool CApp::OnInit() 
 {
-    sf_Display = new sf::RenderWindow();
+    _display = new sf::RenderWindow();
 
     if (!CCommon::_Common.OnInit())
         return false;
 
     CParser::_Parser.SetRunning(&_running);
+    _EndableOfIcon = CSurface::OnLoad(CCommon::_Common.GAME_ICON.c_str(), _icon);
 
     if (CCommon::_Common.FULL_SCREEN)
         SetFullScreen(true);
@@ -26,7 +27,7 @@ bool CApp::OnInit()
 
     //SDL_EnableKeyRepeat(1, SDL_DEFAULT_REPEAT_INTERVAL / 3);
 
-    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str(), sf_Display)){
+    if (!CResourceControl::_ResourceManager.OnInit(CCommon::_Common.GAME_PATH.c_str(), _display)){
         cout << "CApp::OnInit(): can't find script file \"" 
             << CCommon::_Common.GAME_PATH.c_str() << "\"." << endl;
         return false;

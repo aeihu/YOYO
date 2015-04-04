@@ -84,7 +84,7 @@ void CCharacterLayer::OnLoop()
         _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
     }
 
-    _visible = _alpha > 0 ? true : false;
+    _isShowed = _alpha > 0 ? true : false;
 
     if (_sprite.getColor().a != _alpha ||
         _sprite.getColor().r != _red ||
@@ -92,7 +92,7 @@ void CCharacterLayer::OnLoop()
         _sprite.getColor().b != _blue)
         _sprite.setColor(sf::Color(_red, _green, _blue, _alpha*_alphaOfSwap));
 
-    if (_visible){
+    if (_isShowed){
         if (_coordinate != _sprite.getPosition()){
             _sprite.setPosition(_coordinate);
             _swapSprite.setPosition(_coordinate);
@@ -145,7 +145,7 @@ void CCharacterLayer::OnLoop()
          
 void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_visible)
+    if (_isShowed)
         Surf_Dest->draw(_sprite);
 
     if (_isBodyChangeing)
@@ -370,7 +370,7 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
     if (__isBodyChanged && !body.empty() && _textureList.count(body) > 0){
         _currcentBody = body;
         
-        if (_visible && isEffect){
+        if (_isShowed && isEffect){
             _swapSprite.setTexture(_textureList[body],true);
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();

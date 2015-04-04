@@ -35,8 +35,13 @@ bool CActionTo::OnLoop(bool cleanup)
 
         if (_elapsed == 0)
             *_val = _valOfFinish;
-        else
-            _incr = abs((_valOfFinish - *_val) * ((1000.0f/(float)CCommon::_Common.MAX_FPS)/(float)_elapsed));
+        else{
+            float __fps = 60.0f;
+            if (CCommon::_Common.MAX_FPS > 0)
+                __fps = (float)CCommon::_Common.MAX_FPS;
+
+            _incr = abs((_valOfFinish - *_val) * ((1000.0f/__fps)/(float)_elapsed));
+        }
     }
 
     if ((*_val) != _valOfFinish){

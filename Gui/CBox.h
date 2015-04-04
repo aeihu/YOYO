@@ -19,7 +19,7 @@ class CBox : public CImgLayer
 {
     private:
     protected:
-        using CImageBaseClass::_visible;
+        using CImageBaseClass::_isShowed;
 
         virtual bool CheckList(Object json);
         virtual bool SetProperty(Object json);

@@ -32,7 +32,7 @@ class CMessageBox : public CBox , public CTextProcessing
         bool CheckList(Object json);
         bool SetProperty(Object json);
     protected:
-        using CBox::_visible;
+        using CBox::_isShowed;
     public:
         CMessageBox();
         
