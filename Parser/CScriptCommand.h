@@ -99,5 +99,6 @@ bool Cmd_RotationCamera(vector<string>& args, CActionSet* act);
 
 bool Cmd_Delay(vector<string>& args, CActionSet* act);
 bool Cmd_Pause(vector<string>& args, CActionSet* act);
+bool Cmd_LoadScript(vector<string>& args, CActionSet* act);
 
 #endif

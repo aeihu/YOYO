@@ -33,6 +33,8 @@ class CDrawableClass : public CBaiscProperties
 
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}
+        virtual bool OnRButtonUp(int mX, int mY){return false;}
+        virtual bool OnRButtonDown(int mX, int mY){return false;}
         virtual bool OnMouseMove(int mX, int mY){return false;}
 
         virtual void OnSaveData(Object& json) const;

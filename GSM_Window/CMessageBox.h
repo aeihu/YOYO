@@ -28,6 +28,7 @@ class CMessageBox : public CBox , public CTextProcessing
         bool                _pause;
         bool*               _pauseControl;
         bool                _isFramesChanged;
+        bool                _isUserWantToHideMsg;
 
         bool CheckList(Object json);
         bool SetProperty(Object json);

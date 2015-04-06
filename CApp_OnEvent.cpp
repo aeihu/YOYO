@@ -105,28 +105,29 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
 //------------------------------------------------------------------------------
 void CApp::OnLButtonDown(int mX, int mY)
 {
-    CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY);
+    CResourceControl::_ResourceManager.OnLButtonDown(mX, mY);
 }
 
 void CApp::OnRButtonDown(int mX, int mY)
 {    
-
+    CResourceControl::_ResourceManager.OnRButtonDown(mX, mY);
 }
 
 void CApp::OnRButtonUp(int mX, int mY)
 {
+    CResourceControl::_ResourceManager.OnRButtonUp(mX, mY);
 }
 //------------------------------------------------------------------------------
 void CApp::OnLButtonUp(int mX, int mY)
 {
-    CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonUp(mX, mY);
+    CResourceControl::_ResourceManager.OnLButtonUp(mX, mY);
 }
 
 
 //------------------------------------------------------------------------------
 void CApp::OnMouseMove(int mX, int mY)
 {
-    CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseMove(mX, mY);
+    CResourceControl::_ResourceManager.OnMouseMove(mX, mY);
 }
 
 //------------------------------------------------------------------------------

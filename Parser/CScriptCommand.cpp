@@ -137,7 +137,7 @@ bool Common_FuncOfColor(string objTypeName, vector<string>& args, CActionSet* ac
         atoi(__values["-i"][0].c_str());
 
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -222,7 +222,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
         atoi(__values["-i"][0].c_str());
 
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -293,7 +293,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
         atoi(__values["-i"][0].c_str());
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -371,7 +371,7 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
     }
     else{
         CDrawableObjectControl* __doc = __isEffect ? 
-            &CResourceControl::_ResourceManager._EffectObjectControl
+            &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -465,7 +465,7 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
     }
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -548,7 +548,7 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
     }
     else{
         CDrawableObjectControl* __doc = __isEffect ? 
-            &CResourceControl::_ResourceManager._EffectObjectControl
+            &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -649,7 +649,7 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
     }
     else{
         CDrawableObjectControl* __doc = __isEffect ? 
-            &CResourceControl::_ResourceManager._EffectObjectControl
+            &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -703,7 +703,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
     }
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -741,7 +741,7 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
     }
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -795,7 +795,7 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
         atoi(__values["-i"][0].c_str());
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -933,7 +933,7 @@ bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act)
         __args.push_back("");
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -1116,7 +1116,7 @@ bool Cmd_SetText(vector<string>& args, CActionSet* act)
     string& __name = __values["-n"][0];
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -1580,7 +1580,7 @@ bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act)
     }
     
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -1613,7 +1613,7 @@ bool Cmd_HideParticleSystem(vector<string>& args, CActionSet* act)
     }
 
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
     
@@ -1738,7 +1738,7 @@ bool Cmd_ColorCurtain(vector<string>& args, CActionSet* act)
         return false;
 
     CDrawableObjectControl* __doc = __isEffect ? 
-        &CResourceControl::_ResourceManager._EffectObjectControl
+        &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
@@ -1804,16 +1804,15 @@ bool Cmd_RotationCamera(vector<string>& args, CActionSet* act)
 
 bool Cmd_Delay(vector<string>& args, CActionSet* act)
 {
-    bool __isEffect = args[0] == "q(-_-)p";
     args.erase(args.begin());
 
     if (act == NULL){
-        cout << "Cmd_ColorCurtain(): Action Set is null." <<endl;
+        cout << "Cmd_Delay(): Action Set is null." <<endl;
         return false;
     }
 
     if (args.size() < 1){
-        cout << "Cmd_ColorCurtain(): command invaild. can't set " << args.size()
+        cout << "Cmd_Delay(): command invaild. can't set " << args.size()
             << " argument(s) in the command." <<endl;
         return false;
     }
@@ -1829,13 +1828,11 @@ bool Cmd_Delay(vector<string>& args, CActionSet* act)
     size_t __inte = atoi(__values["-i"][0].c_str());
     bool __pause = __values.count("-p") == 0 ? false : true;
     act->AddAction(new CDeplayOfAction(__inte, __pause));
-
     return true;
 }
 
 bool Cmd_Pause(vector<string>& args, CActionSet* act)
 {
-    bool __isEffect = args[0] == "q(-_-)p";
     args.erase(args.begin());
 
     if (act == NULL){
@@ -1844,6 +1841,25 @@ bool Cmd_Pause(vector<string>& args, CActionSet* act)
     }
 
     act->AddAction(new CClassFuncOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::PauseForUserConfrim));
-
     return true;
 }
+
+bool Cmd_LoadScript(vector<string>& args, CActionSet* act)
+{
+    args.erase(args.begin());
+    
+    if (act == NULL){
+        cout << "Cmd_LoadScript(): Action Set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << "Cmd_LoadScript(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+
+    act->AddAction(new CClassFuncArgsOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::LoadScript, args));
+    return true;
+}
+

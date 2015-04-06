@@ -84,7 +84,7 @@ CDrawableClass* CDrawableObjectControl::GetDrawableObject(string name)
 
 bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
 {
-    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
         if ((*it).second->OnLButtonUp(mX, mY))
             return true;
 
@@ -93,8 +93,22 @@ bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
 
 bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
 {
-    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
         if ((*it).second->OnLButtonDown(mX, mY))
+            return true;
+
+    return false;
+}
+        
+bool CDrawableObjectControl::OnRButtonUp(int mX, int mY)
+{
+    return false;
+}
+
+bool CDrawableObjectControl::OnRButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
+        if ((*it).second->OnRButtonDown(mX, mY))
             return true;
 
     return false;
@@ -102,7 +116,7 @@ bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
 
 bool CDrawableObjectControl::OnMouseMove(int mX, int mY)
 {
-    for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin() ; it != _drawableObjectList.end();it++)
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
         if ((*it).second->OnMouseMove(mX, mY))
             return true;
 
@@ -135,6 +149,7 @@ void CDrawableObjectControl::OnRender(sf::RenderWindow* Surf_Dest)
                     Surf_Dest->setView(Surf_Dest->getDefaultView());
                     __b = false;
                 }
+
                 (*it).second->OnRender(Surf_Dest);
             }
     }

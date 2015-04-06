@@ -20,7 +20,7 @@ CMessageBox::CMessageBox()
     AddChildNode(&_frames);
     _frames.SetFlag(FLAG_SCALE);
     _isFramesChanged =
-    _pause = false;
+    _isUserWantToHideMsg = _pause = false;
 }
 
 CMessageBox* CMessageBox::Create(const char* filename)
@@ -205,8 +205,8 @@ void CMessageBox::OnLoop()
 
     CTextProcessing::OnLoop();
     
-    if (_pauseControl)
-        *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
+    //if (_pauseControl)
+    //    *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
 }
 
 void CMessageBox::SetControl(bool* p)
@@ -216,7 +216,7 @@ void CMessageBox::SetControl(bool* p)
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_isShowed){
+    if (_isShowed && !_isUserWantToHideMsg){
         CBox::OnRender(Surf_Dest);
         _speakerName.setOrigin(-2.0f, -2.0f);
         _speakerName.setColor(
@@ -252,14 +252,22 @@ void CMessageBox::SetText(vector<string> args)
 
 void CMessageBox::SetText(string msg)
 {
+    if (_pauseControl)
+        *_pauseControl = true;
     _pause = true;
     CTextProcessing::SetText(msg);
 }
 
 bool CMessageBox::OnLButtonDown(int x, int y)
 {
+    if (_isUserWantToHideMsg){
+        _isUserWantToHideMsg = false;
+        return true;
+    }
+
     if (IsTextAllShown()){
         _pause = false;
+        return false;
     }
     else
         Skip();
@@ -269,15 +277,16 @@ bool CMessageBox::OnLButtonDown(int x, int y)
 
 bool CMessageBox::OnLButtonUp(int x, int y)
 {
-    return true;
+    return false;
 }
 
 bool CMessageBox::OnRButtonDown(int x, int y)
 {
+    _isUserWantToHideMsg = !_isUserWantToHideMsg;
     return true;
 }
 
 bool CMessageBox::OnRButtonUp(int x, int y)
 {
-    return true;
+    return false;
 }

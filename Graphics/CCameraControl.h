@@ -28,6 +28,7 @@ class CCameraControl
 
         bool OnInit(sf::RenderTarget* display);
         void OnLoop();
+        void OnCleanup();
 };
 
 
