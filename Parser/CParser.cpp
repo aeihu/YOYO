@@ -152,6 +152,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@order_particle") _pFunc = &Cmd_SetParticleSystemLayerOrder;
 
         else if (__commandName == "@delay")_pFunc = &Cmd_Delay; 
+        else if (__commandName == "@pause")_pFunc = &Cmd_Pause; 
         else if (__commandName == "@exit"){
             if (_pRunning != NULL)
                 *_pRunning = false;

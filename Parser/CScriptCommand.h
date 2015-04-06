@@ -98,5 +98,6 @@ bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act);
 bool Cmd_RotationCamera(vector<string>& args, CActionSet* act);
 
 bool Cmd_Delay(vector<string>& args, CActionSet* act);
+bool Cmd_Pause(vector<string>& args, CActionSet* act);
 
 #endif

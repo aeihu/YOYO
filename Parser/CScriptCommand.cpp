@@ -1832,3 +1832,18 @@ bool Cmd_Delay(vector<string>& args, CActionSet* act)
 
     return true;
 }
+
+bool Cmd_Pause(vector<string>& args, CActionSet* act)
+{
+    bool __isEffect = args[0] == "q(-_-)p";
+    args.erase(args.begin());
+
+    if (act == NULL){
+        cout << "Cmd_Pause(): Action Set is null." <<endl;
+        return false;
+    }
+
+    act->AddAction(new CClassFuncOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::PauseForUserConfrim));
+
+    return true;
+}
