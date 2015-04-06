@@ -167,7 +167,7 @@ bool CScrollbar::CheckList(Object json)
     return __result;
 }
 
-bool CScrollbar::SetProperty(Object json)
+bool CScrollbar::SetProperty(Object json, bool isLoad)
 {
     _height = json.get<Number>("SCROLLBAR_HEIGHT");
 

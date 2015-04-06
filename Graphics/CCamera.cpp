@@ -14,7 +14,7 @@ CCamera::CCamera()
     _zoom = 1.0f;
 }
 
-void CCamera::Reset(float x, float y, float w, float h)
+void CCamera::SetCamera(float x, float y, float w, float h)
 {
     _coordinate.x = x;
     _coordinate.y = y;
@@ -154,7 +154,7 @@ bool CCamera::CheckList(Object json)
     return result;
 }
 
-bool CCamera::SetProperty(Object json)
+bool CCamera::SetProperty(Object json, bool isLoad)
 {
     float __w = CCommon::_Common.WWIDTH;
     float __h = CCommon::_Common.WHEIGHT;
@@ -167,7 +167,7 @@ bool CCamera::SetProperty(Object json)
         __h = json.get<Number>("HEIGHT");
     }
 
-    Reset(json.get<Number>("X"), json.get<Number>("Y"), __w, __h);
+    SetCamera(json.get<Number>("X"), json.get<Number>("Y"), __w, __h);
     SetZoom(json.get<Number>("ZOOM"));
     SetRotation(json.get<Number>("ROTATION"));
 

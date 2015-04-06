@@ -58,6 +58,39 @@ bool CDrawableObjectControl::AddDrawableObject(string name, string objTypeName, 
 
     return false;
 }
+        
+bool CDrawableObjectControl::ResetDrawableObject(string name, string objTypeName)
+{
+    if (!IsExists(objTypeName+":"+name))
+        return false;
+    
+    if (objTypeName == "Img"){
+        CImgLayer* __obj = static_cast<CImgLayer*>(GetDrawableObject(objTypeName+":"+name));
+        __obj->Reset();
+    }
+    else if (objTypeName == "Button"){
+        CButton* __obj = static_cast<CButton*>(GetDrawableObject(objTypeName+":"+name));
+        __obj->Reset();
+    }
+    else if (objTypeName == "CharacterLayer"){
+        CCharacterLayer* __obj = static_cast<CCharacterLayer*>(GetDrawableObject(objTypeName+":"+name));
+        __obj->Reset();
+    }
+    else if (objTypeName == "LogBox"){
+    }
+    else if (objTypeName == "MessageBox"){
+        CMessageBox* __obj = static_cast<CMessageBox*>(GetDrawableObject(objTypeName+":"+name));
+        __obj->Reset();
+    }
+    else if (objTypeName == "ParticleSystem"){
+    }
+    else if (objTypeName == "ScrEffect"){
+    }
+    else if (objTypeName == "Text"){ 
+    }
+
+    return true;
+}
 
 bool CDrawableObjectControl::DelDrawableObject(string name)
 {

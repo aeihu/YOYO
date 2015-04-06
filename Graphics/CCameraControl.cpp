@@ -17,6 +17,15 @@ bool CCameraControl::AddCamera(string name, string filename)
     return true;
 }
 
+bool CCameraControl::ResetCamera(string name)
+{
+    if(_cameraList.count(name) < 1)
+        return false;
+    
+    _cameraList[name]->Reset();
+    return true;
+}
+
 bool CCameraControl::DelCamera(string name)
 {
     if(_cameraList.count(name) > 0){

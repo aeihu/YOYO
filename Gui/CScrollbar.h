@@ -47,7 +47,7 @@ class CScrollbar : public CBox
         bool OnLButtonUp(int x, int y);
         
         virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json);
+        virtual bool SetProperty(Object json, bool isLoad=true);
         void OnSubLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
 

@@ -11,14 +11,19 @@
 
 bool CConfigFile::LoadConfigFile(const char* FileName)
 {
-    Object json;
-    json.parse(Cio::LoadTxtFile(FileName));
+    __json.reset();
+    __json.parse(Cio::LoadTxtFile(FileName));
 
-    if (!CheckList(json))
+    if (!CheckList(__json))
         return false;
 
-    if (!SetProperty(json))
+    if (!SetProperty(__json))
         return false;
 
     return true;
+}
+        
+void CConfigFile::Reset()
+{
+    SetProperty(__json, false);
 }

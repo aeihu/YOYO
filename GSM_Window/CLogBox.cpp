@@ -116,7 +116,7 @@ bool CLogBox::CheckList(Object json)
     return __result;
 }
 
-bool CLogBox::SetProperty(Object json)
+bool CLogBox::SetProperty(Object json, bool isLoad)
 {
     _logMax = json.get<Number>("LOG_MAXNUM");
     _visNum = json.get<Number>("LOG_VISIBLE_NUM");

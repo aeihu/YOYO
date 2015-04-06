@@ -33,29 +33,29 @@ bool CSequenceOfSprite::CheckList(Object json)
     return __result;
 }
 
-bool CSequenceOfSprite::SetProperty(Object json)
+bool CSequenceOfSprite::SetProperty(Object json, bool isLoad)
 {
-    if (LoadImg(json.get<String>("TILESET_PATH").c_str())){
-        SetLayerOrder(json.get<Number>("ORDER"));
+    if (isLoad)
+        if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
+            return false;
 
-        if (json.has<Number>("SCALE")){
-            _scale.y = _scale.x = json.get<Number>("SCALE");
-        }
-        else{
-            if (json.has<Number>("SCALE_X"))
-                _scale.x = json.get<Number>("SCALE_X");
+    SetLayerOrder(json.get<Number>("ORDER"));
 
-            if (json.has<Number>("SCALE_Y"))
-                _scale.y = json.get<Number>("SCALE_Y");
-        }
+    if (json.has<Number>("SCALE")){
+        _scale.y = _scale.x = json.get<Number>("SCALE");
+    }
+    else{
+        if (json.has<Number>("SCALE_X"))
+            _scale.x = json.get<Number>("SCALE_X");
 
-        if (json.has<Number>("ROTATION")){
-            _rotation = json.get<Number>("ROTATION");
-        }
-        return true;
+        if (json.has<Number>("SCALE_Y"))
+            _scale.y = json.get<Number>("SCALE_Y");
     }
 
-    return false;
+    if (json.has<Number>("ROTATION")){
+        _rotation = json.get<Number>("ROTATION");
+    }
+    return true;
 }
 
 bool CSequenceOfSprite::LoadImg(const char* filename)

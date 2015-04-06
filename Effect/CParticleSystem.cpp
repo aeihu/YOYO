@@ -173,7 +173,7 @@ bool CParticleSystem::CheckList(Object json)
     return result;
 }
 
-bool CParticleSystem::SetProperty(Object json)
+bool CParticleSystem::SetProperty(Object json, bool isLoad)
 {
     if (json.has<String>("PARTICLE_TEXTURE")){
         if (!CSurface::OnLoad(json.get<String>("PARTICLE_TEXTURE"), _texture))

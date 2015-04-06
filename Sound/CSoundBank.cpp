@@ -213,6 +213,13 @@ void CSoundBank::StopSE(string name)
     }
 }
 
+void CSoundBank::StopSE()
+{
+    for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();it++){
+        (*it).second.stop();
+    }
+}
+
 bool CSoundBank::DeleteVoice(string name)
 {
     return DelBuffer(_voiceList, name);

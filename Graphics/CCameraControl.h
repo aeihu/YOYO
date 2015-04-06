@@ -19,6 +19,7 @@ class CCameraControl
     protected:
     public:
         bool AddCamera(string name, string filename);
+        bool ResetCamera(string name);
         bool DelCamera(string name);
         CCamera* GetCamera(string name);
         

@@ -46,7 +46,7 @@ class CParticleSystem : public CDrawableClass, public CConfigFile
 
         void ResetParticle(std::size_t index);
         bool CheckList(Object json);
-        bool SetProperty(Object json);
+        bool SetProperty(Object json, bool isLoad=true);
     public:
         CParticleSystem();
 

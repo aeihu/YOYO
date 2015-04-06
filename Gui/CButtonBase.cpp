@@ -132,12 +132,14 @@ bool CButtonBase::CheckList(Object json)
     return result;
 }
 
-bool CButtonBase::SetProperty(Object json)
+bool CButtonBase::SetProperty(Object json, bool isLoad)
 {    
     SetWidth(json.get<Number>("WIDTH"));
     SetHeight(json.get<Number>("HEIGHT"));
-    if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
-        return false;
+
+    if (isLoad)
+        if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
+            return false;
 
     SetMaxFrames(json.get<Number>("MAX_FRAMES"));
     SetFrameRate(json.get<Number>("FRAME_RATE"));

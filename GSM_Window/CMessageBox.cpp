@@ -42,18 +42,20 @@ void CMessageBox::SetFont(sf::Font& font)
     _speakerName.setFont(font);
 }
 
-bool CMessageBox::SetProperty(Object json)
+bool CMessageBox::SetProperty(Object json, bool isLoad)
 {
     CTextProcessing::SetRowWidth(json.get<Number>("MSG_WIDTH"));
 
 //=================Init cursor==================================
-    if (!_frames.LoadImg(json.get<String>("CURSOR_PATH").c_str()))
-        return false;
+    if (isLoad){
+        if (!_frames.LoadImg(json.get<String>("CURSOR_PATH").c_str()))
+            return false;
 
-    _frames.SetWidth(json.get<Number>("CURSOR_WIDTH"));
-    _frames.SetHeight(json.get<Number>("CURSOR_HEIGHT"));
-    _frames.SetMaxFrames(json.get<Number>("CURSOR_MAX_FRAMES"));
-    _frames.SetFrameRate(json.get<Number>("CURSOR_FRAME_RATE"));
+        _frames.SetWidth(json.get<Number>("CURSOR_WIDTH"));
+        _frames.SetHeight(json.get<Number>("CURSOR_HEIGHT"));
+        _frames.SetMaxFrames(json.get<Number>("CURSOR_MAX_FRAMES"));
+        _frames.SetFrameRate(json.get<Number>("CURSOR_FRAME_RATE"));
+    }
 
     _speakerNameOffset.x = json.get<Number>("SPEAKER_OFFSET_X");
     _speakerNameOffset.y = json.get<Number>("SPEAKER_OFFSET_Y");

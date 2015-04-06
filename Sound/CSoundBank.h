@@ -83,6 +83,7 @@ class CSoundBank {
 
         void StopSE(vector<string> args);
         void StopSE(string name);
+        void StopSE();
 
         int AddVoice(string name, string filename);
         void PlayVoice(vector<string> args);

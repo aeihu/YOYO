@@ -28,7 +28,7 @@ class CLogBox : public CBox
         CScrollbar                  _scrollbar;
     protected:
         bool CheckList(Object json);
-        bool SetProperty(Object json);
+        bool SetProperty(Object json, bool isLoad=true);
     public:
         CLogBox();
         

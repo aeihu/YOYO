@@ -31,7 +31,7 @@ class CMessageBox : public CBox , public CTextProcessing
         bool                _isUserWantToHideMsg;
 
         bool CheckList(Object json);
-        bool SetProperty(Object json);
+        bool SetProperty(Object json, bool isLoad=true);
     protected:
         using CBox::_isShowed;
     public:

@@ -19,11 +19,14 @@ using namespace jsonxx;
 
 class CConfigFile
 {
+    private:
+        Object __json;
     protected:
         virtual bool CheckList(Object json)=0;
-        virtual bool SetProperty(Object json)=0;
+        virtual bool SetProperty(Object json, bool isLoad=true)=0;
     public:
         virtual bool LoadConfigFile(const char* FileName);
+        virtual void Reset();
 };
 
 #endif

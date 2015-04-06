@@ -61,25 +61,34 @@ bool CBox::CheckList(Object json)
     return __result;
 }
 
-bool CBox::SetProperty(Object json)
+bool CBox::SetProperty(Object json, bool isLoad)
 {
-    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
-
-    sf::Image __tileset, __dest;
-    if (!CSurface::OnLoad(json.get<String>("TILESET_PATH").c_str(), __tileset))
-        return false;
-
-    if (json.get<Boolean>("TILE_ENABLE")){
-        if (!CGuiCommon::CreateBoxBackground(
-            &__dest, &__tileset, json.get<String>("MAP_PATH").c_str(), json.get<Number>("TILE_SIZE")))
+    if (isLoad){
+        sf::Image __tileset, __dest;
+        if (!CSurface::OnLoad(json.get<String>("TILESET_PATH").c_str(), __tileset))
             return false;
 
-        _texture.loadFromImage(__dest);
-    }
-    else
-        _texture.loadFromImage(__tileset);
+        if (json.get<Boolean>("TILE_ENABLE")){
+            if (!CGuiCommon::CreateBoxBackground(
+                &__dest, &__tileset, json.get<String>("MAP_PATH").c_str(), json.get<Number>("TILE_SIZE")))
+                return false;
 
-    _sprite.setTexture(_texture,true);
+            _texture.loadFromImage(__dest);
+        }
+        else
+            _texture.loadFromImage(__tileset);
+
+        _sprite.setTexture(_texture,true);
+    }
+    
+    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
     SetLayerOrder(json.get<Number>("ORDER"));
+    
+    if (_flipX)
+        FlipX();
+
+    if (_flipY)
+        FlipY();
+
     return true;
 }

@@ -35,7 +35,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
 
         virtual bool LoadImg(const char* filename);
         virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json);
+        virtual bool SetProperty(Object json, bool isLoad=true);
     public:
         CImgLayer();
         ~CImgLayer(){};

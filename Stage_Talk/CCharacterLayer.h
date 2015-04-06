@@ -40,7 +40,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         bool                                    _isBodyChangeing;
         
         bool CheckList(Object json);
-        bool SetProperty(Object json);
+        bool SetProperty(Object json, bool isLoad=true);
         void Flip();
   public:
         CCharacterLayer(float x=0.0f, float y=0.0f);

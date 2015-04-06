@@ -84,32 +84,36 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 if (!_ObjectControl.AddObject(__assetName,
                     objTypeName,
                     __path))
-                    return -2;
+                    continue;
             
                 __assetName = objTypeName + ":" + __assetName;
             }
             else if (objTypeName == "Voice"){
                 if (_SoundControl.AddVoice(__assetName,
                     __path) != 0)
-                    return -2;
+                    continue;
             }
             else if (objTypeName == "Se"){
                 if (_SoundControl.AddSE(__assetName,
                     __path) != 0)
-                    return -2;
+                    continue;
             }
             else if (objTypeName == "Camera"){
                 if (!_CameraControl.AddCamera(__assetName,
-                    __path))
-                    return -2;
+                    __path)){
+                    _CameraControl.ResetCamera(__assetName);
+                    continue;
+                }
             }
             else if (objTypeName == "EffctImg"){
                 objTypeName = "Img";
                 if (!_LoadingObjectControl.AddDrawableObject(
                     __assetName, 
                     objTypeName, 
-                    __path))
-                    return -2;
+                    __path)){
+                    _LoadingObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                    continue;
+                }
 
                 __assetName = objTypeName + ":" + __assetName;
             }
@@ -117,14 +121,16 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 if (!_SoundControl.AddBgm(
                     __assetName, 
                     __path))
-                    return -2;
+                    continue;
             }
             else if (objTypeName == "Text"){
                 if (!_DrawableObjectControl.AddDrawableObject(
                     __assetName, 
                     objTypeName, 
-                    __path))
-                    return -2;
+                    __path)){
+                    _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                    continue;
+                }
 
                 __assetName = objTypeName + ":" + __assetName;
             }
@@ -132,8 +138,10 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 if (!_DrawableObjectControl.AddDrawableObject(
                     __assetName, 
                     objTypeName, 
-                    __path))
-                    return -2;
+                    __path)){
+                    _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                    continue;
+                }
 
                 __assetName = objTypeName + ":" + __assetName;
 
@@ -268,9 +276,9 @@ void CResourceControl::Compare(Object& src, Object& des, string colName)
     if (src.has<Array>(colName) && des.has<Array>(colName)){
         for (size_t i=0; i < src.get<Array>(colName).size(); i++){
             for (size_t j=0; j < des.get<Array>(colName).size(); j++){
-                if (src.get<Array>(colName).get<Object>(i).get<String>("name")
+                if (src.get<Array>(colName).get<Object>(i).get<String>("path")
                     == 
-                    des.get<Array>(colName).get<Object>(j).get<String>("name")){
+                    des.get<Array>(colName).get<Object>(j).get<String>("path")){
                     
                     bool& __isDelete = des.get<Array>(colName).get<Object>(j).get<bool>("isdelete");
                     __isDelete = false;
@@ -284,6 +292,9 @@ void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
     _drawableObjCtrlEnable = false;
+    _SoundControl.StopBgm();
+    _SoundControl.StopVoice();
+    _SoundControl.StopSE();
 
     Object __obj;
     if (LoadJson(__obj, _fileNameOfScript)){
@@ -320,6 +331,7 @@ void CResourceControl::LoadAsset()
         CheckIn(_script, "music", "Music");
 
         if (_script.has<Array>("script")){
+            CParser::_Parser.Reset();
             CParser::_Parser.InsertCmd(_script.get<Array>("script"));
         }
     }

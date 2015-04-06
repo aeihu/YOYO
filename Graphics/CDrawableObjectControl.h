@@ -33,6 +33,7 @@ class CDrawableObjectControl
         bool IsExists(string name);
         
         bool AddDrawableObject(string name, string objTypeName, string filename);
+        bool ResetDrawableObject(string name, string objTypeName);
         bool DelDrawableObject(string name);
         CDrawableClass* GetDrawableObject(string name);
 

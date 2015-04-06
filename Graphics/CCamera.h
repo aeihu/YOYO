@@ -23,13 +23,13 @@ class CCamera : public CBaiscProperties, public CConfigFile
         sf::RenderTarget*   _window;
 
         bool CheckList(Object json);
-        bool SetProperty(Object json);
+        bool SetProperty(Object json, bool isLoad=true);
     protected:
     public:
         CCamera();
         static CCamera* CCamera::Create(const char* filename);
 
-        void Reset(float x, float y, float w, float h);
+        void SetCamera(float x, float y, float w, float h);
         void SetViewport(float x, float y, float w, float h);
         void SetCenter(float x, float y);
         void SetSize(float w, float h);

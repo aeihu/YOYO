@@ -27,7 +27,7 @@ class CButtonBase : public CSequenceOfSprite
         string          _seNameOfMouseDown;
     protected:
         virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json);
+        virtual bool SetProperty(Object json, bool isLoad=true);
         virtual void Exec(void* data=NULL)=0;
     public:
         CAnimation      _AnimationControl;

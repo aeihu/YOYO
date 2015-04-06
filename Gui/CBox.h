@@ -22,7 +22,7 @@ class CBox : public CImgLayer
         using CImageBaseClass::_isShowed;
 
         virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json);
+        virtual bool SetProperty(Object json, bool isLoad=true);
     public:
         CBox(float x=0.0f, float y=0.0f);
         ~CBox();

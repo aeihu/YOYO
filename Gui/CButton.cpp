@@ -29,7 +29,7 @@ bool CButton::CheckList(Object json)
     return result;
 }
 
-bool CButton::SetProperty(Object json)
+bool CButton::SetProperty(Object json, bool isLoad)
 {
     //return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
     //    json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 

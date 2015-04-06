@@ -210,9 +210,6 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
     map<string, vector<string> > __values;
     if (!Common_ArgsToKV(__funcName.c_str(), __flags, args, __values))
         return false;
-
-    if (__values.count("-n") == 0)
-        return false;
     
     string& __name = __values["-n"][0];
     bool __pause = __values.count("-p") == 0 ? false : true;
