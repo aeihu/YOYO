@@ -20,11 +20,12 @@ using namespace std;
 class CScript
 {
     protected:
-        map<string, CSequenceOfAction>  _scriptList;
+        map<string, CSequenceOfAction*>  _scriptList;
     
     public:
         bool AddScript(string name, Array scr);
         bool DelScript(string name);
+        virtual void OnCleanup();
         //const CSequenceOfAction& GetScript(string name) const;
 };
 

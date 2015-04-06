@@ -15,11 +15,11 @@ bool CScript::AddScript(string name, Array scr)
     if (_scriptList.count(name) > 0)
         return false;
     
-    _scriptList[name] = CSequenceOfAction();
+    _scriptList[name] = new CSequenceOfAction();
 
     for (size_t i=0; i<scr.size(); i++){
         CParser::_Parser.ExecuteCmd(scr.get<String>(i),
-            &_scriptList[name], true);
+            _scriptList[name], true);
     }
         
     return true;
@@ -34,7 +34,12 @@ bool CScript::DelScript(string name)
     return true;
 }
         
-//const CSequenceOfAction& CScript::GetScript(string name) const
-//{
-//    
-//}
+void CScript::OnCleanup()
+{
+    for (map<string, CSequenceOfAction*>::const_iterator it=_scriptList.begin();it!=_scriptList.end(); it++){
+        (*it).second->OnCleanup();
+        delete (*it).second;
+    }
+
+    _scriptList.clear();
+}
