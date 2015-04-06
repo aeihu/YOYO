@@ -21,6 +21,8 @@ class CActionSet : public CActionBaseClass
     protected:
         list<CActionBaseClass*>     _actionList;
         list<CActionBaseClass*>     _tempActionList;
+
+        virtual bool CopyList(CActionSet* act);
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
@@ -31,6 +33,7 @@ class CActionSet : public CActionBaseClass
         bool DeleteAct(string name, bool skip);
 
         void OnCleanup();
+        virtual inline EActType GetType() { return ACTION_SET;}
 };
 
 #endif

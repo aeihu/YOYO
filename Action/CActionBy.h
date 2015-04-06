@@ -14,12 +14,6 @@
 
 class CActionBy : public CActionBaseClass
 {
-    protected:
-    public:
-        CActionBy(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
-
-        bool IsPause() const;
-        bool OnLoop(bool cleanup=true);
     private:
         bool        _restore;
         float       _orgVal;
@@ -29,6 +23,14 @@ class CActionBy : public CActionBaseClass
         float       _incr;
         bool        _isRunning;
         size_t      _elapsed;
+    protected:
+    public:
+        CActionBy(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
+
+        bool IsPause() const;
+        bool OnLoop(bool cleanup=true);
+        virtual CActionBaseClass* Copy();
+        virtual inline EActType GetType() { return ACTION_BY;}
 };
 
 #endif

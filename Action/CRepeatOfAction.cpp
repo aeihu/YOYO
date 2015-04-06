@@ -73,3 +73,15 @@ void CRepeatOfAction::SetLoopNum(int num)
 {
     _count = _loopNum = num;
 }
+
+CActionBaseClass* CRepeatOfAction::Copy()
+{
+    CRepeatOfAction* __result = new CRepeatOfAction();
+    if (!CopyList(__result)){
+        delete __result;
+        return NULL;
+    }
+    
+    __result->SetLoopNum(_loopNum);
+    return __result;
+}

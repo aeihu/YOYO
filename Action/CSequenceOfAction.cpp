@@ -45,3 +45,14 @@ bool CSequenceOfAction::IsPause() const
 
     return _pause || _actionList.front()->IsPause();
 }
+
+CActionBaseClass* CSequenceOfAction::Copy()
+{
+    CSequenceOfAction* __result = new CSequenceOfAction();
+    if (!CopyList(__result)){
+        delete __result;
+        return NULL;
+    }
+
+    return __result;
+}

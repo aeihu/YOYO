@@ -22,6 +22,8 @@ class CRepeatOfAction : public CActionSet
         bool OnLoop(bool cleanup=true);
         void SetLoopNum(int num);
         bool IsPause() const;
+        virtual CActionBaseClass* Copy();
+        virtual inline EActType GetType() { return ACTION_REP;}
 };
 
 #endif

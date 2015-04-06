@@ -21,6 +21,8 @@ class CSimultaneousOfAction : public CActionSet
     public:
         virtual bool IsPause() const;
         bool OnLoop(bool cleanup=true);
+        virtual CActionBaseClass* Copy();
+        virtual inline EActType GetType() { return ACTION_SIM;}
 };
 
 #endif

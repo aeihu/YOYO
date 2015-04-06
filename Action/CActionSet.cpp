@@ -54,6 +54,24 @@ bool CActionSet::DeleteAct(string name, bool skip)
     return false;
 }
 
+bool CActionSet::CopyList(CActionSet* act)
+{
+    if (act){
+        act->SetName(_name);
+        act->SetPause(_pause);
+        
+        for (list<CActionBaseClass*>::iterator it=_tempActionList.begin();it!=_tempActionList.end(); it++)
+            act->AddAction((*it)->Copy());
+
+        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++)
+            act->AddAction((*it)->Copy());
+
+        return true;
+    }
+
+    return false;
+}
+
 void CActionSet::AddAction(CActionBaseClass* act)
 {
     if (act != NULL)
@@ -80,3 +98,4 @@ void CActionSet::OnCleanup()
     _actionList.clear();
     _tempActionList.clear();
 }
+

@@ -53,3 +53,14 @@ bool CSimultaneousOfAction::IsPause() const
 
     return false;
 }
+
+CActionBaseClass* CSimultaneousOfAction::Copy()
+{
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    if (!CopyList(__result)){
+        delete __result;
+        return NULL;
+    }
+
+    return __result;
+}

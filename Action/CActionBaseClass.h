@@ -16,6 +16,20 @@ using namespace std;
 class CActionBaseClass
 {
     protected:
+        enum EActType{
+            ACTION_BASE,
+            ACTION_BY,
+            ACTION_TO,
+            ACTION_SET,
+            ACTION_SEQ,
+            ACTION_SIM,
+            ACTION_REP,
+            ACTION_DEPLY,
+            ACTION_FUNC,
+            ACTION_CLASS_FUNC,
+            ACTION_CLASS_FUNC_ARGS,
+        };
+
         bool        _pause;
         bool        _skip;
     public:
@@ -26,6 +40,8 @@ class CActionBaseClass
         virtual void OnCleanup(){}; 
         virtual bool IsPause() const {return _pause;} 
         void Skip() {_skip = true;}
+        virtual CActionBaseClass* Copy()=0;
+        virtual inline EActType GetType() { return ACTION_BASE;}
 };
 
 #endif

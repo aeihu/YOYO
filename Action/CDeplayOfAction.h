@@ -23,6 +23,9 @@ class CDeplayOfAction : public CActionBaseClass
         
         bool IsPause() const;
         bool OnLoop(bool cleanup=true);
+        virtual CActionBaseClass* Copy();
+
+        virtual inline EActType GetType() { return ACTION_DEPLY;}
 };
 
 #endif

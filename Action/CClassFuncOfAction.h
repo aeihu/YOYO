@@ -33,6 +33,13 @@ class CClassFuncOfAction : public CActionBaseClass
     
             return true;
         }
+        
+        virtual CActionBaseClass* Copy()
+        {
+            return new CClassFuncOfAction<T>(_obj, _func);
+        }
+
+        virtual inline EActType GetType() { return ACTION_CLASS_FUNC;}
 };
 
 #endif

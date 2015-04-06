@@ -21,3 +21,8 @@ bool CFuncOfAction::OnLoop(bool cleanup)
     
     return true;
 }
+        
+CActionBaseClass* CFuncOfAction::Copy()
+{
+    return new CFuncOfAction(_func);
+}

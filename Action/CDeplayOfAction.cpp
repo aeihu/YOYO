@@ -34,3 +34,8 @@ bool CDeplayOfAction::IsPause() const
 {
     return _pause && _isRunning;
 }
+
+CActionBaseClass* CDeplayOfAction::Copy()
+{
+    return new CDeplayOfAction(_delay, _pause);
+}

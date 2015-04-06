@@ -36,6 +36,13 @@ class CClassFuncArgsOfAction : public CActionBaseClass
     
             return true;
         }
+        
+        virtual CActionBaseClass* Copy()
+        {
+            return new CClassFuncArgsOfAction<T>(_obj, _func, _args);
+        }
+
+        virtual inline EActType GetType() { return ACTION_CLASS_FUNC_ARGS;}
 };
 
 #endif

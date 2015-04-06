@@ -22,6 +22,8 @@ class CSequenceOfAction : public CActionSet
     public:
         bool IsPause() const;
         bool OnLoop(bool cleanup=true);
+        virtual CActionBaseClass* Copy();
+        virtual inline EActType GetType() { return ACTION_SEQ;}
 };
 
 #endif

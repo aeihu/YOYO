@@ -84,4 +84,9 @@ bool CActionBy::IsPause() const
 {
     return _pause && _isRunning;
 }
+        
+CActionBaseClass* CActionBy::Copy()
+{
+    return new CActionBy(_val, _elapsed, _byVal, _restore, _pause);
+}
 
