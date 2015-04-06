@@ -35,9 +35,10 @@ class CResourceControl : public CScript
         Object                          _gameBaiscAsset;
 
         bool                            _drawableObjCtrlEnable;
-        bool                            _effectObjCtrlEnable;
+        bool                            _loadingObjCtrlEnable;
+        bool                            _isResetCamera;
         bool                            _pauseOfAction;
-        bool                            _pauseOfMsg;
+        bool                            _pauseOfUser;
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;
 
@@ -59,7 +60,7 @@ class CResourceControl : public CScript
         static CResourceControl                 _ResourceManager;
         CSoundBank                              _SoundControl;
         CDrawableObjectControl                  _DrawableObjectControl;
-        CDrawableObjectControl                  _EffectObjectControl;
+        CDrawableObjectControl                  _LoadingObjectControl;
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;
@@ -68,8 +69,10 @@ class CResourceControl : public CScript
         bool SetVariable(string name, string val);
         string GetVariable(string name);
         bool DelVariable(string name);
+        void PauseForUserConfrim();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
+        void LoadScript(vector<string> args);
         bool LoadScript(string filename);
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);

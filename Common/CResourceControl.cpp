@@ -13,10 +13,9 @@ CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this)
 {
-    _effectObjCtrlEnable = _drawableObjCtrlEnable = false;
     _script.reset();
     _fileNameOfScript = "";
-    _pauseOfAction = _pauseOfMsg = false;
+    _loadingObjCtrlEnable = _drawableObjCtrlEnable = _isResetCamera = _pauseOfAction = _pauseOfUser = false;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -106,7 +105,7 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
             }
             else if (objTypeName == "EffctImg"){
                 objTypeName = "Img";
-                if (!_EffectObjectControl.AddDrawableObject(
+                if (!_LoadingObjectControl.AddDrawableObject(
                     __assetName, 
                     objTypeName, 
                     __path))
@@ -140,7 +139,7 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
 
                 if (objTypeName == "MessageBox"){
                     CMessageBox* __msg = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__assetName));
-                    __msg->SetControl(&_pauseOfMsg);
+                    __msg->SetControl(&_pauseOfUser);
                 }
             }
         }
@@ -161,7 +160,7 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
         return false;
     
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
-    _EffectObjectControl.AddDrawableObject("screen","ScrEffect","");
+    _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
 
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
@@ -259,7 +258,9 @@ void CResourceControl::BeginLoadProcess()
 
 void CResourceControl::EndLoadProcess()
 {
-    _effectObjCtrlEnable = false;
+    _loadingObjCtrlEnable = false;
+    _drawableObjCtrlEnable = true;
+    CParser::_Parser.Continue();
 }
 
 void CResourceControl::Compare(Object& src, Object& des, string colName)
@@ -324,35 +325,43 @@ void CResourceControl::LoadAsset()
     }
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
-    *__seq = _scriptList["loading_end_script"];
+    __seq = static_cast<CSequenceOfAction*>(_scriptList["loading_end_script"]->Copy());
     __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
     _ActionControl.AddAction(__seq);
-    
-    _drawableObjCtrlEnable = true;
-    CParser::_Parser.Continue();
+}
+        
+void CResourceControl::LoadScript(vector<string> args)
+{
+    if (args.size() > 0)
+        LoadScript(args[0]);
 }
 
 bool CResourceControl::LoadScript(string filename)
 {
     _fileNameOfScript = filename;
 
-    CSequenceOfAction* __seq = new CSequenceOfAction();
-    _effectObjCtrlEnable = true;
-    *__seq = _scriptList["loading_start_script"];
-    __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
-    _ActionControl.AddAction(__seq);
+    CSequenceOfAction* __seq = NULL;
+    _loadingObjCtrlEnable = _isResetCamera = true;
+    __seq = static_cast<CSequenceOfAction*>(_scriptList["loading_start_script"]->Copy());
 
-    return true;
+    if (__seq){
+        __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
+        _ActionControl.AddAction(__seq);
+
+        return true;
+    }
+    else
+        return false;
 }
 
 void CResourceControl::OnLoop()
 {
     _ActionControl.OnLoop();
-    _pauseOfMsg = false;
+    //_pauseOfUser = false;
     _pauseOfAction = _ActionControl.IsPause();
     
-    if (_effectObjCtrlEnable){
-        _EffectObjectControl.OnLoop();
+    if (_loadingObjCtrlEnable){
+        _LoadingObjectControl.OnLoop();
         return;
     }
 
@@ -362,7 +371,7 @@ void CResourceControl::OnLoop()
     _CameraControl.OnLoop();
     _SoundControl.OnLoop();
     
-    if (_pauseOfAction || _pauseOfMsg)
+    if (_pauseOfAction || _pauseOfUser)
         return;
 
     CParser::_Parser.OnLoop();
@@ -373,14 +382,24 @@ void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnRender(Surf_Dest);
     
-    if (_effectObjCtrlEnable)
-        _EffectObjectControl.OnRender(Surf_Dest);
+    if (_loadingObjCtrlEnable){
+        if (_isResetCamera){
+            _isResetCamera = false;
+            Surf_Dest->setView(Surf_Dest->getDefaultView());
+        }
+        _LoadingObjectControl.OnRender(Surf_Dest);
+    }
 }
 
 void CResourceControl::OnCleanup()
 {
+    CScript::OnCleanup();
+    _SoundControl.OnCleanup();
     _DrawableObjectControl.OnCleanup();
-    _EffectObjectControl.OnCleanup();
+    _LoadingObjectControl.OnCleanup();
+    _ObjectControl.OnCleanup();
+    _CameraControl.OnCleanup();
+    _ActionControl.OnCleanup();
 }
 
 void CResourceControl::OnSaveData()
@@ -445,4 +464,9 @@ bool CResourceControl::DelVariable(string name)
     }
 
     return false;
+}
+
+void CResourceControl::PauseForUserConfrim()
+{
+    _pauseOfUser = true;
 }

@@ -11,31 +11,42 @@
 //------------------------------------------------------------------------------
 void CResourceControl::OnLButtonDown(int mX, int mY)
 {
-    if (!_pauseOfAction)
-        CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY);
+    if (!_pauseOfAction && _drawableObjCtrlEnable){
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
+            return;
+        else
+            _pauseOfUser = false;
+    }
 }
 
 void CResourceControl::OnRButtonDown(int mX, int mY)
 {    
-
+    if (!_pauseOfAction && _drawableObjCtrlEnable)
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonDown(mX, mY))
+            return;
 }
 
 void CResourceControl::OnRButtonUp(int mX, int mY)
 {
+    if (!_pauseOfAction && _drawableObjCtrlEnable)
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonUp(mX, mY))
+            return;
 }
 //------------------------------------------------------------------------------
 void CResourceControl::OnLButtonUp(int mX, int mY)
 {
-    if (!_pauseOfAction)
-        CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonUp(mX, mY);
+    if (!_pauseOfAction && _drawableObjCtrlEnable)
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonUp(mX, mY))
+            return;
 }
 
 
 //------------------------------------------------------------------------------
 void CResourceControl::OnMouseMove(int mX, int mY)
 {
-    if (!_pauseOfAction)
-        CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseMove(mX, mY);
+    if (!_pauseOfAction && _drawableObjCtrlEnable)
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseMove(mX, mY))
+            return;
 }
 
 //==============================================================================
