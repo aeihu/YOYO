@@ -55,7 +55,7 @@ class CSoundBank {
         float                                           _musicVolume;
         list<CVoiceStream*>                             _voicePool;
         list<pair<string, sf::Sound> >                  _soundPool;
-        sf::Music                                       _bgm;
+        pair<string, sf::Music>                         _bgm;
         map<string, sf::SoundBuffer*>                   _voiceList;
         map<string, sf::SoundBuffer*>                   _seList;
         map<string, CMusicData>                         _musicList;
@@ -104,6 +104,7 @@ class CSoundBank {
         int PlayBgm(string name, float vol, bool loop);
         void PauseBgm();
         void StopBgm();
+        void OnSaveData(Object& json) const;
 
         CActionTo* CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore, bool pause);
         CActionBy* CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore, bool pause);

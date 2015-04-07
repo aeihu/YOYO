@@ -72,6 +72,7 @@ bool Cmd_Message(vector<string>& args, CActionSet* act);
 bool Cmd_ShowMessageBox(vector<string>& args, CActionSet* act);
 bool Cmd_HideMessageBox(vector<string>& args, CActionSet* act);
 bool Cmd_SetMessageBoxLayerOrder(vector<string>& args, CActionSet* act);
+bool Cmd_CleanMessageBox(vector<string>& args, CActionSet* act);
 
 bool Cmd_ShowLogBox(vector<string>& args, CActionSet* act);
 bool Cmd_HideLogBox(vector<string>& args, CActionSet* act);

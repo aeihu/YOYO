@@ -101,7 +101,7 @@ bool Common_FuncOfColor(string objTypeName, vector<string>& args, CActionSet* ac
     string __funcName = "Cmd_Color" + objTypeName;
 
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -187,7 +187,7 @@ bool Common_FuncOfShow(string objTypeName, vector<string>& args, CActionSet* act
     string __funcName = "Cmd_Show" + objTypeName;
 
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -260,7 +260,7 @@ bool Common_FuncOfHide(string objTypeName, vector<string>& args, CActionSet* act
     string __funcName = "Cmd_Hide" + objTypeName;
 
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -310,7 +310,7 @@ bool Common_FuncOfMove(string objTypeName, vector<string>& args, CActionSet* act
 
     string __funcName = "Cmd_Move" + objTypeName;
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -410,7 +410,7 @@ bool Common_FuncOfOrigin(string objTypeName, vector<string>& args, CActionSet* a
 
     string __funcName = "Cmd_Origin" + objTypeName;
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -505,7 +505,7 @@ bool Common_FuncOfRotation(string objTypeName, vector<string>& args, CActionSet*
 
     string __funcName = "Cmd_Rotation" + objTypeName;
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -569,7 +569,7 @@ bool Common_FuncOfScale(string objTypeName, vector<string>& args, CActionSet* ac
 
     string __funcName = "Cmd_Scale" + objTypeName;
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -689,7 +689,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, vector<string>& args, CActionSe
     string __funcName = "Cmd_SetLayerOrder" + objTypeName;
     
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -727,7 +727,7 @@ bool Common_FuncOfFlip(string objTypeName, vector<string>& args, CActionSet* act
     string __funcName = "Cmd_Flip" + flipx ? "X" : "Y" + objTypeName;
     
     if (act == NULL){
-        cout << __funcName << "(): Action Set is null." <<endl;
+        cout << __funcName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -764,7 +764,7 @@ bool Common_FuncOfScreen(vector<string>& args, CActionSet* act, bool isShow)
     string __funName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
 
     if (act == NULL){
-        cout << __funName << "(): Action Set is null." <<endl;
+        cout << __funName << "(): action set is null." <<endl;
         return false;
     }
 
@@ -847,7 +847,7 @@ bool Cmd_FuncOfActionForDeleteOrSkip(string funcName, vector<string>& args, CAct
     }
 
     if (act == NULL){
-        cout << funcName << "(): Action Set is null." <<endl;
+        cout << funcName << "(): action set is null." <<endl;
         return false;
     }
     
@@ -892,7 +892,7 @@ bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act)
     args.erase(args.begin());
 
     if (act == NULL){
-        cout << "Cmd_SetPoseCharacterLayer(): Action Set is null." <<endl;
+        cout << "Cmd_SetPoseCharacterLayer(): action set is null." <<endl;
         return false;
     }
     
@@ -1550,6 +1550,35 @@ bool Cmd_SetMessageBoxLayerOrder(vector<string>& args, CActionSet* act)
     return Common_FuncOfLayerOrder("MessageBox", args, act);
 }
 
+bool Cmd_CleanMessageBox(vector<string>& args, CActionSet* act)
+{
+    args.erase(args.begin());
+    
+    if (act == NULL){
+        cout << "Cmd_CleanMessageBox(): action set is null." <<endl;
+        return false;
+    }
+
+    if (args.size() < 1){
+        cout << "Cmd_CleanMessageBox(): command invaild. can't set " << args.size()
+            << " argument(s) in the command." <<endl;
+        return false;
+    }
+    
+    CDrawableClass* __obj = 
+        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:"+args[0]);
+
+    if(__obj == NULL){
+        cout << "Cmd_CleanMessageBox(): MessageBox \"" << args[0] << "\" has no existed." <<endl;
+        return false;
+    }
+    
+    CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
+
+    act->AddAction(new CClassFuncOfAction<CMessageBox>(__msgbox, &CMessageBox::ClearText));
+    return true;
+}
+
 bool Cmd_ShowLogBox(vector<string>& args, CActionSet* act)
 {
     return Common_FuncOfShow("LogBox", args, act);
@@ -1710,7 +1739,7 @@ bool Cmd_ColorCurtain(vector<string>& args, CActionSet* act)
     args.erase(args.begin());
 
     if (act == NULL){
-        cout << "Cmd_ColorCurtain(): Action Set is null." <<endl;
+        cout << "Cmd_ColorCurtain(): action set is null." <<endl;
         return false;
     }
 
@@ -1804,7 +1833,7 @@ bool Cmd_Delay(vector<string>& args, CActionSet* act)
     args.erase(args.begin());
 
     if (act == NULL){
-        cout << "Cmd_Delay(): Action Set is null." <<endl;
+        cout << "Cmd_Delay(): action set is null." <<endl;
         return false;
     }
 
@@ -1833,7 +1862,7 @@ bool Cmd_Pause(vector<string>& args, CActionSet* act)
     args.erase(args.begin());
 
     if (act == NULL){
-        cout << "Cmd_Pause(): Action Set is null." <<endl;
+        cout << "Cmd_Pause(): action set is null." <<endl;
         return false;
     }
 
@@ -1846,7 +1875,7 @@ bool Cmd_LoadScript(vector<string>& args, CActionSet* act)
     args.erase(args.begin());
     
     if (act == NULL){
-        cout << "Cmd_LoadScript(): Action Set is null." <<endl;
+        cout << "Cmd_LoadScript(): action set is null." <<endl;
         return false;
     }
 

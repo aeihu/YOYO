@@ -66,7 +66,7 @@ int CSoundBank::AddVoice(string name, string filename) {
 //https://github.com/LaurentGomila/SFML/wiki/Source%3A-MP3-Player
 bool CSoundBank::OnLoadBGM(const char* FileName)
 {
-    if (!_bgm.openFromFile(FileName))
+    if (!_bgm.second.openFromFile(FileName))
         return false;
 
     return true;
@@ -74,7 +74,7 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
 
 void CSoundBank::SetBGMLoop(bool loop)
 {
-    _bgm.setLoop(loop);
+    _bgm.second.setLoop(loop);
 }
 
 //------------------------------------------------------------------------------
@@ -265,22 +265,22 @@ bool CSoundBank::DelBgm(string name)
 
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
-    return _bgm.getStatus();
+    return _bgm.second.getStatus();
 }
 
 void CSoundBank::PauseBgm()
 {
-    _bgm.pause();
+    _bgm.second.pause();
 }
         
 void CSoundBank::StopBgm()
 {
-    _bgm.stop();
+    _bgm.second.stop();
 }
 
 void CSoundBank::PlayBgm()
 {
-    _bgm.play();
+    _bgm.second.play();
 }
         
 void CSoundBank::PlayBgm(vector<string> args)
@@ -295,22 +295,23 @@ int CSoundBank::PlayBgm(string name, float vol, bool loop)
         return -1;
 
     if (_musicList[name]._Path.find("*") == string::npos){
-        if (!_bgm.openFromFile(_musicList[name]._Path)){
+        if (!_bgm.second.openFromFile(_musicList[name]._Path)){
             cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
     }
     else {
-        if (!_bgm.openFromMemory(_musicList[name]._Data, _musicList[name]._Size)){
+        if (!_bgm.second.openFromMemory(_musicList[name]._Data, _musicList[name]._Size)){
             cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
     }
     
     _musicVolume = vol;
-    _bgm.setLoop(loop);
-    _bgm.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
-    _bgm.play();
+    _bgm.first = name;
+    _bgm.second.setLoop(loop);
+    _bgm.second.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
+    _bgm.second.play();
     return 0;
 }
 
@@ -326,8 +327,8 @@ CActionBy* CSoundBank::CreateActionOfMusicVolBy(size_t elapsed, float vol, bool 
 
 void CSoundBank::OnLoop()
 {
-    if (_musicVolume * CCommon::_Common.BGM_VOLUME != _bgm.getVolume())
-        _bgm.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
+    if (_musicVolume * CCommon::_Common.BGM_VOLUME != _bgm.second.getVolume())
+        _bgm.second.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
 
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
@@ -403,6 +404,25 @@ bool CSoundBank::OnInit()
     }
     
     return true;
+}
+        
+void CSoundBank::OnSaveData(Object& json) const
+{
+    if (_bgm.second.getStatus() != sf::Music::Stopped){
+        json << "bgm_name" << _bgm.first;
+        json << "bgm_vol" << _musicVolume;
+        json << "bgm_loop" << _bgm.second.getLoop();
+        json << "bgm_status" << _bgm.second.getStatus();
+    }
+
+    for (list<pair<string, sf::Sound> >::const_iterator it=_soundPool.begin(); it!= _soundPool.end();++it){
+        if ((*it).second.getStatus() != sf::Sound::Stopped){
+            json << "se_name" << (*it).first;
+            json << "se_vol" << (*it).second.getVolume() / CCommon::_Common.SE_VOLUME;
+            json << "se_loop" << (*it).second.getLoop();
+            json << "se_status" << (*it).second.getStatus();
+        }
+    }
 }
 
 void CSoundBank::CVoiceStream::Load(const sf::SoundBuffer& buffer)
