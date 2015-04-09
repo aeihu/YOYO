@@ -18,6 +18,7 @@
 class CText : public CImageBaseClass
 {
     private:
+        string              _currcentFont;
         sf::Text            _sfText;
         sf::Color           _textColor;
         sf::Color           _shadowColor;
@@ -61,6 +62,7 @@ class CText : public CImageBaseClass
         void SetColor(vector<string> args);
         
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json);
 };
 
 #endif

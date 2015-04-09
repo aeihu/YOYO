@@ -228,3 +228,19 @@ void CImageBaseClass::OnSaveData(Object& json) const
     json << "green" << _green;
     json << "blue" << _blue;
 }
+
+void CImageBaseClass::OnLoadData(Object json)
+{
+    CDrawableClass::OnLoadData(json);
+    _origin.x = json.get<Number>("origin_x");
+    _origin.y = json.get<Number>("origin_y");
+    _red = json.get<Number>("red");
+    _green = json.get<Number>("green");
+    _blue = json.get<Number>("blue");
+
+    if (_flipX != json.get<Boolean>("flip_x"))
+        FlipX();
+
+    if (_flipY != json.get<Boolean>("flip_y"))
+        FlipY();
+}

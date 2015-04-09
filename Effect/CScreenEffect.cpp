@@ -148,8 +148,9 @@ CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
 {
     if (num==0)
         return NULL;
-
+    
     CScreenEffect* __result = new CScreenEffect();
+    __result->SetClassName("ScrEffect");
     float distance = width / (float)num;
     num *= 4;
     __result->_vertexArray.resize(num);
@@ -187,4 +188,16 @@ void CScreenEffect::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (_isShowed)
         Surf_Dest->draw(_vertexArray);
+}
+
+void CScreenEffect::OnSaveData(Object& json) const
+{
+    CDrawableClass::OnSaveData(json);
+    json << "showed" << _isShowed;
+}
+
+void CScreenEffect::OnLoadData(Object json)
+{
+    CDrawableClass::OnLoadData(json);
+    _isShowed = json.get<Boolean>("showed");
 }

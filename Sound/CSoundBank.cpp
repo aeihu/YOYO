@@ -409,18 +409,46 @@ bool CSoundBank::OnInit()
 void CSoundBank::OnSaveData(Object& json) const
 {
     if (_bgm.second.getStatus() != sf::Music::Stopped){
-        json << "bgm_name" << _bgm.first;
-        json << "bgm_vol" << _musicVolume;
-        json << "bgm_loop" << _bgm.second.getLoop();
-        json << "bgm_status" << _bgm.second.getStatus();
+        if (!_bgm.first.empty()){
+            Object _obj;
+            _obj << "name" << _bgm.first;
+            _obj << "vol" << _musicVolume;
+            _obj << "loop" << _bgm.second.getLoop();
+            _obj << "status" << (_bgm.second.getStatus() == sf::Music::Playing ? true : false);
+            json << "bgm" << _obj;
+        }
     }
 
+    Array _array;
     for (list<pair<string, sf::Sound> >::const_iterator it=_soundPool.begin(); it!= _soundPool.end();++it){
         if ((*it).second.getStatus() != sf::Sound::Stopped){
-            json << "se_name" << (*it).first;
-            json << "se_vol" << (*it).second.getVolume() / CCommon::_Common.SE_VOLUME;
-            json << "se_loop" << (*it).second.getLoop();
-            json << "se_status" << (*it).second.getStatus();
+            if (!(*it).first.empty()){
+                Object _obj;
+                _obj << "name" << (*it).first;
+                _obj << "vol" << (*it).second.getVolume() / CCommon::_Common.SE_VOLUME;
+                _obj << "loop" << (*it).second.getLoop();
+                _array << _obj;
+            }
+        }
+    }
+    json << "se" << _array;
+}
+
+void CSoundBank::OnLoadData(Object json)
+{
+    if (json.has<Object>("bgm")){
+        Object& __bgm = json.get<Object>("bgm");
+        PlayBgm(__bgm.get<String>("name"), __bgm.get<Number>("vol"), __bgm.get<Boolean>("loop"));
+
+        if (!__bgm.get<Boolean>("status"))
+            PauseBgm();
+    }
+    
+    if (json.has<Array>("se")){
+        Array& __seList = json.get<Array>("se");
+        for (size_t i=0; i<__seList.size(); i++){
+            Object& __se = __seList.get<Object>(i);
+            PlaySE(__se.get<String>("name"), __se.get<Number>("vol"), __se.get<Boolean>("loop"));
         }
     }
 }

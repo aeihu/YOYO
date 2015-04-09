@@ -147,3 +147,12 @@ void CBaiscProperties::OnSaveData(Object& json) const
     json << "scale_y" << _scale.y;
     json << "rotation" << _rotation;
 }
+
+void CBaiscProperties::OnLoadData(Object json)
+{
+    _coordinate.x = json.get<Number>("x");
+    _coordinate.y = json.get<Number>("y");
+    _scale.x = json.get<Number>("scale_x");
+    _scale.y = json.get<Number>("scale_y");
+    _rotation = json.get<Number>("rotation");
+}

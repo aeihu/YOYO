@@ -55,6 +55,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         virtual void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json);
 };
 
 #endif

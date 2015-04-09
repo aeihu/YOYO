@@ -56,6 +56,8 @@ class CParser
 
         bool IsDeplaying();
         void SetRunning(bool* running);
+        void OnSaveData(Object& json) const;
+        void OnLoadData(Object json);
 };
 
 #endif

@@ -77,8 +77,8 @@ class CResourceControl : public CScript
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
-        void OnSaveData();
-        void OnLoadData();
+        bool OnSaveData() const;
+        bool OnLoadData();
         
         void OnLButtonDown(int mX, int mY);
         void OnLButtonUp(int mX, int mY);

@@ -105,6 +105,7 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
         else if (__commandName == "@show_msgbox") _pFunc = &Cmd_ShowMessageBox;
         else if (__commandName == "@hide_msgbox") _pFunc = &Cmd_HideMessageBox;
         else if (__commandName == "@order_msgbox") _pFunc = &Cmd_SetMessageBoxLayerOrder;
+        else if (__commandName == "@clean_msgbox") _pFunc = &Cmd_CleanMessageBox;
         else if (__commandName == "@msg") _pFunc = &Cmd_Message;
 
         else if (__commandName == "@show_logbox") _pFunc = &Cmd_ShowLogBox;
@@ -333,4 +334,17 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
             plist[i] = CResourceControl::_ResourceManager.GetVariable(plist[i]);
 
     return plist.size();
+}
+
+void CParser::OnSaveData(Object& json) const
+{
+    Object __obj;
+    __obj << "index" << _index;
+    json << "script" << __obj;
+}
+
+void CParser::OnLoadData(Object json)
+{
+    Object& __obj = json.get<Object>("script");
+    SetIndex(__obj.get<Number>("index"));
 }

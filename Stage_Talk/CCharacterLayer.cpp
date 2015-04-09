@@ -25,7 +25,7 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
 {    
     CCharacterLayer* __chr = new CCharacterLayer();
     if (__chr->LoadConfigFile(filename)){
-        __chr->SetClassName("character");
+        __chr->SetClassName("CharacterLayer");
         __chr->SetPath(filename);
         return __chr;
     }
@@ -436,8 +436,21 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
 void CCharacterLayer::OnSaveData(Object& json) const
 {
     CImageBaseClass::OnSaveData(json);
-    json << "body" << _currcentBody;
-    json << "eye" << _currcentEyes;
-    json << "mouth" << _currcentMouth;
-    json << "voice" << _currcentVoice;
+
+    if (!_currcentBody.empty()) json << "body" << _currcentBody;
+    if (!_currcentEyes.empty()) json << "eye" << _currcentEyes;
+    if (!_currcentMouth.empty()) json << "mouth" << _currcentMouth;
+    if (!_currcentVoice.empty()) json << "voice" << _currcentVoice;
+}
+        
+void CCharacterLayer::OnLoadData(Object json)
+{
+    CImageBaseClass::OnLoadData(json);
+    SetPose(
+        json.has<String>("body") ? json.get<String>("body") : "", 
+        json.has<String>("eye") ? json.get<String>("eye") : "", 
+        json.has<String>("mouth") ? json.get<String>("mouth") : "", 
+        false);
+
+    SetVoice(json.has<String>("voice") ? json.get<String>("voice") : "");
 }

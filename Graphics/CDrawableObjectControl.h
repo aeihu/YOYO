@@ -45,6 +45,8 @@ class CDrawableObjectControl
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
+        void OnSaveData(Object& json) const;
+        void OnLoadData(Object json);
 };
 
 #endif

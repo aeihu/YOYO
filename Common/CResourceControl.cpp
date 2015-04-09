@@ -9,6 +9,11 @@
 #include "CResourceControl.h"
 #include "../Parser/CParser.h"
 
+#ifdef WIN32
+    #include <direct.h>
+#else
+#endif
+
 CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this)
@@ -414,30 +419,89 @@ void CResourceControl::OnCleanup()
     _ActionControl.OnCleanup();
 }
 
-void CResourceControl::OnSaveData()
+bool CResourceControl::OnSaveData() const
 {
-    //ofstream __savefile("./userdata/1.txt");
-    //Object __json;
-    //__json.reset();
+    cout << "CResourceControl::OnSaveData(): saving..." <<endl;
+    Object __json;
 
-    //if(!__savefile){
-    //    cout << "error" << endl;
-    //    return;
+    //{
+    //    Object __sysVar;
+    //    for (map<string, string>::const_iterator it=_systemVariableList.begin();it!=_systemVariableList.end();it++)
+    //        __sysVar << (*it).first << (*it).second;
+    //    
+    //    __json << "system_variable" << __sysVar;
     //}
 
-    //for (size_t i=0; i<_drawableObjectList.size(); i++){
-    //    cout << "_(:3J Z)_" <<endl;
-    //    __savefile << "name=" << _drawableObjectList[i].first <<endl;
-    //    _drawableObjectList[i].second->OnSaveData(__json);
-    //    cout << "(:3[____]" <<endl;
-    //}
+    {
+        Object __usrVar;
+        for (map<string, string>::const_iterator it=_userVariableList.begin();it!=_userVariableList.end();it++)
+            __usrVar << (*it).first << (*it).second;
+        
+        __json << "user_variable" << __usrVar;
+    }
 
-    //__savefile.close();
+    _DrawableObjectControl.OnSaveData(__json);
+    _SoundControl.OnSaveData(__json);
+    _CameraControl.OnSaveData(__json);
+    CParser::_Parser.OnSaveData(__json);
+
+    ofstream __savefile("./savedata/1.sav", ofstream::binary|ofstream::out);
+
+    if(!__savefile.is_open()){
+#ifdef WIN32
+        if (mkdir("./savedata") == 0){
+            __savefile.open("./savedata/1.sav", ofstream::binary|ofstream::out);
+            if(!__savefile.is_open())
+                cout << "CResourceControl::OnSaveData(): failed to save." <<endl;
+                return false;
+        }
+        else{
+            cout << "CResourceControl::OnSaveData(): failed to create directory 'savedata'." <<endl;
+            return false;
+        }
+#else
+    
+#endif
+    }
+
+    __savefile << __json.json();
+    __savefile.close();
+    cout << "CResourceControl::OnSaveData(): saved." <<endl;
+    return true;
 }
 
-void CResourceControl::OnLoadData()
+bool CResourceControl::OnLoadData()
 {
+    cout << "CResourceControl::OnLoadData(): loading..." <<endl;
+    Object __obj;
+    if (__obj.parse(Cio::LoadTxtFile("./savedata/1.sav"))){
+        _DrawableObjectControl.OnLoadData(__obj);
+        _SoundControl.OnLoadData(__obj);
+        _CameraControl.OnLoadData(__obj);
+        CParser::_Parser.OnLoadData(__obj);
+        
+        //{
+        //    map<std::string, Value*> __sysvar = __obj.get<Object>("system_variable").kv_map();
+        //    _systemVariableList.clear();
+        //    for (map<std::string, Value*>::const_iterator it=__sysvar.begin();it!=__sysvar.end();it++){
+        //        _systemVariableList[(*it).first] = (*it).second->is<String>();
+        //    }
+        //}
 
+        {
+            map<std::string, Value*> __usrvar = __obj.get<Object>("user_variable").kv_map();
+            _userVariableList.clear();
+            for (map<std::string, Value*>::const_iterator it=__usrvar.begin();it!=__usrvar.end();it++){
+                _userVariableList[(*it).first] = (*it).second->is<String>();
+            }
+        }
+
+        cout << "CResourceControl::OnLoadData(): loaded." <<endl;
+        return true;
+    }
+        
+    cout << "CResourceControl::OnLoadData(): failed to load." <<endl;
+    return false;
 }
 
 bool CResourceControl::AddVariable(string name, string val)

@@ -30,6 +30,7 @@ class CObject
         string GetClassName() const;
         string GetPath() const;
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json){}
 };
 
 #endif

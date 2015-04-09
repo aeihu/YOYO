@@ -150,7 +150,7 @@ CImgLayer* CImgLayer::Create(const char* filename)
 {
     CImgLayer* __img = new CImgLayer();
     if (__img->LoadConfigFile(filename)){
-        __img->SetClassName("image");
+        __img->SetClassName("Img");
         __img->SetPath(filename);
         return __img;
     }
@@ -214,6 +214,12 @@ void CImgLayer::OnSaveData(Object& json) const
 {
     CImageBaseClass::OnSaveData(json);
     json << "flag" << _flag;
+}
+        
+void CImgLayer::OnLoadData(Object json)
+{
+    CImageBaseClass::OnLoadData(json);
+    _flag = json.get<Number>("flag");
 }
 
 bool CImgLayer::SetBaseNode(CImgLayer* baseNode)

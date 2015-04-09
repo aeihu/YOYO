@@ -21,7 +21,7 @@ CLogBox* CLogBox::Create(const char* filename)
 {
     CLogBox* __logBox = new CLogBox();
     if (__logBox->LoadConfigFile(filename)){
-        __logBox->SetClassName("logbox");
+        __logBox->SetClassName("LogBox");
         __logBox->SetPath(filename);
         return __logBox;
     }

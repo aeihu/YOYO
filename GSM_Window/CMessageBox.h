@@ -39,6 +39,8 @@ class CMessageBox : public CBox , public CTextProcessing
         
         static CMessageBox* Create(const char* filename);
 
+        void ClearText();
+
         void SetText(vector<string> args);
         void SetText(string msg);
 

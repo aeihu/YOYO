@@ -198,3 +198,31 @@ void CDrawableObjectControl::OnCleanup()
 
     _drawableObjectList.clear();
 }
+
+void CDrawableObjectControl::OnSaveData(Object& json) const
+{
+    Array __array;
+    for (vector<pair<string, CDrawableClass*> >::const_iterator it=_drawableObjectList.begin(); 
+        it!=_drawableObjectList.end(); it++){
+        Object __obj;
+        (*it).second->OnSaveData(__obj);
+        __obj << "name" << (*it).first;
+        __array << __obj;
+    }
+    json << "visual_obj" << __array;
+}
+
+void CDrawableObjectControl::OnLoadData(Object json)
+{
+    if (json.has<Array>("visual_obj")){
+        Array& __visualArr = json.get<Array>("visual_obj");
+
+        for (size_t i=0; i<__visualArr.size(); i++){
+            Object& __obj = __visualArr.get<Object>(i);
+            if (IsExists(__obj.get<String>("name"))){
+                CDrawableClass* __dra = CDrawableObjectControl::GetDrawableObject(__obj.get<String>("name"));
+                __dra->OnLoadData(__obj);
+            }
+        }
+    }
+}

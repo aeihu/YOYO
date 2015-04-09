@@ -62,6 +62,7 @@ class CImageBaseClass : public CDrawableClass
         virtual void OnLoop()=0;
         
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json);
         virtual bool GetVisible() const;
 };
 

@@ -59,3 +59,10 @@ void CDrawableClass::OnSaveData(Object& json) const
     json << "layer_order" << _layerOrder;
     json << "alpha" << _alpha;
 }
+
+void CDrawableClass::OnLoadData(Object json)
+{
+    CBaiscProperties::OnLoadData(json);
+    _layerOrder = json.get<Number>("layer_order");
+    _alpha = json.get<Number>("alpha");
+}

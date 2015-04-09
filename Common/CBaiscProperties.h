@@ -59,6 +59,7 @@ class CBaiscProperties : public CObject
 
         virtual void OnLoop()=0;
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json);
 };
 
 #endif

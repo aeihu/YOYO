@@ -18,9 +18,10 @@ void CCamera::SetCamera(float x, float y, float w, float h)
 {
     _coordinate.x = x;
     _coordinate.y = y;
-    _size.x = w;
-    _size.y = h;
-    _orgSize = _size;
+    //_size.x = w;
+    //_size.y = h;
+    _orgSize.x = w;
+    _orgSize.y = h;
     _camera.reset(sf::FloatRect(x, y, w, h));
 }
 
@@ -35,19 +36,19 @@ void CCamera::SetCenter(float x, float y)
     _coordinate.y = y;
 }
     
-void CCamera::SetSize(float w, float h)
-{
-    _size.x = w;
-    _size.y = h;
-    _orgSize = _size;
-}
+//void CCamera::SetSize(float w, float h)
+//{
+//    _size.x = w;
+//    _size.y = h;
+//    _orgSize = _size;
+//}
     
 void CCamera::SetZoom(float zoom)
 {
     _camera.setSize(_orgSize);
     _zoom = _scale.x = zoom;
     _camera.zoom(zoom);
-    _size = _camera.getSize();
+    //_size = _camera.getSize();
 }
 
 void CCamera::SetRotation(float angle)
@@ -82,10 +83,10 @@ void CCamera::OnLoop()
         __isChanged = true;
     }
 
-    if (_size != _camera.getSize()){
-        _camera.setSize(_size);
-        __isChanged = true;
-    }
+    //if (_size != _camera.getSize()){
+    //    _camera.setSize(_size);
+    //    __isChanged = true;
+    //}
 
     if (_zoom != _scale.x){
         SetZoom(_scale.x);
@@ -110,8 +111,21 @@ sf::Vector2f CCamera::GetPosition()
 void CCamera::OnSaveData(Object& json) const
 {
     CBaiscProperties::OnSaveData(json);
-    json << "width" << _size.x;
-    json << "height" << _size.y;
+    //json << "width" << _size.x;
+    //json << "height" << _size.y;
+    json << "zoom" << _zoom;
+    json << "org_width" << _orgSize.x;
+    json << "org_height" << _orgSize.y;
+}
+
+void CCamera::OnLoadData(Object json)
+{
+    CBaiscProperties::OnLoadData(json);
+    _orgSize.x = json.get<Number>("org_width");
+    _orgSize.y = json.get<Number>("org_height");
+    //_size.x = json.get<Number>("width");
+    //_size.y = json.get<Number>("height");
+    SetZoom(json.get<Number>("zoom"));
 }
 
 CCamera* CCamera::Create(const char* filename)
@@ -149,7 +163,6 @@ bool CCamera::CheckList(Object json)
         cout << "can't find value of ROTATION." << endl;
         return false;
     }
-
 
     return result;
 }

@@ -16,6 +16,7 @@ class CCameraControl
     private:
         map<string, CCamera*>           _cameraList;
         sf::RenderTarget*               _display;
+        string                          _currcentCamera;
     protected:
     public:
         bool AddCamera(string name, string filename);
@@ -30,6 +31,8 @@ class CCameraControl
         bool OnInit(sf::RenderTarget* display);
         void OnLoop();
         void OnCleanup();
+        void OnSaveData(Object& json) const;
+        void OnLoadData(Object json);
 };
 
 

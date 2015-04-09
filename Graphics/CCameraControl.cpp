@@ -78,6 +78,7 @@ bool CCameraControl::UseCamera(string name)
     for ( it=_cameraList.begin(); it !=_cameraList.end(); it++ ){
         (*it).second->UnBind();
     }
+    _currcentCamera = name;
     __obj->Bind(_display);
     return true;
 }
@@ -96,6 +97,43 @@ void CCameraControl::UseDefaultCamera()
 {
     if (_display == NULL)
         return;
-
+    
+    _currcentCamera = "";
     _display->setView(_display->getDefaultView());
+}
+        
+void CCameraControl::OnSaveData(Object& json) const
+{
+    Object __obj;
+    Array __array;
+
+    if (!_currcentCamera.empty())
+        __obj << "use_camera" << _currcentCamera;
+    
+    for (map<string, CCamera*>::const_iterator it=_cameraList.begin(); it!=_cameraList.end(); it++){
+        Object __cam;
+        (*it).second->OnSaveData(__cam);
+        __cam << "name" << (*it).first;
+        __array << __cam;
+    }
+    __obj << "camera" << __array;
+    json << "camera" << __obj;
+}
+        
+void CCameraControl::OnLoadData(Object json)
+{
+    Object& __obj = json.get<Object>("camera");
+    Array& __array = __obj.get<Array>("camera");
+    for (size_t i=0; i<__array.size(); i++){
+        Object& __obj = __array.get<Object>(i);
+        CCamera* __cam = GetCamera(__obj.get<String>("name"));
+        if (__cam != NULL){
+            __cam->OnLoadData(__obj);
+        }
+    }
+
+    if (__obj.has<String>("use_camera"))
+        UseCamera(__obj.get<String>("use_camera"));
+    else
+        UseDefaultCamera();
 }

@@ -11,7 +11,7 @@ CParticleSystem* CParticleSystem::Create(const char* filename)
 {
     CParticleSystem* __ptc = new CParticleSystem();
     if (__ptc->LoadConfigFile(filename)){
-        __ptc->SetClassName("particle");
+        __ptc->SetClassName("ParticleSystem");
         __ptc->SetPath(filename);
         __ptc->SetLayerOrder(1);
         return __ptc;

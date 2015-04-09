@@ -41,6 +41,8 @@ class CScreenEffect : public CDrawableClass
         bool GetVisible() const;
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
+        void OnSaveData(Object& json) const;
+        void OnLoadData(Object json);
 
         void SetColor(vector<string> args);
 

@@ -23,11 +23,17 @@ CMessageBox::CMessageBox()
     _isUserWantToHideMsg = _pause = false;
 }
 
+void CMessageBox::ClearText()
+{
+    _speakerName.setString("");
+    CTextProcessing::Clear();
+}
+
 CMessageBox* CMessageBox::Create(const char* filename)
 {
     CMessageBox* __msgbox = new CMessageBox();
     if (__msgbox->LoadConfigFile(filename)){
-        __msgbox->SetClassName("msgbox");
+        __msgbox->SetClassName("MessageBox");
         __msgbox->SetPath(filename);
         return __msgbox;
     }
@@ -256,6 +262,7 @@ void CMessageBox::SetText(string msg)
 {
     if (_pauseControl)
         *_pauseControl = true;
+
     _pause = true;
     CTextProcessing::SetText(msg);
 }

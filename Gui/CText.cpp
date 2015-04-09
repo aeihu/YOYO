@@ -10,6 +10,7 @@
 
 CText::CText()
 {
+    _currcentFont = "";
     _textColor.r = 255;
     _textColor.g = 255;
     _textColor.b = 255;
@@ -104,7 +105,7 @@ CText* CText::Create()
 {
     CText* __text = new CText();
     __text->SetLayerOrder(105);
-    __text->SetClassName("text");
+    __text->SetClassName("Text");
 
     return __text;
 }
@@ -117,7 +118,8 @@ void CText::SetFont(string name)
    
     if (__object != NULL){
         __fnt = static_cast<CFont*>(__object);
-         _sfText.setFont(__fnt->GetFont());
+        _sfText.setFont(__fnt->GetFont());
+        _currcentFont = name;
     }
 }
 
@@ -232,8 +234,25 @@ void CText::OnRender(sf::RenderTarget* Surf_Dest)
 void CText::OnSaveData(Object& json) const
 {
     CImageBaseClass::OnSaveData(json);
+    json << "font" << _currcentFont;
     json << "shadow_enable" << _shadowEnable;
     json << "shadow_red" << _shadowColor.r;
     json << "shadow_green" << _shadowColor.g;
     json << "shadow_blue" << _shadowColor.b;
+    json << "shadow_alpha" << _shadowPercent;
+    
+    if (_sfText.getString() != "")
+        json << "text" << _sfText.getString();
+}
+        
+void CText::OnLoadData(Object json)
+{
+    CImageBaseClass::OnLoadData(json);
+    SetFont(json.get<String>("font"));
+    _shadowEnable = json.get<Boolean>("shadow_enable");
+    _shadowColor.r = json.get<Number>("shadow_red");
+    _shadowColor.g = json.get<Number>("shadow_green");
+    _shadowColor.b = json.get<Number>("shadow_green");
+    _shadowPercent = json.get<Number>("shadow_alpha");
+    SetString(json.has<String>("text") ? json.get<String>("text") : "");
 }

@@ -60,5 +60,6 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
+        virtual void OnLoadData(Object json);
 };
 #endif

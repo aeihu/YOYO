@@ -25,7 +25,7 @@ string CObject::GetPath() const
         
 void CObject::OnSaveData(Object& json) const
 {
-    json << "class_name" << _className;
+    json << "class" << _className;
     json << "path" << _path;
 }
 
