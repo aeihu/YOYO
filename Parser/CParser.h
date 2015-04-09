@@ -35,7 +35,7 @@ class CParser
         bool                    _pause;
 
         int AnalysisOfParameters(string para, vector<string> &plist);
-        void ParserObject(Object& obj, CActionSet* act);
+        void ParserObject(Object& obj, CActionSet* act, bool isEffect);
 
         bool (*_pFunc)(vector<string>&, CActionSet*);
     public:
@@ -45,11 +45,12 @@ class CParser
         void Pause();
         void Continue();
         void Reset();
-        void SetIndex(size_t i);
+        void GoToIndex(size_t i);
         size_t GetIndex();
         void OnLoop();
         void OnCleanup();
-
+        
+        void Execute(Array& commands, size_t i, CActionSet* act, bool isEffect);
         void ExecuteCmd(string cmd, CActionSet* act, bool isEffect);
         void InsertCmd(Array cmd);
         void SetDeplay(int ms);

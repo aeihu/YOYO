@@ -17,10 +17,8 @@ bool CScript::AddScript(string name, Array scr)
     
     _scriptList[name] = new CSequenceOfAction();
 
-    for (size_t i=0; i<scr.size(); i++){
-        CParser::_Parser.ExecuteCmd(scr.get<String>(i),
-            _scriptList[name], true);
-    }
+    for (size_t i=0; i<scr.size(); i++)
+        CParser::_Parser.Execute(scr, i, _scriptList[name], true);
         
     return true;
 }

@@ -89,7 +89,7 @@ void CActionSet::OnCleanup()
         if (i == 1)
             __list = &_tempActionList;
 
-        for (list<CActionBaseClass*>::iterator it=__list->begin();it!=__list->end(); it++){
+        for (list<CActionBaseClass*>::iterator it=__list->begin(); it!=__list->end(); it++){
             (*it)->OnCleanup();
             delete (*it);
             (*it) = NULL;

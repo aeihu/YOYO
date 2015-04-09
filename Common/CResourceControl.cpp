@@ -8,6 +8,7 @@
 
 #include "CResourceControl.h"
 #include "../Parser/CParser.h"
+#include <ctime>
 
 #ifdef WIN32
     #include <direct.h>
@@ -20,7 +21,12 @@ CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAss
 {
     _script.reset();
     _fileNameOfScript = "";
-    _loadingObjCtrlEnable = _drawableObjCtrlEnable = _isResetCamera = _pauseOfAction = _pauseOfUser = false;
+    _isLoadPlayerData =
+    _loadingObjCtrlEnable = 
+    _drawableObjCtrlEnable = 
+    _isResetCamera = 
+    _pauseOfAction = 
+    _pauseOfUser = false;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -272,7 +278,6 @@ void CResourceControl::BeginLoadProcess()
 void CResourceControl::EndLoadProcess()
 {
     _loadingObjCtrlEnable = false;
-    _drawableObjCtrlEnable = true;
     CParser::_Parser.Continue();
 }
 
@@ -297,9 +302,6 @@ void CResourceControl::LoadAsset()
 {
     CParser::_Parser.Pause();
     _drawableObjCtrlEnable = false;
-    _SoundControl.StopBgm();
-    _SoundControl.StopVoice();
-    _SoundControl.StopSE();
 
     Object __obj;
     if (LoadJson(__obj, _fileNameOfScript)){
@@ -342,7 +344,14 @@ void CResourceControl::LoadAsset()
     }
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
-    __seq = static_cast<CSequenceOfAction*>(_scriptList["loading_end_script"]->Copy());
+
+    if (_isLoadPlayerData){
+        _isLoadPlayerData = false;
+        LoadPlayerDataProcess();
+    }
+    
+    _drawableObjCtrlEnable = true;
+    __seq->AddAction(static_cast<CSequenceOfAction*>(_scriptList["loading_end_script"]->Copy()));
     __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::EndLoadProcess));
     _ActionControl.AddAction(__seq);
 }
@@ -362,6 +371,10 @@ bool CResourceControl::LoadScript(string filename)
     __seq = static_cast<CSequenceOfAction*>(_scriptList["loading_start_script"]->Copy());
 
     if (__seq){
+        _SoundControl.StopBgm();
+        _SoundControl.StopSE();
+        _SoundControl.StopVoice();
+        _ActionControl.OnCleanup();
         __seq->AddAction(new CClassFuncOfAction<CResourceControl>(this, &CResourceControl::BeginLoadProcess));
         _ActionControl.AddAction(__seq);
 
@@ -374,19 +387,18 @@ bool CResourceControl::LoadScript(string filename)
 void CResourceControl::OnLoop()
 {
     _ActionControl.OnLoop();
-    //_pauseOfUser = false;
     _pauseOfAction = _ActionControl.IsPause();
     
-    if (_loadingObjCtrlEnable){
-        _LoadingObjectControl.OnLoop();
-        return;
-    }
+    _CameraControl.OnLoop();
+    _SoundControl.OnLoop();
 
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnLoop();
 
-    _CameraControl.OnLoop();
-    _SoundControl.OnLoop();
+    if (_loadingObjCtrlEnable){
+        _LoadingObjectControl.OnLoop();
+        return;
+    }
     
     if (_pauseOfAction || _pauseOfUser)
         return;
@@ -399,13 +411,8 @@ void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnRender(Surf_Dest);
     
-    if (_loadingObjCtrlEnable){
-        if (_isResetCamera){
-            _isResetCamera = false;
-            Surf_Dest->setView(Surf_Dest->getDefaultView());
-        }
+    if (_loadingObjCtrlEnable)
         _LoadingObjectControl.OnRender(Surf_Dest);
-    }
 }
 
 void CResourceControl::OnCleanup()
@@ -419,18 +426,18 @@ void CResourceControl::OnCleanup()
     _ActionControl.OnCleanup();
 }
 
-bool CResourceControl::OnSaveData() const
+bool CResourceControl::OnSaveData(int index) const
 {
     cout << "CResourceControl::OnSaveData(): saving..." <<endl;
     Object __json;
+    __json << "script" << _fileNameOfScript;
 
-    //{
-    //    Object __sysVar;
-    //    for (map<string, string>::const_iterator it=_systemVariableList.begin();it!=_systemVariableList.end();it++)
-    //        __sysVar << (*it).first << (*it).second;
-    //    
-    //    __json << "system_variable" << __sysVar;
-    //}
+    {
+        char __strTime[20];
+        time_t __time = time(NULL);
+        strftime(__strTime, sizeof(__strTime),"%y-%m-%d %H:%M", localtime(&__time));
+        __json << "date_time" << __strTime;
+    }
 
     {
         Object __usrVar;
@@ -445,12 +452,14 @@ bool CResourceControl::OnSaveData() const
     _CameraControl.OnSaveData(__json);
     CParser::_Parser.OnSaveData(__json);
 
-    ofstream __savefile("./savedata/1.sav", ofstream::binary|ofstream::out);
+    char __path[260];
+    sprintf(__path, "./savedata/%d.sav", index);
+    ofstream __savefile(__path, ofstream::binary|ofstream::out);
 
     if(!__savefile.is_open()){
 #ifdef WIN32
         if (mkdir("./savedata") == 0){
-            __savefile.open("./savedata/1.sav", ofstream::binary|ofstream::out);
+            __savefile.open(__path, ofstream::binary|ofstream::out);
             if(!__savefile.is_open())
                 cout << "CResourceControl::OnSaveData(): failed to save." <<endl;
                 return false;
@@ -470,33 +479,37 @@ bool CResourceControl::OnSaveData() const
     return true;
 }
 
-bool CResourceControl::OnLoadData()
+void CResourceControl::LoadPlayerDataProcess()
+{
+    _CameraControl.OnLoadData(_playerData);
+    _DrawableObjectControl.OnLoadData(_playerData);
+    _SoundControl.OnLoadData(_playerData);
+    CParser::_Parser.OnLoadData(_playerData);
+
+    {
+        map<std::string, Value*> __usrvar = _playerData.get<Object>("user_variable").kv_map();
+        _userVariableList.clear();
+        for (map<std::string, Value*>::const_iterator it=__usrvar.begin();it!=__usrvar.end();it++){
+            _userVariableList[(*it).first] = (*it).second->is<String>();
+        }
+    }
+
+    cout << "CResourceControl::OnLoadData(): loaded." <<endl;
+}
+
+bool CResourceControl::OnLoadData(int index)
 {
     cout << "CResourceControl::OnLoadData(): loading..." <<endl;
-    Object __obj;
-    if (__obj.parse(Cio::LoadTxtFile("./savedata/1.sav"))){
-        _DrawableObjectControl.OnLoadData(__obj);
-        _SoundControl.OnLoadData(__obj);
-        _CameraControl.OnLoadData(__obj);
-        CParser::_Parser.OnLoadData(__obj);
+    char __path[260];
+    sprintf(__path, "./savedata/%d.sav", index);
+
+    _playerData.reset();
+    if (_playerData.parse(Cio::LoadTxtFile(__path))){
+        if (!_playerData.has<String>("script"))
+            return false;
         
-        //{
-        //    map<std::string, Value*> __sysvar = __obj.get<Object>("system_variable").kv_map();
-        //    _systemVariableList.clear();
-        //    for (map<std::string, Value*>::const_iterator it=__sysvar.begin();it!=__sysvar.end();it++){
-        //        _systemVariableList[(*it).first] = (*it).second->is<String>();
-        //    }
-        //}
-
-        {
-            map<std::string, Value*> __usrvar = __obj.get<Object>("user_variable").kv_map();
-            _userVariableList.clear();
-            for (map<std::string, Value*>::const_iterator it=__usrvar.begin();it!=__usrvar.end();it++){
-                _userVariableList[(*it).first] = (*it).second->is<String>();
-            }
-        }
-
-        cout << "CResourceControl::OnLoadData(): loaded." <<endl;
+        _isLoadPlayerData = true;
+        LoadScript(_playerData.get<String>("script"));
         return true;
     }
         

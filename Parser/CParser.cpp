@@ -47,6 +47,19 @@ void CParser::OnCleanup()
     _pRunning = NULL;
 }
 
+void CParser::Execute(Array& commands, size_t i, CActionSet* act, bool isEffect)
+{
+    if (commands.has<String>(i)){
+        ExecuteCmd(commands.get<String>(_index), act, isEffect);
+    }
+    else if (commands.has<Object>(_index)){
+        Object __obj = commands.get<Object>(_index);
+        ParserObject(__obj, act, isEffect);
+    }else{
+        cout << "error!" << endl;
+    }
+}
+
 void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
 {
     vector<string> __listOfCmdPara;
@@ -171,9 +184,11 @@ void CParser::ExecuteCmd(string cmd, CActionSet* act, bool isEffect)
     }
 }
 
-void CParser::SetIndex(size_t i)
+void CParser::GoToIndex(size_t i)
 {
     _index = i;
+    Execute(_cmdList, _index, &CResourceControl::_ResourceManager._ActionControl, false);
+    ++_index;
 }
 
 size_t CParser::GetIndex()
@@ -191,7 +206,7 @@ void CParser::Continue()
     _pause = false;
 }
         
-void CParser::ParserObject(Object& obj, CActionSet* act)
+void CParser::ParserObject(Object& obj, CActionSet* act, bool isEffect)
 {
     if (!act)
         return;
@@ -231,10 +246,10 @@ void CParser::ParserObject(Object& obj, CActionSet* act)
 
         for (size_t i=0; i<__arrOfScr.size(); i++){
             if (__arrOfScr.has<String>(i)){
-                ExecuteCmd(__arrOfScr.get<String>(i), __actionSet, false);
+                ExecuteCmd(__arrOfScr.get<String>(i), __actionSet, isEffect);
             }
             else if (__arrOfScr.has<Object>(i)){
-                ParserObject(__arrOfScr.get<Object>(i), __actionSet);
+                ParserObject(__arrOfScr.get<Object>(i), __actionSet, isEffect);
             }
         }
         
@@ -254,17 +269,7 @@ void CParser::OnLoop()
 
         if (_cmdList.size() > _index){
             CResourceControl::_ResourceManager._SoundControl.StopVoice();
-
-            if (_cmdList.has<String>(_index)){
-                ExecuteCmd(_cmdList.get<String>(_index), &CResourceControl::_ResourceManager._ActionControl, false);
-            }
-            else if (_cmdList.has<Object>(_index)){
-                Object __obj = _cmdList.get<Object>(_index);
-                ParserObject(__obj, &CResourceControl::_ResourceManager._ActionControl);
-            }else{
-                    cout << "error!" << endl;
-            }
-
+            Execute(_cmdList, _index, &CResourceControl::_ResourceManager._ActionControl, false);
             ++_index;
         }
     }
@@ -338,13 +343,10 @@ int CParser::AnalysisOfParameters(string para, vector<string> &plist)
 
 void CParser::OnSaveData(Object& json) const
 {
-    Object __obj;
-    __obj << "index" << _index;
-    json << "script" << __obj;
+    json << "index" << (_index-1);
 }
 
 void CParser::OnLoadData(Object json)
 {
-    Object& __obj = json.get<Object>("script");
-    SetIndex(__obj.get<Number>("index"));
+    GoToIndex(json.get<Number>("index"));
 }

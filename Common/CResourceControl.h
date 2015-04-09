@@ -23,6 +23,10 @@
 
 using namespace std;
 
+/*
+LoadScript()->BeginLoadProcess()->LoadAsset()->EndLoadProcess()
+*/
+
 class CResourceControl : public CScript
 {
     private:
@@ -31,6 +35,8 @@ class CResourceControl : public CScript
         sf::Thread                      _threadOfLoading;
 
         string                          _fileNameOfScript;
+
+        Object                          _playerData;
         Object                          _script;
         Object                          _gameBaiscAsset;
 
@@ -39,9 +45,12 @@ class CResourceControl : public CScript
         bool                            _isResetCamera;
         bool                            _pauseOfAction;
         bool                            _pauseOfUser;
+        bool                            _isLoadPlayerData;
+
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;
-
+        
+        void LoadPlayerDataProcess();
         void BeginLoadProcess();
         void EndLoadProcess();
         void LoadAsset();
@@ -77,8 +86,8 @@ class CResourceControl : public CScript
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
-        bool OnSaveData() const;
-        bool OnLoadData();
+        bool OnSaveData(int index) const;
+        bool OnLoadData(int index);
         
         void OnLButtonDown(int mX, int mY);
         void OnLButtonUp(int mX, int mY);
