@@ -80,34 +80,42 @@ void CSoundBank::SetBGMLoop(bool loop)
 //------------------------------------------------------------------------------
 void CSoundBank::OnCleanup()
 {
+    StopBgm();
+    StopSE();
+    StopVoice();
+
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it) != NULL)
             delete (*it);
     }
 
-    for (map<string, sf::SoundBuffer*>::iterator it=_seList.begin() ; it !=_seList.end(); it++){
+    cout << "mapsize: " << _seList.size() << endl;
+    int __i = 0;
+    for (map<string, sf::SoundBuffer*>::iterator it=_seList.begin() ; it!=_seList.end(); it++){
+        __i++;
+        cout << "index: " << __i << endl;
         if ((*it).second != NULL){
             delete (*it).second;
             (*it).second = NULL;
         }
     }
 
-    for (map<string, sf::SoundBuffer*>::iterator it=_voiceList.begin() ; it !=_voiceList.end(); it++){
+    for (map<string, sf::SoundBuffer*>::reverse_iterator it=_voiceList.rbegin() ; it!=_voiceList.rend(); it++){
         if ((*it).second != NULL){
             delete (*it).second;
             (*it).second = NULL;
         }
     }
     
-    for (map<string, CMusicData>::iterator it=_musicList.begin() ; it !=_musicList.end(); it++){
+    for (map<string, CMusicData>::reverse_iterator it=_musicList.rbegin() ; it !=_musicList.rend(); it++){
         DelBgm((*it).first);
     }
 
-    _voicePool.clear();
-    _soundPool.clear();
     _seList.clear();
     _voiceList.clear();
     _musicList.clear();
+    _voicePool.clear();
+    _soundPool.clear();
 }
 
 //==============================================================================
@@ -145,8 +153,9 @@ bool CSoundBank::PlaySE(string name, float vol, bool loop)
 void CSoundBank::StopVoice()
 {
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
-        if ((*it)->getStatus() == sf::Sound::Playing)
+        if ((*it)->getStatus() == sf::Sound::Playing){
             (*it)->stop();
+        }
     }
 }
 
@@ -209,6 +218,7 @@ void CSoundBank::StopSE(string name)
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();it++){
         if ((*it).first == name){
             (*it).second.stop();
+            (*it).second.resetBuffer();
         }
     }
 }
@@ -217,6 +227,7 @@ void CSoundBank::StopSE()
 {
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();it++){
         (*it).second.stop();
+        (*it).second.resetBuffer();
     }
 }
 
@@ -332,6 +343,7 @@ void CSoundBank::OnLoop()
 
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
+            (*it).second.resetBuffer();
             if (_soundPool.size() > CCommon::_Common.SOUND_POOL_NUM){
                 it=_soundPool.erase(it);
                 continue;
