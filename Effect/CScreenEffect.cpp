@@ -8,6 +8,11 @@
 
 #include "CScreenEffect.h"
 
+CScreenEffect::CScreenEffect()
+{
+    _red = _green = _blue = 0.0f;
+}
+
 bool CScreenEffect::GetVisible() const
 {
     return _isShowed;
@@ -181,6 +186,15 @@ void CScreenEffect::OnLoop()
         
         if (_vertexArray[i].color.a != (sf::Uint8)_vertexData[i]._alpha)
             _vertexArray[i].color.a = (sf::Uint8)_vertexData[i]._alpha;
+        
+        if (_vertexArray[i].color.r != (sf::Uint8)_red)
+            _vertexArray[i].color.r = (sf::Uint8)_red;
+
+        if (_vertexArray[i].color.g != (sf::Uint8)_green)
+            _vertexArray[i].color.g = (sf::Uint8)_green;
+
+        if (_vertexArray[i].color.b != (sf::Uint8)_blue)
+            _vertexArray[i].color.b = (sf::Uint8)_blue;
     }
 }
 
@@ -200,4 +214,9 @@ void CScreenEffect::OnLoadData(Object json)
 {
     CDrawableClass::OnLoadData(json);
     _isShowed = json.get<Boolean>("showed");
+
+    float __alpha = _isShowed ? 255.0f : 0.0f;
+    
+    for (size_t i=0; i<_vertexArray.getVertexCount(); i++)
+        _vertexData[i]._alpha = __alpha;
 }

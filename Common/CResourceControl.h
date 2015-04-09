@@ -42,10 +42,10 @@ class CResourceControl : public CScript
 
         bool                            _drawableObjCtrlEnable;
         bool                            _loadingObjCtrlEnable;
-        bool                            _isResetCamera;
         bool                            _pauseOfAction;
         bool                            _pauseOfUser;
         bool                            _isLoadPlayerData;
+        bool                            _isNeedCleanAction;
 
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;

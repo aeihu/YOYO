@@ -21,10 +21,10 @@ CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAss
 {
     _script.reset();
     _fileNameOfScript = "";
+    _isNeedCleanAction =
     _isLoadPlayerData =
     _loadingObjCtrlEnable = 
     _drawableObjCtrlEnable = 
-    _isResetCamera = 
     _pauseOfAction = 
     _pauseOfUser = false;
 }
@@ -336,6 +336,14 @@ void CResourceControl::LoadAsset()
         CheckIn(_script, "voice", "Voice");
         CheckIn(_script, "camera", "Camera");
         CheckIn(_script, "music", "Music");
+        
+         Array& __array = _gameBaiscAsset.get<Array>("messagebox");
+         for (size_t i=0; i<__array.size(); i++){
+             CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
+             if (__msgbox){
+                 __msgbox->ClearText();
+             }
+         }
 
         if (_script.has<Array>("script")){
             CParser::_Parser.Reset();
@@ -358,8 +366,10 @@ void CResourceControl::LoadAsset()
         
 void CResourceControl::LoadScript(vector<string> args)
 {
-    if (args.size() > 0)
-        LoadScript(args[0]);
+    if (args.size() > 0){
+        _fileNameOfScript = args[0];
+        _isNeedCleanAction = true;
+    }
 }
 
 bool CResourceControl::LoadScript(string filename)
@@ -367,7 +377,7 @@ bool CResourceControl::LoadScript(string filename)
     _fileNameOfScript = filename;
 
     CSequenceOfAction* __seq = NULL;
-    _loadingObjCtrlEnable = _isResetCamera = true;
+    _loadingObjCtrlEnable = true;
     __seq = static_cast<CSequenceOfAction*>(_scriptList["loading_start_script"]->Copy());
 
     if (__seq){
@@ -387,6 +397,10 @@ bool CResourceControl::LoadScript(string filename)
 void CResourceControl::OnLoop()
 {
     _ActionControl.OnLoop();
+    if (_isNeedCleanAction) {
+        _isNeedCleanAction = false;
+        LoadScript(_fileNameOfScript);
+    }
     _pauseOfAction = _ActionControl.IsPause();
     
     _CameraControl.OnLoop();

@@ -18,6 +18,9 @@ class CDrawableClass : public CBaiscProperties
     protected:
         bool                              _isShowed;
         float                             _alpha;
+        float                             _red;
+        float                             _green;
+        float                             _blue;
     public:
         CDrawableClass();
         
@@ -27,6 +30,16 @@ class CDrawableClass : public CBaiscProperties
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
         virtual void OnLoop()=0;
+
+        virtual CSimultaneousOfAction* CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore, bool pause);	  
+        virtual CActionTo* CreateActionOfColorRedTo(size_t elapsed, float r, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore, bool pause);
+
+        virtual CSimultaneousOfAction* CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore, bool pause);	  
+        virtual CActionBy* CreateActionOfColorRedBy(size_t elapsed, float r, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore, bool pause);
+        virtual CActionBy* CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore, bool pause);
 
         virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
         virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);

@@ -36,6 +36,7 @@ class CScreenEffect : public CDrawableClass
         void SetShow();
         void SetHide();
     public:
+        CScreenEffect();
         static CScreenEffect* Create(size_t num, float width, float height);
 
         bool GetVisible() const;
