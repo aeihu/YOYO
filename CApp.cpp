@@ -66,6 +66,8 @@ void CApp::SetFullScreen(bool isFirst)
 }
 
 //------------------------------------------------------------------------------
+
+#ifdef _DEBUG
 void FuncOfStdin()
 {
     string __cmd;
@@ -75,7 +77,7 @@ void FuncOfStdin()
         CParser::_Parser.CParser::ExecuteCmd(__cmd, NULL, false);
     }
 }
-
+#endif
 //------------------------------------------------------------------------------
 int CApp::OnExecute() 
 {
@@ -84,8 +86,10 @@ int CApp::OnExecute()
         return -1;
     }
     sf::Event __events;
+#ifdef _DEBUG
     sf::Thread  __threadOfStdin(&FuncOfStdin);
     __threadOfStdin.launch();
+#endif
 
 	while(_display->isOpen() && _running){
 		while(_display->pollEvent(__events)) {

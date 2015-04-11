@@ -17,6 +17,10 @@ void CApp::OnEvent(sf::Event* Event) {
 //==============================================================================
 void CApp::OnKeyDown(sf::Event::KeyEvent key) {
     switch(key.code) {
+        case sf::Keyboard::A: {
+            CResourceControl::_ResourceManager.SetAuto(true);
+            break;
+        }
         case sf::Keyboard::Left: {
 
             break;
@@ -34,6 +38,11 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
 
         case sf::Keyboard::Down: {
 
+            break;
+        }
+                        
+        case sf::Keyboard::LControl: {
+            CResourceControl::_ResourceManager.Skip();
             break;
         }
                         
@@ -56,6 +65,16 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
             else
                 SetFullScreen();
             
+            break;
+        }
+
+        case sf::Keyboard::F6: {
+            //CResourceControl::_ResourceManager.OnSaveData(0);
+            break;
+        }
+
+        case sf::Keyboard::F10: {
+            //CResourceControl::_ResourceManager.OnLoadData(0);
             break;
         }
         
@@ -106,11 +125,13 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
 void CApp::OnLButtonDown(int mX, int mY)
 {
     CResourceControl::_ResourceManager.OnLButtonDown(mX, mY);
+    CResourceControl::_ResourceManager.SetAuto(false);
 }
 
 void CApp::OnRButtonDown(int mX, int mY)
 {    
     CResourceControl::_ResourceManager.OnRButtonDown(mX, mY);
+    CResourceControl::_ResourceManager.SetAuto(false);
 }
 
 void CApp::OnRButtonUp(int mX, int mY)
@@ -122,7 +143,6 @@ void CApp::OnLButtonUp(int mX, int mY)
 {
     CResourceControl::_ResourceManager.OnLButtonUp(mX, mY);
 }
-
 
 //------------------------------------------------------------------------------
 void CApp::OnMouseMove(int mX, int mY)

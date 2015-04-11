@@ -35,6 +35,7 @@ class CResourceControl : public CScript
         sf::Thread                      _threadOfLoading;
 
         string                          _fileNameOfScript;
+        unsigned long                   _oldTimeForAuto;
 
         Object                          _playerData;
         Object                          _script;
@@ -46,6 +47,9 @@ class CResourceControl : public CScript
         bool                            _pauseOfUser;
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
+
+        bool                            _isAuto;
+        bool                            _flagForAuto;
 
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;
@@ -62,6 +66,7 @@ class CResourceControl : public CScript
         char CheckIn(Object& json, string colName, string objTypeName);
         bool CheckOut(Object& json, string colName, string objTypeName);
 
+        void AutoToNextStep();
     protected:
 
         CResourceControl();
@@ -74,8 +79,11 @@ class CResourceControl : public CScript
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;
         
+        void Skip();
         bool AddVariable(string name, string val);
         bool SetVariable(string name, string val);
+        bool GetAuto() const;
+        void SetAuto(bool isAuto);
         string GetVariable(string name);
         bool DelVariable(string name);
         void PauseForUserConfrim();

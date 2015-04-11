@@ -89,11 +89,7 @@ void CSoundBank::OnCleanup()
             delete (*it);
     }
 
-    cout << "mapsize: " << _seList.size() << endl;
-    int __i = 0;
     for (map<string, sf::SoundBuffer*>::iterator it=_seList.begin() ; it!=_seList.end(); it++){
-        __i++;
-        cout << "index: " << __i << endl;
         if ((*it).second != NULL){
             delete (*it).second;
             (*it).second = NULL;
@@ -390,6 +386,15 @@ char CSoundBank::IsVoiceSilence(string name)
     }
 
     return VOICE_STOPPED;   
+}
+
+bool CSoundBank::GetVoiceStatus()
+{
+    for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++)
+        if ((*it)->getStatus() == CVoiceStream::Playing)
+            return true;
+            
+    return false;
 }
 
 bool CSoundBank::GetVoiceStatus(string name)

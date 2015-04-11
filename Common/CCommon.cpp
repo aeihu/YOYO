@@ -39,6 +39,7 @@ CCommon::CCommon()
 
     //<option>
     TEXT_FRAMERATE = 10;
+    AUTO_FRAMERATE = 1000;
 
     VOICE_VOLUME =
     BGM_VOLUME = 
@@ -99,6 +100,7 @@ void CCommon::SetValue(Object json)
     if (json.has<Number>("SCREEN_PIECE_NUM")) SCREEN_PIECE_NUM = json.get<Number>("SCREEN_PIECE_NUM");
       
     if (json.has<Number>("TEXT_FRAMERATE")) TEXT_FRAMERATE = json.get<Number>("TEXT_FRAMERATE");
+    if (json.has<Number>("AUTO_FRAMERATE")) AUTO_FRAMERATE = json.get<Number>("AUTO_FRAMERATE");
     if (json.has<Number>("BGM_VOLUME")) BGM_VOLUME = json.get<Number>("BGM_VOLUME");
     if (json.has<Number>("SE_VOLUME")) SE_VOLUME = json.get<Number>("SE_VOLUME");
     if (json.has<Number>("VOICE_VOLUME")) VOICE_VOLUME = json.get<Number>("VOICE_VOLUME");

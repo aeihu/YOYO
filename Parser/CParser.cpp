@@ -205,7 +205,7 @@ void CParser::Continue()
 {
     _pause = false;
 }
-        
+
 void CParser::ParserObject(Object& obj, CActionSet* act, bool isEffect)
 {
     if (!act)

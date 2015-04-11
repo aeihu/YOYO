@@ -52,6 +52,7 @@ class CCommon
 
         //<option>
         size_t  TEXT_FRAMERATE ;//10
+        size_t  AUTO_FRAMERATE ;//10
         float  BGM_VOLUME;// 10
         float  SE_VOLUME;// 10
         float  VOICE_VOLUME;// 10

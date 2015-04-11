@@ -19,6 +19,7 @@ CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAsset, this)
 {
+    _oldTimeForAuto = 0;
     _script.reset();
     _fileNameOfScript = "";
     _isNeedCleanAction =
@@ -26,7 +27,9 @@ CResourceControl::CResourceControl():_threadOfLoading(&CResourceControl::LoadAss
     _loadingObjCtrlEnable = 
     _drawableObjCtrlEnable = 
     _pauseOfAction = 
-    _pauseOfUser = false;
+    _pauseOfUser = 
+    _isAuto = 
+    _flagForAuto = false;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -403,11 +406,13 @@ void CResourceControl::OnLoop()
     }
     _pauseOfAction = _ActionControl.IsPause();
     
-    _CameraControl.OnLoop();
     _SoundControl.OnLoop();
 
-    if (_drawableObjCtrlEnable)
+    if (_drawableObjCtrlEnable){
+        _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
+        AutoToNextStep();
+    }
 
     if (_loadingObjCtrlEnable){
         _LoadingObjectControl.OnLoop();
@@ -431,6 +436,7 @@ void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 
 void CResourceControl::OnCleanup()
 {
+    _threadOfLoading.terminate();
     CScript::OnCleanup();
     _SoundControl.OnCleanup();
     _DrawableObjectControl.OnCleanup();
@@ -550,6 +556,17 @@ bool CResourceControl::SetVariable(string name, string val)
     return false;
 }
 
+bool CResourceControl::GetAuto() const
+{
+    return _isAuto;
+}
+
+void CResourceControl::SetAuto(bool isAuto)
+{
+    if (!_loadingObjCtrlEnable)
+        _isAuto = isAuto;
+}
+
 string CResourceControl::GetVariable(string name)
 {
     if(_userVariableList.count(name) > 0){
@@ -572,4 +589,44 @@ bool CResourceControl::DelVariable(string name)
 void CResourceControl::PauseForUserConfrim()
 {
     _pauseOfUser = true;
+}
+
+void CResourceControl::AutoToNextStep()
+{
+    if (_isAuto && _pauseOfUser && !_loadingObjCtrlEnable){
+        bool __textAllShown = true;
+        Array& __array = _gameBaiscAsset.get<Array>("messagebox");
+        for (size_t i=0; i<__array.size(); i++){
+            CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
+            if (__msgbox){
+                if (!__msgbox->IsTextAllShown()){
+                    return;
+                }
+            }
+        }
+        
+        if (_SoundControl.GetVoiceStatus())
+            return;
+        
+        if (_flagForAuto){
+            _oldTimeForAuto = CCommon::_Common.GetTicks() + CCommon::_Common.AUTO_FRAMERATE;
+            _flagForAuto = false;
+            cout << "CResourceControl::AutoToNextStep(): deply start (" <<  CCommon::_Common.GetTicks() << ")" << endl;
+        }
+
+        if (_oldTimeForAuto < CCommon::_Common.GetTicks()){
+            _pauseOfUser = false;
+            _flagForAuto = true;
+            cout << "CResourceControl::AutoToNextStep(): deply end (" << CCommon::_Common.GetTicks() << ")" << endl;
+        }
+    }
+}
+        
+void CResourceControl::Skip()
+{
+    if (_loadingObjCtrlEnable)
+        return;
+
+    _ActionControl.Skip();
+    _pauseOfUser = false;
 }
