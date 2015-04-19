@@ -3,7 +3,7 @@
 *
 * Game Scenario Maker is a free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
-* Version 2(GPLv2) as published by the Free Software Foundation.
+* Version 3(GPLv3) as published by the Free Software Foundation.
 */
 
 #include "CCommon.h"
