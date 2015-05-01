@@ -1,7 +1,7 @@
 /*
 * Copyright (C) 2012-2015, <Aeihu.z, aeihu.z@gmail.com>.
 *
-* Game Scenario Maker is a free software; you can redistribute it and/or
+* YOYO is a free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * Version 3(GPLv3) as published by the Free Software Foundation.
 */
@@ -16,7 +16,7 @@ CCommon::CCommon()
     //GameState = MAP_FOCUS;
     CONFIG_PATH = "./game.config";
     GAME_PATH = "./game/main";
-    GAME_NAME = "Game Scenario Maker";
+    GAME_NAME = "YOYO";
     GAME_ICON = "./icon.ico";
     GAME_SYSDATA = "./sys.dat";
     FULL_SCREEN = false;
