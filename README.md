@@ -1,4 +1,4 @@
-YOYO
+#YOYO
 
 Maybe you know kirikiri or Ren'Py if you play japanese galgame or visual novel.YOYO do like as kirikiri or Ren'Py. 
 
