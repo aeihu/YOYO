@@ -1,6 +1,7 @@
 #YOYO
 
 Maybe you know kirikiri or Ren'Py if you play japanese galgame or visual novel.YOYO do like as kirikiri or Ren'Py. 
+YOYO is distributed under the \[[GPLv3](http://opensource.org/licenses/GPL-3.0)\]
 
 External Libraries used by<br/>
 [sfml](http://www.sfml-dev.org/index.php): Simple and Fast Multimedia Library. \[[zlib/png license](http://opensource.org/licenses/Zlib)\]<br/>
