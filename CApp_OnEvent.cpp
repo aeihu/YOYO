@@ -18,7 +18,7 @@ void CApp::OnEvent(sf::Event* Event) {
 void CApp::OnKeyDown(sf::Event::KeyEvent key) {
     switch(key.code) {
         case sf::Keyboard::A: {
-            CResourceControl::_ResourceManager.SetAuto(true);
+            CResourceControl::_ResourceManager.SetAuto(!CResourceControl::_ResourceManager.GetAuto());
             break;
         }
         case sf::Keyboard::Left: {

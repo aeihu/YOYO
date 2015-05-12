@@ -99,8 +99,10 @@ int CApp::OnExecute()
 		OnLoop();
 		OnRender();
 	}
-    
     OnCleanup();
+#ifdef _DEBUG
+    __threadOfStdin.terminate();
+#endif
 
     return 0;
 }
