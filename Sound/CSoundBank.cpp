@@ -11,6 +11,7 @@
 
 //==============================================================================
 CSoundBank::CSoundBank() {
+    _bgm.second = new sf::Music();
     _voiceList.clear();
 }
 
@@ -66,7 +67,7 @@ int CSoundBank::AddVoice(string name, string filename) {
 //https://github.com/LaurentGomila/SFML/wiki/Source%3A-MP3-Player
 bool CSoundBank::OnLoadBGM(const char* FileName)
 {
-    if (!_bgm.second.openFromFile(FileName))
+    if (!_bgm.second->openFromFile(FileName))
         return false;
 
     return true;
@@ -74,7 +75,7 @@ bool CSoundBank::OnLoadBGM(const char* FileName)
 
 void CSoundBank::SetBGMLoop(bool loop)
 {
-    _bgm.second.setLoop(loop);
+    _bgm.second->setLoop(loop);
 }
 
 //------------------------------------------------------------------------------
@@ -83,6 +84,8 @@ void CSoundBank::OnCleanup()
     StopBgm();
     StopSE();
     StopVoice();
+    delete _bgm.second;
+    _bgm.second = NULL;
 
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it) != NULL)
@@ -272,22 +275,22 @@ bool CSoundBank::DelBgm(string name)
 
 sf::Sound::Status CSoundBank::GetBgmStatus()
 {
-    return _bgm.second.getStatus();
+    return _bgm.second->getStatus();
 }
 
 void CSoundBank::PauseBgm()
 {
-    _bgm.second.pause();
+    _bgm.second->pause();
 }
         
 void CSoundBank::StopBgm()
 {
-    _bgm.second.stop();
+    _bgm.second->stop();
 }
 
 void CSoundBank::PlayBgm()
 {
-    _bgm.second.play();
+    _bgm.second->play();
 }
         
 void CSoundBank::PlayBgm(vector<string> args)
@@ -302,13 +305,13 @@ int CSoundBank::PlayBgm(string name, float vol, bool loop)
         return -1;
 
     if (_musicList[name]._Path.find("*") == string::npos){
-        if (!_bgm.second.openFromFile(_musicList[name]._Path)){
+        if (!_bgm.second->openFromFile(_musicList[name]._Path)){
             cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
     }
     else {
-        if (!_bgm.second.openFromMemory(_musicList[name]._Data, _musicList[name]._Size)){
+        if (!_bgm.second->openFromMemory(_musicList[name]._Data, _musicList[name]._Size)){
             cout << "CSoundBank::PlayBgm(): failed to load '" << _musicList[name]._Path << "'" << endl;
             return -2;
         }
@@ -316,9 +319,9 @@ int CSoundBank::PlayBgm(string name, float vol, bool loop)
     
     _musicVolume = vol;
     _bgm.first = name;
-    _bgm.second.setLoop(loop);
-    _bgm.second.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
-    _bgm.second.play();
+    _bgm.second->setLoop(loop);
+    _bgm.second->setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
+    _bgm.second->play();
     return 0;
 }
 
@@ -334,8 +337,8 @@ CActionBy* CSoundBank::CreateActionOfMusicVolBy(size_t elapsed, float vol, bool 
 
 void CSoundBank::OnLoop()
 {
-    if (_musicVolume * CCommon::_Common.BGM_VOLUME != _bgm.second.getVolume())
-        _bgm.second.setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
+    if (_musicVolume * CCommon::_Common.BGM_VOLUME != _bgm.second->getVolume())
+        _bgm.second->setVolume(_musicVolume * CCommon::_Common.BGM_VOLUME);
 
     for (list<pair<string, sf::Sound> >::iterator it=_soundPool.begin() ; it != _soundPool.end();){
         if ((*it).second.getStatus() == sf::Sound::Stopped){
@@ -425,13 +428,13 @@ bool CSoundBank::OnInit()
         
 void CSoundBank::OnSaveData(Object& json) const
 {
-    if (_bgm.second.getStatus() != sf::Music::Stopped){
+    if (_bgm.second->getStatus() != sf::Music::Stopped){
         if (!_bgm.first.empty()){
             Object _obj;
             _obj << "name" << _bgm.first;
             _obj << "vol" << _musicVolume;
-            _obj << "loop" << _bgm.second.getLoop();
-            _obj << "status" << (_bgm.second.getStatus() == sf::Music::Playing ? true : false);
+            _obj << "loop" << _bgm.second->getLoop();
+            _obj << "status" << (_bgm.second->getStatus() == sf::Music::Playing ? true : false);
             json << "bgm" << _obj;
         }
     }

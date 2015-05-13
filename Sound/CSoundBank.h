@@ -55,7 +55,7 @@ class CSoundBank {
         float                                           _musicVolume;
         list<CVoiceStream*>                             _voicePool;
         list<pair<string, sf::Sound> >                  _soundPool;
-        pair<string, sf::Music>                         _bgm;
+        pair<string, sf::Music*>                        _bgm;
         map<string, sf::SoundBuffer*>                   _voiceList;
         map<string, sf::SoundBuffer*>                   _seList;
         map<string, CMusicData>                         _musicList;
