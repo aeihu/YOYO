@@ -38,12 +38,12 @@ bool CSequenceOfAction::OnLoop(bool cleanup)
     return false;
 }
 
-bool CSequenceOfAction::IsPause() const
+bool CSequenceOfAction::PauseRequest() const
 {
     if (_actionList.size() < 1)
         return false;
 
-    return _pause || _actionList.front()->IsPause();
+    return _pauseRequest || _actionList.front()->PauseRequest();
 }
 
 CActionBaseClass* CSequenceOfAction::Copy()

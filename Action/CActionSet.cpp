@@ -26,7 +26,7 @@ void CActionSet::SetName(string name)
 
 void CActionSet::SetPause(bool pause)
 {
-    _pause = pause;
+    _pauseRequest = pause;
 }
         
 bool CActionSet::DeleteAct(string name, bool skip)
@@ -58,7 +58,7 @@ bool CActionSet::CopyList(CActionSet* act)
 {
     if (act){
         act->SetName(_name);
-        act->SetPause(_pause);
+        act->SetPause(_pauseRequest);
         
         for (list<CActionBaseClass*>::iterator it=_tempActionList.begin();it!=_tempActionList.end(); it++)
             act->AddAction((*it)->Copy());

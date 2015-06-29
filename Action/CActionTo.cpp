@@ -15,7 +15,7 @@ CActionTo::CActionTo(float* val, size_t elapsed, float fin, bool restore, bool p
         _isRunning = false;
         _val = val;
         _valOfFinish = fin;
-        _pause = pause;
+        _pauseRequest = pause;
         _restore = restore;
         _elapsed = elapsed;
     }
@@ -79,12 +79,12 @@ FINISH:
     }
 }
 
-bool CActionTo::IsPause() const
+bool CActionTo::PauseRequest() const
 {
-    return _pause && _isRunning;
+    return _pauseRequest && _isRunning;
 }
 
 CActionBaseClass* CActionTo::Copy()
 {
-    return new CActionTo(_val, _elapsed, _valOfFinish, _restore, _pause);
+    return new CActionTo(_val, _elapsed, _valOfFinish, _restore, _pauseRequest);
 }

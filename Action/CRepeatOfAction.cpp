@@ -13,12 +13,12 @@ CRepeatOfAction::CRepeatOfAction()
     _count = _loopNum = 0;
 }
         
-bool CRepeatOfAction::IsPause() const
+bool CRepeatOfAction::PauseRequest() const
 {
     if (_actionList.size() < 1 || _count == 0)
         return false;
 
-    return _pause || _actionList.front()->IsPause();
+    return _pauseRequest || _actionList.front()->PauseRequest();
 }
 
 bool CRepeatOfAction::OnLoop(bool cleanup)

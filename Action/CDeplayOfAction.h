@@ -21,7 +21,7 @@ class CDeplayOfAction : public CActionBaseClass
     public:
         CDeplayOfAction(size_t delay, bool pause=false);
         
-        bool IsPause() const;
+        bool PauseRequest() const;
         bool OnLoop(bool cleanup=true);
         virtual CActionBaseClass* Copy();
 

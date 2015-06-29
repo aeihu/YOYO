@@ -12,7 +12,7 @@ CDeplayOfAction::CDeplayOfAction(size_t delay, bool pause)
 {
     _isRunning = false;
     _delay = delay;
-    _pause = pause;
+    _pauseRequest = pause;
 }
 
 bool CDeplayOfAction::OnLoop(bool cleanup)
@@ -30,12 +30,12 @@ bool CDeplayOfAction::OnLoop(bool cleanup)
     return false;
 }
 
-bool CDeplayOfAction::IsPause() const
+bool CDeplayOfAction::PauseRequest() const
 {
-    return _pause && _isRunning;
+    return _pauseRequest && _isRunning;
 }
 
 CActionBaseClass* CDeplayOfAction::Copy()
 {
-    return new CDeplayOfAction(_delay, _pause);
+    return new CDeplayOfAction(_delay, _pauseRequest);
 }

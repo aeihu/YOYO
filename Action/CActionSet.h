@@ -26,7 +26,7 @@ class CActionSet : public CActionBaseClass
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
-        virtual bool IsPause() const=0;
+        virtual bool PauseRequest() const=0;
         virtual string GetName() const;
         void SetName(string name);
         void SetPause(bool pause);

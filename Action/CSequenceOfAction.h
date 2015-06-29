@@ -20,7 +20,7 @@ class CSequenceOfAction : public CActionSet
 {
     protected:
     public:
-        bool IsPause() const;
+        bool PauseRequest() const;
         bool OnLoop(bool cleanup=true);
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_SEQ;}

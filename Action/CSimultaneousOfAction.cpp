@@ -38,16 +38,16 @@ bool CSimultaneousOfAction::OnLoop(bool cleanup)
     return false;
 }
 
-bool CSimultaneousOfAction::IsPause() const
+bool CSimultaneousOfAction::PauseRequest() const
 {
     if (_actionList.size() < 1)
         return false;
 
-    if (_pause)
+    if (_pauseRequest)
         return true;
 
     for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
-        if ((*it)->IsPause())
+        if ((*it)->PauseRequest())
             return true;
     }
 
