@@ -38,7 +38,8 @@ CTextProcessing::CTextProcessing()
 
 bool CTextProcessing::isWordOrNumber(char c)
 {
-    return (c >= 65 && c <= 90) || (c >= 97 && c <= 121) || (c >= 43 && c <= 58);
+    // have a problem in here
+    return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 43 && c <= 58);
 }
 
 
