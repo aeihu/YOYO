@@ -404,7 +404,7 @@ void CResourceControl::OnLoop()
         _isNeedCleanAction = false;
         LoadScript(_fileNameOfScript);
     }
-    _pauseOfAction = _ActionControl.IsPause();
+    _pauseOfAction = _ActionControl.PauseRequest();
     
     _SoundControl.OnLoop();
 
