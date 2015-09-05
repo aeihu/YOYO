@@ -134,7 +134,10 @@ void CTextProcessing::Process()
         __cursorPos += __size==1?__fontSize>>1:__fontSize;
 
         if (__size == 1 && __index > 0){
-            if (!isWordOrNumber(_text[__index-1]))
+            if (_text[__index] == '\n'){
+                __cursorPos=0;
+            }
+            else if (!isWordOrNumber(_text[__index-1])){
                 for (size_t i=__index; i<_text.length(); i++){
                     if (!isWordOrNumber(_text[i])){
                         if (__cursorPos+(i-__index)*(__fontSize>>1) > _rowWidth)
@@ -142,6 +145,7 @@ void CTextProcessing::Process()
                         break;
                     }
                 }
+            }
         }
         else if (__cursorPos > _rowWidth)
             __str = "\n";
