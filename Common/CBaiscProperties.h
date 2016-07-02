@@ -24,10 +24,11 @@ class CBaiscProperties : public CObject
         sf::Vector2f                        _scale;
         sf::Vector2f                        _coordinate;
         float                               _rotation;
-        
+		CSimultaneousOfAction				_actionList;
     public:
         CBaiscProperties();
 
+		void AddAction(CActionBaseClass* act);
         virtual float& GetRotation();
         void SetRotation(float r);
         sf::Vector2f& GetPosition();
@@ -57,7 +58,29 @@ class CBaiscProperties : public CObject
         virtual CActionBy* CreateActionOfMoveXBy(size_t elapsed, float x, bool restore, bool pause);
         virtual CActionBy* CreateActionOfMoveYBy(size_t elapsed, float y, bool restore, bool pause);
 
-        virtual void OnLoop()=0;
+		/////////////////////////////////////////////////////////////////////
+
+		virtual void CreateActionOfRotationToForSelf(size_t elapsed, float rotation, bool restore, bool pause);
+		virtual void CreateActionOfRotationByForSelf(size_t elapsed, float rotation, bool restore, bool pause);
+
+		virtual void CreateActionOfScaleToForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
+		virtual void CreateActionOfScaleXToForSelf(size_t elapsed, float x, bool restore, bool pause);
+		virtual void CreateActionOfScaleYToForSelf(size_t elapsed, float y, bool restore, bool pause);
+
+		virtual void CreateActionOfScaleByForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
+		virtual void CreateActionOfScaleXByForSelf(size_t elapsed, float x, bool restore, bool pause);
+		virtual void CreateActionOfScaleYByForSelf(size_t elapsed, float y, bool restore, bool pause);
+
+		virtual void CreateActionOfMoveToForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
+		virtual void CreateActionOfMoveXToForSelf(size_t elapsed, float x, bool restore, bool pause);
+		virtual void CreateActionOfMoveYToForSelf(size_t elapsed, float y, bool restore, bool pause);
+
+		virtual void CreateActionOfMoveByForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
+		virtual void CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore, bool pause);
+		virtual void CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore, bool pause);
+
+		virtual void OnLoop() = 0;
+		virtual void OnCleanup();
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
 };
