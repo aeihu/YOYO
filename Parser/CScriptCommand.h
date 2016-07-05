@@ -9,97 +9,95 @@
 #ifndef _CSCRIPTCOMMAND_H_ 
     #define _CSCRIPTCOMMAND_H_
 #include <string>
-#include <map>
-#include <vector>
 #include "../Action/CActionSet.h"
+#include "lua.hpp"
 
 using namespace std;
 
-bool Cmd_ShowCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_HideCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_MoveCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_RotationCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_SetPoseCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_SetCharacterLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_FlipXCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_FlipYCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_OriginCharacterLayer(vector<string>& args, CActionSet* act);
-bool Cmd_ColorCharacterLayer(vector<string>& args, CActionSet* act);
+int Cmd_ShowCharacterLayer(lua_State* args);
+int Cmd_HideCharacterLayer(lua_State* args);
+int Cmd_MoveCharacterLayer(lua_State* args);
+int Cmd_ScaleCharacterLayer(lua_State* args);
+int Cmd_RotationCharacterLayer(lua_State* args);
+int Cmd_SetPoseCharacterLayer(lua_State* args);
+int Cmd_SetCharacterLayerOrder(lua_State* args);
+int Cmd_FlipXCharacterLayer(lua_State* args);
+int Cmd_FlipYCharacterLayer(lua_State* args);
+int Cmd_OriginCharacterLayer(lua_State* args);
+int Cmd_ColorCharacterLayer(lua_State* args);
 
-bool Cmd_ShowImg(vector<string>& args, CActionSet* act);
-bool Cmd_HideImg(vector<string>& args, CActionSet* act);
-bool Cmd_MoveImg(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleImg(vector<string>& args, CActionSet* act);
-bool Cmd_RotationImg(vector<string>& args, CActionSet* act);
-bool Cmd_SetImgLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_FlipXImg(vector<string>& args, CActionSet* act);
-bool Cmd_FlipYImg(vector<string>& args, CActionSet* act);
-bool Cmd_OriginImg(vector<string>& args, CActionSet* act);
-bool Cmd_ColorImg(vector<string>& args, CActionSet* act);
+int Cmd_ShowImg(lua_State* args);
+int Cmd_HideImg(lua_State* args);
+int Cmd_MoveImg(lua_State* args);
+int Cmd_ScaleImg(lua_State* args);
+int Cmd_RotationImg(lua_State* args);
+int Cmd_SetImgLayerOrder(lua_State* args);
+int Cmd_FlipXImg(lua_State* args);
+int Cmd_FlipYImg(lua_State* args);
+int Cmd_OriginImg(lua_State* args);
+int Cmd_ColorImg(lua_State* args);
 
-bool Cmd_ShowText(vector<string>& args, CActionSet* act);
-bool Cmd_HideText(vector<string>& args, CActionSet* act);
-bool Cmd_MoveText(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleText(vector<string>& args, CActionSet* act);
-bool Cmd_RotationText(vector<string>& args, CActionSet* act);
-bool Cmd_SetTextLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_OriginText(vector<string>& args, CActionSet* act);
-bool Cmd_SetText(vector<string>& args, CActionSet* act);
-bool Cmd_ColorText(vector<string>& args, CActionSet* act);
+int Cmd_ShowText(lua_State* args);
+int Cmd_HideText(lua_State* args);
+int Cmd_MoveText(lua_State* args);
+int Cmd_ScaleText(lua_State* args);
+int Cmd_RotationText(lua_State* args);
+int Cmd_SetTextLayerOrder(lua_State* args);
+int Cmd_OriginText(lua_State* args);
+int Cmd_SetText(lua_State* args);
+int Cmd_ColorText(lua_State* args);
 
-bool Cmd_PlayBGM(vector<string>& args, CActionSet* act);
-bool Cmd_SetBGMVolume(vector<string>& args, CActionSet* act);
-bool Cmd_PauseBGM(vector<string>& args, CActionSet* act);
-bool Cmd_ResumeBGM(vector<string>& args, CActionSet* act);
-bool Cmd_StopBGM(vector<string>& args, CActionSet* act);
+int Cmd_PlayBGM(lua_State* args);
+int Cmd_SetBGMVolume(lua_State* args);
+int Cmd_PauseBGM(lua_State* args);
+int Cmd_ResumeBGM(lua_State* args);
+int Cmd_StopBGM(lua_State* args);
 
-bool Cmd_StopSE(vector<string>& args, CActionSet* act);
-bool Cmd_PlaySE(vector<string>& args, CActionSet* act);
+int Cmd_StopSE(lua_State* args);
+int Cmd_PlaySE(lua_State* args);
 
-bool Cmd_ShowButton(vector<string>& args, CActionSet* act);
-bool Cmd_HideButton(vector<string>& args, CActionSet* act);
-bool Cmd_MoveButton(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleButton(vector<string>& args, CActionSet* act);
-bool Cmd_RotationButton(vector<string>& args, CActionSet* act);
-bool Cmd_SetButtonLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_FlipXButton(vector<string>& args, CActionSet* act);
-bool Cmd_FlipYButton(vector<string>& args, CActionSet* act);
-bool Cmd_OriginButton(vector<string>& args, CActionSet* act);
-bool Cmd_ColorButton(vector<string>& args, CActionSet* act);
+int Cmd_ShowButton(lua_State* args);
+int Cmd_HideButton(lua_State* args);
+int Cmd_MoveButton(lua_State* args);
+int Cmd_ScaleButton(lua_State* args);
+int Cmd_RotationButton(lua_State* args);
+int Cmd_SetButtonLayerOrder(lua_State* args);
+int Cmd_FlipXButton(lua_State* args);
+int Cmd_FlipYButton(lua_State* args);
+int Cmd_OriginButton(lua_State* args);
+int Cmd_ColorButton(lua_State* args);
 
-bool Cmd_Message(vector<string>& args, CActionSet* act);
-bool Cmd_ShowMessageBox(vector<string>& args, CActionSet* act);
-bool Cmd_HideMessageBox(vector<string>& args, CActionSet* act);
-bool Cmd_SetMessageBoxLayerOrder(vector<string>& args, CActionSet* act);
-bool Cmd_CleanMessageBox(vector<string>& args, CActionSet* act);
+int Cmd_Message(lua_State* args);
+int Cmd_ShowMessageBox(lua_State* args);
+int Cmd_HideMessageBox(lua_State* args);
+int Cmd_SetMessageBoxLayerOrder(lua_State* args);
+int Cmd_CleanMessageBox(lua_State* args);
 
-bool Cmd_ShowLogBox(vector<string>& args, CActionSet* act);
-bool Cmd_HideLogBox(vector<string>& args, CActionSet* act);
-bool Cmd_SetLogBoxLayerOrder(vector<string>& args, CActionSet* act);
+int Cmd_ShowLogBox(lua_State* args);
+int Cmd_HideLogBox(lua_State* args);
+int Cmd_SetLogBoxLayerOrder(lua_State* args);
 
-bool Cmd_ShowParticleSystem(vector<string>& args, CActionSet* act);
-bool Cmd_HideParticleSystem(vector<string>& args, CActionSet* act);
-bool Cmd_SetParticleSystemLayerOrder(vector<string>& args, CActionSet* act);
+//int Cmd_ShowParticleSystem(lua_State* args);
+//int Cmd_HideParticleSystem(lua_State* args);
+//int Cmd_SetParticleSystemLayerOrder(lua_State* args);
 
-bool Cmd_AddVariable(vector<string>& args, CActionSet* act);
-bool Cmd_SetVariable(vector<string>& args, CActionSet* act);
-bool Cmd_DelVariable(vector<string>& args, CActionSet* act);
+//int Cmd_AddVariable(lua_State* args);
+//int Cmd_SetVariable(lua_State* args);
+//int Cmd_DelVariable(lua_State* args);
 
-bool Cmd_DelAction(vector<string>& args, CActionSet* act);
-bool Cmd_SkipAction(vector<string>& args, CActionSet* act);
+int Cmd_DelAction(lua_State* args);
+int Cmd_SkipAction(lua_State* args);
 
-bool Cmd_ShowCurtain(vector<string>& args, CActionSet* act);
-bool Cmd_HideCurtain(vector<string>& args, CActionSet* act);
-bool Cmd_ColorCurtain(vector<string>& args, CActionSet* act);
+int Cmd_ShowCurtain(lua_State* args);
+int Cmd_HideCurtain(lua_State* args);
+int Cmd_ColorCurtain(lua_State* args);
 
-bool Cmd_UseCamera(vector<string>& args, CActionSet* act);
-bool Cmd_MoveCamera(vector<string>& args, CActionSet* act);
-bool Cmd_ScaleCamera(vector<string>& args, CActionSet* act);
-bool Cmd_RotationCamera(vector<string>& args, CActionSet* act);
+int Cmd_UseCamera(lua_State* args);
+int Cmd_MoveCamera(lua_State* args);
+int Cmd_ScaleCamera(lua_State* args);
+int Cmd_RotationCamera(lua_State* args);
 
-bool Cmd_Delay(vector<string>& args, CActionSet* act);
-bool Cmd_Pause(vector<string>& args, CActionSet* act);
-bool Cmd_LoadScript(vector<string>& args, CActionSet* act);
+int Cmd_Pause(lua_State* args);
+int Cmd_LoadScript(lua_State* args);
 
 #endif
