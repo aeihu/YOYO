@@ -7,6 +7,7 @@
 */
 
 #include "CCommon.h"
+#include  <io.h>
 
 CCommon CCommon::_Common;
 
@@ -113,6 +114,11 @@ void CCommon::SetValue(Object json)
 
 unsigned long CCommon::GetTicks(){
     return __clock.getElapsedTime().asMilliseconds();
+}
+
+bool CCommon::IsFileExist(string filename)
+{
+	return (access(filename.c_str(), 0) == 0);
 }
 
 //void CCommon::SaveSysData()
