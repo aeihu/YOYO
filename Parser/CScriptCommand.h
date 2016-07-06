@@ -85,8 +85,8 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args);
 //int Cmd_SetVariable(lua_State* args);
 //int Cmd_DelVariable(lua_State* args);
 
-int Cmd_DelAction(lua_State* args);
-int Cmd_SkipAction(lua_State* args);
+//int Cmd_DelAction(lua_State* args);
+//int Cmd_SkipAction(lua_State* args);
 
 int Cmd_ShowCurtain(lua_State* args);
 int Cmd_HideCurtain(lua_State* args);
@@ -97,7 +97,7 @@ int Cmd_MoveCamera(lua_State* args);
 int Cmd_ScaleCamera(lua_State* args);
 int Cmd_RotationCamera(lua_State* args);
 
-int Cmd_Pause(lua_State* args);
+//int Cmd_Pause(lua_State* args);
 int Cmd_LoadScript(lua_State* args);
 
 #endif

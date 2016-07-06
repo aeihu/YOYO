@@ -161,6 +161,7 @@ CImgLayer* CImgLayer::Create(const char* filename)
 
 void CImgLayer::OnLoop()
 {
+	CBaiscProperties::OnLoop();
     _isShowed = _alpha > 0 ? true : false;
     
     if (_sprite.getColor().a != _alpha ||

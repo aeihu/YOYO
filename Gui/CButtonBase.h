@@ -12,9 +12,9 @@
 #include <string>
 #include <map>
 #include "../Animation/CAnimation.h"
-#include "../Parser/CParser.h"
 #include "../Graphics/CSequenceOfSprite.h"
 #include "../Common/CConfigFile.h"
+#include "../Common/CResourceControl.h"
 
 using namespace std;
 

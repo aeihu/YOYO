@@ -77,6 +77,36 @@ CActionTo* CImageBaseClass::CreateActionOfOriginYTo(size_t elapsed, float y, boo
     return new CActionTo(&_origin.y, elapsed, y, restore, pause);
 }
 
+void CImageBaseClass::CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginTo(elapsed, x, y, restore, pause));
+}
+
+void CImageBaseClass::CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginXTo(elapsed, x, restore, pause));
+}
+
+void CImageBaseClass::CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginYTo(elapsed, y, restore, pause));
+}
+
+void CImageBaseClass::CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginBy(elapsed, x, y, restore, pause));
+}
+
+void CImageBaseClass::CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginXBy(elapsed, x, restore, pause));
+}
+
+void CImageBaseClass::CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfOriginYBy(elapsed, y, restore, pause));
+}
+
 const sf::Vector2f& CImageBaseClass::GetOrigin() const
 {
     return _origin;

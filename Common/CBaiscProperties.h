@@ -25,6 +25,7 @@ class CBaiscProperties : public CObject
         sf::Vector2f                        _coordinate;
         float                               _rotation;
 		CSimultaneousOfAction				_actionList;
+		static bool							_isActionRunning;
     public:
         CBaiscProperties();
 
@@ -79,7 +80,7 @@ class CBaiscProperties : public CObject
 		virtual void CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore, bool pause);
 		virtual void CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore, bool pause);
 
-		virtual void OnLoop() = 0;
+		virtual void OnLoop();
 		virtual void OnCleanup();
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);

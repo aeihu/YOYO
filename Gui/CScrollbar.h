@@ -10,6 +10,7 @@
     #define _CSCROLLBAR_H_
 
 #include "CButtonBase.h"
+#include "CBox.h"
 
 class CScrollbar : public CBox
 {

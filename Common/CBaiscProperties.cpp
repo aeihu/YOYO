@@ -9,6 +9,8 @@
 #include "CBaiscProperties.h"
 #include "CCommon.h"
 
+bool CBaiscProperties::_isActionRunning = false;
+
 CBaiscProperties::CBaiscProperties()
 {
     _rotation = 0.0f;
@@ -214,6 +216,11 @@ void CBaiscProperties::CreateActionOfMoveXByForSelf(size_t elapsed, float x, boo
 void CBaiscProperties::CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore, bool pause)
 {
 	_actionList.AddAction(CreateActionOfMoveYBy(elapsed, y, restore, pause));
+}
+
+void CBaiscProperties::OnLoop()
+{
+	_isActionRunning = _actionList.OnLoop();
 }
 
 void CBaiscProperties::OnCleanup()

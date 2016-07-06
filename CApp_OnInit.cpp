@@ -17,7 +17,6 @@ bool CApp::OnInit()
     if (!CCommon::_Common.OnInit())
         return false;
 
-    CParser::_Parser.SetRunning(&_running);
     _EndableOfIcon = CSurface::OnLoad(CCommon::_Common.GAME_ICON.c_str(), _icon);
 
     if (CCommon::_Common.FULL_SCREEN)

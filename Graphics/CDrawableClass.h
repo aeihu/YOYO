@@ -44,6 +44,21 @@ class CDrawableClass : public CBaiscProperties
         virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
         virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
 
+		/////////////////////////////////////////////////////////
+
+		virtual void CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause);
+		virtual void CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore, bool pause);
+		virtual void CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore, bool pause);
+		virtual void CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore, bool pause);
+
+		virtual void CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause);
+		virtual void CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore, bool pause);
+		virtual void CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore, bool pause);
+		virtual void CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore, bool pause);
+
+		virtual void CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore, bool pause);
+		virtual void CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore, bool pause);
+
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}
         virtual bool OnRButtonUp(int mX, int mY){return false;}

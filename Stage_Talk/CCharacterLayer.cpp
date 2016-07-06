@@ -75,6 +75,7 @@ void CCharacterLayer::SetVoice(vector<string> args)
 
 void CCharacterLayer::OnLoop()
 {
+	CBaiscProperties::OnLoop();
     if (_isBodyChangeing){ 
         if (_simAct.OnLoop()){
             _isBodyChangeing = false;

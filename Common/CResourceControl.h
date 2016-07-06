@@ -14,12 +14,13 @@
 #include "CEvent.h"
 #include "CObjectControl.h"
 #include "../Graphics/CCamera.h"
-#include "../Script/CScript.h"
 #include "../Sound/CSoundBank.h"
 #include "../Graphics/CDrawableObjectControl.h"
 #include "../Graphics/CCameraControl.h"
 #include "../Action/CClassFuncOfAction.h"
 #include "../Effect/CScreenEffect.h"
+#include "../GSM_Window/CMessageBox.h"
+#include "../Parser/CLua.h"
 
 using namespace std;
 
@@ -27,22 +28,25 @@ using namespace std;
 LoadScript()->BeginLoadProcess()->LoadAsset()->EndLoadProcess()
 */
 
-class CResourceControl : public CScript
+class CResourceControl// : public CScript
 {
     private:
         sf::Sprite                      _spriteUp;
         sf::Sprite                      _spriteDown;
         sf::Thread                      _threadOfLoading;
 
-        string                          _fileNameOfScript;
+		string                          _fileNameOfScriptForLoadingBegin;
+		string                          _fileNameOfScriptForLoadingfinish;
+		string                          _fileNameOfCurrentRunningScript;
+
         unsigned long                   _oldTimeForAuto;
 
         Object                          _playerData;
-        Object                          _script;
+        Object                          _scriptConfig;
         Object                          _gameBaiscAsset;
 
         bool                            _drawableObjCtrlEnable;
-        bool                            _loadingObjCtrlEnable;
+		bool                            _loadingProcessEnable;
         bool                            _pauseOfAction;
         bool                            _pauseOfUser;
         bool                            _isLoadPlayerData;
@@ -56,8 +60,7 @@ class CResourceControl : public CScript
         
         void LoadPlayerDataProcess();
         void BeginLoadProcess();
-        void EndLoadProcess();
-        void LoadAsset();
+		void ThreadOfLoadAsset();
         void Compare(Object& src, Object& des, string colName);
 
         bool JsonProcess(Object& src, Object& des, string colName);
@@ -81,11 +84,13 @@ class CResourceControl : public CScript
         
         void Skip();
         bool AddVariable(string name, string val);
-        bool SetVariable(string name, string val);
+		bool SetVariable(string name, string val);
+		bool DelVariable(string name);
+
+		bool IsLoadingProcessRunning() const;
         bool GetAuto() const;
         void SetAuto(bool isAuto);
         string GetVariable(string name);
-        bool DelVariable(string name);
         void PauseForUserConfrim();
 
         bool OnInit(string filename, sf::RenderWindow* Window);

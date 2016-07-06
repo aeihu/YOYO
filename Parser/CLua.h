@@ -16,12 +16,12 @@ class CLua
 {
 	public:
 		static CLua _Lua;
+
 		CLua();
 		~CLua();
 
 		int OnInit();
 		bool LoadScript(string filename);
-		void RunScript();
 		void OnCleanup();
 	private:
 		lua_State* _luaState;
@@ -29,4 +29,5 @@ class CLua
 		sf::Mutex _mutex;
 		string _currentScriptName;
 
+		void RunScript();
 };

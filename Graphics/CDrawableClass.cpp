@@ -162,6 +162,58 @@ CActionBy* CDrawableClass::CreateActionOfAlphaBy(size_t elapsed, float alpha, bo
     return new CActionBy(&_alpha, elapsed, alpha, restore, pause);
 }
 
+////////////////////////////////////////////////
+
+void CDrawableClass::CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorTo(elapsed, r, g, b, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorRedTo(elapsed, r, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorGreenTo(elapsed, g, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorBlueTo(elapsed, b, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorBy(elapsed, r, g, b, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorRedBy(elapsed, r, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorGreenBy(elapsed, g, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfColorBlueBy(elapsed, b, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfAlphaTo(elapsed, alpha, restore, pause));
+}
+
+void CDrawableClass::CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore, bool pause)
+{
+	_actionList.AddAction(CreateActionOfAlphaBy(elapsed, alpha, restore, pause));
+}
+
 void CDrawableClass::OnSaveData(Object& json) const
 {
     CBaiscProperties::OnSaveData(json);

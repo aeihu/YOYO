@@ -70,12 +70,12 @@ void CApp::SetFullScreen(bool isFirst)
 #ifdef _DEBUG
 void FuncOfStdin()
 {
-    string __cmd;
-    while (true){
-        getline(cin,__cmd);
+    //string __cmd;
+    //while (true){
+    //    getline(cin,__cmd);
 
-        CParser::_Parser.CParser::ExecuteCmd(__cmd, NULL, false);
-    }
+    //    CParser::_Parser.CParser::ExecuteCmd(__cmd, NULL, false);
+    //}
 }
 #endif
 //------------------------------------------------------------------------------

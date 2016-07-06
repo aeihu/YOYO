@@ -93,23 +93,23 @@ int CLua::OnInit()
 		{ "zoom_camera", Cmd_ScaleCamera },
 		{ "rota_camera", Cmd_RotationCamera },
 
-		{ "add_var", Cmd_AddVariable },
-		{ "set_var", Cmd_SetVariable },
-		{ "del_var", Cmd_DelVariable },
+		//{ "add_var", Cmd_AddVariable },
+		//{ "set_var", Cmd_SetVariable },
+		//{ "del_var", Cmd_DelVariable },
 
-		{ "del_act", Cmd_DelAction },
-		{ "skip_act", Cmd_SkipAction },
+		//{ "del_act", Cmd_DelAction },
+		//{ "skip_act", Cmd_SkipAction },
 
 		{ "show_curtain", Cmd_ShowCurtain },
 		{ "hide_curtain", Cmd_HideCurtain },
 		{ "color_curtain", Cmd_ColorCurtain },
 
-		{ "show_particle", Cmd_ShowParticleSystem },
-		{ "hide_particle", Cmd_HideParticleSystem },
-		{ "order_particle", Cmd_SetParticleSystemLayerOrder },
+		//{ "show_particle", Cmd_ShowParticleSystem },
+		//{ "hide_particle", Cmd_HideParticleSystem },
+		//{ "order_particle", Cmd_SetParticleSystemLayerOrder },
 
-		{ "delay", Cmd_Delay },
-		{ "pause", Cmd_Pause },
+		//{ "delay", Cmd_Delay },
+		//{ "pause", Cmd_Pause },
 		{ "load_script", Cmd_LoadScript },
 		{ "exit", Cmd_LoadScript },
 		{ NULL, NULL }

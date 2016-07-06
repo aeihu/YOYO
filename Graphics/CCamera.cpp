@@ -71,6 +71,7 @@ void CCamera::UnBind()
 
 void CCamera::OnLoop()
 {
+	CBaiscProperties::OnLoop();
     bool __isChanged = false;
     
     if (_coordinate != _camera.getCenter()){

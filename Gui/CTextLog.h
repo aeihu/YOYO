@@ -11,6 +11,7 @@
 
 #include "CButtonBase.h"
 #include "../Sound/CSoundBank.h"
+#include "../Text/CTextFunction.h"
 
 class CTextLog
 {

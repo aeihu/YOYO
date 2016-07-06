@@ -171,6 +171,7 @@ void CText::SetStyle(vector<string> args)
 
 void CText::OnLoop()
 {
+	CBaiscProperties::_actionList.OnLoop();
     _isShowed = _alpha > 0 ? true : false;
 
     if (_sfText.getColor().a != _alpha){

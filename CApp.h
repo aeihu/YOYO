@@ -15,7 +15,6 @@
 #include "Common/CEvent.h"
 #include "GSM_Window/CMessageBox.h"
 #include "Stage_Talk/CCharacterLayer.h"
-#include "Parser/CParser.h"
 #include "Parser/CScriptCommand.h"
 #include "Sound/CSoundBank.h"
 #include "Gui/CButton.h"
