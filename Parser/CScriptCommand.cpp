@@ -135,7 +135,7 @@ bool Common_FuncOfColor(string objTypeName, lua_State* args)
 	if (objTypeName != "ScrEffect")
 	{
 
-		if (Common_GetValue(args, "n", __name))
+		if (!Common_GetValue(args, "n", __name))
 		{
 			cout << __funcName << "(): parameter \"n\" must be need." << endl;
 			return false;
@@ -211,7 +211,7 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
@@ -246,18 +246,20 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
             __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
         }
 
-        float* __x = &__obj->GetPosition().x;
-        float* __y = &__obj->GetPosition().y;
+        float __x = __obj->GetPosition().x;
+        float __y = __obj->GetPosition().y;
 
 		float __vx;
-		if (Common_GetValue(args, "x", __vx)) *__x = __vx; // x
+		if (Common_GetValue(args, "x", __vx)) 
+			__x = __vx; // x
 
 		float __vy;
-		if (Common_GetValue(args, "y", __vy)) *__y = __vy; // x
+		if (Common_GetValue(args, "y", __vy)) 
+			__y = __vy; // x
         
         __sim->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset, __pause));
 		__obj->AddAction(__sim);
-        __obj->SetPosition(*__x, *__y);
+        __obj->SetPosition(__x, __y);
         return true;
     }
     else
@@ -280,7 +282,7 @@ bool Common_FuncOfHide(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
@@ -323,7 +325,7 @@ bool Common_FuncOfMove(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
@@ -409,7 +411,7 @@ bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
@@ -490,14 +492,14 @@ bool Common_FuncOfRotation(string objTypeName, lua_State* args)
 	}
     
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
 	}
 
 	float __rotation;
-	if (Common_GetValue(args, "v", __rotation))
+	if (!Common_GetValue(args, "v", __rotation))
 	{
 		cout << __funcName << "(): parameter \"v\" must be need." << endl;
 		return false;
@@ -554,7 +556,7 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
@@ -576,7 +578,7 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
 
 	if (objTypeName == "Camera"){
 		float __z;
-		if (Common_GetValue(args, "z", __z))
+		if (!Common_GetValue(args, "z", __z))
 		{
 			cout << __funcName << "(): parameter \"z\" must be need." << endl;
 			return false;
@@ -661,14 +663,14 @@ bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << __funcName << "(): parameter \"n\" must be need." << endl;
 		return false;
 	}
 
 	string __layer;
-	if (Common_GetValue(args, "l", __layer))
+	if (!Common_GetValue(args, "l", __layer))
 	{
 		cout << __funcName << "(): parameter \"l\" must be need." << endl;
 		return false;
@@ -877,7 +879,7 @@ int Cmd_SetPoseCharacterLayer(lua_State* args)
 	}
 
 	string __name;
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << "Cmd_SetPoseCharacterLayer(): parameter \"n\" must be need." << endl;
 		return false;
@@ -1061,7 +1063,7 @@ int Cmd_SetText(lua_State* args)
 	}
 
 	string __name;//name
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << "Cmd_SetText(): parameter \"n\" must be need." << endl;
 		return false;
@@ -1199,7 +1201,7 @@ int Cmd_PlayBGM(lua_State* args)
 	}
 
 	string __name;//name
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << "Cmd_PlayBGM(): parameter \"n\" must be need." << endl;
 		return false;
@@ -1333,7 +1335,7 @@ int Cmd_PlaySE(lua_State* args)
 	}
 
 	string __name;//name
-	if (Common_GetValue(args, "n", __name))
+	if (!Common_GetValue(args, "n", __name))
 	{
 		cout << "Cmd_SetBGMVolume(): parameter \"n\" must be need." << endl;
 		return false;
@@ -1435,14 +1437,14 @@ int Cmd_Message(lua_State* args)
 	}
 
 	string __msgBoxName;//MessageBoxName
-	if (Common_GetValue(args, "n", __msgBoxName))
+	if (!Common_GetValue(args, "n", __msgBoxName))
 	{
 		cout << "Cmd_Message(): parameter \"n\" must be need." << endl;
 		return false;
 	}
 
 	string __msg;//message
-	if (Common_GetValue(args, "m", __msg))
+	if (!Common_GetValue(args, "m", __msg))
 	{
 		cout << "Cmd_Message(): parameter \"m\" must be need." << endl;
 		return false;
@@ -1530,7 +1532,7 @@ int Cmd_CleanMessageBox(lua_State* args)
 	}
 
 	string __msgBoxName;//MessageBoxName
-	if (Common_GetValue(args, "n", __msgBoxName))
+	if (!Common_GetValue(args, "n", __msgBoxName))
 	{
 		cout << "Cmd_CleanMessageBox(): parameter \"n\" must be need." << endl;
 		return false;

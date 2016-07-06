@@ -9,22 +9,8 @@
 #include "CLua.h"
 #include "CScriptCommand.h"
 
-CLua CLua::_Lua;
-
-CLua::CLua() : _thread(&CLua::RunScript, this)
+int RegYOYOLibs(lua_State *L)
 {
-	_luaState = NULL;
-	_currentScriptName = "";
-}
-
-CLua::~CLua()
-{
-}
-
-int CLua::OnInit()
-{
-	_luaState = luaL_newstate();
-
 	static const luaL_Reg __YOYOlibs[] =
 	{
 		{ "show_chara", Cmd_ShowCharacterLayer },
@@ -114,11 +100,33 @@ int CLua::OnInit()
 		{ "exit", Cmd_LoadScript },
 		{ NULL, NULL }
 	};
+
+	luaL_newlib(L, __YOYOlibs);
+	return 1;
+}
+
+///////////////////////////////////////
+
+CLua::CLua() : _thread(&CLua::RunScript, this)
+{
+	_luaState = NULL;
+	_currentScriptName = "";
+}
+
+CLua::~CLua()
+{
+}
+
+bool CLua::OnInit()
+{
+	_luaState = luaL_newstate();
+	
 	//2.设置待注册的Lua标准库，这个库是给你的Lua脚本用的
 	//因为接下来我们只想在Lua脚本里面输出hello world，所以只引入基本库就可以了
 	static const luaL_Reg lualibs[] =
 	{
 		{ "base", luaopen_base },
+		{ "YOYO", RegYOYOLibs },
 		{ NULL, NULL }
 	};
 	//3.注册Lua标准库并清空栈
@@ -129,7 +137,7 @@ int CLua::OnInit()
 		lua_pop(_luaState, 1);
 	}
 
-	return 0;
+	return true;
 }
 
 void CLua::RunScript()

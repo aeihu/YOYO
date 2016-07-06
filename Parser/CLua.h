@@ -6,6 +6,9 @@
 * Version 3(GPLv3) as published by the Free Software Foundation.
 */
 
+#ifndef _CLUA_H_ 
+	#define _CLUA_H_
+
 #include "lua.hpp"
 #include <string>
 #include <SFML/System.hpp>
@@ -15,12 +18,10 @@ using namespace std;
 class CLua
 {
 	public:
-		static CLua _Lua;
-
 		CLua();
 		~CLua();
 
-		int OnInit();
+		bool OnInit();
 		bool LoadScript(string filename);
 		void OnCleanup();
 	private:
@@ -31,3 +32,5 @@ class CLua
 
 		void RunScript();
 };
+
+#endif
