@@ -110,8 +110,6 @@ bool Common_GetValue(lua_State* L, const char* fieldName, vector<string>& val)
 
 bool Common_FuncOfColor(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
     string __funcName = "Cmd_Color" + objTypeName;
 
 	{
@@ -157,7 +155,7 @@ bool Common_FuncOfColor(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
 
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -201,8 +199,6 @@ bool Common_FuncOfColor(string objTypeName, lua_State* args)
 
 bool Common_FuncOfShow(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
     string __funcName = "Cmd_Show" + objTypeName;
 
 	{
@@ -233,7 +229,7 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
 
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -272,8 +268,6 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
 
 bool Common_FuncOfHide(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
     string __funcName = "Cmd_Hide" + objTypeName;
 
 	{
@@ -301,7 +295,7 @@ bool Common_FuncOfHide(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
     
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -317,8 +311,6 @@ bool Common_FuncOfHide(string objTypeName, lua_State* args)
 
 bool Common_FuncOfMove(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
 	string __funcName = "Cmd_Move" + objTypeName;
 
 	{
@@ -365,7 +357,7 @@ bool Common_FuncOfMove(string objTypeName, lua_State* args)
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        CDrawableObjectControl* __doc = __isLoadingInterface ? 
+        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -405,8 +397,6 @@ bool Common_FuncOfMove(string objTypeName, lua_State* args)
 
 bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
 	string __funcName = "Cmd_Origin" + objTypeName;
 
 	{
@@ -447,7 +437,7 @@ bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
     
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -488,8 +478,6 @@ bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
 
 bool Common_FuncOfRotation(string objTypeName, lua_State* args)
 {
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
 	string __funcName = "Cmd_Rotation" + objTypeName;
 
 	{
@@ -533,7 +521,7 @@ bool Common_FuncOfRotation(string objTypeName, lua_State* args)
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        CDrawableObjectControl* __doc = __isLoadingInterface ? 
+        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -554,8 +542,6 @@ bool Common_FuncOfRotation(string objTypeName, lua_State* args)
 
 bool Common_FuncOfScale(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
 	string __funcName = "Cmd_Scale" + objTypeName;
 
 	{
@@ -624,7 +610,7 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
 			return false;
 		}
 
-        CDrawableObjectControl* __doc = __isLoadingInterface ? 
+        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -663,8 +649,6 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
 
 bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 { 
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
     string __funcName = "Cmd_SetLayerOrder" + objTypeName;
 
 	{
@@ -690,7 +674,7 @@ bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 		return false;
 	}
 
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -712,8 +696,6 @@ bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 
 bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
 {
-	bool __isLoadingInterface = args[0] == "q(-_-)p";
-
 	string __funcName = "Cmd_Flip" + flipx ? "X" : "Y" + objTypeName;
 
 	{
@@ -731,7 +713,7 @@ bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
 		return false;
 	}
 
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -753,8 +735,6 @@ bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
 
 bool Common_FuncOfScreen(lua_State* args, bool isShow)
 {
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
     string __funcName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
 
 	{
@@ -781,7 +761,7 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
 	string __layer;
 	bool __lIsBe  = Common_GetValue(args, "l", __layer);
     
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -823,13 +803,13 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
 		switch (__Type)
 		{
 			case 1:
-				__obj->CreateActionGradientForSelf(__inte, isShow, __left, __pause);
+				__obj->CreateActionGradientForSelf(__inte, isShow, __right, __pause);
 				break;
 			case 2:
-				__obj->CreateActionLouverForSelf(__inte, isShow, __left, false, __pause);
+				__obj->CreateActionLouverForSelf(__inte, isShow, __right, false, __pause);
 				break;
 			case 3:
-				__obj->CreateActionLouverForSelf(__inte, isShow, __left, true, __pause);
+				__obj->CreateActionLouverForSelf(__inte, isShow, __right, true, __pause);
 				break;
 			default:
 				__obj->CreateActionShowOrHideForSelf(__inte, isShow, __pause);
@@ -840,21 +820,22 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
     return true;
 }
 
-int Cmd_FuncOfActionForDeleteOrSkip(string funcName, lua_State* args, bool skip)
-{
-	CActionSet& act = &CResourceControl::_ResourceManager._ActionControl;
+//int Cmd_FuncOfActionForDeleteOrSkip(string funcName, lua_State* args, bool skip)
+//{
+//	CActionSet& act = &CResourceControl::_ResourceManager._ActionControl;
+//
+//    if (act == NULL){
+//        cout << funcName << "(): action set is null." <<endl;
+//        return false;
+//    }
+//    
+//    for (size_t i=0; i<args.size(); i++){
+//        act->DeleteAct(args[i], skip);
+//    }
+//
+//    return true;
+//}
 
-    if (act == NULL){
-        cout << funcName << "(): action set is null." <<endl;
-        return false;
-    }
-    
-    for (size_t i=0; i<args.size(); i++){
-        act->DeleteAct(args[i], skip);
-    }
-
-    return true;
-}
 /*==============================================================
     commad of script
 ===============================================================*/
@@ -886,13 +867,14 @@ int Cmd_HideCharacterLayer(lua_State* args)
 
 int Cmd_SetPoseCharacterLayer(lua_State* args)
 {
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-    
-    if (args.size() < 1){
-        cout << "Cmd_SetPoseCharacterLayer(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_SetPoseCharacterLayer(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
 	string __name;
 	if (Common_GetValue(args, "n", __name))
@@ -919,7 +901,7 @@ int Cmd_SetPoseCharacterLayer(lua_State* args)
     __args.push_back(__mouth);
 	__args.push_back(__skip);
     
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1069,13 +1051,14 @@ int Cmd_ColorText(lua_State* args)
 
 int Cmd_SetText(lua_State* args)
 {
-    bool __isLoadingInterface = args[0] == "q(-_-)p";
-
-    if (args.size() < 1){
-        cout << "Cmd_SetText(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_SetText(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
 	string __name;//name
 	if (Common_GetValue(args, "n", __name))
@@ -1087,16 +1070,16 @@ int Cmd_SetText(lua_State* args)
 	string __font = "";//font
 	Common_GetValue(args, "f", __font);
 
-	string __size = "";//size
+	size_t __size = 0;//size
 	Common_GetValue(args, "s", __size);
 
 	string __text = "";//text
-	Common_GetValue(args, "t", __text);
+	bool _isBeT = Common_GetValue(args, "t", __text);
 
-	string __shadow = "";//shadow
+	bool __shadow = "";//shadow
 	Common_GetValue(args, "h", __shadow);
 
-	string __shadowpercent = "";//shadowpercent
+	float __shadowpercent = -1.0f;//shadowpercent
 	Common_GetValue(args, "c", __shadowpercent);
 
 	string __colorRed = "";//color red
@@ -1123,7 +1106,7 @@ int Cmd_SetText(lua_State* args)
 	string __styleStrikeThrough = "";//style strikeThrough
 	Common_GetValue(args, "ss", __styleStrikeThrough);
 
-    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1133,37 +1116,24 @@ int Cmd_SetText(lua_State* args)
         return false;
     }
     
-    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
-    vector<string> __args;
     CText* __txt = static_cast<CText*>(__doc->GetDrawableObject("Text:"+__name));
     
-    if (__values.count("-h") > 0){
-        __args.push_back("");
-    }
-    __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetShadowEnable, __args));
+	__txt->SetShadowEnable(__shadow);
 
-	if (__shadowpercent != ""){
-        __args.clear();
-		__args.push_back(__shadowpercent);
-        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetShadowPercent, __args));
+	if (!(__shadowpercent < 0.0f)){
+		__txt->SetShadowPercent(__shadowpercent);
     }
 
 	if (__font != ""){
-        __args.clear();
-		__args.push_back(__font);
-        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetFont, __args));
+		__txt->SetFont(__font);
     }
 
-	if (__size != ""){
-        __args.clear();
-		__args.push_back(__size);
-        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetCharacterSize, __args));
+	if (__size > 0){
+		__txt->SetCharacterSize(__size);
     }
     
-	if (__text != ""){
-        __args.clear();
-		__args.push_back(__text);
-        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetString, __args));
+	if (_isBeT){
+		__txt->SetString(__text);
     }
     
 	if (__colorRed != "" ||
@@ -1184,23 +1154,19 @@ int Cmd_SetText(lua_State* args)
 			__color.b = atoi(__colorBlue.c_str());
         }
 
-        __args.clear();
-        __args.push_back(__values["-cr"][0]);
-        __args.push_back(__values["-cg"][0]);
-        __args.push_back(__values["-cb"][0]);
-        __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+		__txt->SetColor(__color.r, __color.g, __color.b);
     }
 
+	vector<string> __args;
 	if (__styleRegular != "" ||
 		__styleBold != "" ||
 		__styleItalic != "" ||
 		__styleUnderlined != "" ||
-		__styleStrikeThrough != ""){
-            
-        __args.clear();
+		__styleStrikeThrough != "")
+	{        
 		if (__styleRegular != ""){
             __args.push_back("-sr");
-            __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+			__txt->SetStyle(__args);
         }else{
 			if (__styleBold != "")
                 __args.push_back("-sb");
@@ -1214,21 +1180,23 @@ int Cmd_SetText(lua_State* args)
 			if (__styleStrikeThrough != "")
                 __args.push_back("-ss");
 
-            __sim->AddAction(new CClassFuncArgsOfAction<CText>(__txt, &CText::SetColor, __args));
+			__txt->SetStyle(__args);
         }
     }
-	/////// wei wan cheng
-	__txt->AddAction(__sim);
+
     return true;
 }
 
 int Cmd_PlayBGM(lua_State* args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_PlayBGM(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_PlayBGM(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
 	string __name;//name
 	if (Common_GetValue(args, "n", __name))
@@ -1249,14 +1217,17 @@ int Cmd_PlayBGM(lua_State* args)
 
 int Cmd_SetBGMVolume(lua_State* args)
 {
-    if (args.size() < 1){
-        cout << "Cmd_SetBGMVolume(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }   
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_SetBGMVolume(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
 	float __vol = 1.0f;//vol
-	if (Common_GetValue(args, "v", __vol))
+	if (!Common_GetValue(args, "v", __vol))
 	{
 		cout << "Cmd_SetBGMVolume(): parameter \"v\" must be need." << endl;
 		return false;
@@ -1275,9 +1246,13 @@ int Cmd_SetBGMVolume(lua_State* args)
 	Common_GetValue(args, "r", __reset);
 
     if (__isBy)
-        act->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(__inte, __vol, __reset, __pause));
+		CResourceControl::_ResourceManager._ActionControl.AddAction(
+			CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(
+				__inte, __vol, __reset, __pause));
     else
-        act->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, __vol, __reset, __pause));
+		CResourceControl::_ResourceManager._ActionControl.AddAction(
+			CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(
+				__inte, __vol, __reset, __pause));
 
     return true;
 }
@@ -1296,80 +1271,81 @@ int Cmd_ResumeBGM(lua_State* args)
 
 int Cmd_StopBGM(lua_State* args)
 {
-    if (args.size() < 1){
-        act->AddAction(new CClassFuncOfAction<CSoundBank>(
-            &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_StopBGM(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
-        return true;
-    }
+	size_t __inte = 0;//incr
+	Common_GetValue(args, "i", __inte);
 
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-p", FLAG_NONPARAMETRIC));    //pause
-    __flags.push_back(pair<string, ENUM_FLAG>("-i", FLAG_OPTIONAL));        //incr
-
-    map<string, vector<string> > __values;
-    if (!Common_ArgsToKV("Cmd_SetBGMVolume", __flags, args, __values))
-        return false;
-
-    size_t __inte = __values.count("-i") == 0 ? 
-        CCommon::_Common.INTERVAL : atoi(__values["-i"][0].c_str());
-    bool __pause = __values.count("-p") == 0 ? false : true;
+	bool __pause = 0;//pause
+	Common_GetValue(args, "p", __pause);
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
     __seq->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, 0.0f, false, __pause));
     __seq->AddAction(new CClassFuncOfAction<CSoundBank>(
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
     
-    act->AddAction(__seq);
+	CResourceControl::_ResourceManager._ActionControl.AddAction(__seq);
     return true;
 }
 
 int Cmd_StopSE(lua_State* args)
 {
-    args.erase(args.begin());
-    if (args.size() < 1){
-        cout << "Cmd_StopSE(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_StopSE(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
     
-    vector<string> __args;
-    __args.push_back(args[0]);
-    act->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
-        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopSE, __args));
+	vector<string> __args;
+	if (!Common_GetValue(args, "n", __args))
+	{
+		cout << "Cmd_StopSE(): parameter \"n\" must be need." << endl;
+		return false;
+	}
+
+	for (size_t i = 0; i < __args.size(); i++)
+	{
+		CResourceControl::_ResourceManager._SoundControl.StopSE(__args[i]);
+	}
 
     return true;
 }
 
 int Cmd_PlaySE(lua_State* args)
 {
-    args.erase(args.begin());
-    if (args.size() < 1){
-        cout << "Cmd_PlaySE(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
-    
-    std::list<pair<string, ENUM_FLAG> > __flags;
-    __flags.push_back(pair<string, ENUM_FLAG>("-l", FLAG_NONPARAMETRIC));    //loop
-    __flags.push_back(pair<string, ENUM_FLAG>("-n", FLAG_NECESSITY));    //name
-    __flags.push_back(pair<string, ENUM_FLAG>("-v", FLAG_OPTIONAL));    //vol
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_PlaySE(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
-    map<string, vector<string> > __values;
-    if (!Common_ArgsToKV("Cmd_PlaySE", __flags, args, __values))
-        return false;
+	string __name;//name
+	if (Common_GetValue(args, "n", __name))
+	{
+		cout << "Cmd_SetBGMVolume(): parameter \"n\" must be need." << endl;
+		return false;
+	}
 
-    string& __name = __values["-n"][0];
-    string& __vol = __values.count("-v") == 0 ? "1" : __values["-v"][0];
-    
-    vector<string> __args;
-    __args.push_back(__name);
-    __args.push_back(__vol);
-    if (__values.count("-l") > 0)
-        __args.push_back("");
+	float __vol = 1.0f;//vol
+	Common_GetValue(args, "v", __vol);
 
-    act->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
-        &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlaySE, __args));
+	bool __loop = false; //loop
+	Common_GetValue(args, "l", __loop);
+
+	CResourceControl::_ResourceManager._SoundControl.PlaySE(__name, __vol, __loop);
 
     return true;
 
@@ -1449,6 +1425,15 @@ int Cmd_ColorButton(lua_State* args)
 
 int Cmd_Message(lua_State* args)
 {
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_Message(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
+
 	string __msgBoxName;//MessageBoxName
 	if (Common_GetValue(args, "n", __msgBoxName))
 	{
@@ -1535,30 +1520,33 @@ int Cmd_SetMessageBoxLayerOrder(lua_State* args)
 
 int Cmd_CleanMessageBox(lua_State* args)
 {
-    args.erase(args.begin());
-    
-    if (act == NULL){
-        cout << "Cmd_CleanMessageBox(): action set is null." <<endl;
-        return false;
-    }
+	{
+		int __numOfargs = lua_gettop(args);
+		if (__numOfargs < 1){
+			cout << "Cmd_CleanMessageBox(): command invaild. can't set " << __numOfargs
+				<< " argument(s) in the command." << endl;
+			return false;
+		}
+	}
 
-    if (args.size() < 1){
-        cout << "Cmd_CleanMessageBox(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+	string __msgBoxName;//MessageBoxName
+	if (Common_GetValue(args, "n", __msgBoxName))
+	{
+		cout << "Cmd_CleanMessageBox(): parameter \"n\" must be need." << endl;
+		return false;
+	}
     
     CDrawableClass* __obj = 
-        CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:"+args[0]);
+		CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:" + __msgBoxName);
 
     if(__obj == NULL){
-        cout << "Cmd_CleanMessageBox(): MessageBox \"" << args[0] << "\" has no existed." <<endl;
+		cout << "Cmd_CleanMessageBox(): MessageBox \"" << __msgBoxName << "\" has no existed." << endl;
         return false;
     }
     
     CMessageBox* __msgbox = static_cast<CMessageBox*>(__obj);
 
-    act->AddAction(new CClassFuncOfAction<CMessageBox>(__msgbox, &CMessageBox::ClearText));
+	__msgbox->ClearText();
     return true;
 }
 
@@ -1579,7 +1567,7 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 
 //int Cmd_ShowParticleSystem(lua_State* args)
 //{
-//    bool __isLoadingInterface = args[0] == "q(-_-)p";
+//    bool CResourceControl::_ResourceManager.IsLoadingProcessRunning() = args[0] == "q(-_-)p";
 //    args.erase(args.begin());
 //
 //    if (args.size() < 1){
@@ -1588,7 +1576,7 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 //        return false;
 //    }
 //    
-//    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+//    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
 //        &CResourceControl::_ResourceManager._LoadingObjectControl
 //            :
 //        &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1612,7 +1600,7 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 //
 //int Cmd_HideParticleSystem(lua_State* args)
 //{
-//    bool __isLoadingInterface = args[0] == "q(-_-)p";
+//    bool CResourceControl::_ResourceManager.IsLoadingProcessRunning() = args[0] == "q(-_-)p";
 //    args.erase(args.begin());
 //
 //    if (args.size() < 1){
@@ -1621,7 +1609,7 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 //        return false;
 //    }
 //
-//    CDrawableObjectControl* __doc = __isLoadingInterface ? 
+//    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
 //        &CResourceControl::_ResourceManager._LoadingObjectControl
 //            :
 //        &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1696,15 +1684,15 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 //    return true;
 //}
 
-int Cmd_DelAction(lua_State* args)
-{
-    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_DelAction", args, act, false);
-}
-
-int Cmd_SkipAction(lua_State* args)
-{
-    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_SkipAction", args, act, true);
-}
+//int Cmd_DelAction(lua_State* args)
+//{
+//    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_DelAction", args, act, false);
+//}
+//
+//int Cmd_SkipAction(lua_State* args)
+//{
+//    return Cmd_FuncOfActionForDeleteOrSkip("Cmd_SkipAction", args, act, true);
+//}
 
 int Cmd_ShowCurtain(lua_State* args)
 {
@@ -1723,16 +1711,14 @@ int Cmd_ColorCurtain(lua_State* args)
 
 int Cmd_UseCamera(lua_State* args)
 {
-    args.erase(args.begin());
-    if (args.size() == 0){
-        act->AddAction(new CClassFuncOfAction<CCameraControl>(
-            &CResourceControl::_ResourceManager._CameraControl,
-            &CCameraControl::UseDefaultCamera));
+	int __numOfargs = lua_gettop(args);
+	if (__numOfargs == 0){
+		CResourceControl::_ResourceManager._CameraControl.UseDefaultCamera();
     }
-    else{
-        act->AddAction(new CClassFuncArgsOfAction<CCameraControl>(
-            &CResourceControl::_ResourceManager._CameraControl, 
-            &CCameraControl::UseCamera, args));
+	else{
+		string __name = "";// Name
+		Common_GetValue(args, "n", __name);
+		CResourceControl::_ResourceManager._CameraControl.UseCamera(__name);
     }
     return true;
 }
@@ -1752,35 +1738,31 @@ int Cmd_RotationCamera(lua_State* args)
     return Common_FuncOfRotation("Camera", args);
 }
 
-int Cmd_Pause(lua_State* args)
-{
-    args.erase(args.begin());
-
-    if (act == NULL){
-        cout << "Cmd_Pause(): action set is null." <<endl;
-        return false;
-    }
-
-    act->AddAction(new CClassFuncOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::PauseForUserConfrim));
-    return true;
-}
+//int Cmd_Pause(lua_State* args)
+//{
+//    if (act == NULL){
+//        cout << "Cmd_Pause(): action set is null." <<endl;
+//        return false;
+//    }
+//
+//    act->AddAction(new CClassFuncOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::PauseForUserConfrim));
+//    return true;
+//}
 
 int Cmd_LoadScript(lua_State* args)
 {
-    args.erase(args.begin());
-    
-    if (act == NULL){
-        cout << "Cmd_LoadScript(): action set is null." <<endl;
-        return false;
-    }
+    //if (act == NULL){
+    //    cout << "Cmd_LoadScript(): action set is null." <<endl;
+    //    return false;
+    //}
 
-    if (args.size() < 1){
-        cout << "Cmd_LoadScript(): command invaild. can't set " << args.size()
-            << " argument(s) in the command." <<endl;
-        return false;
-    }
+    //if (args.size() < 1){
+    //    cout << "Cmd_LoadScript(): command invaild. can't set " << args.size()
+    //        << " argument(s) in the command." <<endl;
+    //    return false;
+    //}
 
-    act->AddAction(new CClassFuncArgsOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::LoadScript, args));
+    //act->AddAction(new CClassFuncArgsOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::LoadScript, args));
     return true;
 }
 
