@@ -14,6 +14,13 @@ bool CCameraControl::AddCamera(string name, string filename)
         return false;
     
     _cameraList[name] = CCamera::Create(filename.c_str());
+	if (_cameraList[name] == NULL)
+	{
+		_cameraList.erase(name);
+		cout << "CCameraControl::AddCamera(): failed to create camera"
+			<< " \"" << name << "\"." << endl;
+		return false;
+	}
     return true;
 }
 
