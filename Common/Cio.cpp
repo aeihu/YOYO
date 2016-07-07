@@ -81,7 +81,8 @@ string Cio::LoadTxtFile(string filename)
 		CZlib::OpenFileInZip(filename, __file, __size);
 
         if (__file){
-		    string __result = __file;
+			string __result = "";
+			__result.insert(0, __file, __size);
             ClearBom(__result);
 		    CZlib::CloseFileInZip(__file);
 		    return __result;
@@ -112,7 +113,7 @@ string Cio::LoadTxtFile(string filename)
             
             //char BOM[3] = {0xEF,0xBB,0xBF};
 			if (__is){
-				__result = __buffer;
+				__result.insert(0, __buffer, __length);
                 ClearBom(__result);
             }
 			else
