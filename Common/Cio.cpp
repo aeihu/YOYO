@@ -20,23 +20,23 @@ string& Cio::Trim(string& str)
 
 void Cio::ClearFileInMem(char* &file)
 {
-	if (file != NULL){
-		delete[] file;
-		file = NULL;
-	}
+    if (file != NULL){
+        delete[] file;
+        file = NULL;
+    }
 }
 
 bool Cio::LoadFileToMem(string filename, char* &file, unsigned long& size)
 {
-	ClearFileInMem(file);
+    ClearFileInMem(file);
 
-	if (filename.find("*")!=string::npos){
-		if (CZlib::OpenFileInZip(filename, file, size) == 0){
-			return true;
-		}
-		return false;
-	}
-	else{
+    if (filename.find("*")!=string::npos){
+        if (CZlib::OpenFileInZip(filename, file, size) == 0){
+            return true;
+        }
+        return false;
+    }
+    else{
         filebuf* __pBuf;  
         ifstream __fileStr;    
 
@@ -50,7 +50,7 @@ bool Cio::LoadFileToMem(string filename, char* &file, unsigned long& size)
         __pBuf->sgetn (file,size); 
         __fileStr.close();  
         return true;
-	}
+    }
 }
 
 size_t Cio::CounterOfString(string str, string symbol, size_t pos)
@@ -75,58 +75,58 @@ string Cio::ClearBom(string &str)
 
 string Cio::LoadTxtFile(string filename)
 {
-	if (filename.find("*")!=string::npos){
-		char* __file = NULL;
-		unsigned long __size = 0;
-		CZlib::OpenFileInZip(filename, __file, __size);
+    if (filename.find("*")!=string::npos){
+        char* __file = NULL;
+        unsigned long __size = 0;
+        CZlib::OpenFileInZip(filename, __file, __size);
 
         if (__file){
-			string __result = "";
-			__result.insert(0, __file, __size);
+            string __result = "";
+            __result.insert(0, __file, __size);
             ClearBom(__result);
-		    CZlib::CloseFileInZip(__file);
-		    return __result;
+            CZlib::CloseFileInZip(__file);
+            return __result;
         }
         else{
             cout << "Cio::LoadTxtFile(): can't open file \'" << filename << "\'." << endl;
             return "";
         }
-	}
-	else{
-		string __result = "";
-		ifstream __is (filename.c_str(), std::ifstream::binary);
-		if (__is) {
-			// get length of file:
-			__is.seekg (0, __is.end);
-			int __length = __is.tellg();
-			__is.seekg (0, __is.beg);
+    }
+    else{
+        string __result = "";
+        ifstream __is (filename.c_str(), std::ifstream::binary);
+        if (__is) {
+            // get length of file:
+            __is.seekg (0, __is.end);
+            int __length = __is.tellg();
+            __is.seekg (0, __is.beg);
 
-			char * __buffer = new char [__length];
+            char * __buffer = new char [__length];
 
-			//cout << "Reading " << __length << " characters... ";
-			// read data as a block:
-			__is.read (__buffer,__length);
+            //cout << "Reading " << __length << " characters... ";
+            // read data as a block:
+            __is.read (__buffer,__length);
 
-			//if (is)
-			//  std::cout << "all characters read successfully.";
-			//else
+            //if (is)
+            //  std::cout << "all characters read successfully.";
+            //else
             
             //char BOM[3] = {0xEF,0xBB,0xBF};
-			if (__is){
-				__result.insert(0, __buffer, __length);
+            if (__is){
+                __result.insert(0, __buffer, __length);
                 ClearBom(__result);
             }
-			else
-				cout << "Cio::LoadTxtFile(): only " << __is.gcount() << " could be read";
+            else
+                cout << "Cio::LoadTxtFile(): only " << __is.gcount() << " could be read";
 
-			__is.close();
+            __is.close();
 
-			// ...buffer contains the entire file...
+            // ...buffer contains the entire file...
 
-			delete[] __buffer;
-		}
-		return __result;
-	}
+            delete[] __buffer;
+        }
+        return __result;
+    }
 }
 
 string Cio::DeleteComment(string str, bool isDelete)
@@ -150,7 +150,7 @@ string Cio::DeleteComment(string str, bool isDelete)
 
 list<string> Cio::LoadTxtFile(string filename, string symbol)
 {
-	string __data = LoadTxtFile(filename);
+    string __data = LoadTxtFile(filename);
 
     list<string> __result = SplitString(__data, "\n\r");
         
@@ -158,25 +158,25 @@ list<string> Cio::LoadTxtFile(string filename, string symbol)
         (*it) = DeleteComment(*it);
     }
 
-	return __result;
+    return __result;
 }
 
 bool Cio::IsOneWord(std::string &str, std::string valid_characters)
 {
-	if (str.find_first_of(valid_characters) == string::npos)
-		return false;
+    if (str.find_first_of(valid_characters) == string::npos)
+        return false;
 
-	string __tmp = "";
-	__tmp.insert(0, str, str.find_first_of(valid_characters), str.find_last_of(valid_characters)-str.find_first_of(valid_characters)+1);
+    string __tmp = "";
+    __tmp.insert(0, str, str.find_first_of(valid_characters), str.find_last_of(valid_characters)-str.find_first_of(valid_characters)+1);
 
-	if(__tmp.find_first_not_of(valid_characters) != string::npos){
-		str = "";
-		return false;
-	}
-	else{
-		str = __tmp;
-		return true;
-	}
+    if(__tmp.find_first_not_of(valid_characters) != string::npos){
+        str = "";
+        return false;
+    }
+    else{
+        str = __tmp;
+        return true;
+    }
 }
 
 //==============_(:3J Z)_===================
@@ -187,28 +187,28 @@ bool Cio::IsNested(std::string &str, char first_symbol, char last_symbol)
     size_t first_symbol_pos = str.find_first_of(first_symbol);
     size_t last_symbol_pos = str.find_last_of(last_symbol);
 
-	if (first_symbol_pos==string::npos || last_symbol_pos==string::npos)
+    if (first_symbol_pos==string::npos || last_symbol_pos==string::npos)
         return false;
 
-	string __tmp = "";
-	__tmp.insert(0, str, first_symbol_pos+1, last_symbol_pos-first_symbol_pos-1);
-	str = __tmp;
+    string __tmp = "";
+    __tmp.insert(0, str, first_symbol_pos+1, last_symbol_pos-first_symbol_pos-1);
+    str = __tmp;
 
-	return true;
+    return true;
 }
 
 list<string> Cio::SplitString(string str, string symbol)
 {
     list<string> __result;
     while (str.find_first_of(symbol) != string::npos){
-	    string __tmp = "";
-	    __tmp.insert (0,str,0,str.find_first_of(symbol));
+        string __tmp = "";
+        __tmp.insert (0,str,0,str.find_first_of(symbol));
         __tmp = Trim(__tmp);
 
         if (!__tmp.empty())
             __result.push_back(__tmp);
 
-		str.erase(0, str.find_first_of(symbol)+1);
+        str.erase(0, str.find_first_of(symbol)+1);
     }
 
     __result.push_back(str);
@@ -220,30 +220,30 @@ bool Cio::AnalyticExpression(string str, string symbol, string &name, string &va
 {
     if (str.empty() || str.find(symbol) == string::npos){
         cout << "Cio::AnalyticExpression(): \"" << str << "\" can't find symbol \"" << symbol << "\"." << endl;
-		return false;
+        return false;
     }
 
-	name = "";
-	name.insert (0,str,0,str.find(symbol));
+    name = "";
+    name.insert (0,str,0,str.find(symbol));
 
-	if (!IsOneWord(name, CHARACTERS)){
+    if (!IsOneWord(name, CHARACTERS)){
         cout << "Cio::AnalyticExpression(): name of argument \"" << name << "\" is wrong format." << endl;
         return false;
     }
 
-	value = "";
-	value.insert (0,str,str.find(symbol) + 1, str.length() - 1);
+    value = "";
+    value.insert (0,str,str.find(symbol) + 1, str.length() - 1);
 
-	if (!IsNested(value, '"', '"'))
+    if (!IsNested(value, '"', '"'))
         if (!IsOneWord(value, NUMBER)){
             cout << "Cio::AnalyticExpression(): value of argument \"" << name << "\" is wrong format." << endl;
-			return false;
+            return false;
         }
 
-	return true;
+    return true;
 }
 
 bool Cio::AnalyticExpression(string str, string &name, string &value)
 {
-	return AnalyticExpression(str, "=", name, value);
+    return AnalyticExpression(str, "=", name, value);
 }

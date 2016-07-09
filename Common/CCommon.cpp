@@ -118,13 +118,13 @@ unsigned long CCommon::GetTicks(){
 
 bool CCommon::IsFileExist(string filename)
 {
-	if (filename.find("*") != string::npos){
-		char* __file = NULL;
-		unsigned long __size = 0;
-		return CZlib::OpenFileInZip(filename, __file, __size) == 0;
-	}
-	else
-		return (access(filename.c_str(), 0) == 0);
+    if (filename.find("*") != string::npos){
+        char* __file = NULL;
+        unsigned long __size = 0;
+        return CZlib::OpenFileInZip(filename, __file, __size) == 0;
+    }
+    else
+        return (access(filename.c_str(), 0) == 0);
 }
 
 //void CCommon::SaveSysData()

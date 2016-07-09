@@ -49,11 +49,11 @@ class CScreenEffect : public CDrawableClass
 
         CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed, bool isShow, bool pause);
         CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool isShow, bool L2R, bool pause);
-		CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
+        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
 
-		void CreateActionShowOrHideForSelf(size_t elapsed, bool isShow, bool pause);
-		void CreateActionGradientForSelf(size_t elapsed, bool isShow, bool L2R, bool pause);
-		void CreateActionLouverForSelf(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
+        void CreateActionShowOrHideForSelf(size_t elapsed, bool isShow, bool pause);
+        void CreateActionGradientForSelf(size_t elapsed, bool isShow, bool L2R, bool pause);
+        void CreateActionLouverForSelf(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
 };
 
 #endif

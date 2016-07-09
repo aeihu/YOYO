@@ -7,7 +7,7 @@
 */
 
 #ifndef _CLUA_H_ 
-	#define _CLUA_H_
+    #define _CLUA_H_
 
 #include "lua.hpp"
 #include <string>
@@ -17,25 +17,25 @@ using namespace std;
 
 class CLua
 {
-	private:
-		lua_State* _luaState; 
-		lua_State *_luaThread;
-		sf::Thread _thread;
-		sf::Mutex _mutex;
-		string _currentScriptName;
+    private:
+        lua_State* _luaState; 
+        lua_State *_luaThread;
+        sf::Thread _thread;
+        sf::Mutex _mutex;
+        string _currentScriptName;
 
-		void RunScript();
+        void RunScript();
 
-	public:
-		CLua();
-		~CLua();
+    public:
+        CLua();
+        ~CLua();
 
-		bool OnInit();
-		void OnCleanup();
+        bool OnInit();
+        void OnCleanup();
 
-		bool LoadScript(string filename);
-		int GetLuaThreadStatus() const;
-		int ResumeLuaThread();
+        bool LoadScript(string filename);
+        int GetLuaThreadStatus() const;
+        int ResumeLuaThread();
 };
 
 #endif

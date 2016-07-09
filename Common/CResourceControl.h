@@ -30,14 +30,20 @@ LoadScript()->BeginLoadProcess()->LoadAsset()->EndLoadProcess()
 
 class CResourceControl// : public CScript
 {
+    public:
+        enum EProcStatus{
+            STOP,
+            RUNNING,
+            FINISH
+        };
     private:
         sf::Sprite                      _spriteUp;
         sf::Sprite                      _spriteDown;
         sf::Thread                      _threadOfLoading;
 
-		string                          _fileNameOfScriptForLoadingBegin;
-		string                          _fileNameOfScriptForLoadingfinish;
-		string                          _fileNameOfCurrentRunningScript;
+        string                          _fileNameOfScriptForLoadingBegin;
+        string                          _fileNameOfScriptForLoadingfinish;
+        string                          _fileNameOfCurrentRunningScript;
 
         unsigned long                   _oldTimeForAuto;
 
@@ -46,11 +52,12 @@ class CResourceControl// : public CScript
         Object                          _gameBaiscAsset;
 
         bool                            _drawableObjCtrlEnable;
-		bool                            _loadingProcessEnable;
         bool                            _pauseOfAction;
         bool                            _pauseOfUser;
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
+
+        EProcStatus                        _loadingProcessStatus;
 
         bool                            _isAuto;
         bool                            _flagForAuto;
@@ -59,8 +66,7 @@ class CResourceControl// : public CScript
         map<string, string>             _systemVariableList;
         
         void LoadPlayerDataProcess();
-        void BeginLoadProcess();
-		void ThreadOfLoadAsset();
+        void ThreadOfLoadAsset();
         void Compare(Object& src, Object& des, string colName);
 
         bool JsonProcess(Object& src, Object& des, string colName);
@@ -81,13 +87,14 @@ class CResourceControl// : public CScript
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;
+        CLua                                    _LuaControl;
         
         void Skip();
         bool AddVariable(string name, string val);
-		bool SetVariable(string name, string val);
-		bool DelVariable(string name);
+        bool SetVariable(string name, string val);
+        bool DelVariable(string name);
 
-		bool IsLoadingProcessRunning() const;
+        EProcStatus GetLoadingProcessStatus() const;
         bool GetAuto() const;
         void SetAuto(bool isAuto);
         string GetVariable(string name);

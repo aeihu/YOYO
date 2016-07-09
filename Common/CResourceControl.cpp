@@ -20,17 +20,17 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
 {
     _oldTimeForAuto = 0;
     _scriptConfig.reset();
-	_fileNameOfScriptForLoadingBegin =
-	_fileNameOfScriptForLoadingfinish =
+    _fileNameOfScriptForLoadingBegin =
+    _fileNameOfScriptForLoadingfinish =
     _fileNameOfCurrentRunningScript = "";
     _isNeedCleanAction =
     _isLoadPlayerData =
-    _loadingProcessEnable = 
     _drawableObjCtrlEnable = 
     _pauseOfAction = 
     _pauseOfUser = 
     _isAuto = 
     _flagForAuto = false;
+    _loadingProcessStatus = EProcStatus::STOP;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -181,6 +181,9 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
 
     if (!_SoundControl.OnInit())
         return false;
+
+    if (!_LuaControl.OnInit())
+        return false;
     
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
     _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
@@ -188,32 +191,32 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
     
-	if (_gameBaiscAsset.has<String>("loading_begin_script"))
-	{
-		if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_begin_script")))
-			_fileNameOfScriptForLoadingBegin = _gameBaiscAsset.get<String>("loading_begin_script");
-		else
-		{
-			_fileNameOfScriptForLoadingBegin = "";
-			return false;
-		}
-	}
-	else
-		return false;
+    if (_gameBaiscAsset.has<String>("loading_begin_script"))
+    {
+        if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_begin_script")))
+            _fileNameOfScriptForLoadingBegin = _gameBaiscAsset.get<String>("loading_begin_script");
+        else
+        {
+            _fileNameOfScriptForLoadingBegin = "";
+            return false;
+        }
+    }
+    else
+        return false;
 
 
-	if (_gameBaiscAsset.has<String>("loading_finish_script"))
-	{
-		if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_finish_script")))
-			_fileNameOfScriptForLoadingfinish = _gameBaiscAsset.get<String>("loading_finish_script");
-		else
-		{
-			_fileNameOfScriptForLoadingBegin = "";
-			return false;
-		}
-	}
-	else
-		return false;
+    if (_gameBaiscAsset.has<String>("loading_finish_script"))
+    {
+        if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_finish_script")))
+            _fileNameOfScriptForLoadingfinish = _gameBaiscAsset.get<String>("loading_finish_script");
+        else
+        {
+            _fileNameOfScriptForLoadingBegin = "";
+            return false;
+        }
+    }
+    else
+        return false;
 
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
@@ -288,20 +291,15 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
         obj << "main_script" << __json.get<String>("main_script");
 
     if (__json.has<Array>("script"))
-		obj << "script" << __json.get<String>("script");
+        obj << "script" << __json.get<String>("script");
 
-    if (__json.has<Array>("loading_begin_script"))
-		obj << "loading_begin_script" << __json.get<String>("loading_begin_script");
+    if (__json.has<string>("loading_begin_script"))
+        obj << "loading_begin_script" << __json.get<String>("loading_begin_script");
 
-    if (__json.has<Array>("loading_finish_script"))
-		obj << "loading_finish_script" << __json.get<String>("loading_finish_script");
+    if (__json.has<string>("loading_finish_script"))
+        obj << "loading_finish_script" << __json.get<String>("loading_finish_script");
     
     return true;
-}
-
-void CResourceControl::BeginLoadProcess()
-{
-    _threadOfLoading.launch();
 }
 
 void CResourceControl::Compare(Object& src, Object& des, string colName)
@@ -328,8 +326,8 @@ void CResourceControl::ThreadOfLoadAsset()
 
     Object __obj;
     if (LoadJson(__obj, _fileNameOfCurrentRunningScript)){
-		if (!_scriptConfig.empty()){
-			//1. 检查当前要加载的脚本所需资源是否已被加载到内存中，如果已在内存中则标记“无需删除”
+        if (!_scriptConfig.empty()){
+            //1. 检查当前要加载的脚本所需资源是否已被加载到内存中，如果已在内存中则标记“无需删除”
             Compare(__obj, _scriptConfig, "character");
             Compare(__obj, _scriptConfig, "img");
             Compare(__obj, _scriptConfig, "button");
@@ -338,7 +336,7 @@ void CResourceControl::ThreadOfLoadAsset()
             Compare(__obj, _scriptConfig, "camera");
             Compare(__obj, _scriptConfig, "music");
             
-			//2.清空资源，如果资源已标记为“无需删除”，将不用被删除。
+            //2.清空资源，如果资源已标记为“无需删除”，将不用被删除。
             CheckOut(_scriptConfig, "text", "Text");
             CheckOut(_scriptConfig, "character","CharacterLayer");
             CheckOut(_scriptConfig, "img","Img");
@@ -350,17 +348,17 @@ void CResourceControl::ThreadOfLoadAsset()
             _scriptConfig.reset();
         }
         
-		_scriptConfig = __obj;
-		_scriptConfig << "filename" << _fileNameOfCurrentRunningScript;
+        _scriptConfig = __obj;
+        _scriptConfig << "filename" << _fileNameOfCurrentRunningScript;
 
-		CheckIn(_scriptConfig, "text", "Text");
-		CheckIn(_scriptConfig, "character", "CharacterLayer");
-		CheckIn(_scriptConfig, "img", "Img");
-		CheckIn(_scriptConfig, "button", "Button");
-		CheckIn(_scriptConfig, "se", "Se");
-		CheckIn(_scriptConfig, "voice", "Voice");
-		CheckIn(_scriptConfig, "camera", "Camera");
-		CheckIn(_scriptConfig, "music", "Music");
+        CheckIn(_scriptConfig, "text", "Text");
+        CheckIn(_scriptConfig, "character", "CharacterLayer");
+        CheckIn(_scriptConfig, "img", "Img");
+        CheckIn(_scriptConfig, "button", "Button");
+        CheckIn(_scriptConfig, "se", "Se");
+        CheckIn(_scriptConfig, "voice", "Voice");
+        CheckIn(_scriptConfig, "camera", "Camera");
+        CheckIn(_scriptConfig, "music", "Music");
         
          Array& __array = _gameBaiscAsset.get<Array>("messagebox");
          for (size_t i=0; i<__array.size(); i++){
@@ -376,17 +374,16 @@ void CResourceControl::ThreadOfLoadAsset()
         //}
     }
 
-    CSequenceOfAction* __seq = new CSequenceOfAction();
+    //CSequenceOfAction* __seq = new CSequenceOfAction();
 
 
     if (_isLoadPlayerData){
         _isLoadPlayerData = false;
         LoadPlayerDataProcess();
     }
-    
-	_drawableObjCtrlEnable = true;
-	CLua::_Lua.LoadScript(_fileNameOfScriptForLoadingfinish);
-	_loadingProcessEnable = false;
+
+    _loadingProcessStatus = CResourceControl::FINISH;
+    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish);
 }
         
 void CResourceControl::LoadScript(vector<string> args)
@@ -399,15 +396,17 @@ void CResourceControl::LoadScript(vector<string> args)
 
 bool CResourceControl::LoadScript(string filename)
 {
-	if (CCommon::_Common.IsFileExist(filename))
-	{
-		_fileNameOfCurrentRunningScript = filename;
-		_loadingProcessEnable = true;
+    if (CCommon::_Common.IsFileExist(filename))
+    {
         _SoundControl.StopBgm();
         _SoundControl.StopSE();
         _SoundControl.StopVoice();
-		_ActionControl.OnCleanup();
-		CLua::_Lua.LoadScript(_fileNameOfScriptForLoadingBegin);
+        _ActionControl.OnCleanup();
+
+        _fileNameOfCurrentRunningScript = filename;
+        _loadingProcessStatus = CResourceControl::RUNNING;
+        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin);
+        _threadOfLoading.launch();
 
         return true;
     }
@@ -415,9 +414,9 @@ bool CResourceControl::LoadScript(string filename)
         return false;
 }
 
-bool CResourceControl::IsLoadingProcessRunning() const
+CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
 {
-	return _loadingProcessEnable;
+    return    _loadingProcessStatus;
 }
 
 void CResourceControl::OnLoop()
@@ -437,8 +436,16 @@ void CResourceControl::OnLoop()
         AutoToNextStep();
     }
 
-    if (_loadingProcessEnable){
+    if (_loadingProcessStatus != CResourceControl::STOP){
         _LoadingObjectControl.OnLoop();
+
+        if (_loadingProcessStatus == CResourceControl::FINISH)
+            if (_LuaControl.GetLuaThreadStatus() == LUA_OK)
+            {
+                _drawableObjCtrlEnable = true;
+                _loadingProcessStatus = CResourceControl::STOP;
+            }
+
         return;
     }
     
@@ -451,7 +458,7 @@ void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
     if (_drawableObjCtrlEnable)
         _DrawableObjectControl.OnRender(Surf_Dest);
     
-    if (_loadingProcessEnable)
+    if (_loadingProcessStatus != EProcStatus::STOP)
         _LoadingObjectControl.OnRender(Surf_Dest);
 }
 
@@ -581,7 +588,7 @@ bool CResourceControl::GetAuto() const
 
 void CResourceControl::SetAuto(bool isAuto)
 {
-    if (!_loadingProcessEnable)
+    if (_loadingProcessStatus == CResourceControl::STOP)
         _isAuto = isAuto;
 }
 
@@ -611,7 +618,7 @@ void CResourceControl::PauseForUserConfrim()
 
 void CResourceControl::AutoToNextStep()
 {
-    if (_isAuto && _pauseOfUser && !_loadingProcessEnable){
+    if (_isAuto && _pauseOfUser && _loadingProcessStatus == CResourceControl::STOP){
         bool __textAllShown = true;
         Array& __array = _gameBaiscAsset.get<Array>("messagebox");
         for (size_t i=0; i<__array.size(); i++){
@@ -642,7 +649,7 @@ void CResourceControl::AutoToNextStep()
         
 void CResourceControl::Skip()
 {
-    if (_loadingProcessEnable)
+    if (_loadingProcessStatus == CResourceControl::STOP)
         return;
 
     _ActionControl.Skip();

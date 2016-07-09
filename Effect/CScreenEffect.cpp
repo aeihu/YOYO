@@ -145,17 +145,17 @@ CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool 
 
 void CScreenEffect::CreateActionShowOrHideForSelf(size_t elapsed, bool isShow, bool pause)
 {
-	_actionList.AddAction(CreateActionShowOrHide(elapsed, isShow, pause));
+    _actionList.AddAction(CreateActionShowOrHide(elapsed, isShow, pause));
 }
 
 void CScreenEffect::CreateActionGradientForSelf(size_t elapsed, bool isShow, bool L2R, bool pause)
 {
-	_actionList.AddAction(CreateActionGradient(elapsed, isShow, L2R, pause));
+    _actionList.AddAction(CreateActionGradient(elapsed, isShow, L2R, pause));
 }
 
 void CScreenEffect::CreateActionLouverForSelf(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause)
 {
-	_actionList.AddAction(CreateActionLouver(elapsed, isShow, L2R, slide, pause));
+    _actionList.AddAction(CreateActionLouver(elapsed, isShow, L2R, slide, pause));
 }
 
 CScreenEffect::PData::PData()
@@ -189,7 +189,7 @@ CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
 
 void CScreenEffect::OnLoop()
 {
-	CBaiscProperties::OnLoop();
+    CBaiscProperties::OnLoop();
     if (!_isShowed)
         return;
 

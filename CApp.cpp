@@ -12,7 +12,7 @@
 //==============================================================================
 CApp::CApp() {
     _display = NULL;
-	_EndableOfIcon = false;
+    _EndableOfIcon = false;
     _running = true;
 }
 
@@ -91,14 +91,14 @@ int CApp::OnExecute()
     __threadOfStdin.launch();
 #endif
 
-	while(_display->isOpen() && _running){
-		while(_display->pollEvent(__events)) {
-			OnEvent(&__events);
-		}
+    while(_display->isOpen() && _running){
+        while(_display->pollEvent(__events)) {
+            OnEvent(&__events);
+        }
         
-		OnLoop();
-		OnRender();
-	}
+        OnLoop();
+        OnRender();
+    }
     OnCleanup();
 #ifdef _DEBUG
     __threadOfStdin.terminate();
