@@ -8,6 +8,7 @@
 
 #include "CLua.h"
 #include "CScriptCommand.h"
+#include "../Common/Cio.h"
 
 int RegYOYOLibs(lua_State *L)
 {
@@ -109,6 +110,7 @@ int RegYOYOLibs(lua_State *L)
 
 CLua::CLua() : _thread(&CLua::RunScript, this)
 {
+	_luaThread = 
 	_luaState = NULL;
 	_currentScriptName = "";
 }
@@ -137,16 +139,32 @@ bool CLua::OnInit()
 		lua_pop(_luaState, 1);
 	}
 
+	if (LUA_OK != luaL_dostring(_luaState, "YOYO_LUA_THREAD_RUNNING = false"))
+	{
+		cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+	}
+
 	return true;
 }
 
 void CLua::RunScript()
 {
-	lua_State *__luaThread = lua_newthread(_luaState); 
+	_luaThread = lua_newthread(_luaState);
 	_mutex.lock();
-	luaL_loadfile(__luaThread, _currentScriptName.c_str());
+	string __scr = "YOYO_LUA_THREAD_RUNNING = true \n" + 
+		Cio::LoadTxtFile(_currentScriptName) + 
+		"\n YOYO_LUA_THREAD_RUNNING = false";
+
+	if (LUA_OK != luaL_loadstring(_luaThread, __scr.c_str()))
+	{
+		cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+	}
 	_mutex.unlock();
-	lua_resume(__luaThread, NULL, 0);
+
+	if (LUA_YIELD < lua_resume(_luaThread, NULL, 0))
+	{
+		cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+	}
 }
 
 bool CLua::LoadScript(string filename)
@@ -165,4 +183,42 @@ void CLua::OnCleanup()
 		lua_close(_luaState);
 
 	_thread.terminate();
+}
+
+int CLua::GetLuaThreadStatus() const
+{
+	int __status = lua_status(_luaThread);
+	switch (__status)
+	{
+		case LUA_YIELD:
+			return LUA_YIELD;// 1
+		break;
+		case LUA_OK:
+			if (lua_getglobal(_luaState, "YOYO_LUA_THREAD_RUNNING") == LUA_TBOOLEAN)
+			{
+				if (lua_toboolean(_luaState, -1))
+					return 7;
+				else
+					return LUA_OK;
+			}
+		break;
+		default:
+			return __status;
+		break;
+	} 
+}
+
+int CLua::ResumeLuaThread()
+{
+	int __result = GetLuaThreadStatus();
+	if (__result == LUA_YIELD)
+	{
+		__result = lua_resume(_luaThread, NULL, 0);
+		if (LUA_YIELD < __result)
+		{
+			cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+		}
+	}
+
+	return __result;
 }

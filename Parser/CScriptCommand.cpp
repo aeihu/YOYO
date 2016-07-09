@@ -155,7 +155,8 @@ bool Common_FuncOfColor(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
 
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+    CDrawableObjectControl* __doc = 
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -229,7 +230,8 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
 
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -297,7 +299,8 @@ bool Common_FuncOfHide(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
     
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -359,7 +362,8 @@ bool Common_FuncOfMove(string objTypeName, lua_State* args)
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+		CDrawableObjectControl* __doc =
+			CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -439,7 +443,8 @@ bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
 	size_t __inte = CCommon::_Common.INTERVAL; //interval
 	Common_GetValue(args, "i", __inte);
     
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -523,7 +528,8 @@ bool Common_FuncOfRotation(string objTypeName, lua_State* args)
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
     }
     else{
-        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+		CDrawableObjectControl* __doc =
+			CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -612,7 +618,8 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
 			return false;
 		}
 
-        CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+		CDrawableObjectControl* __doc =
+			CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -676,7 +683,8 @@ bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 		return false;
 	}
 
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -715,7 +723,8 @@ bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
 		return false;
 	}
 
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -763,7 +772,8 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
 	string __layer;
 	bool __lIsBe  = Common_GetValue(args, "l", __layer);
     
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -903,7 +913,8 @@ int Cmd_SetPoseCharacterLayer(lua_State* args)
     __args.push_back(__mouth);
 	__args.push_back(__skip);
     
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -963,7 +974,7 @@ int Cmd_ColorCharacterLayer(lua_State* args)
 
 int Cmd_ShowImg(lua_State* args)
 {
-    return Common_FuncOfShow("Img", args);
+	return Common_FuncOfShow("Img", args);
 }
 
 int Cmd_HideImg(lua_State* args)
@@ -1108,7 +1119,8 @@ int Cmd_SetText(lua_State* args)
 	string __styleStrikeThrough = "";//style strikeThrough
 	Common_GetValue(args, "ss", __styleStrikeThrough);
 
-    CDrawableObjectControl* __doc = CResourceControl::_ResourceManager.IsLoadingProcessRunning() ? 
+	CDrawableObjectControl* __doc =
+		CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;

@@ -17,20 +17,25 @@ using namespace std;
 
 class CLua
 {
-	public:
-		CLua();
-		~CLua();
-
-		bool OnInit();
-		bool LoadScript(string filename);
-		void OnCleanup();
 	private:
-		lua_State* _luaState;
+		lua_State* _luaState; 
+		lua_State *_luaThread;
 		sf::Thread _thread;
 		sf::Mutex _mutex;
 		string _currentScriptName;
 
 		void RunScript();
+
+	public:
+		CLua();
+		~CLua();
+
+		bool OnInit();
+		void OnCleanup();
+
+		bool LoadScript(string filename);
+		int GetLuaThreadStatus() const;
+		int ResumeLuaThread();
 };
 
 #endif
