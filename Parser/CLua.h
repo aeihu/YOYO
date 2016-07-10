@@ -18,11 +18,14 @@ using namespace std;
 class CLua
 {
     private:
-        lua_State* _luaState; 
-        lua_State *_luaThread;
-        sf::Thread _thread;
-        sf::Mutex _mutex;
-        string _currentScriptName;
+        lua_State*  _luaState; 
+        lua_State*  _luaThread;
+        sf::Thread  _thread;
+        sf::Mutex   _mutex;
+
+        string      _currentScriptName;
+        string      _codeAtBeginOfScript;
+        string      _codeAtEndOfScript;
 
         void RunScript();
 
@@ -32,8 +35,8 @@ class CLua
 
         bool OnInit();
         void OnCleanup();
-
-        bool LoadScript(string filename);
+        bool LoadScript(string filename, string codeAtB = "", string codeAtE = "");
+        bool GetGlobal(const char* name, bool &val);
         int GetLuaThreadStatus() const;
         int ResumeLuaThread();
 };

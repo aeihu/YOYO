@@ -112,6 +112,8 @@ CLua::CLua() : _thread(&CLua::RunScript, this)
 {
     _luaThread = 
     _luaState = NULL;
+    _codeAtBeginOfScript =
+    _codeAtEndOfScript =
     _currentScriptName = "";
 }
 
@@ -142,6 +144,7 @@ bool CLua::OnInit()
     if (LUA_OK != luaL_dostring(_luaState, "YOYO_LUA_THREAD_RUNNING = false"))
     {
         cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+        return false;
     }
 
     return true;
@@ -151,9 +154,11 @@ void CLua::RunScript()
 {
     _luaThread = lua_newthread(_luaState);
     _mutex.lock();
-    string __scr = "YOYO_LUA_THREAD_RUNNING = true \n" + 
+    string __scr = _codeAtBeginOfScript + "\n" + 
+        "YOYO_LUA_THREAD_RUNNING = true \n" +
         Cio::LoadTxtFile(_currentScriptName) + 
-        "\n YOYO_LUA_THREAD_RUNNING = false";
+        "\n YOYO_LUA_THREAD_RUNNING = false\n" +
+        _codeAtEndOfScript;
 
     if (LUA_OK != luaL_loadstring(_luaThread, __scr.c_str()))
     {
@@ -167,8 +172,10 @@ void CLua::RunScript()
     }
 }
 
-bool CLua::LoadScript(string filename)
+bool CLua::LoadScript(string filename, string codeAtB, string codeAtE)
 {
+    _codeAtBeginOfScript = codeAtB;
+    _codeAtBeginOfScript = codeAtE;
     _thread.terminate();
     _mutex.lock();
     _currentScriptName = filename;
@@ -185,6 +192,16 @@ void CLua::OnCleanup()
     _thread.terminate();
 }
 
+bool CLua::GetGlobal(const char* name, bool &val)
+{
+    if (lua_getglobal(_luaState, name) == LUA_TBOOLEAN) {
+        val = lua_toboolean(_luaState, -1);
+        return true;
+    }
+
+    return false;
+}
+
 int CLua::GetLuaThreadStatus() const
 {
     int __status = lua_status(_luaThread);
@@ -195,12 +212,10 @@ int CLua::GetLuaThreadStatus() const
         break;
         case LUA_OK:
             if (lua_getglobal(_luaState, "YOYO_LUA_THREAD_RUNNING") == LUA_TBOOLEAN)
-            {
                 if (lua_toboolean(_luaState, -1))
                     return 7;
-                else
-                    return LUA_OK;
-            }
+
+            return LUA_OK;
         break;
         default:
             return __status;

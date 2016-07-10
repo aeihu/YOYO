@@ -28,6 +28,22 @@ int Common_YieldCont(lua_State *L, int, lua_KContext ctx)
     return 0;
 }
 
+bool Common_GetValue(lua_State* L, const char* fieldName, int& val)
+{
+    if (lua_istable(L, -1))
+    {
+        if (lua_getfield(L, -1, fieldName) == LUA_TNUMBER) {
+            val = lua_tonumber(L, -1);
+            lua_pop(L, 1);
+            return true;
+        }
+
+        lua_pop(L, 1);
+    }
+
+    return false;
+}
+
 bool Common_GetValue(lua_State* L, const char* fieldName, size_t& val)
 {
     if (lua_istable(L, -1))
@@ -250,16 +266,12 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    
-    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
     if (__doc->IsExists(objTypeName+":"+__name)){
         CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
-        string __layer; // layer
+        int __layer; // layer
         if (Common_GetValue(args, "l", __layer)){
-            vector<string> __args;
-            __args.push_back(__layer);
-            __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
+            __obj->SetLayerOrder(__layer);
         }
 
         float __x = __obj->GetPosition().x;
@@ -273,8 +285,7 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
         if (Common_GetValue(args, "y", __vy)) 
             __y = __vy; // x
         
-        __sim->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset, __pause));
-        __obj->AddAction(__sim);
+        __obj->CreateActionOfAlphaToForSelf(__inte, __alpha, __reset, __pause);
         __obj->SetPosition(__x, __y);
         return __pause ? CMD_YIELD : CMD_OK;
     }
@@ -783,8 +794,6 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
     size_t __inte = CCommon::_Common.INTERVAL; //interval
     Common_GetValue(args, "i", __inte);
 
-    string __layer;
-    bool __lIsBe  = Common_GetValue(args, "l", __layer);
     
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -800,47 +809,25 @@ bool Common_FuncOfScreen(lua_State* args, bool isShow)
         cout << __funcName << "(): can't find ScrEffect \"screen\"." <<endl;
         return CMD_ERR;
     }
-    
-    if (__lIsBe){
-        CSimultaneousOfAction*__sim = new CSimultaneousOfAction();
-        vector<string> __args;
-        __args.push_back(__layer);
-        __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CDrawableClass::SetLayerOrder, __args));
-        
-        switch (__Type)
-        {
-            case 1:
-                __sim->AddAction(__obj->CreateActionGradient(__inte, isShow, __right, __pause));
-                break;
-            case 2:
-                __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __right, false, __pause));
-                break;
-            case 3:
-                __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __right, true, __pause));
-                break;
-            default:
-                __sim->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
-                break;
-        }
 
-        __obj->AddAction(__sim);
-    }
-    else{
-        switch (__Type)
-        {
-            case 1:
-                __obj->CreateActionGradientForSelf(__inte, isShow, __right, __pause);
-                break;
-            case 2:
-                __obj->CreateActionLouverForSelf(__inte, isShow, __right, false, __pause);
-                break;
-            case 3:
-                __obj->CreateActionLouverForSelf(__inte, isShow, __right, true, __pause);
-                break;
-            default:
-                __obj->CreateActionShowOrHideForSelf(__inte, isShow, __pause);
-                break;
-        }
+    int __layer;
+    if (Common_GetValue(args, "l", __layer))
+        __obj->SetLayerOrder(__layer);
+
+    switch (__Type)
+    {
+        case 1:
+            __obj->CreateActionGradientForSelf(__inte, isShow, __right, __pause);
+            break;
+        case 2:
+            __obj->CreateActionLouverForSelf(__inte, isShow, __right, false, __pause);
+            break;
+        case 3:
+            __obj->CreateActionLouverForSelf(__inte, isShow, __right, true, __pause);
+            break;
+        default:
+            __obj->CreateActionShowOrHideForSelf(__inte, isShow, __pause);
+            break;
     }
 
     return __pause ? CMD_YIELD : CMD_OK;
@@ -1952,4 +1939,3 @@ int Cmd_LoadScript(lua_State* args)
     //act->AddAction(new CClassFuncArgsOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::LoadScript, args));
     return CMD_OK;
 }
-
