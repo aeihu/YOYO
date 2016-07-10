@@ -30,7 +30,7 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _pauseOfUser = 
     _isAuto = 
     _flagForAuto = false;
-    _loadingProcessStatus = EProcStatus::STOP;
+    _loadingProcessStatus = CResourceControl::STOP;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -211,7 +211,7 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
             _fileNameOfScriptForLoadingfinish = _gameBaiscAsset.get<String>("loading_finish_script");
         else
         {
-            _fileNameOfScriptForLoadingBegin = "";
+            _fileNameOfScriptForLoadingfinish = "";
             return false;
         }
     }
@@ -376,14 +376,13 @@ void CResourceControl::ThreadOfLoadAsset()
 
     //CSequenceOfAction* __seq = new CSequenceOfAction();
 
-
     if (_isLoadPlayerData){
         _isLoadPlayerData = false;
         LoadPlayerDataProcess();
     }
 
+    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish, "YOYO_LUA_LOADING_THREAD_RUNNING = true");
     _loadingProcessStatus = CResourceControl::FINISH;
-    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish);
 }
         
 void CResourceControl::LoadScript(vector<string> args)
@@ -405,7 +404,7 @@ bool CResourceControl::LoadScript(string filename)
 
         _fileNameOfCurrentRunningScript = filename;
         _loadingProcessStatus = CResourceControl::RUNNING;
-        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin);
+        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin, "", "YOYO_LUA_LOADING_THREAD_RUNNING = false");
         _threadOfLoading.launch();
 
         return true;
@@ -416,7 +415,7 @@ bool CResourceControl::LoadScript(string filename)
 
 CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
 {
-    return    _loadingProcessStatus;
+    return _loadingProcessStatus;
 }
 
 void CResourceControl::OnLoop()
@@ -440,10 +439,14 @@ void CResourceControl::OnLoop()
         _LoadingObjectControl.OnLoop();
 
         if (_loadingProcessStatus == CResourceControl::FINISH)
-            if (_LuaControl.GetLuaThreadStatus() == LUA_OK)
-            {
-                _drawableObjCtrlEnable = true;
-                _loadingProcessStatus = CResourceControl::STOP;
+            if (_LuaControl.GetLuaThreadStatus() == LUA_OK){
+                bool __b = true;
+                _LuaControl.GetGlobal("YOYO_LUA_LOADING_THREAD_RUNNING", __b);
+
+                if (!__b){
+                    _drawableObjCtrlEnable = true;
+                    _loadingProcessStatus = CResourceControl::STOP;
+                }
             }
 
         return;

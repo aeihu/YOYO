@@ -57,7 +57,7 @@ class CResourceControl// : public CScript
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
 
-        EProcStatus                        _loadingProcessStatus;
+        EProcStatus                     _loadingProcessStatus;
 
         bool                            _isAuto;
         bool                            _flagForAuto;
