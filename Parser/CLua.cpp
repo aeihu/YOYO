@@ -125,12 +125,10 @@ bool CLua::OnInit()
 {
     _luaState = luaL_newstate();
     
-    //2.设置待注册的Lua标准库，这个库是给你的Lua脚本用的
-    //因为接下来我们只想在Lua脚本里面输出hello world，所以只引入基本库就可以了
     static const luaL_Reg lualibs[] =
     {
         { "base", luaopen_base },
-        { "YOYO", RegYOYOLibs },
+        { "yoyo", RegYOYOLibs },
         { NULL, NULL }
     };
     //3.注册Lua标准库并清空栈
@@ -154,8 +152,8 @@ void CLua::RunScript()
 {
     _luaThread = lua_newthread(_luaState);
     _mutex.lock();
-    string __scr = _codeAtBeginOfScript + "\n" + 
-        "YOYO_LUA_THREAD_RUNNING = true \n" +
+    string __scr = _codeAtBeginOfScript +
+        ";YOYO_LUA_THREAD_RUNNING = true;" +
         Cio::LoadTxtFile(_currentScriptName) + 
         "\n YOYO_LUA_THREAD_RUNNING = false\n" +
         _codeAtEndOfScript;

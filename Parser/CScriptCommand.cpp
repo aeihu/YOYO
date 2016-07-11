@@ -228,7 +228,7 @@ int Common_FuncOfColor(string objTypeName, lua_State* args)
 }
 
 
-bool Common_FuncOfShow(string objTypeName, lua_State* args)
+int Common_FuncOfShow(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_Show" + objTypeName;
 
@@ -295,7 +295,7 @@ bool Common_FuncOfShow(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfHide(string objTypeName, lua_State* args)
+int Common_FuncOfHide(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_Hide" + objTypeName;
 
@@ -339,7 +339,7 @@ bool Common_FuncOfHide(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfMove(string objTypeName, lua_State* args)
+int Common_FuncOfMove(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_Move" + objTypeName;
 
@@ -426,7 +426,7 @@ bool Common_FuncOfMove(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
+int Common_FuncOfOrigin(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_Origin" + objTypeName;
 
@@ -508,7 +508,7 @@ bool Common_FuncOfOrigin(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfRotation(string objTypeName, lua_State* args)
+int Common_FuncOfRotation(string objTypeName, lua_State* args)
 {
     string __funcName = "Cmd_Rotation" + objTypeName;
 
@@ -573,7 +573,7 @@ bool Common_FuncOfRotation(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfScale(string objTypeName, lua_State* args)
+int Common_FuncOfScale(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_Scale" + objTypeName;
 
@@ -681,7 +681,7 @@ bool Common_FuncOfScale(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
+int Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
 { 
     string __funcName = "Cmd_SetLayerOrder" + objTypeName;
 
@@ -729,9 +729,9 @@ bool Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
+int Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
 {
-    string __funcName = "Cmd_Flip" + flipx ? "X" : "Y" + objTypeName;
+    string __funcName = (flipx ? "Cmd_FlipX" : "Cmd_FlipY") + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -769,7 +769,7 @@ bool Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
     return CMD_ERR;
 }
 
-bool Common_FuncOfScreen(lua_State* args, bool isShow)
+int Common_FuncOfScreen(lua_State* args, bool isShow)
 {
     string __funcName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
 
