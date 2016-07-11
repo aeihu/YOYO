@@ -27,12 +27,10 @@ void CActionSet::SetName(string name)
 
 void CActionSet::SetPause(bool pause)
 {
-    _pauseRequest = pause;
+    if (pause != _pauseRequest)
+        _numOfPauseActions += pause ? 1 : -1;
 
-    if (_pauseRequest)
-        _numOfPauseActions++;
-    else
-        _numOfPauseActions--;
+    _pauseRequest = pause;
 }
         
 bool CActionSet::DeleteAct(string name, bool skip)
