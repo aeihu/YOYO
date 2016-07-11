@@ -18,9 +18,8 @@ bool CSimultaneousOfAction::OnLoop()
         if ((*it)->OnLoop()){
             __count++;
         }
-        else{
-            ++it;
-        }
+            
+        ++it;
     }
     _skip = false;
 
