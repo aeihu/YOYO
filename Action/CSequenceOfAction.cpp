@@ -8,29 +8,23 @@
 
 #include "CSequenceOfAction.h"
 
-bool CSequenceOfAction::OnLoop(bool cleanup)
+bool CSequenceOfAction::OnLoop()
 {
     do {
-        if (!_actionList.empty()){
+        if (_iterator != _actionList.end()){
             if (_skip)
-                _actionList.front()->Skip();
+                (*_iterator)->Skip();
 
-            if (_actionList.front()->OnLoop(cleanup)){
-                if (!cleanup)
-                    _tempActionList.push_back(_actionList.front());
-
-                 _actionList.pop_front();
+            if ((*_iterator)->OnLoop()){
+                _iterator++;
             }
         }
         else
             _skip = false;
     } while (_skip);
     
-    if (_actionList.empty()){
-        if (cleanup)
-            OnCleanup();
-        else
-            _actionList.swap(_tempActionList);
+    if (_iterator == _actionList.end()){
+        OnCleanup();
         
         return true;
     }
@@ -40,10 +34,10 @@ bool CSequenceOfAction::OnLoop(bool cleanup)
 
 bool CSequenceOfAction::PauseRequest() const
 {
-    if (_actionList.size() < 1)
+    if (_iterator == _actionList.end())
         return false;
 
-    return _pauseRequest || _actionList.front()->PauseRequest();
+    return _pauseRequest || (*_iterator)->PauseRequest();
 }
 
 CActionBaseClass* CSequenceOfAction::Copy()

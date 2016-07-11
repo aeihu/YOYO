@@ -17,12 +17,12 @@ using namespace std;
 class CActionSet : public CActionBaseClass
 {
     private:
-        string                      _name;
+        string                              _name;
     protected:
-        list<CActionBaseClass*>     _actionList;
-        list<CActionBaseClass*>     _tempActionList;
+        list<CActionBaseClass*>::iterator   _iterator;
+        list<CActionBaseClass*>             _actionList;
 
-        virtual bool CopyList(CActionSet* act);
+        bool CopyList(CActionSet* act);
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);

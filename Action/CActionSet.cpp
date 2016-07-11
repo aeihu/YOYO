@@ -11,6 +11,7 @@
 CActionSet::CActionSet()
 {
     _name = "";
+    _iterator = _actionList.begin();
 }
 
 
@@ -27,6 +28,11 @@ void CActionSet::SetName(string name)
 void CActionSet::SetPause(bool pause)
 {
     _pauseRequest = pause;
+
+    if (_pauseRequest)
+        _numOfPauseActions++;
+    else
+        _numOfPauseActions--;
 }
         
 bool CActionSet::DeleteAct(string name, bool skip)
@@ -54,16 +60,35 @@ bool CActionSet::DeleteAct(string name, bool skip)
     return false;
 }
 
+void CActionSet::AddAction(CActionBaseClass* act)
+{
+    if (act != NULL){
+        _actionList.push_back(act);
+        _iterator = _actionList.begin();
+    }
+}
+
+void CActionSet::OnCleanup()
+{
+    if (_actionList.empty())
+        return;
+
+    for (list<CActionBaseClass*>::iterator it = _actionList.begin(); it != _actionList.end(); it++){
+        (*it)->OnCleanup();
+        delete (*it);
+        (*it) = NULL;
+    }
+
+    _actionList.clear();
+}
+
 bool CActionSet::CopyList(CActionSet* act)
 {
     if (act){
         act->SetName(_name);
         act->SetPause(_pauseRequest);
-        
-        for (list<CActionBaseClass*>::iterator it=_tempActionList.begin();it!=_tempActionList.end(); it++)
-            act->AddAction((*it)->Copy());
 
-        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); it++)
+        for (list<CActionBaseClass*>::iterator it = _actionList.begin(); it != _actionList.end(); it++)
             act->AddAction((*it)->Copy());
 
         return true;
@@ -71,31 +96,3 @@ bool CActionSet::CopyList(CActionSet* act)
 
     return false;
 }
-
-void CActionSet::AddAction(CActionBaseClass* act)
-{
-    if (act != NULL)
-        _actionList.push_back(act);
-}
-
-void CActionSet::OnCleanup()
-{
-    if (_actionList.empty() && _tempActionList.empty())
-        return;
-
-    list<CActionBaseClass*>* __list = &_actionList;
-
-    for (char i=0; i<2; i++){
-        if (i == 1)
-            __list = &_tempActionList;
-
-        for (list<CActionBaseClass*>::iterator it=__list->begin(); it!=__list->end(); it++){
-            (*it)->OnCleanup();
-            delete (*it);
-            (*it) = NULL;
-        }
-    }
-    _actionList.clear();
-    _tempActionList.clear();
-}
-
