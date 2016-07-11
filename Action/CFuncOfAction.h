@@ -18,7 +18,7 @@ class CFuncOfAction : public CActionBaseClass
     protected:
     public:
         CFuncOfAction(void (*func)());
-        bool OnLoop(bool cleanup=true);
+        bool OnLoop();
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_FUNC;}
 };

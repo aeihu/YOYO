@@ -8,17 +8,15 @@
 
 #include "CSimultaneousOfAction.h"
 
-bool CSimultaneousOfAction::OnLoop(bool cleanup)
+bool CSimultaneousOfAction::OnLoop()
 {
+    size_t __count = 0;
     for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
         if (_skip)
             (*it)->Skip();
 
-        if ((*it)->OnLoop(cleanup)){
-            if (!cleanup)
-                _tempActionList.push_back(*it);
-
-            it=_actionList.erase(it);
+        if ((*it)->OnLoop()){
+            __count++;
         }
         else{
             ++it;
@@ -26,12 +24,8 @@ bool CSimultaneousOfAction::OnLoop(bool cleanup)
     }
     _skip = false;
 
-    if (_actionList.empty()){
-        if (cleanup)
-            OnCleanup();
-        else
-            _actionList.swap(_tempActionList);
-        
+    if (_actionList.size() == __count){
+        OnCleanup();
         return true;
     }
 
@@ -40,18 +34,15 @@ bool CSimultaneousOfAction::OnLoop(bool cleanup)
 
 bool CSimultaneousOfAction::PauseRequest() const
 {
-    if (_actionList.size() < 1)
-        return false;
-
-    if (_pauseRequest)
-        return true;
-
+    size_t __count = 0;
     for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
         if ((*it)->PauseRequest())
             return true;
+
+        __count++;
     }
 
-    return false;
+    return __count < 1 ? false : _pauseRequest;
 }
 
 CActionBaseClass* CSimultaneousOfAction::Copy()

@@ -25,7 +25,7 @@ class CClassFuncOfAction : public CActionBaseClass
             _func = func;
         }
 
-        bool OnLoop(bool cleanup=true)
+        bool OnLoop()
         {
             if (_func != 0 && _obj != 0){
                 (_obj->*_func)();

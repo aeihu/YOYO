@@ -13,9 +13,12 @@ CDeplayOfAction::CDeplayOfAction(size_t delay, bool pause)
     _isRunning = false;
     _delay = delay;
     _pauseRequest = pause;
+
+    if (_pauseRequest)
+        _numOfPauseActions++;
 }
 
-bool CDeplayOfAction::OnLoop(bool cleanup)
+bool CDeplayOfAction::OnLoop()
 {
     if (!_isRunning){
         _time = CCommon::_Common.GetTicks() + _delay;

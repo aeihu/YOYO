@@ -13,7 +13,7 @@ CFuncOfAction::CFuncOfAction(void (*func)())
     _func = func;
 }
 
-bool CFuncOfAction::OnLoop(bool cleanup)
+bool CFuncOfAction::OnLoop()
 {
     if (_func != 0){
         _func();

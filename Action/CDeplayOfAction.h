@@ -20,9 +20,9 @@ class CDeplayOfAction : public CActionBaseClass
         size_t          _delay;
     public:
         CDeplayOfAction(size_t delay, bool pause=false);
-        
+
         bool PauseRequest() const;
-        bool OnLoop(bool cleanup=true);
+        bool OnLoop();
         virtual CActionBaseClass* Copy();
 
         virtual inline EActType GetType() { return ACTION_DEPLY;}
