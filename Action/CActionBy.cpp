@@ -18,13 +18,15 @@ CActionBy::CActionBy(float* val, size_t elapsed, float fin, bool restore, bool p
         _pauseRequest = pause;
         _restore = restore;
         _elapsed = elapsed;
+
+        if (_pauseRequest)
+            _numOfPauseActions++;
     }
 }
-
 /*
     when result is true, it's mean action has finished
 */
-bool CActionBy::OnLoop(bool cleanup)
+bool CActionBy::OnLoop()
 {
     if (_val == NULL)
         return true;

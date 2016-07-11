@@ -27,7 +27,7 @@ class CActionTo : public CActionBaseClass
         CActionTo(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
 
         bool PauseRequest() const;
-        bool OnLoop(bool cleanup=true);
+        bool OnLoop();
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_TO;}
 };

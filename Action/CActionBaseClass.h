@@ -30,18 +30,21 @@ class CActionBaseClass
             ACTION_CLASS_FUNC_ARGS,
         };
 
+        static int  _numOfPauseActions;
         bool        _pauseRequest;
         bool        _skip;
     public:
-        CActionBaseClass() {_skip = _pauseRequest = false;}
+        CActionBaseClass();
+        ~CActionBaseClass();
 
-        virtual string GetName() const {return "";}; 
-        virtual bool OnLoop(bool cleanup=true)=0; 
+        static int GetNumberOfActionInPause();
+        virtual string GetName() const;
+        virtual bool OnLoop()=0; 
         virtual void OnCleanup(){}; 
-        virtual bool PauseRequest() const {return _pauseRequest;} 
-        void Skip() {_skip = true;}
+        virtual bool PauseRequest() const;
+        void Skip();
         virtual CActionBaseClass* Copy()=0;
-        virtual inline EActType GetType() { return ACTION_BASE;}
+        virtual inline EActType GetType() { return ACTION_BASE; }
 };
 
 #endif
