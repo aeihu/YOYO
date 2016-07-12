@@ -15,12 +15,12 @@ CTextProcessing::CTextProcessing()
 {
     _pAlpha = NULL;
     _coordinate.x = _coordinate.y = 0.0f;
+    _status = CONFIRMED;
     _isSkip = false;
     _rowWidth =
     _index=
     _oldTime =
     _length = 0;
-
     _textOfShown =
     _text = "";
     _textColor.r = 255;
@@ -38,7 +38,7 @@ CTextProcessing::CTextProcessing()
 
 bool CTextProcessing::isWordOrNumber(char c)
 {
-    // have a problem in here
+    // There's a problem
     return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 43 && c <= 58);
 }
 
@@ -109,6 +109,7 @@ void CTextProcessing::Clear()
 
 void CTextProcessing::SetText(string msg)
 {
+    _status = RUNNING;
     _textOfShown = "";
     _length =
     _index = 0;
@@ -174,19 +175,29 @@ void CTextProcessing::OnLoop()
     else
         return;
 
-    if (_index < _text.length()){
-        if (_isSkip){
-            _textOfShown = _text;
-            _index = _text.length();
-            _isSkip = false;
+    if (_status == RUNNING){
+        if (_index < _text.length()){
+            if (_isSkip){
+                _textOfShown = _text;
+                _index = _text.length();
+                _isSkip = false;
+            }
+            else{
+                size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
+                _textOfShown.append(_text.substr(_index, __size));
+                _index += __size;
+            }
+            CTextFunction::SetString(_sfText, _textOfShown);
         }
         else{
-            size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
-            _textOfShown.append(_text.substr(_index, __size));
-            _index += __size;
+            _status = FINISH;
         }
-        CTextFunction::SetString(_sfText, _textOfShown);
     }
+}
+
+void CTextProcessing::Confirm()
+{
+    _status = CONFIRMED;
 }
 
 void CTextProcessing::Skip()
@@ -206,9 +217,9 @@ void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)
     Surf_Dest->draw(_sfText);
 }
 
-bool CTextProcessing::IsTextAllShown()
+CTextProcessing::EStatus CTextProcessing::GetStatus() const
 {
-    return _index>=_text.length();
+    return _status;
 }
 
 float CTextProcessing::GetWidth()

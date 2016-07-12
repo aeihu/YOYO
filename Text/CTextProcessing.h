@@ -20,9 +20,17 @@
 
 class CTextProcessing
 {
+    public:
+        enum EStatus
+        {
+            RUNNING,
+            FINISH,
+            CONFIRMED,
+        };
     private:
         sf::Vector2f        _coordinate;
         bool                _isSkip;
+        EStatus             _status;
         string              _text;
         string              _textOfShown;
         sf::Text            _sfText;
@@ -48,9 +56,10 @@ class CTextProcessing
         void OnRender(sf::RenderTarget* Surf_Dest);
         void Skip();
         void Clear();
-        bool IsTextAllShown();
+        void Confirm();
 
         virtual void SetText(string msg);
+        EStatus GetStatus() const;
         string GetText();
         float GetWidth();
         float GetHeight();
