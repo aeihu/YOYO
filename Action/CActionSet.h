@@ -17,19 +17,21 @@ using namespace std;
 class CActionSet : public CActionBaseClass
 {
     private:
-        string                              _name;
+        bool                                _isDelete;
+        
+        void SetIsDelete(CActionBaseClass* act, bool b);
     protected:
+        string                              _name;
         list<CActionBaseClass*>::iterator   _iterator;
         list<CActionBaseClass*>             _actionList;
 
         bool CopyList(CActionSet* act);
+        bool IsDelete() const;
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
         virtual bool PauseRequest() const=0;
         virtual string GetName() const;
-        void SetName(string name);
-        void SetPause(bool pause);
         bool DeleteAct(string name, bool skip);
 
         void OnCleanup();

@@ -10,6 +10,7 @@
 
 CActionSet::CActionSet()
 {
+    _isDelete = true;
     _name = "";
     _iterator = _actionList.begin();
 }
@@ -18,19 +19,6 @@ CActionSet::CActionSet()
 string CActionSet::GetName() const
 {
     return _name;
-}
-
-void CActionSet::SetName(string name)
-{
-    _name = name;
-}
-
-void CActionSet::SetPause(bool pause)
-{
-    if (pause != _pauseRequest)
-        _numOfPauseActions += pause ? 1 : -1;
-
-    _pauseRequest = pause;
 }
         
 bool CActionSet::DeleteAct(string name, bool skip)
@@ -61,8 +49,34 @@ bool CActionSet::DeleteAct(string name, bool skip)
 void CActionSet::AddAction(CActionBaseClass* act)
 {
     if (act != NULL){
+        if (this->GetType() == ACTION_REP){
+            SetIsDelete(act,  false);
+        }
+        
         _actionList.push_back(act);
         _iterator = _actionList.begin();
+    }
+}
+
+void CActionSet::SetIsDelete(CActionBaseClass* act, bool b)
+{
+    if (act){
+        if (act->GetType() == ACTION_SEQ || 
+            act->GetType() == ACTION_SIM ||
+            act->GetType() == ACTION_REP){
+            CActionSet* __actset = static_cast<CActionSet*>(act);
+            __actset->_isDelete = b;
+
+            for (list<CActionBaseClass*>::iterator it = __actset->_actionList.begin();
+                it != __actset->_actionList.end(); it++){
+
+                if ((*it)->GetType() == ACTION_SEQ ||
+                    (*it)->GetType() == ACTION_SIM ||
+                    (*it)->GetType() == ACTION_REP){
+                    SetIsDelete((*it), b);
+                }
+            }
+        }
     }
 }
 
@@ -83,9 +97,6 @@ void CActionSet::OnCleanup()
 bool CActionSet::CopyList(CActionSet* act)
 {
     if (act){
-        act->SetName(_name);
-        act->SetPause(_pauseRequest);
-
         for (list<CActionBaseClass*>::iterator it = _actionList.begin(); it != _actionList.end(); it++)
             act->AddAction((*it)->Copy());
 
@@ -93,4 +104,8 @@ bool CActionSet::CopyList(CActionSet* act)
     }
 
     return false;
+}
+bool CActionSet::IsDelete() const
+{
+    return _isDelete;
 }

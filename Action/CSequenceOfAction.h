@@ -20,6 +20,7 @@ class CSequenceOfAction : public CActionSet
 {
     protected:
     public:
+        CSequenceOfAction(string name = "", bool pause = false);
         bool PauseRequest() const;
         bool OnLoop();
         virtual CActionBaseClass* Copy();

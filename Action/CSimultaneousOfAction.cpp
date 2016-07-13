@@ -8,6 +8,15 @@
 
 #include "CSimultaneousOfAction.h"
 
+CSimultaneousOfAction::CSimultaneousOfAction(string name, bool pause)
+{
+    _name = name;
+    _pauseRequest = pause;
+
+    if (_pauseRequest)
+        _numOfPauseActions++;
+}
+
 bool CSimultaneousOfAction::OnLoop()
 {
     size_t __count = 0;
@@ -24,7 +33,9 @@ bool CSimultaneousOfAction::OnLoop()
     _skip = false;
 
     if (_actionList.size() == __count){
-        OnCleanup();
+        if (IsDelete())
+            OnCleanup();
+
         return true;
     }
 
@@ -46,7 +57,7 @@ bool CSimultaneousOfAction::PauseRequest() const
 
 CActionBaseClass* CSimultaneousOfAction::Copy()
 {
-    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction(_name, _pauseRequest);
     if (!CopyList(__result)){
         delete __result;
         return NULL;
