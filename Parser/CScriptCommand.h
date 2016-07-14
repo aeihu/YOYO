@@ -97,6 +97,7 @@ int Cmd_MoveCamera(lua_State* args);
 int Cmd_ScaleCamera(lua_State* args);
 int Cmd_RotationCamera(lua_State* args);
 
+int Cmd_Delay(lua_State* args);
 //int Cmd_Pause(lua_State* args);
 int Cmd_LoadScript(lua_State* args);
 

@@ -21,11 +21,22 @@
 #include "../Action/CClassFuncArgsOfAction.h"
 #include "../Gui/CText.h"
 
+string __funcname = "";
 
 int Common_YieldCont(lua_State *L, int, lua_KContext ctx)
 {
-    cout << "Common_YieldCont(): resume suspends." << endl;
+    if (CResourceControl::_ResourceManager.GetMsgboxPauseStatus())
+        CResourceControl::_ResourceManager.OffMsgboxPause();
+
+    cout << __funcname << "(): resume thread." << endl;
     return 0;
+}
+
+int Common_RetrunYield(lua_State *L, string funcname)
+{
+    __funcname = funcname;
+    cout << __funcname << "(): suspends thread." << endl;
+    return lua_yieldk(L, 0, 0, Common_YieldCont);
 }
 
 bool Common_GetValue(lua_State* L, const char* fieldName, int& val)
@@ -856,7 +867,7 @@ int Common_FuncOfScreen(lua_State* args, bool isShow)
 int Cmd_ShowCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfShow("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -864,7 +875,7 @@ int Cmd_ShowCharacterLayer(lua_State* args)
 int Cmd_MoveCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfMove("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -872,7 +883,7 @@ int Cmd_MoveCharacterLayer(lua_State* args)
 int Cmd_ScaleCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfScale("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -880,7 +891,7 @@ int Cmd_ScaleCharacterLayer(lua_State* args)
 int Cmd_RotationCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfRotation("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -888,7 +899,7 @@ int Cmd_RotationCharacterLayer(lua_State* args)
 int Cmd_HideCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfHide("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -950,7 +961,7 @@ int Cmd_SetPoseCharacterLayer(lua_State* args)
 int Cmd_SetCharacterLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -958,7 +969,7 @@ int Cmd_SetCharacterLayerOrder(lua_State* args)
 int Cmd_FlipXCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfFlip("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -966,7 +977,7 @@ int Cmd_FlipXCharacterLayer(lua_State* args)
 int Cmd_FlipYCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfFlip("CharacterLayer", args, false) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -974,7 +985,7 @@ int Cmd_FlipYCharacterLayer(lua_State* args)
 int Cmd_OriginCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfOrigin("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -982,7 +993,7 @@ int Cmd_OriginCharacterLayer(lua_State* args)
 int Cmd_ColorCharacterLayer(lua_State* args)
 {
     if (Common_FuncOfColor("CharacterLayer", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1006,7 +1017,7 @@ int Cmd_ColorCharacterLayer(lua_State* args)
 int Cmd_ShowImg(lua_State* args)
 {
     if (Common_FuncOfShow("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1014,7 +1025,7 @@ int Cmd_ShowImg(lua_State* args)
 int Cmd_HideImg(lua_State* args)
 {
     if (Common_FuncOfHide("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1022,7 +1033,7 @@ int Cmd_HideImg(lua_State* args)
 int Cmd_MoveImg(lua_State* args)
 {
     if (Common_FuncOfMove("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1030,7 +1041,7 @@ int Cmd_MoveImg(lua_State* args)
 int Cmd_ScaleImg(lua_State* args)
 {
     if (Common_FuncOfScale("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1038,7 +1049,7 @@ int Cmd_ScaleImg(lua_State* args)
 int Cmd_RotationImg(lua_State* args)
 {
     if (Common_FuncOfRotation("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1046,7 +1057,7 @@ int Cmd_RotationImg(lua_State* args)
 int Cmd_SetImgLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1054,7 +1065,7 @@ int Cmd_SetImgLayerOrder(lua_State* args)
 int Cmd_FlipXImg(lua_State* args)
 {
     if (Common_FuncOfFlip("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1062,7 +1073,7 @@ int Cmd_FlipXImg(lua_State* args)
 int Cmd_FlipYImg(lua_State* args)
 {
     if (Common_FuncOfFlip("Img", args, false) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1070,7 +1081,7 @@ int Cmd_FlipYImg(lua_State* args)
 int Cmd_OriginImg(lua_State* args)
 {
     if (Common_FuncOfOrigin("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1078,7 +1089,7 @@ int Cmd_OriginImg(lua_State* args)
 int Cmd_ColorImg(lua_State* args)
 {
     if (Common_FuncOfColor("Img", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1086,7 +1097,7 @@ int Cmd_ColorImg(lua_State* args)
 int Cmd_ShowText(lua_State* args)
 {
     if (Common_FuncOfShow("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1094,7 +1105,7 @@ int Cmd_ShowText(lua_State* args)
 int Cmd_HideText(lua_State* args)
 {
     if (Common_FuncOfHide("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1102,7 +1113,7 @@ int Cmd_HideText(lua_State* args)
 int Cmd_MoveText(lua_State* args)
 {
     if (Common_FuncOfMove("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1110,7 +1121,7 @@ int Cmd_MoveText(lua_State* args)
 int Cmd_ScaleText(lua_State* args)
 {
     if (Common_FuncOfScale("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1118,7 +1129,7 @@ int Cmd_ScaleText(lua_State* args)
 int Cmd_RotationText(lua_State* args)
 {
     if (Common_FuncOfRotation("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1126,7 +1137,7 @@ int Cmd_RotationText(lua_State* args)
 int Cmd_SetTextLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1134,7 +1145,7 @@ int Cmd_SetTextLayerOrder(lua_State* args)
 int Cmd_OriginText(lua_State* args)
 {
     if (Common_FuncOfOrigin("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1142,7 +1153,7 @@ int Cmd_OriginText(lua_State* args)
 int Cmd_ColorText(lua_State* args)
 {
     if (Common_FuncOfColor("Text", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1354,7 +1365,7 @@ int Cmd_SetBGMVolume(lua_State* args)
                 __inte, __vol, __reset, __pause));
 
     if (__pause)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1396,7 +1407,7 @@ int Cmd_StopBGM(lua_State* args)
     CResourceControl::_ResourceManager._ActionControl.AddAction(__seq);
 
     if (__pause)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1441,7 +1452,7 @@ int Cmd_PlaySE(lua_State* args)
     string __name;//name
     if (!Common_GetValue(args, "n", __name))
     {
-        cout << "Cmd_SetBGMVolume(): parameter \"n\" must be need." << endl;
+        cout << "Cmd_PlaySE(): parameter \"n\" must be need." << endl;
         return 0;
     }
 
@@ -1462,7 +1473,7 @@ int Cmd_PlaySE(lua_State* args)
 int Cmd_ShowButton(lua_State* args)
 {
     if (Common_FuncOfShow("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1470,7 +1481,7 @@ int Cmd_ShowButton(lua_State* args)
 int Cmd_HideButton(lua_State* args)
 {
     if (Common_FuncOfHide("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1478,7 +1489,7 @@ int Cmd_HideButton(lua_State* args)
 int Cmd_MoveButton(lua_State* args)
 {
     if (Common_FuncOfMove("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1486,7 +1497,7 @@ int Cmd_MoveButton(lua_State* args)
 int Cmd_ScaleButton(lua_State* args)
 {
     if (Common_FuncOfScale("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1494,7 +1505,7 @@ int Cmd_ScaleButton(lua_State* args)
 int Cmd_RotationButton(lua_State* args)
 {
     if (Common_FuncOfRotation("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1502,7 +1513,7 @@ int Cmd_RotationButton(lua_State* args)
 int Cmd_SetButtonLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1510,7 +1521,7 @@ int Cmd_SetButtonLayerOrder(lua_State* args)
 int Cmd_FlipXButton(lua_State* args)
 {
     if (Common_FuncOfFlip("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1518,7 +1529,7 @@ int Cmd_FlipXButton(lua_State* args)
 int Cmd_FlipYButton(lua_State* args)
 {
     if (Common_FuncOfFlip("Button", args, false) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1526,7 +1537,7 @@ int Cmd_FlipYButton(lua_State* args)
 int Cmd_OriginButton(lua_State* args)
 {
     if (Common_FuncOfOrigin("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1534,7 +1545,7 @@ int Cmd_OriginButton(lua_State* args)
 int Cmd_ColorButton(lua_State* args)
 {
     if (Common_FuncOfColor("Button", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1631,12 +1642,14 @@ int Cmd_Message(lua_State* args)
     if (__voiceName != ""){
         __args.clear();
         __args.push_back(__voiceName);
+
         __sim->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
             &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayVoice, __args));
     }
 
     __msgbox->AddAction(__sim);
-    lua_yieldk(args, 0, 0, Common_YieldCont);
+    CResourceControl::_ResourceManager.OnMsgboxPause();
+    Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1644,7 +1657,7 @@ int Cmd_Message(lua_State* args)
 int Cmd_ShowMessageBox(lua_State* args)
 {   
     if (Common_FuncOfShow("MessageBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1652,7 +1665,7 @@ int Cmd_ShowMessageBox(lua_State* args)
 int Cmd_HideMessageBox(lua_State* args)
 {
     if (Common_FuncOfHide("MessageBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1660,7 +1673,7 @@ int Cmd_HideMessageBox(lua_State* args)
 int Cmd_SetMessageBoxLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("MessageBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1700,7 +1713,7 @@ int Cmd_CleanMessageBox(lua_State* args)
 int Cmd_ShowLogBox(lua_State* args)
 {
     if (Common_FuncOfShow("LogBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1708,7 +1721,7 @@ int Cmd_ShowLogBox(lua_State* args)
 int Cmd_HideLogBox(lua_State* args)
 {
     if (Common_FuncOfHide("LogBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1716,7 +1729,7 @@ int Cmd_HideLogBox(lua_State* args)
 int Cmd_SetLogBoxLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("LogBox", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1853,7 +1866,7 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 int Cmd_ShowCurtain(lua_State* args)
 {
     if (Common_FuncOfScreen(args, true) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1861,7 +1874,7 @@ int Cmd_ShowCurtain(lua_State* args)
 int Cmd_HideCurtain(lua_State* args)
 {
     if (Common_FuncOfScreen(args, false) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1869,7 +1882,7 @@ int Cmd_HideCurtain(lua_State* args)
 int Cmd_ColorCurtain(lua_State* args)
 {
     if (Common_FuncOfColor("ScrEffect", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1891,7 +1904,7 @@ int Cmd_UseCamera(lua_State* args)
 int Cmd_MoveCamera(lua_State* args)
 {
     if (Common_FuncOfMove("Camera", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1899,7 +1912,7 @@ int Cmd_MoveCamera(lua_State* args)
 int Cmd_ScaleCamera(lua_State* args)
 {
     if (Common_FuncOfScale("Camera", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1907,7 +1920,7 @@ int Cmd_ScaleCamera(lua_State* args)
 int Cmd_RotationCamera(lua_State* args)
 {
     if (Common_FuncOfRotation("Camera", args) == CMD_YIELD)
-        lua_yieldk(args, 0, 0, Common_YieldCont);
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
@@ -1922,6 +1935,30 @@ int Cmd_RotationCamera(lua_State* args)
 //    act->AddAction(new CClassFuncOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::PauseForUserConfrim));
 //    return CMD_OK;
 //}
+int Cmd_Delay(lua_State* args)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 1){
+            cout << __FUNCTION__ << "(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+            return 0;
+        }
+    }
+
+    if (!lua_isnumber(args, 1))
+    {
+        cout << __FUNCTION__ << "(): parameter must be number." << endl;
+        return 0;
+    }
+
+    size_t __time = lua_tonumber(args, 1);
+    CResourceControl::_ResourceManager._ActionControl.AddAction(
+        new CDeplayOfAction(__time, true));
+
+    Common_RetrunYield(args, __FUNCTION__);
+    return 0;
+}
 
 int Cmd_LoadScript(lua_State* args)
 {
