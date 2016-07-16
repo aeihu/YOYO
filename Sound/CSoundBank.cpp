@@ -160,8 +160,10 @@ void CSoundBank::StopVoice()
 
 void CSoundBank::PlayVoice(vector<string> args)
 {
-    if (args.size() > 0)
+    if (args.size() > 0){
+        StopVoice();
         PlayVoice(args[0]);
+    }
 }
 
 bool CSoundBank::PlayVoice(string name)
@@ -205,8 +207,9 @@ bool CSoundBank::DeleteSE(string name)
 
 void CSoundBank::StopSE(vector<string> args)
 {
-    if (args.size() >= 1)
-        StopSE(args[0]);
+    for (vector<string>::iterator it = args.begin(); it != args.end(); it++){
+        StopSE(*it);
+    }
 }
 
 void CSoundBank::StopSE(string name)
