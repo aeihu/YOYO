@@ -36,7 +36,7 @@ class CActionBaseClass
     public:
         CActionBaseClass();
         ~CActionBaseClass();
-
+        
         static int GetNumberOfActionInPause();
         virtual string GetName() const;
         virtual bool OnLoop()=0; 
