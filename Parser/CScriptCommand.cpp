@@ -20,22 +20,23 @@
 #include <algorithm>
 #include "../Action/CClassFuncArgsOfAction.h"
 #include "../Gui/CText.h"
+#include "../Action/CRepeatOfAction.h"
 
-string __funcname = "";
+string func_name = "";
 
 int Common_YieldCont(lua_State *L, int, lua_KContext ctx)
 {
     if (CResourceControl::_ResourceManager.GetMsgboxPauseStatus())
         CResourceControl::_ResourceManager.OffMsgboxPause();
 
-    cout << __funcname << "(): resume thread." << endl;
+    cout << func_name << "(): resume thread." << endl;
     return 0;
 }
 
 int Common_RetrunYield(lua_State *L, string funcname)
 {
-    __funcname = funcname;
-    cout << __funcname << "(): suspends thread." << endl;
+    func_name = funcname;
+    cout << func_name << "(): suspends thread." << endl;
     return lua_yieldk(L, 0, 0, Common_YieldCont);
 }
 
@@ -149,9 +150,10 @@ enum
     CMD_YIELD
 };
 
-int Common_FuncOfColor(string objTypeName, lua_State* args)
+int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 { 
-    string __funcName = "Cmd_Color" + objTypeName;
+    string __funcName = isCreateAction ? 
+        "Cmd_CreateActionForColor" + objTypeName : "Cmd_Color" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -188,7 +190,8 @@ int Common_FuncOfColor(string objTypeName, lua_State* args)
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -204,20 +207,19 @@ int Common_FuncOfColor(string objTypeName, lua_State* args)
 
 
     if (__doc->IsExists(objTypeName+":"+__name)){
-        CImageBaseClass* __obj = static_cast<CImageBaseClass*>(__doc->GetDrawableObject(objTypeName+":"+__name));
+        CImageBaseClass* __obj = static_cast<CImageBaseClass*>(__doc->GetDrawableObject(objTypeName + ":" + __name));
+        CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
 
         if (__crIsBe && __cgIsBe && __cbIsBe){
-            __obj->CreateActionOfColorToForSelf(
+            __sim->AddAction(__obj->CreateActionOfColorTo(
                     __inte, 
                     __cr,
                     __cg,
                     __cb,
                     __reset, 
-                    __pause);
+                    __pause));
         }
         else{
-            CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
-
             if (__crIsBe)
                 __sim->AddAction(__obj->CreateActionOfColorRedTo(__inte, __cr, __reset, __pause));
             
@@ -226,9 +228,12 @@ int Common_FuncOfColor(string objTypeName, lua_State* args)
             
             if (__cbIsBe)
                 __sim->AddAction(__obj->CreateActionOfColorBlueTo(__inte, __cb, __reset, __pause));
-
-            __obj->AddAction(__sim);
         }
+
+        if (isCreateAction)
+            *act = __sim;
+        else
+            __obj->AddAction(__sim);
         
         return __pause ? CMD_YIELD : CMD_OK;
     }
@@ -239,9 +244,10 @@ int Common_FuncOfColor(string objTypeName, lua_State* args)
 }
 
 
-int Common_FuncOfShow(string objTypeName, lua_State* args)
+int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 { 
-    string __funcName = "Cmd_Show" + objTypeName;
+    string __funcName = isCreateAction ? 
+        "Cmd_CreateActionForShow" + objTypeName : "Cmd_Show" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -260,7 +266,8 @@ int Common_FuncOfShow(string objTypeName, lua_State* args)
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -278,11 +285,15 @@ int Common_FuncOfShow(string objTypeName, lua_State* args)
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
     if (__doc->IsExists(objTypeName+":"+__name)){
-        CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
+        CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName + ":" + __name);
+        CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
 
         int __layer; // layer
         if (Common_GetValue(args, "l", __layer)){
-            __obj->SetLayerOrder(__layer);
+            vector<char> __args;
+            __args.push_back(__layer);
+            __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CDrawableClass::SetLayerOrder, __args));
+            __args.clear();
         }
 
         float __x = __obj->GetPosition().x;
@@ -295,9 +306,18 @@ int Common_FuncOfShow(string objTypeName, lua_State* args)
         float __vy;
         if (Common_GetValue(args, "y", __vy)) 
             __y = __vy; // x
-        
-        __obj->CreateActionOfAlphaToForSelf(__inte, __alpha, __reset, __pause);
-        __obj->SetPosition(__x, __y);
+
+        vector<float> __args;
+        __args.push_back(__x);
+        __args.push_back(__y);
+        __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass, float>(__obj, &CDrawableClass::SetPosition, __args));
+        __sim->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset, __pause));
+
+        if (isCreateAction)
+            *act = __sim;
+        else
+            __obj->AddAction(__sim);
+
         return __pause ? CMD_YIELD : CMD_OK;
     }
     else
@@ -306,9 +326,10 @@ int Common_FuncOfShow(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-int Common_FuncOfHide(string objTypeName, lua_State* args)
+int Common_FuncOfHide(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 { 
-    string __funcName = "Cmd_Hide" + objTypeName;
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForHide" + objTypeName : "Cmd_Hide" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -327,7 +348,8 @@ int Common_FuncOfHide(string objTypeName, lua_State* args)
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -344,15 +366,20 @@ int Common_FuncOfHide(string objTypeName, lua_State* args)
     CDrawableClass* __obj = __doc->GetDrawableObject(objTypeName+":"+__name);
 
     if (__obj != NULL){
-        __obj->CreateActionOfAlphaToForSelf(__inte, 0.0f, __reset, __pause);
+        if (isCreateAction)
+            *act = __obj->CreateActionOfAlphaTo(__inte, 0.0f, __reset, __pause);
+        else
+            __obj->CreateActionOfAlphaToForSelf(__inte, 0.0f, __reset, __pause);
+
         return __pause ? CMD_YIELD : CMD_OK;
     }
     return CMD_ERR;
 }
 
-int Common_FuncOfMove(string objTypeName, lua_State* args)
+int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 { 
-    string __funcName = "Cmd_Move" + objTypeName;
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForMove" + objTypeName : "Cmd_Move" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -384,7 +411,8 @@ int Common_FuncOfMove(string objTypeName, lua_State* args)
     Common_GetValue(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -409,26 +437,50 @@ int Common_FuncOfMove(string objTypeName, lua_State* args)
 
     if (__obj != NULL){
         if (__xIsBe && __yIsBe){
-            if (__isBy)
-                __obj->CreateActionOfMoveByForSelf(__inte, __x, __y, __reset, __pause);
-            else
-                __obj->CreateActionOfMoveToForSelf(__inte, __x, __y, __reset, __pause);
+            if (__isBy){
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfMoveBy(__inte, __x, __y, __reset, __pause);
+                else
+                    __obj->CreateActionOfMoveByForSelf(__inte, __x, __y, __reset, __pause);
+            }
+            else{
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfMoveTo(__inte, __x, __y, __reset, __pause);
+                else
+                    __obj->CreateActionOfMoveToForSelf(__inte, __x, __y, __reset, __pause);
+            }
         }
         else
         {
             if (__xIsBe)
             {
-                if (__isBy)
-                    __obj->CreateActionOfMoveXByForSelf(__inte, __x, __reset, __pause);
-                else
-                    __obj->CreateActionOfMoveXToForSelf(__inte, __x, __reset, __pause);
+                if (__isBy){
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfMoveXBy(__inte, __x, __reset, __pause);
+                    else
+                        __obj->CreateActionOfMoveXByForSelf(__inte, __x, __reset, __pause);
+                }
+                else{
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfMoveXTo(__inte, __x, __reset, __pause);
+                    else
+                        __obj->CreateActionOfMoveXToForSelf(__inte, __x, __reset, __pause);
+                }
             }
             else
             {
-                if (__isBy)
-                    __obj->CreateActionOfMoveYByForSelf(__inte, __y, __reset, __pause);
-                else
-                    __obj->CreateActionOfMoveYToForSelf(__inte, __y, __reset, __pause);
+                if (__isBy){
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfMoveYBy(__inte, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfMoveYByForSelf(__inte, __y, __reset, __pause);
+                }
+                else{
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfMoveYTo(__inte, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfMoveYToForSelf(__inte, __y, __reset, __pause);
+                }
             }
         }
         return __pause ? CMD_YIELD : CMD_OK;
@@ -437,9 +489,10 @@ int Common_FuncOfMove(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-int Common_FuncOfOrigin(string objTypeName, lua_State* args)
+int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 { 
-    string __funcName = "Cmd_Origin" + objTypeName;
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForOrigin" + objTypeName : "Cmd_Origin" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -471,7 +524,8 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args)
     Common_GetValue(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -488,40 +542,65 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args)
     CImageBaseClass* __obj = NULL;
 
     __obj = static_cast<CImageBaseClass*>(__doc->GetDrawableObject(objTypeName+":"+__name));
-
     if (__obj != NULL){
         if (__xIsBe && __yIsBe){
-            if (__isBy)
-                __obj->CreateActionOfOriginByForSelf(__inte, __x, __y, __reset, __pause);
-            else
-                __obj->CreateActionOfOriginToForSelf(__inte, __x, __y, __reset, __pause);
+            if (__isBy){
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfOriginBy(__inte, __x, __y, __reset, __pause);
+                else
+                    __obj->CreateActionOfOriginByForSelf(__inte, __x, __y, __reset, __pause);
+            }
+            else{
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfOriginTo(__inte, __x, __y, __reset, __pause);
+                else
+                    __obj->CreateActionOfOriginToForSelf(__inte, __x, __y, __reset, __pause);
+            }
         }
         else
         {
             if (__xIsBe)
             {
-                if (__isBy)
-                    __obj->CreateActionOfOriginXByForSelf(__inte, __x, __reset, __pause);
-                else
-                    __obj->CreateActionOfOriginXToForSelf(__inte, __x, __reset, __pause);
+                if (__isBy){
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfOriginXBy(__inte, __x, __reset, __pause);
+                    else
+                        __obj->CreateActionOfOriginXByForSelf(__inte, __x, __reset, __pause);
+                }
+                else{
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfOriginXTo(__inte, __x, __reset, __pause);
+                    else
+                        __obj->CreateActionOfOriginXToForSelf(__inte, __x, __reset, __pause);
+                }
             }
             else
             {
-                if (__isBy)
-                    __obj->CreateActionOfOriginYByForSelf(__inte, __y, __reset, __pause);
-                else
-                    __obj->CreateActionOfOriginYToForSelf(__inte, __y, __reset, __pause);
+                if (__isBy){
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfOriginYBy(__inte, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfOriginYByForSelf(__inte, __y, __reset, __pause);
+                }
+                else{
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfOriginYTo(__inte, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfOriginYToForSelf(__inte, __y, __reset, __pause);
+                }
             }
         }
+
         return __pause ? CMD_YIELD : CMD_OK;
     }
 
     return CMD_ERR;
 }
 
-int Common_FuncOfRotation(string objTypeName, lua_State* args)
+int Common_FuncOfRotation(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
-    string __funcName = "Cmd_Rotation" + objTypeName;
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForRotation" + objTypeName : "Cmd_Rotation" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -550,7 +629,8 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args)
     Common_GetValue(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -574,19 +654,29 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args)
     }
 
     if (__obj != NULL){
-        if (__isBy)
-            __obj->CreateActionOfRotationByForSelf(__inte, __rotation, __reset, __pause);
-        else
-            __obj->CreateActionOfRotationToForSelf(__inte, __rotation, __reset, __pause);
+        if (__isBy){
+            if (isCreateAction)
+                *act = __obj->CreateActionOfRotationBy(__inte, __rotation, __reset, __pause);
+            else
+                __obj->CreateActionOfRotationByForSelf(__inte, __rotation, __reset, __pause);
+        }
+        else{
+            if (isCreateAction)
+                *act = __obj->CreateActionOfRotationTo(__inte, __rotation, __reset, __pause);
+            else
+                __obj->CreateActionOfRotationToForSelf(__inte, __rotation, __reset, __pause);
+        }
+
         return __pause ? CMD_YIELD : CMD_OK;
     }
 
     return CMD_ERR;
 }
 
-int Common_FuncOfScale(string objTypeName, lua_State* args)
-{ 
-    string __funcName = "Cmd_Scale" + objTypeName;
+int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
+{
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForScale" + objTypeName : "Cmd_Scale" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -608,7 +698,8 @@ int Common_FuncOfScale(string objTypeName, lua_State* args)
     Common_GetValue(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false; //reset
     Common_GetValue(args, "r", __reset);
@@ -629,10 +720,18 @@ int Common_FuncOfScale(string objTypeName, lua_State* args)
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
 
         if (__obj != NULL){
-            if (__isBy)
-                __obj->CreateActionOfScaleXByForSelf(__inte, __z, __reset, __pause);
-            else
-                __obj->CreateActionOfScaleXToForSelf(__inte, __z, __reset, __pause);
+            if (__isBy){
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfScaleXBy(__inte, __z, __reset, __pause);
+                else
+                    __obj->CreateActionOfScaleXByForSelf(__inte, __z, __reset, __pause);
+            }
+            else{
+                if (isCreateAction)
+                    *act = __obj->CreateActionOfScaleXTo(__inte, __z, __reset, __pause);
+                else
+                    __obj->CreateActionOfScaleXToForSelf(__inte, __z, __reset, __pause);
+            }
 
             return __pause ? CMD_YIELD : CMD_OK;
         }
@@ -664,25 +763,48 @@ int Common_FuncOfScale(string objTypeName, lua_State* args)
 
         if (__obj != NULL){
             if (__xIsBe && __yIsBe){
-                if (__isBy)
-                    __obj->CreateActionOfScaleByForSelf(__inte, __x, __y, __reset, __pause);
-                else
-                    __obj->CreateActionOfScaleToForSelf(__inte, __x, __y, __reset, __pause);
+                if (__isBy){
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfScaleBy(__inte, __x, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfScaleByForSelf(__inte, __x, __y, __reset, __pause);
+                }
+                else{
+                    if (isCreateAction)
+                        *act = __obj->CreateActionOfScaleTo(__inte, __x, __y, __reset, __pause);
+                    else
+                        __obj->CreateActionOfScaleToForSelf(__inte, __x, __y, __reset, __pause);
+                }
             }
             else{
                 if (__xIsBe){
-                    if (__isBy)
-                        __obj->CreateActionOfScaleXByForSelf(__inte, __x, __reset, __pause);
-                    else
-                        __obj->CreateActionOfScaleXToForSelf(__inte, __x, __reset, __pause);
+                    if (__isBy){
+                        if (isCreateAction)
+                            *act = __obj->CreateActionOfScaleXBy(__inte, __x, __reset, __pause);
+                        else
+                            __obj->CreateActionOfScaleXByForSelf(__inte, __x, __reset, __pause);
+                    }
+                    else{
+                        if (isCreateAction)
+                            *act = __obj->CreateActionOfScaleXTo(__inte, __x, __reset, __pause);
+                        else
+                            __obj->CreateActionOfScaleXToForSelf(__inte, __x, __reset, __pause);
+                    }
                 }
                 else{
-                    if (__isBy)
-                        __obj->CreateActionOfScaleYByForSelf(__inte, __y, __reset, __pause);
-                    else
-                        __obj->CreateActionOfScaleYToForSelf(__inte, __y, __reset, __pause);
+                    if (__isBy){
+                        if (isCreateAction)
+                            *act = __obj->CreateActionOfScaleYBy(__inte, __x, __reset, __pause);
+                        else
+                            __obj->CreateActionOfScaleYByForSelf(__inte, __x, __reset, __pause);
+                    }
+                    else{
+                        if (isCreateAction)
+                            *act = __obj->CreateActionOfScaleYTo(__inte, __x, __reset, __pause);
+                        else
+                            __obj->CreateActionOfScaleYToForSelf(__inte, __x, __reset, __pause);
+                    }
                 }
-
             }
 
             return __pause ? CMD_YIELD : CMD_OK;
@@ -692,9 +814,10 @@ int Common_FuncOfScale(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-int Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
-{ 
-    string __funcName = "Cmd_SetLayerOrder" + objTypeName;
+int Common_FuncOfLayerOrder(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
+{
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForSetLayerOrder" + objTypeName : "Cmd_SetLayerOrder" + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -712,7 +835,7 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
         return CMD_ERR;
     }
 
-    string __layer;
+    int __layer;
     if (!Common_GetValue(args, "l", __layer))
     {
         cout << __funcName << "(): parameter \"l\" must be need." << endl;
@@ -729,9 +852,12 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
     __obj = __doc->GetDrawableObject(objTypeName + ":" + __name);
 
     if (__obj){
-        vector<string> __args;
+        vector<char> __args;
         __args.push_back(__layer);
-        __obj->AddAction(new CClassFuncArgsOfAction<CDrawableClass>(__obj, &CImageBaseClass::SetLayerOrder, __args));
+        if (isCreateAction)
+            *act = new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CImageBaseClass::SetLayerOrder, __args);
+        else
+            __obj->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CImageBaseClass::SetLayerOrder, __args));
 
         return CMD_OK;
     }
@@ -740,9 +866,11 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args)
     return CMD_ERR;
 }
 
-int Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
+int Common_FuncOfFlip(string objTypeName, lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false, bool flipx = true)
 {
-    string __funcName = (flipx ? "Cmd_FlipX" : "Cmd_FlipY") + objTypeName;
+    string __funcName = isCreateAction ?
+        (flipx ? "Cmd_CreateActionForFlipX" : "Cmd_CreateActionForFlipY") + objTypeName :
+        (flipx ? "Cmd_FlipX" : "Cmd_FlipY") + objTypeName;
 
     {
         int __numOfargs = lua_gettop(args);
@@ -769,10 +897,18 @@ int Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
     __obj = static_cast<CImgLayer*>(__doc->GetDrawableObject(objTypeName + ":" + lua_tostring(args, 1)));
 
     if (__obj){
-        if (flipx)
-            __obj->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipX));
-        else
-            __obj->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipY));
+        if (flipx){
+            if (isCreateAction)
+                *act = new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipX);
+            else
+                __obj->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipX));
+        }
+        else{
+            if (isCreateAction)
+                *act = new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipY);
+            else
+                __obj->AddAction(new CClassFuncOfAction<CImgLayer>(__obj, &CImgLayer::FlipY));
+        }
 
         return CMD_OK;
     }
@@ -780,9 +916,11 @@ int Common_FuncOfFlip(string objTypeName, lua_State* args, bool flipx = true)
     return CMD_ERR;
 }
 
-int Common_FuncOfScreen(lua_State* args, bool isShow)
+int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
-    string __funcName = isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
+    string __funcName = isCreateAction ?
+        isShow ? "Cmd_CreateActionForShowCurtain" : "Cmd_CreateActionForHideCurtain" :
+        isShow ? "Cmd_ShowCurtain" : "Cmd_HideCurtain";
 
     {
         int __numOfargs = lua_gettop(args);
@@ -794,7 +932,8 @@ int Common_FuncOfScreen(lua_State* args, bool isShow)
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __right = false; //right
     Common_GetValue(args, "r", __right);
@@ -821,107 +960,74 @@ int Common_FuncOfScreen(lua_State* args, bool isShow)
         return CMD_ERR;
     }
 
+    CSimultaneousOfAction* __sim = isCreateAction ? new CSimultaneousOfAction() : NULL;
+
     int __layer;
-    if (Common_GetValue(args, "l", __layer))
-        __obj->SetLayerOrder(__layer);
+    if (Common_GetValue(args, "l", __layer)){
+        vector<char> __args;
+        __args.push_back(__layer);
+
+        if (isCreateAction)
+            __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CDrawableClass::SetLayerOrder, __args));
+        else
+            __obj->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CDrawableClass::SetLayerOrder, __args));
+    }
 
     switch (__Type)
     {
         case 1:
-            __obj->CreateActionGradientForSelf(__inte, isShow, __right, __pause);
+            if (isCreateAction)
+                __sim->AddAction(__obj->CreateActionGradient(__inte, isShow, __right, __pause));
+            else
+                __obj->CreateActionGradientForSelf(__inte, isShow, __right, __pause);
             break;
         case 2:
-            __obj->CreateActionLouverForSelf(__inte, isShow, __right, false, __pause);
+            if (isCreateAction)
+                __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __right, false, __pause));
+            else
+                __obj->CreateActionLouverForSelf(__inte, isShow, __right, false, __pause);
             break;
         case 3:
-            __obj->CreateActionLouverForSelf(__inte, isShow, __right, true, __pause);
+            if (isCreateAction)
+                __sim->AddAction(__obj->CreateActionLouver(__inte, isShow, __right, true, __pause));
+            else
+                __obj->CreateActionLouverForSelf(__inte, isShow, __right, true, __pause);
             break;
         default:
-            __obj->CreateActionShowOrHideForSelf(__inte, isShow, __pause);
+            if (isCreateAction)
+                __sim->AddAction(__obj->CreateActionShowOrHide(__inte, isShow, __pause));
+            else
+                __obj->CreateActionShowOrHideForSelf(__inte, isShow, __pause);
             break;
     }
+
+    if (isCreateAction)
+        *act = __sim;
 
     return __pause ? CMD_YIELD : CMD_OK;
 }
 
-//int Cmd_FuncOfActionForDeleteOrSkip(string funcName, lua_State* args, bool skip)
-//{
-//    CActionSet& act = &CResourceControl::_ResourceManager._ActionControl;
-//
-//    if (act == NULL){
-//        cout << funcName << "(): action set is null." <<endl;
-//        return CMD_ERR;
-//    }
-//    
-//    for (size_t i=0; i<args.size(); i++){
-//        act->DeleteAct(args[i], skip);
-//    }
-//
-//    return CMD_OK;
-//}
-
-/*==============================================================
-    commad of script
-===============================================================*/
-
-int Cmd_ShowCharacterLayer(lua_State* args)
+int Common_SetPoseCharacterLayer(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
-    if (Common_FuncOfShow("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForSetPoseCharacterLayer" : "Cmd_SetPoseCharacterLayer";
 
-    return 0;
-}
-
-int Cmd_MoveCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfMove("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ScaleCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfScale("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_RotationCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfRotation("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_HideCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfHide("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_SetPoseCharacterLayer(lua_State* args)
-{
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_SetPoseCharacterLayer(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_ERR;
         }
     }
 
     string __name;
     if (!Common_GetValue(args, "n", __name))
     {
-        cout << "Cmd_SetPoseCharacterLayer(): parameter \"n\" must be need." << endl;
-        return 0;
+        cout << __funcName << "(): parameter \"n\" must be need." << endl;
+        return CMD_ERR;
     }
-    
+
     string __body = "";
     Common_GetValue(args, "b", __body);
 
@@ -939,241 +1045,47 @@ int Cmd_SetPoseCharacterLayer(lua_State* args)
     __args.push_back(__eye);
     __args.push_back(__mouth);
     __args.push_back(__skip);
-    
+
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
-            :
+        :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    if (!__doc->IsExists("CharacterLayer:"+__name)){
-        cout << "Cmd_SetPoseCharacterLayer(): can't find character layer \""<< __name << "\"." <<endl;
-        return 0;
+    if (!__doc->IsExists("CharacterLayer:" + __name)){
+        cout << __funcName << "(): can't find character layer \"" << __name << "\"." << endl;
+        return CMD_ERR;
     }
 
-    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__doc->GetDrawableObject("CharacterLayer:"+__name));
+    CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__doc->GetDrawableObject("CharacterLayer:" + __name));
 
-    __chara->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetPose, __args));
-        
-    return 0;
+    if (isCreateAction)
+        *act = new CClassFuncArgsOfAction<CCharacterLayer, string>(__chara, &CCharacterLayer::SetPose, __args);
+    else
+        __chara->AddAction(new CClassFuncArgsOfAction<CCharacterLayer, string>(__chara, &CCharacterLayer::SetPose, __args));
+
+    return CMD_OK;
 }
 
-int Cmd_SetCharacterLayerOrder(lua_State* args)
+int Common_SetText(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
-    if (Common_FuncOfLayerOrder("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForSetText" : "Cmd_SetText";
 
-    return 0;
-}
-
-int Cmd_FlipXCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfFlip("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_FlipYCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfFlip("CharacterLayer", args, false) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_OriginCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfOrigin("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ColorCharacterLayer(lua_State* args)
-{
-    if (Common_FuncOfColor("CharacterLayer", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-//===========================================
-//
-//===========================================
-
-/*
-    Cmd_AddImg: comand of add image.
-    args[0]: set image name.
-    args[1]: set image path.
-    args[2]: set image postion of x.
-    args[3]: set image postion of y.
-*/
-//int Cmd_AddImg(lua_State* args)
-//{
-//    return Common_FuncOfAdd("Img", args);
-//}
-
-int Cmd_ShowImg(lua_State* args)
-{
-    if (Common_FuncOfShow("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_HideImg(lua_State* args)
-{
-    if (Common_FuncOfHide("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_MoveImg(lua_State* args)
-{
-    if (Common_FuncOfMove("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ScaleImg(lua_State* args)
-{
-    if (Common_FuncOfScale("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_RotationImg(lua_State* args)
-{
-    if (Common_FuncOfRotation("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_SetImgLayerOrder(lua_State* args)
-{
-    if (Common_FuncOfLayerOrder("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_FlipXImg(lua_State* args)
-{
-    if (Common_FuncOfFlip("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_FlipYImg(lua_State* args)
-{
-    if (Common_FuncOfFlip("Img", args, false) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_OriginImg(lua_State* args)
-{
-    if (Common_FuncOfOrigin("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ColorImg(lua_State* args)
-{
-    if (Common_FuncOfColor("Img", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ShowText(lua_State* args)
-{
-    if (Common_FuncOfShow("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_HideText(lua_State* args)
-{
-    if (Common_FuncOfHide("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_MoveText(lua_State* args)
-{
-    if (Common_FuncOfMove("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ScaleText(lua_State* args)
-{
-    if (Common_FuncOfScale("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_RotationText(lua_State* args)
-{
-    if (Common_FuncOfRotation("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_SetTextLayerOrder(lua_State* args)
-{
-    if (Common_FuncOfLayerOrder("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_OriginText(lua_State* args)
-{
-    if (Common_FuncOfOrigin("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_ColorText(lua_State* args)
-{
-    if (Common_FuncOfColor("Text", args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
-}
-
-int Cmd_SetText(lua_State* args)
-{
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_SetText(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_ERR;
         }
     }
 
     string __name;//name
     if (!Common_GetValue(args, "n", __name))
     {
-        cout << "Cmd_SetText(): parameter \"n\" must be need." << endl;
-        return 0;
+        cout << __funcName << "(): parameter \"n\" must be need." << endl;
+        return CMD_ERR;
     }
 
     string __font = "";//font
@@ -1218,40 +1130,44 @@ int Cmd_SetText(lua_State* args)
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
-            :
+        :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
 
-    if (!__doc->IsExists("Text:"+__name)){
-        cout << "Cmd_SetText(): can't find text \""<< __name << "\"." <<endl;
-        return 0;
+    if (!__doc->IsExists("Text:" + __name)){
+        cout << __funcName << "(): can't find text \"" << __name << "\"." << endl;
+        return CMD_ERR;
     }
-    
-    CText* __txt = static_cast<CText*>(__doc->GetDrawableObject("Text:"+__name));
-    
-    __txt->SetShadowEnable(__shadow);
+
+    CText* __txt = static_cast<CText*>(__doc->GetDrawableObject("Text:" + __name));
+    CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
+
+    {
+        vector<bool> __args;
+        __args.push_back(__shadow);
+
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, bool>(__txt, &CText::SetShadowEnable, __args));
+    }
 
     if (!(__shadowpercent < 0.0f)){
-        __txt->SetShadowPercent(__shadowpercent);
-    }
+        vector<float> __args;
+        __args.push_back(__shadowpercent);
 
-    if (__font != ""){
-        __txt->SetFont(__font);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, float>(__txt, &CText::SetShadowPercent, __args));
     }
 
     if (__size > 0){
-        __txt->SetCharacterSize(__size);
+        vector<size_t> __args;
+        __args.push_back(__size);
+
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, size_t>(__txt, &CText::SetCharacterSize, __args));
     }
-    
-    if (_isBeT){
-        __txt->SetString(__text);
-    }
-    
+
     if (__colorRed != "" ||
         __colorGreen != "" ||
         __colorBlue != ""){
-        
+
         sf::Color __color = __txt->GetColor();
-        
+
         if (__colorRed != ""){
             __color.r = atoi(__colorRed.c_str());
         }
@@ -1264,20 +1180,38 @@ int Cmd_SetText(lua_State* args)
             __color.b = atoi(__colorBlue.c_str());
         }
 
-        __txt->SetColor(__color.r, __color.g, __color.b);
+        vector<unsigned char> __args;
+        __args.push_back(__color.r);
+        __args.push_back(__color.g);
+        __args.push_back(__color.b);
+
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, unsigned char>(__txt, &CText::SetColor, __args));
     }
 
     vector<string> __args;
+    if (__font != ""){
+        __args.push_back(__font);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, string>(__txt, &CText::SetFont, __args));
+    }
+
+    if (_isBeT){
+        __args.clear();
+        __args.push_back(__text);
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, string>(__txt, &CText::SetString, __args));
+    }
+
     if (__styleRegular != "" ||
         __styleBold != "" ||
         __styleItalic != "" ||
         __styleUnderlined != "" ||
         __styleStrikeThrough != "")
-    {        
+    {
+        __args.clear();
         if (__styleRegular != ""){
             __args.push_back("-sr");
-            __txt->SetStyle(__args);
-        }else{
+            __sim->AddAction(new CClassFuncArgsOfAction<CText, string>(__txt, &CText::SetStyle, __args));
+        }
+        else{
             if (__styleBold != "")
                 __args.push_back("-sb");
 
@@ -1290,49 +1224,73 @@ int Cmd_SetText(lua_State* args)
             if (__styleStrikeThrough != "")
                 __args.push_back("-ss");
 
-            __txt->SetStyle(__args);
+            __sim->AddAction(new CClassFuncArgsOfAction<CText, string>(__txt, &CText::SetStyle, __args));
         }
     }
 
-    return 0;
+    if (isCreateAction)
+        *act = __sim;
+    else
+        __txt->AddAction(__sim);
+
+    return CMD_OK;
 }
 
-int Cmd_PlayBGM(lua_State* args)
+int Common_PlayBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForPlayBGM" : "Cmd_PlayBGM";
+
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_PlayBGM(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_ERR;
         }
     }
 
     string __name;//name
     if (!Common_GetValue(args, "n", __name))
     {
-        cout << "Cmd_PlayBGM(): parameter \"n\" must be need." << endl;
-        return 0;
+        cout << __funcName << "(): parameter \"n\" must be need." << endl;
+        return CMD_ERR;
     }
 
-    float __vol = 1.0f;
+    string __vol = "1";
     Common_GetValue(args, "v", __vol);
 
     bool __loop = false;
     Common_GetValue(args, "l", __loop);
 
-    CResourceControl::_ResourceManager._SoundControl.PlayBgm(__name, __vol, __loop);
-    return 0;
+    vector<string> __args;
+    __args.push_back(__name);
+    __args.push_back(__vol);
+    if (__loop)
+        __args.push_back("l");
+
+    if (isCreateAction)
+        *act = new CClassFuncArgsOfAction<CSoundBank, string>(
+            &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm, __args);
+    else
+        CResourceControl::_ResourceManager._ActionControl.AddAction(
+            new CClassFuncArgsOfAction<CSoundBank, string>(
+                &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayBgm, __args));
+
+    return CMD_OK;
 }
 
-int Cmd_SetBGMVolume(lua_State* args)
+int Common_SetBGMVolume(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForSetBGMVolume" : "Cmd_SetBGMVolume";
+
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_SetBGMVolume(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_ERR;
         }
     }
 
@@ -1340,7 +1298,7 @@ int Cmd_SetBGMVolume(lua_State* args)
     if (!Common_GetValue(args, "v", __vol))
     {
         cout << "Cmd_SetBGMVolume(): parameter \"v\" must be need." << endl;
-        return 0;
+        return CMD_ERR;
     }
 
     size_t __inte = CCommon::_Common.INTERVAL;//incr
@@ -1350,44 +1308,43 @@ int Cmd_SetBGMVolume(lua_State* args)
     Common_GetValue(args, "b", __isBy);
 
     bool __pause = false;//pause
-    Common_GetValue(args, "p", __pause);
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     bool __reset = false;//reset
     Common_GetValue(args, "r", __reset);
 
-    if (__isBy)
-        CResourceControl::_ResourceManager._ActionControl.AddAction(
-            CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(
+    if (__isBy){
+        if (isCreateAction)
+            *act = CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(
+            __inte, __vol, __reset, __pause);
+        else
+            CResourceControl::_ResourceManager._ActionControl.AddAction(
+                CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(
                 __inte, __vol, __reset, __pause));
-    else
-        CResourceControl::_ResourceManager._ActionControl.AddAction(
-            CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(
+    }
+    else{
+        if (isCreateAction)
+            *act = CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(
+            __inte, __vol, __reset, __pause);
+        else
+            CResourceControl::_ResourceManager._ActionControl.AddAction(
+                CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(
                 __inte, __vol, __reset, __pause));
+    }
 
-    if (__pause)
-        Common_RetrunYield(args, __FUNCTION__);
-
-    return 0;
+    return __pause ? CMD_YIELD : CMD_OK;
 }
 
-int Cmd_PauseBGM(lua_State* args)
+int Common_StopBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
-    CResourceControl::_ResourceManager._SoundControl.PauseBgm();
-    return 0;
-}
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForStopBGM" : "Cmd_StopBGM";
 
-int Cmd_ResumeBGM(lua_State* args)
-{
-    CResourceControl::_ResourceManager._SoundControl.PlayBgm();
-    return 0;
-}
-
-int Cmd_StopBGM(lua_State* args)
-{
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_StopBGM(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
             return 0;
         }
@@ -1396,56 +1353,69 @@ int Cmd_StopBGM(lua_State* args)
     size_t __inte = 0;//incr
     Common_GetValue(args, "i", __inte);
 
-    bool __pause = 0;//pause
-    Common_GetValue(args, "p", __pause);
+    bool __pause = false;//pause
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
     __seq->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, 0.0f, false, __pause));
     __seq->AddAction(new CClassFuncOfAction<CSoundBank>(
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
-    
-    CResourceControl::_ResourceManager._ActionControl.AddAction(__seq);
 
-    if (__pause)
-        Common_RetrunYield(args, __FUNCTION__);
+    if (isCreateAction)
+        *act = __seq;
+    else
+        CResourceControl::_ResourceManager._ActionControl.AddAction(__seq);
 
-    return 0;
+    return __pause ? CMD_YIELD : CMD_OK;
 }
 
-int Cmd_StopSE(lua_State* args)
+int Common_StopSE(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForStopSE" : "Cmd_StopSE";
+
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_StopSE(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_YIELD;
         }
     }
-    
+
     vector<string> __args;
-    if (!Common_GetValue(args, "n", __args))
-    {
-        cout << "Cmd_StopSE(): parameter \"n\" must be need." << endl;
-        return 0;
+    if (!Common_GetValue(args, "n", __args)){
+        cout << __funcName << "(): parameter \"n\" must be need." << endl;
+        return CMD_YIELD;
     }
 
-    for (size_t i = 0; i < __args.size(); i++)
-    {
-        CResourceControl::_ResourceManager._SoundControl.StopSE(__args[i]);
-    }
+    if (isCreateAction)
+        *act = new CClassFuncArgsOfAction<CSoundBank, string>(
+            &CResourceControl::_ResourceManager._SoundControl,
+            &CSoundBank::StopSE,
+            __args);
+    else
+        CResourceControl::_ResourceManager._ActionControl.AddAction(
+            new CClassFuncArgsOfAction<CSoundBank, string>(
+                &CResourceControl::_ResourceManager._SoundControl,
+                &CSoundBank::StopSE,
+                __args));
 
-    return 0;
+    return CMD_OK;
 }
 
-int Cmd_PlaySE(lua_State* args)
+int Common_PlaySE(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
 {
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForPlaySE" : "Cmd_PlaySE";
+
     {
         int __numOfargs = lua_gettop(args);
         if (__numOfargs < 1){
-            cout << "Cmd_PlaySE(): command invaild. can't set " << __numOfargs
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
                 << " argument(s) in the command." << endl;
-            return 0;
+            return CMD_ERR;
         }
     }
 
@@ -1453,21 +1423,756 @@ int Cmd_PlaySE(lua_State* args)
     if (!Common_GetValue(args, "n", __name))
     {
         cout << "Cmd_PlaySE(): parameter \"n\" must be need." << endl;
-        return 0;
+        return CMD_ERR;
     }
 
-    float __vol = 1.0f;//vol
+    string __vol = "1";//vol
     Common_GetValue(args, "v", __vol);
 
     bool __loop = false; //loop
     Common_GetValue(args, "l", __loop);
 
-    CResourceControl::_ResourceManager._SoundControl.PlaySE(__name, __vol, __loop);
+    vector<string> __args;
+    __args.push_back(__name);
+    __args.push_back(__vol);
+    if (__loop)
+        __args.push_back("");
+
+    if (isCreateAction)
+        *act = new CClassFuncArgsOfAction<CSoundBank, string>(
+            &CResourceControl::_ResourceManager._SoundControl,
+            &CSoundBank::PlaySE,
+            __args);
+    else
+        CResourceControl::_ResourceManager._ActionControl.AddAction(
+            new CClassFuncArgsOfAction<CSoundBank, string>(
+                &CResourceControl::_ResourceManager._SoundControl,
+                &CSoundBank::PlaySE,
+                __args));
+
+    return CMD_OK;
+}
+
+int Common_UseCamera(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
+{
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForUseCamera" : "Cmd_UseCamera";
+
+    int __numOfargs = lua_gettop(args);
+    if (__numOfargs == 0){
+        if (isCreateAction)
+            *act = new CClassFuncOfAction<CCameraControl>(
+                &CResourceControl::_ResourceManager._CameraControl,
+                &CCameraControl::UseDefaultCamera);
+        else
+            CResourceControl::_ResourceManager._ActionControl.AddAction(
+                new CClassFuncOfAction<CCameraControl>(
+                    &CResourceControl::_ResourceManager._CameraControl,
+                    &CCameraControl::UseDefaultCamera));
+    }
+    else{
+        string __name = "";// Name
+        Common_GetValue(args, "n", __name);
+        vector<string> __args;
+        __args.push_back(__name);
+
+        if (isCreateAction)
+            *act = new CClassFuncArgsOfAction<CCameraControl, string>(
+                &CResourceControl::_ResourceManager._CameraControl,
+                &CCameraControl::UseCamera,
+                __args);
+        else
+            CResourceControl::_ResourceManager._ActionControl.AddAction(
+                new CClassFuncArgsOfAction<CCameraControl, string>(
+                    &CResourceControl::_ResourceManager._CameraControl,
+                    &CCameraControl::UseCamera,
+                    __args));
+    }
+
+    return CMD_OK;
+}
+
+int Common_Delay(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
+{
+    string __funcName = isCreateAction ?
+        "Cmd_CreateActionForDelay" : "Cmd_Delay";
+
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 1){
+            cout << __funcName << "(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+            return CMD_ERR;
+        }
+    }
+
+    size_t __time;//name
+    if (!Common_GetValue(args, "t", __time))
+    {
+        cout << __funcName << "(): parameter \"t\" must be need." << endl;
+        return CMD_ERR;
+    }
+
+    bool __pause = false;//pause
+    if (!isCreateAction)
+        Common_GetValue(args, "p", __pause);
+
+    if (isCreateAction)
+        *act = new CDeplayOfAction(__time, true);
+    else
+        CResourceControl::_ResourceManager._ActionControl.AddAction(
+            new CDeplayOfAction(__time, true));
+
+    return __pause ? CMD_YIELD : CMD_OK;
+}
+
+int Common_CreateActionSet(lua_State* args, string funcname)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 2){
+            cout << funcname << "(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+
+            lua_pushnil(args);
+            return 1;
+        }
+    }
+
+    string __name = "";
+    if (lua_isstring(args, -1)){
+        __name = lua_tostring(args, -1);
+        lua_pop(args, 1);
+    }
+    else{
+        cout << funcname << "(): command invaild. can't set " << endl;
+
+        lua_pushnil(args);
+        return 1;
+    }
+
+    bool __pause = false;
+    if (lua_isboolean(args, -1)){
+        __pause = lua_toboolean(args, -1);
+        lua_pop(args, 1);
+    }
+    else{
+        cout << funcname << "(): command invaild. can't set " << endl;
+
+        lua_pushnil(args);
+        return 1;
+    }
+
+    CActionBaseClass **_act =
+        (CActionBaseClass**)lua_newuserdata(args, sizeof(CActionBaseClass*));
+
+    if (funcname == "Cmd_CreateSequence"){
+        *_act = new CSequenceOfAction(__name, __pause);
+        luaL_getmetatable(args, "yoyo.seq");
+    }
+    else if (funcname == "Cmd_CreateSimultaneous"){
+        *_act = new CSimultaneousOfAction(__name, __pause);
+        luaL_getmetatable(args, "yoyo.sim");
+    }
+    else{
+        *_act = new CRepeatOfAction(__name, __pause);
+        luaL_getmetatable(args, "yoyo.rep");
+    }
+
+    lua_setmetatable(args, -2);
+    return 1;
+}
+
+////////////////////////////////////////
+
+typedef int(*fun3arg)(lua_State*, CActionBaseClass**, bool);
+typedef int(*fun4arg)(string, lua_State*, CActionBaseClass**, bool);
+typedef int(*fun5arg)(string, lua_State*, CActionBaseClass**, bool, bool);
+
+int Common_CreateActionForXXX(
+    fun3arg func,
+    lua_State* args)
+{
+    CActionBaseClass* __act = NULL;
+    if (func(args, &__act, true) != CMD_ERR){
+        if (__act == NULL)
+            lua_pushnil(args);
+        else
+            lua_pushlightuserdata(args, __act);
+
+        return 1;
+    }
+
+    lua_pushnil(args);
+    return 1;
+}
+
+int Common_CreateActionForXXX(
+    fun4arg func,
+    string objTypeName, 
+    lua_State* args)
+{
+    CActionBaseClass* __act = NULL;
+    if (func(objTypeName, args, &__act, true) != CMD_ERR){
+        if (__act == NULL)
+            lua_pushnil(args);
+        else
+            lua_pushlightuserdata(args, __act);
+
+        return 1;
+    }
+
+    lua_pushnil(args);
+    return 1;
+}
+
+int Common_CreateActionForXXX(
+    fun5arg func,
+    string objTypeName,
+    lua_State* args,
+    bool flipx)
+{
+    CActionBaseClass* __act = NULL;
+    if (func(objTypeName, args, &__act, true, flipx) != CMD_ERR){
+        if (__act == NULL)
+            lua_pushnil(args);
+        else
+            lua_pushlightuserdata(args, __act);
+
+        return 1;
+    }
+
+    lua_pushnil(args);
+    return 1;
+}
+//int Cmd_FuncOfActionForDeleteOrSkip(string funcName, lua_State* args, bool skip)
+//{
+//    CActionSet& act = &CResourceControl::_ResourceManager._ActionControl;
+//
+//    if (act == NULL){
+//        cout << funcName << "(): action set is null." <<endl;
+//        return CMD_ERR;
+//    }
+//    
+//    for (size_t i=0; i<args.size(); i++){
+//        act->DeleteAct(args[i], skip);
+//    }
+//
+//    return CMD_OK;
+//}
+
+/*==============================================================
+    commad of script
+===============================================================*/
+
+int Cmd_ShowCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfShow("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
 
-    //cout << "Cmd_PlaySE(): can't find SE \""<< _name << "\"." << endl;
-    //return CMD_ERR;
+int Cmd_CreateActionForShowCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "CharacterLayer", args);
+}
+
+int Cmd_MoveCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfMove("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForMoveCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfMove, "CharacterLayer", args);
+}
+
+int Cmd_ScaleCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfScale("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForScaleCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfScale, "CharacterLayer", args);
+}
+
+int Cmd_RotationCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfRotation("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForRotationCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfRotation, "CharacterLayer", args);
+}
+
+int Cmd_HideCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfHide("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForHideCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "CharacterLayer", args);
+}
+
+int Cmd_SetPoseCharacterLayer(lua_State* args)
+{
+    if (Common_SetPoseCharacterLayer(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetPoseCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_SetPoseCharacterLayer, args);
+}
+
+int Cmd_SetCharacterLayerOrder(lua_State* args)
+{
+    if (Common_FuncOfLayerOrder("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetCharacterLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "CharacterLayer", args);
+}
+
+int Cmd_FlipXCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfFlip("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForFlipXCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "CharacterLayer", args, true);
+}
+
+
+int Cmd_FlipYCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfFlip("CharacterLayer", args, NULL, false, false) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForFlipYCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "CharacterLayer", args, false);
+}
+
+int Cmd_OriginCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfOrigin("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForOriginCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfOrigin, "CharacterLayer", args);
+}
+
+int Cmd_ColorCharacterLayer(lua_State* args)
+{
+    if (Common_FuncOfColor("CharacterLayer", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForColorCharacterLayer(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfColor, "CharacterLayer", args);
+}
+
+//===========================================
+//
+//===========================================
+
+/*
+    Cmd_AddImg: comand of add image.
+    args[0]: set image name.
+    args[1]: set image path.
+    args[2]: set image postion of x.
+    args[3]: set image postion of y.
+*/
+//int Cmd_AddImg(lua_State* args)
+//{
+//    return Common_FuncOfAdd("Img", args);
+//}
+
+int Cmd_ShowImg(lua_State* args)
+{
+    if (Common_FuncOfShow("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForShowImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "Img", args);
+}
+
+int Cmd_HideImg(lua_State* args)
+{
+    if (Common_FuncOfHide("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForHideImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "Img", args);
+}
+
+int Cmd_MoveImg(lua_State* args)
+{
+    if (Common_FuncOfMove("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForMoveImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfMove, "Img", args);
+}
+
+int Cmd_ScaleImg(lua_State* args)
+{
+    if (Common_FuncOfScale("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForScaleImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfScale, "Img", args);
+}
+
+int Cmd_RotationImg(lua_State* args)
+{
+    if (Common_FuncOfRotation("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForRotationImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfRotation, "Img", args);
+}
+
+int Cmd_SetImgLayerOrder(lua_State* args)
+{
+    if (Common_FuncOfLayerOrder("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetImgLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "Img", args);
+}
+
+int Cmd_FlipXImg(lua_State* args)
+{
+    if (Common_FuncOfFlip("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForFlipXImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "Img", args, true);
+}
+
+int Cmd_FlipYImg(lua_State* args)
+{
+    if (Common_FuncOfFlip("Img", args, false) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForFlipYImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "Img", args, false);
+}
+
+int Cmd_OriginImg(lua_State* args)
+{
+    if (Common_FuncOfOrigin("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForOriginImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfOrigin, "Img", args);
+}
+
+int Cmd_ColorImg(lua_State* args)
+{
+    if (Common_FuncOfColor("Img", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForColorImg(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfColor, "Img", args);
+}
+
+int Cmd_ShowText(lua_State* args)
+{
+    if (Common_FuncOfShow("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForShowText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "Text", args);
+}
+
+int Cmd_HideText(lua_State* args)
+{
+    if (Common_FuncOfHide("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForHideText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "Text", args);
+}
+
+int Cmd_MoveText(lua_State* args)
+{
+    if (Common_FuncOfMove("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForMoveText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfMove, "Text", args);
+}
+
+int Cmd_ScaleText(lua_State* args)
+{
+    if (Common_FuncOfScale("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForScaleText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfScale, "Text", args);
+}
+
+int Cmd_RotationText(lua_State* args)
+{
+    if (Common_FuncOfRotation("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForRotationText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfRotation, "Text", args);
+}
+
+int Cmd_SetTextLayerOrder(lua_State* args)
+{
+    if (Common_FuncOfLayerOrder("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetTextLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "Text", args);
+}
+
+int Cmd_OriginText(lua_State* args)
+{
+    if (Common_FuncOfOrigin("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForOriginText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfOrigin, "Text", args);
+}
+
+int Cmd_ColorText(lua_State* args)
+{
+    if (Common_FuncOfColor("Text", args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForColorText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfColor, "Text", args);
+}
+
+int Cmd_SetText(lua_State* args)
+{
+    if (Common_SetText(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetText(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_SetText, args);
+}
+
+int Cmd_PlayBGM(lua_State* args)
+{
+    if (Common_PlayBGM(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForPlayBGM(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_PlayBGM, args);
+}
+
+int Cmd_SetBGMVolume(lua_State* args)
+{
+    if (Common_SetBGMVolume(args) == CMD_YIELD)
+    Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForSetBGMVolume(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_SetBGMVolume, args);
+}
+
+int Cmd_PauseBGM(lua_State* args)
+{
+    CResourceControl::_ResourceManager._ActionControl.AddAction(
+        new CClassFuncOfAction<CSoundBank>(
+            &CResourceControl::_ResourceManager._SoundControl,
+            &CSoundBank::PauseBgm));
+
+    return 0;
+}
+
+int Cmd_CreateActionForPauseBGM(lua_State* args)
+{
+    lua_pushlightuserdata(args, new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl,
+        &CSoundBank::PauseBgm));
+
+    return 1;
+}
+
+int Cmd_ResumeBGM(lua_State* args)
+{
+    CResourceControl::_ResourceManager._ActionControl.AddAction(
+        new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl,
+        &CSoundBank::PlayBgm));
+
+    return 0;
+}
+
+int Cmd_CreateActionForResumeBGM(lua_State* args)
+{
+    lua_pushlightuserdata(args, new CClassFuncOfAction<CSoundBank>(
+        &CResourceControl::_ResourceManager._SoundControl,
+        &CSoundBank::PlayBgm));
+
+    return 1;
+}
+
+int Cmd_StopBGM(lua_State* args)
+{
+    if (Common_StopBGM(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForStopBGM(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_StopBGM, args);
+}
+
+int Cmd_StopSE(lua_State* args)
+{
+    if (Common_StopSE(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForStopSE(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_StopSE, args);
+}
+
+int Cmd_PlaySE(lua_State* args)
+{
+    if (Common_PlaySE(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
+    return 0;
+}
+
+int Cmd_CreateActionForPlaySE(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_PlaySE, args);
 }
 
 int Cmd_ShowButton(lua_State* args)
@@ -1478,12 +2183,22 @@ int Cmd_ShowButton(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForShowButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "Button", args);
+}
+
 int Cmd_HideButton(lua_State* args)
 {
     if (Common_FuncOfHide("Button", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForHideButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "Button", args);
 }
 
 int Cmd_MoveButton(lua_State* args)
@@ -1494,12 +2209,22 @@ int Cmd_MoveButton(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForMoveButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfMove, "Button", args);
+}
+
 int Cmd_ScaleButton(lua_State* args)
 {
     if (Common_FuncOfScale("Button", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForScaleButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfScale, "Button", args);
 }
 
 int Cmd_RotationButton(lua_State* args)
@@ -1510,12 +2235,22 @@ int Cmd_RotationButton(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForRotationButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfRotation, "Button", args);
+}
+
 int Cmd_SetButtonLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("Button", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForSetButtonLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "Button", args);
 }
 
 int Cmd_FlipXButton(lua_State* args)
@@ -1526,12 +2261,22 @@ int Cmd_FlipXButton(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForFlipXButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "Button", args, true);
+}
+
 int Cmd_FlipYButton(lua_State* args)
 {
     if (Common_FuncOfFlip("Button", args, false) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForFlipYButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfFlip, "Button", args, false);
 }
 
 int Cmd_OriginButton(lua_State* args)
@@ -1542,12 +2287,22 @@ int Cmd_OriginButton(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForOriginButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfOrigin, "Button", args);
+}
+
 int Cmd_ColorButton(lua_State* args)
 {
     if (Common_FuncOfColor("Button", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForColorButton(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfColor, "Button", args);
 }
 //
 //
@@ -1625,7 +2380,7 @@ int Cmd_Message(lua_State* args)
                 else{
                     CCharacterLayer* __chara = static_cast<CCharacterLayer*>(__obj);
                     __args.push_back(__voiceName);
-                    __sim->AddAction(new CClassFuncArgsOfAction<CCharacterLayer>(__chara, &CCharacterLayer::SetVoice, __args));
+                    __sim->AddAction(new CClassFuncArgsOfAction<CCharacterLayer, string>(__chara, &CCharacterLayer::SetVoice, __args));
                 }
             }
         }
@@ -1633,17 +2388,17 @@ int Cmd_Message(lua_State* args)
     
     __args.clear();
     __args.push_back(__msg);
-    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox>(__msgbox, &CMessageBox::SetText, __args));
+    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox, string>(__msgbox, &CMessageBox::SetText, __args));
 
     __args.clear();
     __args.push_back(__speakerName);
-    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox>(__msgbox, &CMessageBox::SetSpeakerName, __args));
+    __sim->AddAction(new CClassFuncArgsOfAction<CMessageBox, string>(__msgbox, &CMessageBox::SetSpeakerName, __args));
 
     if (__voiceName != ""){
         __args.clear();
         __args.push_back(__voiceName);
 
-        __sim->AddAction(new CClassFuncArgsOfAction<CSoundBank>(
+        __sim->AddAction(new CClassFuncArgsOfAction<CSoundBank, string>(
             &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayVoice, __args));
     }
 
@@ -1662,6 +2417,11 @@ int Cmd_ShowMessageBox(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForShowMessageBox(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "MessageBox", args);
+}
+
 int Cmd_HideMessageBox(lua_State* args)
 {
     if (Common_FuncOfHide("MessageBox", args) == CMD_YIELD)
@@ -1670,12 +2430,22 @@ int Cmd_HideMessageBox(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForHideMessageBox(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "MessageBox", args);
+}
+
 int Cmd_SetMessageBoxLayerOrder(lua_State* args)
 {
     if (Common_FuncOfLayerOrder("MessageBox", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForSetMessageBoxLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "MessageBox", args);
 }
 
 int Cmd_CleanMessageBox(lua_State* args)
@@ -1718,12 +2488,22 @@ int Cmd_ShowLogBox(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForShowLogBox(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfShow, "LogBox", args);
+}
+
 int Cmd_HideLogBox(lua_State* args)
 {
     if (Common_FuncOfHide("LogBox", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForHideLogBox(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfHide, "LogBox", args);
 }
 
 int Cmd_SetLogBoxLayerOrder(lua_State* args)
@@ -1733,6 +2513,12 @@ int Cmd_SetLogBoxLayerOrder(lua_State* args)
 
     return 0;
 }
+
+int Cmd_CreateActionForSetLogBoxLayerOrder(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfLayerOrder, "LogBox", args);
+}
+
 
 //int Cmd_ShowParticleSystem(lua_State* args)
 //{
@@ -1871,12 +2657,44 @@ int Cmd_ShowCurtain(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForShowCurtain(lua_State* args)
+{
+    CActionBaseClass* __act = NULL;
+    if (Common_FuncOfScreen(args, true, & __act, true) != CMD_ERR){
+        if (__act == NULL)
+            lua_pushnil(args);
+        else
+            lua_pushlightuserdata(args, __act);
+
+        return 1;
+    }
+
+    lua_pushnil(args);
+    return 1;
+}
+
 int Cmd_HideCurtain(lua_State* args)
 {
     if (Common_FuncOfScreen(args, false) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForHideCurtain(lua_State* args)
+{
+    CActionBaseClass* __act = NULL;
+    if (Common_FuncOfScreen(args, false, &__act, true) != CMD_ERR){
+        if (__act == NULL)
+            lua_pushnil(args);
+        else
+            lua_pushlightuserdata(args, __act);
+
+        return 1;
+    }
+
+    lua_pushnil(args);
+    return 1;
 }
 
 int Cmd_ColorCurtain(lua_State* args)
@@ -1887,18 +2705,22 @@ int Cmd_ColorCurtain(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForColorCurtain(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfColor, "ScrEffect", args);
+}
+
 int Cmd_UseCamera(lua_State* args)
 {
-    int __numOfargs = lua_gettop(args);
-    if (__numOfargs == 0){
-        CResourceControl::_ResourceManager._CameraControl.UseDefaultCamera();
-    }
-    else{
-        string __name = "";// Name
-        Common_GetValue(args, "n", __name);
-        CResourceControl::_ResourceManager._CameraControl.UseCamera(__name);
-    }
+    if (Common_UseCamera(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+
     return 0;
+}
+
+int Cmd_CreateActionForUseCamera(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_UseCamera, args);
 }
 
 int Cmd_MoveCamera(lua_State* args)
@@ -1909,6 +2731,11 @@ int Cmd_MoveCamera(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForMoveCamera(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfMove, "Camera", args);
+}
+
 int Cmd_ScaleCamera(lua_State* args)
 {
     if (Common_FuncOfScale("Camera", args) == CMD_YIELD)
@@ -1917,12 +2744,22 @@ int Cmd_ScaleCamera(lua_State* args)
     return 0;
 }
 
+int Cmd_CreateActionForScaleCamera(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfScale, "Camera", args);
+}
+
 int Cmd_RotationCamera(lua_State* args)
 {
     if (Common_FuncOfRotation("Camera", args) == CMD_YIELD)
         Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
+}
+
+int Cmd_CreateActionForRotationCamera(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_FuncOfRotation, "Camera", args);
 }
 
 //int Cmd_Pause(lua_State* args)
@@ -1937,27 +2774,15 @@ int Cmd_RotationCamera(lua_State* args)
 //}
 int Cmd_Delay(lua_State* args)
 {
-    {
-        int __numOfargs = lua_gettop(args);
-        if (__numOfargs < 1){
-            cout << __FUNCTION__ << "(): command invaild. can't set " << __numOfargs
-                << " argument(s) in the command." << endl;
-            return 0;
-        }
-    }
+    if (Common_Delay(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
 
-    if (!lua_isnumber(args, 1))
-    {
-        cout << __FUNCTION__ << "(): parameter must be number." << endl;
-        return 0;
-    }
-
-    size_t __time = lua_tonumber(args, 1);
-    CResourceControl::_ResourceManager._ActionControl.AddAction(
-        new CDeplayOfAction(__time, true));
-
-    Common_RetrunYield(args, __FUNCTION__);
     return 0;
+}
+
+int Cmd_CreateActionForDelay(lua_State* args)
+{
+    return Common_CreateActionForXXX(Common_Delay, args);
 }
 
 int Cmd_LoadScript(lua_State* args)
@@ -1975,4 +2800,47 @@ int Cmd_LoadScript(lua_State* args)
 
     //act->AddAction(new CClassFuncArgsOfAction<CResourceControl>(&CResourceControl::_ResourceManager, &CResourceControl::LoadScript, args));
     return CMD_OK;
+}
+
+int Cmd_AddAction(lua_State* args)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 1){
+            cout << "Cmd_AddAction(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+
+            lua_pushboolean(args, false);
+            return 1;
+        }
+    }
+
+    CActionBaseClass* __act = (CActionBaseClass*)lua_topointer(args, 1);
+
+    if (__act){
+        CResourceControl::_ResourceManager._ActionControl.AddAction(__act);
+        lua_pushboolean(args, true);
+    }
+    else
+        lua_pushboolean(args, false);
+
+    return 1;
+}
+
+int Cmd_CreateSimultaneous(lua_State* args)
+{
+    Common_CreateActionSet(args, __FUNCTION__);
+    return 1;
+}
+
+int Cmd_CreateSequence(lua_State* args)
+{
+    Common_CreateActionSet(args, __FUNCTION__);
+    return 1;
+}
+
+int Cmd_CreateRepeat(lua_State* args)
+{
+    Common_CreateActionSet(args, __FUNCTION__);
+    return 1;
 }
