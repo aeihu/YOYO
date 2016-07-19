@@ -34,6 +34,7 @@ class CBaiscProperties : public CObject
         void SetRotation(float r);
         sf::Vector2f& GetPosition();
         virtual void SetPosition(float x, float y);
+        virtual void SetPosition(vector<float> args);
 
         virtual sf::Vector2f& GetScale();
         virtual void SetScale(float x, float y);

@@ -37,13 +37,13 @@ class CResourceControl// : public CScript
             FINISH
         };
     private:
-        sf::Sprite                      _spriteUp;
-        sf::Sprite                      _spriteDown;
         sf::Thread                      _threadOfLoading;
+        sf::Mutex                       _mutex;
 
         string                          _fileNameOfScriptForLoadingBegin;
         string                          _fileNameOfScriptForLoadingfinish;
         string                          _fileNameOfCurrentRunningScript;
+        string                          _fileNameOfCurrentLuaScript;
 
         unsigned long                   _oldTimeForAuto;
 
@@ -51,11 +51,11 @@ class CResourceControl// : public CScript
         Object                          _scriptConfig;
         Object                          _gameBaiscAsset;
 
-        bool                            _drawableObjCtrlEnable;
         bool                            _pauseOfAction;
-        bool                            _pauseOfUser;
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
+        bool                            _isNeedLuaResume;
+        bool                            _msgboxPauseRequest;
 
         EProcStatus                     _loadingProcessStatus;
 
@@ -98,7 +98,13 @@ class CResourceControl// : public CScript
         bool GetAuto() const;
         void SetAuto(bool isAuto);
         string GetVariable(string name);
-        void PauseForUserConfrim();
+
+        bool GetMsgboxPauseStatus() const;
+        void OnMsgboxPause();
+        void OffMsgboxPause();
+
+        void LockMutex();
+        void UnlockMutex();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
         void LoadScript(vector<string> args);

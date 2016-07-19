@@ -42,6 +42,12 @@ void CBaiscProperties::SetPosition(float x, float y)
     _coordinate.y = y;
 }
 
+void CBaiscProperties::SetPosition(vector<float> args)
+{
+    if (args.size() >= 2)
+        SetPosition(args[0], args[1]);
+}
+
 void CBaiscProperties::SetScale(float x, float y)
 {
     _scale.x = x;

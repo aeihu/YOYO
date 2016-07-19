@@ -25,12 +25,27 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _fileNameOfCurrentRunningScript = "";
     _isNeedCleanAction =
     _isLoadPlayerData =
-    _drawableObjCtrlEnable = 
     _pauseOfAction = 
-    _pauseOfUser = 
     _isAuto = 
+    _isNeedLuaResume =
+    _msgboxPauseRequest =
     _flagForAuto = false;
     _loadingProcessStatus = CResourceControl::STOP;
+}
+
+bool CResourceControl::GetMsgboxPauseStatus() const
+{
+    return _msgboxPauseRequest;
+}
+
+void CResourceControl::OnMsgboxPause()
+{
+    _msgboxPauseRequest = true;
+}
+
+void CResourceControl::OffMsgboxPause()
+{
+    _msgboxPauseRequest = false;
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)
@@ -159,11 +174,6 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
                 }
 
                 __assetName = objTypeName + ":" + __assetName;
-
-                if (objTypeName == "MessageBox"){
-                    CMessageBox* __msg = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__assetName));
-                    __msg->SetControl(&_pauseOfUser);
-                }
             }
         }
     }
@@ -290,7 +300,7 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     if (__json.has<String>("main_script"))
         obj << "main_script" << __json.get<String>("main_script");
 
-    if (__json.has<Array>("script"))
+    if (__json.has<String>("script"))
         obj << "script" << __json.get<String>("script");
 
     if (__json.has<string>("loading_begin_script"))
@@ -321,9 +331,6 @@ void CResourceControl::Compare(Object& src, Object& des, string colName)
 
 void CResourceControl::ThreadOfLoadAsset()
 {
-    //CParser::_Parser.Pause();
-    _drawableObjCtrlEnable = false;
-
     Object __obj;
     if (LoadJson(__obj, _fileNameOfCurrentRunningScript)){
         if (!_scriptConfig.empty()){
@@ -345,9 +352,13 @@ void CResourceControl::ThreadOfLoadAsset()
             CheckOut(_scriptConfig, "voice", "Voice");
             CheckOut(_scriptConfig, "camera", "Camera");
             CheckOut(_scriptConfig, "music", "Music");
+
             _scriptConfig.reset();
         }
-        
+
+        if (__obj.has<string>("script"))
+            _fileNameOfCurrentLuaScript = __obj.get<string>("script");
+
         _scriptConfig = __obj;
         _scriptConfig << "filename" << _fileNameOfCurrentRunningScript;
 
@@ -381,7 +392,7 @@ void CResourceControl::ThreadOfLoadAsset()
         LoadPlayerDataProcess();
     }
 
-    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish, "YOYO_LUA_LOADING_THREAD_RUNNING = true");
+    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish, "", "YOYO_LUA_LOADING_THREAD_RUNNING = false");
     _loadingProcessStatus = CResourceControl::FINISH;
 }
         
@@ -404,7 +415,7 @@ bool CResourceControl::LoadScript(string filename)
 
         _fileNameOfCurrentRunningScript = filename;
         _loadingProcessStatus = CResourceControl::RUNNING;
-        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin, "", "YOYO_LUA_LOADING_THREAD_RUNNING = false");
+        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin, "YOYO_LUA_LOADING_THREAD_RUNNING = true");
         _threadOfLoading.launch();
 
         return true;
@@ -418,21 +429,47 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
     return _loadingProcessStatus;
 }
 
+void CResourceControl::LockMutex()
+{
+    _mutex.lock();
+}
+
+void CResourceControl::UnlockMutex()
+{
+    _mutex.unlock();
+}
+
 void CResourceControl::OnLoop()
 {
+    //_mutex.lock();
     _ActionControl.OnLoop();
+    //_mutex.unlock();
     if (_isNeedCleanAction) {
         _isNeedCleanAction = false;
         LoadScript(_fileNameOfCurrentRunningScript);
     }
-    _pauseOfAction = _ActionControl.PauseRequest();
+
+    if (CActionBaseClass::GetNumberOfActionInPause() < 1){
+        if (_pauseOfAction)
+            _isNeedLuaResume = true;
+
+        _pauseOfAction = false;
+    }
+    else
+        _pauseOfAction = true;
     
     _SoundControl.OnLoop();
 
-    if (_drawableObjCtrlEnable){
+    if (_loadingProcessStatus == CResourceControl::STOP){
         _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
         AutoToNextStep();
+    }
+
+    if (_isNeedLuaResume)
+    {
+        _LuaControl.ResumeLuaThread();
+        _isNeedLuaResume = false;
     }
 
     if (_loadingProcessStatus != CResourceControl::STOP){
@@ -444,25 +481,24 @@ void CResourceControl::OnLoop()
                 _LuaControl.GetGlobal("YOYO_LUA_LOADING_THREAD_RUNNING", __b);
 
                 if (!__b){
-                    _drawableObjCtrlEnable = true;
                     _loadingProcessStatus = CResourceControl::STOP;
+                    _LuaControl.LoadScript(_fileNameOfCurrentLuaScript);
                 }
             }
 
         return;
     }
     
-    if (_pauseOfAction || _pauseOfUser)
+    if (_pauseOfAction)
         return;
 }
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_drawableObjCtrlEnable)
-        _DrawableObjectControl.OnRender(Surf_Dest);
-    
-    if (_loadingProcessStatus != EProcStatus::STOP)
+    if (_loadingProcessStatus != CResourceControl::STOP)
         _LoadingObjectControl.OnRender(Surf_Dest);
+    else
+        _DrawableObjectControl.OnRender(Surf_Dest);
 }
 
 void CResourceControl::OnCleanup()
@@ -614,20 +650,14 @@ bool CResourceControl::DelVariable(string name)
     return false;
 }
 
-void CResourceControl::PauseForUserConfrim()
-{
-    _pauseOfUser = true;
-}
-
 void CResourceControl::AutoToNextStep()
 {
-    if (_isAuto && _pauseOfUser && _loadingProcessStatus == CResourceControl::STOP){
-        bool __textAllShown = true;
+    if (_isAuto && _loadingProcessStatus == CResourceControl::STOP){
         Array& __array = _gameBaiscAsset.get<Array>("messagebox");
         for (size_t i=0; i<__array.size(); i++){
             CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
             if (__msgbox){
-                if (!__msgbox->IsTextAllShown()){
+                if (__msgbox->GetStatus() == CMessageBox::RUNNING){
                     return;
                 }
             }
@@ -643,7 +673,6 @@ void CResourceControl::AutoToNextStep()
         }
 
         if (_oldTimeForAuto < CCommon::_Common.GetTicks()){
-            _pauseOfUser = false;
             _flagForAuto = true;
             cout << "CResourceControl::AutoToNextStep(): deply end (" << CCommon::_Common.GetTicks() << ")" << endl;
         }
@@ -656,5 +685,4 @@ void CResourceControl::Skip()
         return;
 
     _ActionControl.Skip();
-    _pauseOfUser = false;
 }
