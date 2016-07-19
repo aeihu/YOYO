@@ -1518,21 +1518,33 @@ int Common_Delay(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAc
         Common_GetValue(args, "p", __pause);
 
     if (isCreateAction)
-        *act = new CDeplayOfAction(__time, true);
+        *act = new CDeplayOfAction(__time, __pause);
     else
         CResourceControl::_ResourceManager._ActionControl.AddAction(
-            new CDeplayOfAction(__time, true));
+            new CDeplayOfAction(__time, __pause));
 
     return __pause ? CMD_YIELD : CMD_OK;
 }
 
 int Common_CreateActionSet(lua_State* args, string funcname)
 {
-    {
-        int __numOfargs = lua_gettop(args);
-        if (__numOfargs < 2){
-            cout << funcname << "(): command invaild. can't set " << __numOfargs
-                << " argument(s) in the command." << endl;
+    int __numOfargs = lua_gettop(args);
+    if (__numOfargs < 2){
+        cout << funcname << "(): command invaild. can't set " << __numOfargs
+            << " argument(s) in the command." << endl;
+
+        lua_pushnil(args);
+        return 1;
+    }
+
+    int __loopNum = -1;
+    if (funcname == "Cmd_CreateRepeat" && __numOfargs > 2){
+        if (lua_isboolean(args, -1)){
+            __loopNum = lua_tonumber(args, -1);
+            lua_pop(args, 1);
+        }
+        else{
+            cout << funcname << "(): command invaild. can't set " << endl;
 
             lua_pushnil(args);
             return 1;
@@ -1575,7 +1587,7 @@ int Common_CreateActionSet(lua_State* args, string funcname)
         luaL_getmetatable(args, "yoyo.sim");
     }
     else{
-        *_act = new CRepeatOfAction(__name, __pause);
+        *_act = new CRepeatOfAction(__name, __pause, __loopNum);
         luaL_getmetatable(args, "yoyo.rep");
     }
 
@@ -2819,6 +2831,32 @@ int Cmd_AddAction(lua_State* args)
 
     if (__act){
         CResourceControl::_ResourceManager._ActionControl.AddAction(__act);
+        lua_pushboolean(args, true);
+    }
+    else
+        lua_pushboolean(args, false);
+
+    return 1;
+}
+
+int Cmd_AddActionSet(lua_State* args)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 1){
+            cout << "Cmd_AddActionSet(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+
+            lua_pushboolean(args, false);
+            return 1;
+        }
+    }
+
+    CActionBaseClass** __act = (CActionBaseClass**)lua_touserdata(args, 1);
+
+    if (*__act){
+        (*__act)->GetType();
+        CResourceControl::_ResourceManager._ActionControl.AddAction(*__act);
         lua_pushboolean(args, true);
     }
     else

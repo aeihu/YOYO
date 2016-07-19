@@ -24,11 +24,22 @@ int seq_AddAction(lua_State *L)
     return 0;
 }
 
+int seq_GetAction(lua_State *L)
+{
+    CSequenceOfAction **__seq = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
+    luaL_argcheck(L, __seq != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, *__seq);
+    return 1;
+}
+
 int seq_GC(lua_State *L)
 {
     CSequenceOfAction **_act = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
-    if (*_act)
+    if (*_act){
         delete *_act;
+        *_act = NULL;
+    }
 
     return 0;
 }
@@ -47,8 +58,10 @@ int sim_AddAction(lua_State *L)
 int sim_GC(lua_State *L)
 {
     CSimultaneousOfAction **_act = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
-    if (*_act)
+    if (*_act){
         delete *_act;
+        *_act = NULL;
+    }
 
     return 0;
 }
@@ -67,8 +80,10 @@ int rep_AddAction(lua_State *L)
 int rep_GC(lua_State *L)
 {
     CRepeatOfAction **_act = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
-    if (*_act)
+    if (*_act){
         delete *_act;
+        *_act = NULL;
+    }
 
     return 0;
 }
@@ -222,15 +237,16 @@ int luaopen_yoyo(lua_State *L) {
         { "hide_curtain", Cmd_HideCurtain },
         { "color_curtain", Cmd_ColorCurtain },
 
-        { "show_curtain", Cmd_CreateActionForShowCurtain },
-        { "hide_curtain", Cmd_CreateActionForHideCurtain },
-        { "color_curtain", Cmd_CreateActionForColorCurtain },
+        { "act_show_curtain", Cmd_CreateActionForShowCurtain },
+        { "act_hide_curtain", Cmd_CreateActionForHideCurtain },
+        { "act_color_curtain", Cmd_CreateActionForColorCurtain },
 
         { "create_sim", Cmd_CreateSimultaneous },
         { "create_seq", Cmd_CreateSequence },
         { "create_rep", Cmd_CreateRepeat },
 
         { "add_act", Cmd_AddAction },
+        { "add_actset", Cmd_AddActionSet },
 
         //{ "show_particle", Cmd_ShowParticleSystem },
         //{ "hide_particle", Cmd_HideParticleSystem },
@@ -246,6 +262,7 @@ int luaopen_yoyo(lua_State *L) {
 
     static const struct luaL_Reg __seq[] = {
         { "add_act", seq_AddAction },
+        { "get_act", seq_GetAction },
         { "__gc", seq_GC },
         { NULL, NULL }
     };

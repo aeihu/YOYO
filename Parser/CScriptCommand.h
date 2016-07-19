@@ -177,5 +177,6 @@ int Cmd_CreateRepeat(lua_State* args);
 //int Cmd_Pause(lua_State* args);
 int Cmd_LoadScript(lua_State* args);
 int Cmd_AddAction(lua_State* args);
+int Cmd_AddActionSet(lua_State* args);
 
 #endif
