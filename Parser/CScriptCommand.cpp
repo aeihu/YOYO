@@ -1539,9 +1539,9 @@ int Common_CreateActionSet(lua_State* args, string funcname)
         }
     }
 
-    string __name = "";
-    if (lua_isstring(args, -1)){
-        __name = lua_tostring(args, -1);
+    bool __pause = false;
+    if (lua_isboolean(args, -1)){
+        __pause = lua_toboolean(args, -1);
         lua_pop(args, 1);
     }
     else{
@@ -1551,9 +1551,9 @@ int Common_CreateActionSet(lua_State* args, string funcname)
         return 1;
     }
 
-    bool __pause = false;
-    if (lua_isboolean(args, -1)){
-        __pause = lua_toboolean(args, -1);
+    string __name = "";
+    if (lua_isstring(args, -1)){
+        __name = lua_tostring(args, -1);
         lua_pop(args, 1);
     }
     else{
