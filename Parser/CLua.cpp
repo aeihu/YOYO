@@ -247,6 +247,7 @@ int luaopen_yoyo(lua_State *L) {
 
         { "add_act", Cmd_AddAction },
         { "add_actset", Cmd_AddActionSet },
+        { "del_actset", Cmd_DeleteOrSkipAction },
 
         //{ "show_particle", Cmd_ShowParticleSystem },
         //{ "hide_particle", Cmd_HideParticleSystem },

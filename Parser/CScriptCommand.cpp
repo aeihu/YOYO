@@ -22,17 +22,69 @@
 #include "../Gui/CText.h"
 #include "../Action/CRepeatOfAction.h"
 
-string func_name = "";
-
 int Common_RetrunYield(lua_State *L, string funcname)
 {
-    func_name = funcname;
-    cout << func_name << "(): suspends thread." << endl;
+    cout << funcname << "(): suspends thread." << endl;
     CResourceControl::_ResourceManager.LockMutexInLua();
     return 0;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, int& val)
+bool Common_GetValue(lua_State* L, string& val)
+{
+    if (lua_isstring(L, -1)){
+        val = lua_tostring(L, -1);
+        lua_pop(L, 1);
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_GetValue(lua_State* L, int& val)
+{
+    if (lua_isnumber(L, -1)){
+        val = lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_GetValue(lua_State* L, size_t& val)
+{
+    if (lua_isnumber(L, -1)){
+        val = lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_GetValue(lua_State* L, float& val)
+{
+    if (lua_isnumber(L, -1)){
+        val = lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_GetValue(lua_State* L, bool& val)
+{
+    if (lua_isboolean(L, -1)){
+        val = lua_toboolean(L, -1);
+        lua_pop(L, 1);
+        return true;
+    }
+
+    return false;
+}
+
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, int& val)
 {
     if (lua_istable(L, -1))
     {
@@ -48,7 +100,7 @@ bool Common_GetValue(lua_State* L, const char* fieldName, int& val)
     return false;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, size_t& val)
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, size_t& val)
 {
     if (lua_istable(L, -1))
     {
@@ -64,7 +116,7 @@ bool Common_GetValue(lua_State* L, const char* fieldName, size_t& val)
     return false;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, string& val)
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, string& val)
 {
     if (lua_istable(L, -1))
     {
@@ -80,7 +132,7 @@ bool Common_GetValue(lua_State* L, const char* fieldName, string& val)
     return false;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, bool& val)
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, bool& val)
 {
     if (lua_istable(L, -1))
     {
@@ -96,7 +148,7 @@ bool Common_GetValue(lua_State* L, const char* fieldName, bool& val)
     return false;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, float& val)
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, float& val)
 {
     if (lua_istable(L, -1))
     {
@@ -112,7 +164,7 @@ bool Common_GetValue(lua_State* L, const char* fieldName, float& val)
     return false;
 }
 
-bool Common_GetValue(lua_State* L, const char* fieldName, vector<string>& val)
+bool Common_GetValueInTable(lua_State* L, const char* fieldName, vector<string>& val)
 {
     if (lua_istable(L, -1))
     {
@@ -168,11 +220,11 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
     }
 
     float __cr = 0.0f;
-    bool __crIsBe = Common_GetValue(args, "cr", __cr);
+    bool __crIsBe = Common_GetValueInTable(args, "cr", __cr);
     float __cg = 0.0f;
-    bool __cgIsBe = Common_GetValue(args, "cg", __cg);
+    bool __cgIsBe = Common_GetValueInTable(args, "cg", __cg);
     float __cb = 0.0f;
-    bool __cbIsBe = Common_GetValue(args, "cb", __cb);
+    bool __cbIsBe = Common_GetValueInTable(args, "cb", __cb);
 
     if (!__crIsBe && !__cgIsBe && !__cbIsBe)
         return CMD_ERR;
@@ -181,7 +233,7 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
     if (objTypeName != "ScrEffect")
     {
 
-        if (!Common_GetValue(args, "n", __name))
+        if (!Common_GetValueInTable(args, "n", __name))
         {
             cout << __funcName << "(): parameter \"n\" must be need." << endl;
             return CMD_ERR;
@@ -193,13 +245,13 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     CDrawableObjectControl* __doc = 
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -265,23 +317,23 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     float __alpha = 255.0f; //alpha
-    Common_GetValue(args, "a", __alpha);
+    Common_GetValueInTable(args, "a", __alpha);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -294,7 +346,7 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
         CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
 
         int __layer; // layer
-        if (Common_GetValue(args, "l", __layer)){
+        if (Common_GetValueInTable(args, "l", __layer)){
             vector<char> __args;
             __args.push_back(__layer);
             __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CDrawableClass::SetLayerOrder, __args));
@@ -305,11 +357,11 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
         float __y = __obj->GetPosition().y;
 
         float __vx;
-        if (Common_GetValue(args, "x", __vx)) 
+        if (Common_GetValueInTable(args, "x", __vx)) 
             __x = __vx; // x
 
         float __vy;
-        if (Common_GetValue(args, "y", __vy)) 
+        if (Common_GetValueInTable(args, "y", __vy)) 
             __y = __vy; // x
 
         vector<float> __args;
@@ -352,20 +404,20 @@ int Common_FuncOfHide(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -406,16 +458,16 @@ int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     float __x = 0.0f;
-    bool __xIsBe = Common_GetValue(args, "x", __x);
+    bool __xIsBe = Common_GetValueInTable(args, "x", __x);
     float __y = 0.0f;
-    bool __yIsBe = Common_GetValue(args, "y", __y);
+    bool __yIsBe = Common_GetValueInTable(args, "y", __y);
 
     if (!__xIsBe && !__yIsBe){
         cout << __funcName << "(): can't find x,y." << endl;
@@ -423,16 +475,16 @@ int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
 
     bool __isBy = false; //isBy
-    Common_GetValue(args, "b", __isBy);
+    Common_GetValueInTable(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
     
     CBaiscProperties* __obj = NULL;
 
@@ -516,16 +568,16 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** 
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     float __x = 0.0f;
-    bool __xIsBe = Common_GetValue(args, "x", __x);
+    bool __xIsBe = Common_GetValueInTable(args, "x", __x);
     float __y = 0.0f;
-    bool __yIsBe = Common_GetValue(args, "y", __y);
+    bool __yIsBe = Common_GetValueInTable(args, "y", __y);
 
     if (!__xIsBe && !__yIsBe){
         cout << __funcName << "(): can't find x,y." << endl;
@@ -533,16 +585,16 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** 
     }
 
     bool __isBy = false; //isBy
-    Common_GetValue(args, "b", __isBy);
+    Common_GetValueInTable(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -620,30 +672,30 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args, CActionBaseClass*
     }
     
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     float __rotation;
-    if (!Common_GetValue(args, "v", __rotation))
+    if (!Common_GetValueInTable(args, "v", __rotation))
     {
         cout << __funcName << "(): parameter \"v\" must be need." << endl;
         return CMD_ERR;
     }
 
     bool __isBy = false; //isBy
-    Common_GetValue(args, "b", __isBy);
+    Common_GetValueInTable(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
     
     CBaiscProperties* __obj = NULL;
 
@@ -699,30 +751,30 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     bool __isBy = false; //isBy
-    Common_GetValue(args, "b", __isBy);
+    Common_GetValueInTable(args, "b", __isBy);
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false; //reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     CBaiscProperties* __obj = NULL;
     CActionBaseClass* __result = NULL;
 
     if (objTypeName == "Camera"){
         float __z;
-        if (!Common_GetValue(args, "z", __z))
+        if (!Common_GetValueInTable(args, "z", __z))
         {
             cout << __funcName << "(): parameter \"z\" must be need." << endl;
             return CMD_ERR;
@@ -752,12 +804,12 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
     }
     else{
         float __x = 0.0f;
-        bool __xIsBe = Common_GetValue(args, "x", __x);
+        bool __xIsBe = Common_GetValueInTable(args, "x", __x);
         float __y = 0.0f;
-        bool __yIsBe = Common_GetValue(args, "y", __y);
+        bool __yIsBe = Common_GetValueInTable(args, "y", __y);
 
         float __s = 0.0f;
-        if (Common_GetValue(args, "s", __s)){
+        if (Common_GetValueInTable(args, "s", __s)){
             __x = __y = __s;
             __xIsBe = __yIsBe = true;
         }
@@ -842,14 +894,14 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args, CActionBaseClas
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     int __layer;
-    if (!Common_GetValue(args, "l", __layer))
+    if (!Common_GetValueInTable(args, "l", __layer))
     {
         cout << __funcName << "(): parameter \"l\" must be need." << endl;
         return CMD_ERR;
@@ -945,16 +997,16 @@ int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = N
     }
 
     bool __pause = false; //pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __right = false; //right
-    Common_GetValue(args, "r", __right);
+    Common_GetValueInTable(args, "r", __right);
 
     size_t __Type = 0; //type
-    Common_GetValue(args, "t", __Type);
+    Common_GetValueInTable(args, "t", __Type);
 
     size_t __inte = CCommon::_Common.INTERVAL; //interval
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     
     CDrawableObjectControl* __doc =
@@ -975,7 +1027,7 @@ int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = N
     CSimultaneousOfAction* __sim = new CSimultaneousOfAction();
 
     int __layer;
-    if (Common_GetValue(args, "l", __layer)){
+    if (Common_GetValueInTable(args, "l", __layer)){
         vector<char> __args;
         __args.push_back(__layer);
         __sim->AddAction(new CClassFuncArgsOfAction<CDrawableClass, char>(__obj, &CDrawableClass::SetLayerOrder, __args));
@@ -1024,23 +1076,23 @@ int Common_SetPoseCharacterLayer(lua_State* args, CActionBaseClass** act = NULL,
     }
 
     string __name;
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     string __body = "";
-    Common_GetValue(args, "b", __body);
+    Common_GetValueInTable(args, "b", __body);
 
     string __eye = "";
-    Common_GetValue(args, "e", __eye);
+    Common_GetValueInTable(args, "e", __eye);
 
     string __mouth = "";
-    Common_GetValue(args, "m", __mouth);
+    Common_GetValueInTable(args, "m", __mouth);
 
     string __skip = "";
-    Common_GetValue(args, "s", __skip);
+    Common_GetValueInTable(args, "s", __skip);
 
     vector<string> __args;
     __args.push_back(__body);
@@ -1084,50 +1136,50 @@ int Common_SetText(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
     }
 
     string __name;//name
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     string __font = "";//font
-    Common_GetValue(args, "f", __font);
+    Common_GetValueInTable(args, "f", __font);
 
     size_t __size = 0;//size
-    Common_GetValue(args, "s", __size);
+    Common_GetValueInTable(args, "s", __size);
 
     string __text = "";//text
-    bool _isBeT = Common_GetValue(args, "t", __text);
+    bool _isBeT = Common_GetValueInTable(args, "t", __text);
 
     bool __shadow = "";//shadow
-    Common_GetValue(args, "h", __shadow);
+    Common_GetValueInTable(args, "h", __shadow);
 
     float __shadowpercent = -1.0f;//shadowpercent
-    Common_GetValue(args, "c", __shadowpercent);
+    Common_GetValueInTable(args, "c", __shadowpercent);
 
     string __colorRed = "";//color red
-    Common_GetValue(args, "cr", __colorRed);
+    Common_GetValueInTable(args, "cr", __colorRed);
 
     string __colorGreen = "";//color green
-    Common_GetValue(args, "cg", __colorGreen);
+    Common_GetValueInTable(args, "cg", __colorGreen);
 
     string __colorBlue = "";//color blue
-    Common_GetValue(args, "cb", __colorBlue);
+    Common_GetValueInTable(args, "cb", __colorBlue);
 
     string __styleRegular = "";//style regular
-    Common_GetValue(args, "sr", __styleRegular);
+    Common_GetValueInTable(args, "sr", __styleRegular);
 
     string __styleBold = "";//style bold
-    Common_GetValue(args, "sb", __styleBold);
+    Common_GetValueInTable(args, "sb", __styleBold);
 
     string __styleItalic = "";//style italic
-    Common_GetValue(args, "si", __styleItalic);
+    Common_GetValueInTable(args, "si", __styleItalic);
 
     string __styleUnderlined = "";//style underlined
-    Common_GetValue(args, "su", __styleUnderlined);
+    Common_GetValueInTable(args, "su", __styleUnderlined);
 
     string __styleStrikeThrough = "";//style strikeThrough
-    Common_GetValue(args, "ss", __styleStrikeThrough);
+    Common_GetValueInTable(args, "ss", __styleStrikeThrough);
 
     CDrawableObjectControl* __doc =
         CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
@@ -1253,17 +1305,17 @@ int Common_PlayBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
     }
 
     string __name;//name
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     string __vol = "1";
-    Common_GetValue(args, "v", __vol);
+    Common_GetValueInTable(args, "v", __vol);
 
     bool __loop = false;
-    Common_GetValue(args, "l", __loop);
+    Common_GetValueInTable(args, "l", __loop);
 
     vector<string> __args;
     __args.push_back(__name);
@@ -1297,23 +1349,23 @@ int Common_SetBGMVolume(lua_State* args, CActionBaseClass** act = NULL, bool isC
     }
 
     float __vol = 1.0f;//vol
-    if (!Common_GetValue(args, "v", __vol))
+    if (!Common_GetValueInTable(args, "v", __vol))
     {
         cout << "Cmd_SetBGMVolume(): parameter \"v\" must be need." << endl;
         return CMD_ERR;
     }
 
     size_t __inte = CCommon::_Common.INTERVAL;//incr
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     bool __isBy = false;// isBy
-    Common_GetValue(args, "b", __isBy);
+    Common_GetValueInTable(args, "b", __isBy);
 
     bool __pause = false;//pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     bool __reset = false;//reset
-    Common_GetValue(args, "r", __reset);
+    Common_GetValueInTable(args, "r", __reset);
 
     CActionBaseClass* __result = NULL;
     if (__isBy){
@@ -1352,10 +1404,10 @@ int Common_StopBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
     }
 
     size_t __inte = 0;//incr
-    Common_GetValue(args, "i", __inte);
+    Common_GetValueInTable(args, "i", __inte);
 
     bool __pause = false;//pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     CSequenceOfAction* __seq = new CSequenceOfAction();
     __seq->AddAction(CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(__inte, 0.0f, false));
@@ -1389,7 +1441,7 @@ int Common_StopSE(lua_State* args, CActionBaseClass** act = NULL, bool isCreateA
     }
 
     vector<string> __args;
-    if (!Common_GetValue(args, "n", __args)){
+    if (!Common_GetValueInTable(args, "n", __args)){
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_YIELD;
     }
@@ -1424,17 +1476,17 @@ int Common_PlaySE(lua_State* args, CActionBaseClass** act = NULL, bool isCreateA
     }
 
     string __name;//name
-    if (!Common_GetValue(args, "n", __name))
+    if (!Common_GetValueInTable(args, "n", __name))
     {
         cout << "Cmd_PlaySE(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     string __vol = "1";//vol
-    Common_GetValue(args, "v", __vol);
+    Common_GetValueInTable(args, "v", __vol);
 
     bool __loop = false; //loop
-    Common_GetValue(args, "l", __loop);
+    Common_GetValueInTable(args, "l", __loop);
 
     vector<string> __args;
     __args.push_back(__name);
@@ -1476,7 +1528,7 @@ int Common_UseCamera(lua_State* args, CActionBaseClass** act = NULL, bool isCrea
     }
     else{
         string __name = "";// Name
-        Common_GetValue(args, "n", __name);
+        Common_GetValueInTable(args, "n", __name);
         vector<string> __args;
         __args.push_back(__name);
 
@@ -1511,14 +1563,14 @@ int Common_Delay(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAc
     }
 
     size_t __time;//name
-    if (!Common_GetValue(args, "t", __time))
+    if (!Common_GetValueInTable(args, "t", __time))
     {
         cout << __funcName << "(): parameter \"t\" must be need." << endl;
         return CMD_ERR;
     }
 
     bool __pause = false;//pause
-    Common_GetValue(args, "p", __pause);
+    Common_GetValueInTable(args, "p", __pause);
 
     CActionBaseClass* __result = new CDeplayOfAction(__time);
     if (__pause)
@@ -1545,29 +1597,11 @@ int Common_CreateActionSet(lua_State* args, string funcname)
 
     int __loopNum = -1;
     if (funcname == "Cmd_CreateRepeat" && __numOfargs > 1){
-        if (lua_isboolean(args, -1)){
-            __loopNum = lua_tonumber(args, -1);
-            lua_pop(args, 1);
-        }
-        else{
-            cout << funcname << "(): command invaild. can't set " << endl;
-
-            lua_pushnil(args);
-            return 1;
-        }
+        Common_GetValue(args, __loopNum);
     }
 
     string __name = "";
-    if (lua_isstring(args, -1)){
-        __name = lua_tostring(args, -1);
-        lua_pop(args, 1);
-    }
-    else{
-        cout << funcname << "(): command invaild. can't set " << endl;
-
-        lua_pushnil(args);
-        return 1;
-    }
+    Common_GetValue(args, __name);
 
     CActionBaseClass **_act =
         (CActionBaseClass**)lua_newuserdata(args, sizeof(CActionBaseClass*));
@@ -1651,21 +1685,6 @@ int Common_CreateActionForXXX(
     lua_pushnil(args);
     return 1;
 }
-//int Cmd_FuncOfActionForDeleteOrSkip(string funcName, lua_State* args, bool skip)
-//{
-//    CActionSet& act = &CResourceControl::_ResourceManager._ActionControl;
-//
-//    if (act == NULL){
-//        cout << funcName << "(): action set is null." <<endl;
-//        return CMD_ERR;
-//    }
-//    
-//    for (size_t i=0; i<args.size(); i++){
-//        act->DeleteAct(args[i], skip);
-//    }
-//
-//    return CMD_OK;
-//}
 
 /*==============================================================
     commad of script
@@ -2343,27 +2362,27 @@ int Cmd_Message(lua_State* args)
     }
 
     string __msgBoxName;//MessageBoxName
-    if (!Common_GetValue(args, "n", __msgBoxName))
+    if (!Common_GetValueInTable(args, "n", __msgBoxName))
     {
         cout << "Cmd_Message(): parameter \"n\" must be need." << endl;
         return 0;
     }
 
     string __msg;//message
-    if (!Common_GetValue(args, "m", __msg))
+    if (!Common_GetValueInTable(args, "m", __msg))
     {
         cout << "Cmd_Message(): parameter \"m\" must be need." << endl;
         return 0;
     }
 
     string __speakerName = "";
-    Common_GetValue(args, "s", __speakerName);
+    Common_GetValueInTable(args, "s", __speakerName);
 
     string __voiceName = "";
-    Common_GetValue(args, "v", __voiceName);
+    Common_GetValueInTable(args, "v", __voiceName);
 
     vector<string> __cOfArg;
-    Common_GetValue(args, "c", __cOfArg);
+    Common_GetValueInTable(args, "c", __cOfArg);
 
     CDrawableClass* __obj = 
         CResourceControl::_ResourceManager._DrawableObjectControl.GetDrawableObject("MessageBox:"+__msgBoxName);
@@ -2466,7 +2485,7 @@ int Cmd_CleanMessageBox(lua_State* args)
     }
 
     string __msgBoxName;//MessageBoxName
-    if (!Common_GetValue(args, "n", __msgBoxName))
+    if (!Common_GetValueInTable(args, "n", __msgBoxName))
     {
         cout << "Cmd_CleanMessageBox(): parameter \"n\" must be need." << endl;
         return 0;
@@ -2789,6 +2808,39 @@ int Cmd_Delay(lua_State* args)
 int Cmd_CreateActionForDelay(lua_State* args)
 {
     return Common_CreateActionForXXX(Common_Delay, args);
+}
+
+int Cmd_DeleteOrSkipAction(lua_State* args)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs < 1){
+            cout << __FUNCTION__ <<"(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+
+            lua_pushboolean(args, false);
+            return 1;
+        }
+    }
+
+    //bool __skip = true;
+    //Common_GetValue(args, __skip);
+
+    string __name = "";
+    if (!Common_GetValue(args, __name)){
+        cout << __FUNCTION__ << "(): type of first argument must string." << endl;
+        return CMD_ERR;
+    }
+
+    vector<string> __args;
+    __args.push_back(__name);
+    CResourceControl::_ResourceManager._ActionControl.AddAction(
+        new CClassFuncArgsOfAction<CResourceControl, string>(
+            &CResourceControl::_ResourceManager, 
+            &CResourceControl::DelActionForActionControl, 
+            __args));
+
+    return CMD_OK;
 }
 
 int Cmd_LoadScript(lua_State* args)

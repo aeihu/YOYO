@@ -24,6 +24,7 @@ string CActionSet::GetName() const
 bool CActionSet::DeleteAct(string name, bool skip)
 {
     if (name != ""){
+        bool __deleted = false;
         for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
             if (name == (*it).first->GetName()){
                 if (skip){
@@ -35,9 +36,23 @@ bool CActionSet::DeleteAct(string name, bool skip)
                 delete (*it).first;
                 (*it).first = NULL;
                 it = _actionList.erase(it);
+                __deleted = true;
             }
             else
                 ++it;
+        }
+
+        if (__deleted){
+            for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
+                if ((*it).second)
+                    ++it;
+                else{
+                    _iterator = it;
+                    return true;
+                }
+            }
+
+            _iterator = _actionList.begin();
         }
 
         return true;
@@ -54,7 +69,8 @@ void CActionSet::AddAction(CActionBaseClass* act)
         }
         
         _actionList.push_back(pair<CActionBaseClass*, bool>(act, false));
-        _iterator = _actionList.begin();
+        if (_actionList.size() < 1);
+            _iterator = _actionList.begin();
     }
 }
 

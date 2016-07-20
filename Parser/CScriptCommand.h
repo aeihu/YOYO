@@ -146,7 +146,7 @@ int Cmd_CreateActionForSetLogBoxLayerOrder(lua_State* args);
 //int Cmd_SetVariable(lua_State* args);
 //int Cmd_DelVariable(lua_State* args);
 
-//int Cmd_DelAction(lua_State* args);
+int Cmd_DeleteOrSkipAction(lua_State* args);
 //int Cmd_SkipAction(lua_State* args);
 
 int Cmd_ShowCurtain(lua_State* args);

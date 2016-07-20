@@ -28,7 +28,7 @@ using namespace std;
 LoadScript()->BeginLoadProcess()->LoadAsset()->EndLoadProcess()
 */
 
-class CResourceControl// : public CScript
+class CResourceControl
 {
     public:
         enum EProcStatus{
@@ -38,8 +38,8 @@ class CResourceControl// : public CScript
         };
     private:
         sf::Thread                      _threadOfLoading;
-        sf::Mutex                       _mutexMain;
-        sf::Mutex                       _mutexLua;
+        sf::Mutex                       _mutexMainForPause;
+        sf::Mutex                       _mutexLuaForPause;
 
         string                          _fileNameOfScriptForLoadingBegin;
         string                          _fileNameOfScriptForLoadingfinish;
@@ -86,13 +86,15 @@ class CResourceControl// : public CScript
         CDrawableObjectControl                  _LoadingObjectControl;
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
-        CSimultaneousOfAction                   _ActionControl;
+        CSequenceOfAction                       _ActionControl;
         CLua                                    _LuaControl;
         
         void Skip();
         bool AddVariable(string name, string val);
         bool SetVariable(string name, string val);
         bool DelVariable(string name);
+
+        void DelActionForActionControl(vector<string> args);
 
         EProcStatus GetLoadingProcessStatus() const;
         bool GetAuto() const;

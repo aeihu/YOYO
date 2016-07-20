@@ -12,13 +12,13 @@
 void CResourceControl::OnLButtonDown(int mX, int mY)
 {
     if (_loadingProcessStatus == CResourceControl::STOP){
-            if (_msgboxPauseRequest)
-                UnlockMutexInMain();
+        if (GetMsgboxPauseStatus()){
+            UnlockMutexInMain();
+            OffMsgboxPause();
+        }
 
-            if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
-                return;
-        //else
-        //    _pauseOfUser = false;
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
+            return;
     }
 }
 

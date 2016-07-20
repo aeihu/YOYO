@@ -430,24 +430,24 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
 void CResourceControl::LockMutexInLua()
 {
     _isLockMutex = false;
-    _mutexMain.lock();
+    _mutexMainForPause.lock();
     _isLockMutex = true;
-    _mutexMain.unlock();
-    _mutexLua.lock();
-    _mutexLua.unlock();
+    _mutexMainForPause.unlock();
+    _mutexLuaForPause.lock();
+    _mutexLuaForPause.unlock();
 }
 
 void CResourceControl::UnlockMutexInMain()
 {
-    _mutexLua.lock();
-    _mutexMain.unlock();
+    _mutexLuaForPause.lock();
+    _mutexMainForPause.unlock();
 }
 
 void CResourceControl::OnLoop()
 {
     if (_isLockMutex){
-        _mutexMain.lock();
-        _mutexLua.unlock();
+        _mutexMainForPause.lock();
+        _mutexLuaForPause.unlock();
         _isLockMutex = false;
     }
 
@@ -676,4 +676,9 @@ void CResourceControl::Skip()
         return;
 
     _ActionControl.Skip();
+}
+
+void CResourceControl::DelActionForActionControl(vector<string> args)
+{
+    _ActionControl.DeleteAct(args[0], true);
 }
