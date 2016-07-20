@@ -8,19 +8,15 @@
 
 #include "CActionBy.h"
 
-CActionBy::CActionBy(float* val, size_t elapsed, float fin, bool restore, bool pause)
+CActionBy::CActionBy(float* val, size_t elapsed, float fin, bool restore)
 {
     _val = NULL;
     if (val){
         _isRunning = false;
         _val = val;
         _byVal = fin;
-        _pauseRequest = pause;
         _restore = restore;
         _elapsed = elapsed;
-
-        if (_pauseRequest)
-            _numOfPauseActions++;
     }
 }
 /*
@@ -81,14 +77,9 @@ FINISH:
         return true;
     }
 }
-
-bool CActionBy::PauseRequest() const
-{
-    return _pauseRequest && _isRunning;
-}
         
 CActionBaseClass* CActionBy::Copy()
 {
-    return new CActionBy(_val, _elapsed, _byVal, _restore, _pauseRequest);
+    return new CActionBy(_val, _elapsed, _byVal, _restore);
 }
 

@@ -25,9 +25,8 @@ class CActionBy : public CActionBaseClass
         size_t      _elapsed;
     protected:
     public:
-        CActionBy(float* val, size_t elapsed, float fin, bool restore=false, bool pause=false);
+        CActionBy(float* val, size_t elapsed, float fin, bool restore=false);
 
-        bool PauseRequest() const;
         bool OnLoop();
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_BY;}

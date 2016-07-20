@@ -37,23 +37,23 @@ class CImageBaseClass : public CDrawableClass
         virtual void SetOriginX(float x);
         virtual void SetOriginY(float y);
         
-        virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore, bool pause);      
-        virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfOriginYTo(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore);      
+        virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore);
+        virtual CActionTo* CreateActionOfOriginYTo(size_t elapsed, float y, bool restore);
         
-        virtual CSimultaneousOfAction* CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore, bool pause);      
-        virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore);      
+        virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore);
+        virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore);
 
         /////////////////////////////////////////////////
 
-        virtual void CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore);
 
-        virtual void CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
         virtual void OnLoop()=0;

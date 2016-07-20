@@ -19,9 +19,8 @@ class CDeplayOfAction : public CActionBaseClass
         unsigned long   _time;
         size_t          _delay;
     public:
-        CDeplayOfAction(size_t delay, bool pause=false);
+        CDeplayOfAction(size_t delay);
 
-        bool PauseRequest() const;
         bool OnLoop();
         virtual CActionBaseClass* Copy();
 

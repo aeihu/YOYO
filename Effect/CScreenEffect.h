@@ -47,13 +47,13 @@ class CScreenEffect : public CDrawableClass
 
         void SetColor(vector<string> args);
 
-        CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed, bool isShow, bool pause);
-        CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool isShow, bool L2R, bool pause);
-        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
+        CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed, bool isShow);
+        CSimultaneousOfAction* CreateActionGradient(size_t elapsed, bool isShow, bool L2R);
+        CSimultaneousOfAction* CreateActionLouver(size_t elapsed, bool isShow, bool L2R, bool slide);
 
-        void CreateActionShowOrHideForSelf(size_t elapsed, bool isShow, bool pause);
-        void CreateActionGradientForSelf(size_t elapsed, bool isShow, bool L2R, bool pause);
-        void CreateActionLouverForSelf(size_t elapsed, bool isShow, bool L2R, bool slide, bool pause);
+        void CreateActionShowOrHideForSelf(size_t elapsed, bool isShow);
+        void CreateActionGradientForSelf(size_t elapsed, bool isShow, bool L2R);
+        void CreateActionLouverForSelf(size_t elapsed, bool isShow, bool L2R, bool slide);
 };
 
 #endif

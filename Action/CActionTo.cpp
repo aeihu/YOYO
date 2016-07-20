@@ -8,19 +8,15 @@
 
 #include "CActionTo.h"
 
-CActionTo::CActionTo(float* val, size_t elapsed, float fin, bool restore, bool pause)
+CActionTo::CActionTo(float* val, size_t elapsed, float fin, bool restore)
 {
     _val = NULL;
     if (val){
         _isRunning = false;
         _val = val;
         _valOfFinish = fin;
-        _pauseRequest = pause;
         _restore = restore;
         _elapsed = elapsed;
-
-        if (_pauseRequest)
-            _numOfPauseActions++;
     }
 }
 
@@ -82,12 +78,7 @@ FINISH:
     }
 }
 
-bool CActionTo::PauseRequest() const
-{
-    return _pauseRequest && _isRunning;
-}
-
 CActionBaseClass* CActionTo::Copy()
 {
-    return new CActionTo(_val, _elapsed, _valOfFinish, _restore, _pauseRequest);
+    return new CActionTo(_val, _elapsed, _valOfFinish, _restore);
 }

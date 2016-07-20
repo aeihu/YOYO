@@ -8,14 +8,10 @@
 
 #include "CDeplayOfAction.h"
 
-CDeplayOfAction::CDeplayOfAction(size_t delay, bool pause)
+CDeplayOfAction::CDeplayOfAction(size_t delay)
 {
     _isRunning = false;
     _delay = delay;
-    _pauseRequest = pause;
-
-    if (_pauseRequest)
-        _numOfPauseActions++;
 }
 
 bool CDeplayOfAction::OnLoop()
@@ -33,12 +29,7 @@ bool CDeplayOfAction::OnLoop()
     return false;
 }
 
-bool CDeplayOfAction::PauseRequest() const
-{
-    return _pauseRequest && _isRunning;
-}
-
 CActionBaseClass* CDeplayOfAction::Copy()
 {
-    return new CDeplayOfAction(_delay, _pauseRequest);
+    return new CDeplayOfAction(_delay);
 }

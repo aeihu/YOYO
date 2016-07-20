@@ -8,13 +8,10 @@
 
 #include "CSequenceOfAction.h"
 
-CSequenceOfAction::CSequenceOfAction(string name, bool pause)
+CSequenceOfAction::CSequenceOfAction(string name)
 {
     _name = name;
-    _pauseRequest = pause;
-
-    if (_pauseRequest)
-        _numOfPauseActions++;
+    _skip = false;
 }
 
 bool CSequenceOfAction::OnLoop()
@@ -22,9 +19,10 @@ bool CSequenceOfAction::OnLoop()
     do {
         if (_iterator != _actionList.end()){
             if (_skip)
-                (*_iterator)->Skip();
+                (*_iterator).first->Skip();
 
-            if ((*_iterator)->OnLoop()){
+            if ((*_iterator).first->OnLoop()){
+                (*_iterator).second = true;
                 _iterator++;
             }
         }
@@ -42,17 +40,9 @@ bool CSequenceOfAction::OnLoop()
     return false;
 }
 
-bool CSequenceOfAction::PauseRequest() const
-{
-    if (_iterator == _actionList.end())
-        return false;
-
-    return _pauseRequest || (*_iterator)->PauseRequest();
-}
-
 CActionBaseClass* CSequenceOfAction::Copy()
 {
-    CSequenceOfAction* __result = new CSequenceOfAction(_name, _pauseRequest);
+    CSequenceOfAction* __result = new CSequenceOfAction(_name);
     if (!CopyList(__result)){
         delete __result;
         return NULL;

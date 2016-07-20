@@ -19,8 +19,7 @@ class CSimultaneousOfAction : public CActionSet
     private:
     protected:
     public:
-        CSimultaneousOfAction(string name = "", bool pause = false);
-        virtual bool PauseRequest() const;
+        CSimultaneousOfAction(string name = "");
         bool OnLoop();
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_SIM;}

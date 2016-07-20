@@ -8,23 +8,11 @@
 
 #include "CRepeatOfAction.h"
 
-CRepeatOfAction::CRepeatOfAction(string name, bool pause, int loopNum)
+CRepeatOfAction::CRepeatOfAction(string name, int loopNum)
 {
     _count = 0;
     _loopNum = loopNum;
     _name = name;
-    _pauseRequest = pause;
-
-    if (_pauseRequest)
-        _numOfPauseActions++;
-}
-        
-bool CRepeatOfAction::PauseRequest() const
-{
-    if (_iterator == _actionList.end() || _count == 0)
-        return false;
-
-    return _pauseRequest || (*_iterator)->PauseRequest();
 }
 
 bool CRepeatOfAction::OnLoop()
@@ -37,10 +25,12 @@ bool CRepeatOfAction::OnLoop()
     do {
         if (_actionList.end() != _iterator){
             if (_skip)
-                (*_iterator)->Skip();
+                (*_iterator).first->Skip();
 
-            if ((*_iterator)->OnLoop())
+            if ((*_iterator).first->OnLoop()){
+                (*_iterator).second = true;
                 _iterator++;
+            }
         }
         else
             _skip = false;
@@ -55,6 +45,8 @@ bool CRepeatOfAction::OnLoop()
                 if (_count == 0){
                     if (IsDelete())
                         OnCleanup();
+                    else
+                        RestoreActionList();
 
                     return true;
                 }
@@ -67,7 +59,7 @@ bool CRepeatOfAction::OnLoop()
 
 CActionBaseClass* CRepeatOfAction::Copy()
 {
-    CRepeatOfAction* __result = new CRepeatOfAction(_name, _pauseRequest, _loopNum);
+    CRepeatOfAction* __result = new CRepeatOfAction(_name, _loopNum);
     if (!CopyList(__result)){
         delete __result;
         return NULL;

@@ -41,10 +41,10 @@ class CText : public CImageBaseClass
         //void FlipY();
         
         void SetShadowEnable(bool b);
-        void SetShadowEnable(vector<string> args);
+        void SetShadowEnable(vector<bool> args);
 
         void SetShadowPercent(float percent);
-        void SetShadowPercent(vector<string> args);
+        void SetShadowPercent(vector<float> args);
 
         void SetFont(string name);
         void SetFont(vector<string> args);
@@ -56,10 +56,10 @@ class CText : public CImageBaseClass
         void SetString(vector<string> args);
 
         void SetCharacterSize(size_t size);
-        void SetCharacterSize(vector<string> args);
+        void SetCharacterSize(vector<size_t> args);
 
         void SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b); 
-        void SetColor(vector<string> args);
+        void SetColor(vector<unsigned char> args);
         
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);

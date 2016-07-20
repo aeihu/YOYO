@@ -41,45 +41,45 @@ class CBaiscProperties : public CObject
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
 
-        virtual CActionTo* CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore);
+        virtual CActionBy* CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore);
 
-        virtual CSimultaneousOfAction* CreateActionOfScaleTo(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfScaleXTo(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfScaleYTo(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfScaleTo(size_t elapsed, float x, float y, bool restore);
+        virtual CActionTo* CreateActionOfScaleXTo(size_t elapsed, float x, bool restore);
+        virtual CActionTo* CreateActionOfScaleYTo(size_t elapsed, float y, bool restore);
 
-        virtual CSimultaneousOfAction* CreateActionOfScaleBy(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfScaleXBy(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfScaleYBy(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfScaleBy(size_t elapsed, float x, float y, bool restore);
+        virtual CActionBy* CreateActionOfScaleXBy(size_t elapsed, float x, bool restore);
+        virtual CActionBy* CreateActionOfScaleYBy(size_t elapsed, float y, bool restore);
 
-        virtual CSimultaneousOfAction* CreateActionOfMoveTo(size_t elapsed, float x, float y, bool restore, bool pause);      
-        virtual CActionTo* CreateActionOfMoveXTo(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfMoveYTo(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfMoveTo(size_t elapsed, float x, float y, bool restore);      
+        virtual CActionTo* CreateActionOfMoveXTo(size_t elapsed, float x, bool restore);
+        virtual CActionTo* CreateActionOfMoveYTo(size_t elapsed, float y, bool restore);
 
-        virtual CSimultaneousOfAction* CreateActionOfMoveBy(size_t elapsed, float x, float y, bool restore, bool pause);      
-        virtual CActionBy* CreateActionOfMoveXBy(size_t elapsed, float x, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfMoveYBy(size_t elapsed, float y, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfMoveBy(size_t elapsed, float x, float y, bool restore);      
+        virtual CActionBy* CreateActionOfMoveXBy(size_t elapsed, float x, bool restore);
+        virtual CActionBy* CreateActionOfMoveYBy(size_t elapsed, float y, bool restore);
 
         /////////////////////////////////////////////////////////////////////
 
-        virtual void CreateActionOfRotationToForSelf(size_t elapsed, float rotation, bool restore, bool pause);
-        virtual void CreateActionOfRotationByForSelf(size_t elapsed, float rotation, bool restore, bool pause);
+        virtual void CreateActionOfRotationToForSelf(size_t elapsed, float rotation, bool restore);
+        virtual void CreateActionOfRotationByForSelf(size_t elapsed, float rotation, bool restore);
 
-        virtual void CreateActionOfScaleToForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfScaleXToForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfScaleYToForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfScaleToForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfScaleXToForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfScaleYToForSelf(size_t elapsed, float y, bool restore);
 
-        virtual void CreateActionOfScaleByForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfScaleXByForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfScaleYByForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfScaleByForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfScaleXByForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfScaleYByForSelf(size_t elapsed, float y, bool restore);
 
-        virtual void CreateActionOfMoveToForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfMoveXToForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfMoveYToForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfMoveToForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfMoveXToForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfMoveYToForSelf(size_t elapsed, float y, bool restore);
 
-        virtual void CreateActionOfMoveByForSelf(size_t elapsed, float x, float y, bool restore, bool pause);
-        virtual void CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore, bool pause);
-        virtual void CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore, bool pause);
+        virtual void CreateActionOfMoveByForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore);
 
         virtual void OnLoop();
         virtual void OnCleanup();

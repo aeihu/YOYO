@@ -28,13 +28,13 @@ void CDrawableClass::SetLayerOrder(char order)
     CResourceControl::_ResourceManager._DrawableObjectControl._isNeedSort = true;
 }
 
-void CDrawableClass::SetLayerOrder(vector<string> args)
+void CDrawableClass::SetLayerOrder(vector<char> args)
 {
     if (args.size() > 0)
-        SetLayerOrder((unsigned char)atoi(args[0].c_str()));
+        SetLayerOrder(args[0]);
 }
 
-CSimultaneousOfAction* CDrawableClass::CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+CSimultaneousOfAction* CDrawableClass::CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore)
 {
     if (r > 255.0f)
         r = 255.0f;
@@ -52,43 +52,43 @@ CSimultaneousOfAction* CDrawableClass::CreateActionOfColorTo(size_t elapsed, flo
         b = 0.0f;
 
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionTo(&_red, elapsed, r, restore, pause));
-    __result->AddAction(new CActionTo(&_green, elapsed, g, restore, pause));
-    __result->AddAction(new CActionTo(&_blue, elapsed, b, restore, pause));
+    __result->AddAction(new CActionTo(&_red, elapsed, r, restore));
+    __result->AddAction(new CActionTo(&_green, elapsed, g, restore ));
+    __result->AddAction(new CActionTo(&_blue, elapsed, b, restore));
     return __result;
 }
 
-CActionTo* CDrawableClass::CreateActionOfColorRedTo(size_t elapsed, float r, bool restore, bool pause)
+CActionTo* CDrawableClass::CreateActionOfColorRedTo(size_t elapsed, float r, bool restore)
 {
     if (r > 255.0f)
         r = 255.0f;
     else if (r < 0.0f)
         r = 0.0f;
 
-    return new CActionTo(&_red, elapsed, r, restore, pause);
+    return new CActionTo(&_red, elapsed, r, restore);
 }
 
-CActionTo* CDrawableClass::CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore, bool pause)
+CActionTo* CDrawableClass::CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore)
 {
     if (g > 255.0f)
         g = 255.0f;
     else if (g < 0.0f)
         g = 0.0f;
 
-    return new CActionTo(&_green, elapsed, g, restore, pause);
+    return new CActionTo(&_green, elapsed, g, restore);
 }
 
-CActionTo* CDrawableClass::CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore, bool pause)
+CActionTo* CDrawableClass::CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore)
 {
     if (b > 255.0f)
         b = 255.0f;
     else if (b < 0.0f)
         b = 0.0f;
 
-    return new CActionTo(&_blue, elapsed, b, restore, pause);
+    return new CActionTo(&_blue, elapsed, b, restore);
 }
 
-CSimultaneousOfAction* CDrawableClass::CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+CSimultaneousOfAction* CDrawableClass::CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore)
 {
     if (r + _red > 255.0f)
         r = 255.0f - _red;
@@ -106,112 +106,112 @@ CSimultaneousOfAction* CDrawableClass::CreateActionOfColorBy(size_t elapsed, flo
         b = _blue;
 
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionBy(&_red, elapsed, r, restore, pause));
-    __result->AddAction(new CActionBy(&_green, elapsed, g, restore, pause));
-    __result->AddAction(new CActionBy(&_blue, elapsed, b, restore, pause));
+    __result->AddAction(new CActionBy(&_red, elapsed, r, restore));
+    __result->AddAction(new CActionBy(&_green, elapsed, g, restore));
+    __result->AddAction(new CActionBy(&_blue, elapsed, b, restore));
     return __result;
 }
 
-CActionBy* CDrawableClass::CreateActionOfColorRedBy(size_t elapsed, float r, bool restore, bool pause)
+CActionBy* CDrawableClass::CreateActionOfColorRedBy(size_t elapsed, float r, bool restore)
 {
     if (r + _red > 255.0f)
         r = 255.0f - _red;
     else if (r + _red < 0.0f)
         r = _red;
 
-    return new CActionBy(&_red, elapsed, r, restore, pause);
+    return new CActionBy(&_red, elapsed, r, restore);
 }
 
-CActionBy* CDrawableClass::CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore, bool pause)
+CActionBy* CDrawableClass::CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore)
 {
     if (g + _green > 255.0f)
         g = 255.0f - _green;
     else if (g + _green < 0.0f)
         g = _green;
 
-    return new CActionBy(&_green, elapsed, g, restore, pause);
+    return new CActionBy(&_green, elapsed, g, restore);
 }
 
-CActionBy* CDrawableClass::CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore, bool pause)
+CActionBy* CDrawableClass::CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore)
 {
     if (b + _blue > 255.0f)
         b = 255.0f - _blue;
     else if (b + _blue < 0.0f)
         b = _blue;
 
-    return new CActionBy(&_blue, elapsed, b, restore, pause);
+    return new CActionBy(&_blue, elapsed, b, restore);
 }
 
-CActionTo* CDrawableClass::CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause)
+CActionTo* CDrawableClass::CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore)
 {
     if (alpha > 255.0f)
         alpha = 255.0f;
     else if (alpha < 0.0f)
         alpha = 0.0f;
 
-    return new CActionTo(&_alpha, elapsed, alpha, restore, pause);
+    return new CActionTo(&_alpha, elapsed, alpha, restore);
 }
 
-CActionBy* CDrawableClass::CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause)
+CActionBy* CDrawableClass::CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore)
 {
     if (alpha + _alpha > 255.0f)
         alpha = 255.0f - _alpha;
     else if (alpha + _alpha < 0.0f)
         alpha = _alpha;
 
-    return new CActionBy(&_alpha, elapsed, alpha, restore, pause);
+    return new CActionBy(&_alpha, elapsed, alpha, restore);
 }
 
 ////////////////////////////////////////////////
 
-void CDrawableClass::CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorTo(elapsed, r, g, b, restore, pause));
+    _actionList.AddAction(CreateActionOfColorTo(elapsed, r, g, b, restore));
 }
 
-void CDrawableClass::CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorRedTo(elapsed, r, restore, pause));
+    _actionList.AddAction(CreateActionOfColorRedTo(elapsed, r, restore));
 }
 
-void CDrawableClass::CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorGreenTo(elapsed, g, restore, pause));
+    _actionList.AddAction(CreateActionOfColorGreenTo(elapsed, g, restore));
 }
 
-void CDrawableClass::CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorBlueTo(elapsed, b, restore, pause));
+    _actionList.AddAction(CreateActionOfColorBlueTo(elapsed, b, restore));
 }
 
-void CDrawableClass::CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorBy(elapsed, r, g, b, restore, pause));
+    _actionList.AddAction(CreateActionOfColorBy(elapsed, r, g, b, restore));
 }
 
-void CDrawableClass::CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorRedBy(elapsed, r, restore, pause));
+    _actionList.AddAction(CreateActionOfColorRedBy(elapsed, r, restore));
 }
 
-void CDrawableClass::CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorGreenBy(elapsed, g, restore, pause));
+    _actionList.AddAction(CreateActionOfColorGreenBy(elapsed, g, restore));
 }
 
-void CDrawableClass::CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore, bool pause)
+void CDrawableClass::CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore)
 {
-    _actionList.AddAction(CreateActionOfColorBlueBy(elapsed, b, restore, pause));
+    _actionList.AddAction(CreateActionOfColorBlueBy(elapsed, b, restore));
 }
 
-void CDrawableClass::CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore, bool pause)
+void CDrawableClass::CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore)
 {
-    _actionList.AddAction(CreateActionOfAlphaTo(elapsed, alpha, restore, pause));
+    _actionList.AddAction(CreateActionOfAlphaTo(elapsed, alpha, restore));
 }
 
-void CDrawableClass::CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore, bool pause)
+void CDrawableClass::CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore)
 {
-    _actionList.AddAction(CreateActionOfAlphaBy(elapsed, alpha, restore, pause));
+    _actionList.AddAction(CreateActionOfAlphaBy(elapsed, alpha, restore));
 }
 
 void CDrawableClass::OnSaveData(Object& json) const

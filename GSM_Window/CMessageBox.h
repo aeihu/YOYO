@@ -25,13 +25,13 @@ class CMessageBox : public CBox , public CTextProcessing
         sf::Vector2f        _msgOffset;
         sf::Text            _speakerName;
         CSequenceOfSprite   _frames;
-        bool                _pause;
-        bool*               _pauseControl;
         bool                _isFramesChanged;
         bool                _isUserWantToHideMsg;
 
         bool CheckList(Object json);
-        bool SetProperty(Object json, bool isLoad=true);
+        bool SetProperty(Object json, bool isLoad = true);
+        bool ConfirmForText();
+        void SwitchForShowAndHide();
     protected:
         using CBox::_isShowed;
     public:
@@ -48,8 +48,6 @@ class CMessageBox : public CBox , public CTextProcessing
 
         void SetSpeakerName(vector<string> args);
         void SetSpeakerName(string name);
-
-        void SetControl(bool* p);
 
         //bool OnMouseMove(int x, int y);
         bool OnLButtonDown(int x, int y);

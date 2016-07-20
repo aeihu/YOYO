@@ -108,8 +108,8 @@ class CSoundBank {
         void OnSaveData(Object& json) const;
         void OnLoadData(Object json);
 
-        CActionTo* CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore, bool pause);
-        CActionBy* CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore, bool pause);
+        CActionTo* CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore);
+        CActionBy* CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore);
 };
 
 //==============================================================================

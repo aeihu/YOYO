@@ -328,14 +328,14 @@ int CSoundBank::PlayBgm(string name, float vol, bool loop)
     return 0;
 }
 
-CActionTo* CSoundBank::CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore, bool pause)
+CActionTo* CSoundBank::CreateActionOfMusicVolTo(size_t elapsed, float vol, bool restore)
 {
-    return new CActionTo(&_musicVolume, elapsed, vol, restore, pause);
+    return new CActionTo(&_musicVolume, elapsed, vol, restore);
 }
 
-CActionBy* CSoundBank::CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore, bool pause)
+CActionBy* CSoundBank::CreateActionOfMusicVolBy(size_t elapsed, float vol, bool restore)
 {
-    return new CActionBy(&_musicVolume, elapsed, vol, restore, pause);
+    return new CActionBy(&_musicVolume, elapsed, vol, restore);
 }
 
 void CSoundBank::OnLoop()

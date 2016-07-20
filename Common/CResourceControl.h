@@ -38,7 +38,8 @@ class CResourceControl// : public CScript
         };
     private:
         sf::Thread                      _threadOfLoading;
-        sf::Mutex                       _mutex;
+        sf::Mutex                       _mutexMain;
+        sf::Mutex                       _mutexLua;
 
         string                          _fileNameOfScriptForLoadingBegin;
         string                          _fileNameOfScriptForLoadingfinish;
@@ -51,11 +52,10 @@ class CResourceControl// : public CScript
         Object                          _scriptConfig;
         Object                          _gameBaiscAsset;
 
-        bool                            _pauseOfAction;
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
-        bool                            _isNeedLuaResume;
         bool                            _msgboxPauseRequest;
+        bool                            _isLockMutex;
 
         EProcStatus                     _loadingProcessStatus;
 
@@ -103,8 +103,8 @@ class CResourceControl// : public CScript
         void OnMsgboxPause();
         void OffMsgboxPause();
 
-        void LockMutex();
-        void UnlockMutex();
+        void LockMutexInLua();
+        void UnlockMutexInMain();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
         void LoadScript(vector<string> args);

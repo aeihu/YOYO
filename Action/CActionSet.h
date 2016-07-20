@@ -17,20 +17,20 @@ using namespace std;
 class CActionSet : public CActionBaseClass
 {
     private:
-        bool                                _isDelete;
+        bool                                            _isDelete;
         
         void SetIsDelete(CActionBaseClass* act, bool b);
     protected:
-        string                              _name;
-        list<CActionBaseClass*>::iterator   _iterator;
-        list<CActionBaseClass*>             _actionList;
+        string                                          _name;
+        list<pair<CActionBaseClass*, bool> >::iterator  _iterator;
+        list<pair<CActionBaseClass*, bool> >            _actionList;
 
         bool CopyList(CActionSet* act);
         bool IsDelete() const;
+        void RestoreActionList();
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
-        virtual bool PauseRequest() const=0;
         virtual string GetName() const;
         bool DeleteAct(string name, bool skip);
 

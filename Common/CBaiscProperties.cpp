@@ -69,159 +69,159 @@ sf::Vector2f& CBaiscProperties::GetScale()
     return _scale;
 }
 
-CActionTo* CBaiscProperties::CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore, bool pause)
+CActionTo* CBaiscProperties::CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore)
 {
-    return new CActionTo(&_rotation, elapsed, rotation, restore, pause);
+    return new CActionTo(&_rotation, elapsed, rotation, restore);
 }
 
-CActionBy* CBaiscProperties::CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore, bool pause)
+CActionBy* CBaiscProperties::CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore)
 {
-    return new CActionBy(&_rotation, elapsed, rotation, restore, pause);
+    return new CActionBy(&_rotation, elapsed, rotation, restore);
 }
 
-CSimultaneousOfAction* CBaiscProperties::CreateActionOfScaleTo(size_t elapsed, float x, float y, bool restore, bool pause)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfScaleTo(size_t elapsed, float x, float y, bool restore)
 {
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionTo(&_scale.x, elapsed, x, restore, pause));
-    __result->AddAction(new CActionTo(&_scale.y, elapsed, y, restore, pause));
+    __result->AddAction(new CActionTo(&_scale.x, elapsed, x, restore));
+    __result->AddAction(new CActionTo(&_scale.y, elapsed, y, restore));
     return __result;
 }
 
-CActionTo* CBaiscProperties::CreateActionOfScaleXTo(size_t elapsed, float x, bool restore, bool pause)
+CActionTo* CBaiscProperties::CreateActionOfScaleXTo(size_t elapsed, float x, bool restore)
 {
-    return new CActionTo(&_scale.x, elapsed, x, restore, pause);
+    return new CActionTo(&_scale.x, elapsed, x, restore);
 }
 
-CActionTo* CBaiscProperties::CreateActionOfScaleYTo(size_t elapsed, float y, bool restore, bool pause)
+CActionTo* CBaiscProperties::CreateActionOfScaleYTo(size_t elapsed, float y, bool restore)
 {
-    return new CActionTo(&_scale.y, elapsed, y, restore, pause);
+    return new CActionTo(&_scale.y, elapsed, y, restore);
 }
 
-CSimultaneousOfAction* CBaiscProperties::CreateActionOfScaleBy(size_t elapsed, float x, float y, bool restore, bool pause)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfScaleBy(size_t elapsed, float x, float y, bool restore)
 {
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionBy(&_scale.x, elapsed, x, restore, pause));
-    __result->AddAction(new CActionBy(&_scale.y, elapsed, y, restore, pause));
+    __result->AddAction(new CActionBy(&_scale.x, elapsed, x, restore));
+    __result->AddAction(new CActionBy(&_scale.y, elapsed, y, restore));
     return __result;
 }
 
-CActionBy* CBaiscProperties::CreateActionOfScaleXBy(size_t elapsed, float x, bool restore, bool pause)
+CActionBy* CBaiscProperties::CreateActionOfScaleXBy(size_t elapsed, float x, bool restore)
 {
-    return new CActionBy(&_scale.x, elapsed, x, restore, pause);
+    return new CActionBy(&_scale.x, elapsed, x, restore);
 }
 
-CActionBy* CBaiscProperties::CreateActionOfScaleYBy(size_t elapsed, float y, bool restore, bool pause)
+CActionBy* CBaiscProperties::CreateActionOfScaleYBy(size_t elapsed, float y, bool restore)
 {
-    return new CActionBy(&_scale.y, elapsed, y, restore, pause);
+    return new CActionBy(&_scale.y, elapsed, y, restore);
 }
 
-CSimultaneousOfAction* CBaiscProperties::CreateActionOfMoveTo(size_t elapsed, float x, float y, bool restore, bool pause)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfMoveTo(size_t elapsed, float x, float y, bool restore)
 {
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionTo(&_coordinate.x, elapsed, x, restore, pause));
-    __result->AddAction(new CActionTo(&_coordinate.y, elapsed, y, restore, pause));
+    __result->AddAction(new CActionTo(&_coordinate.x, elapsed, x, restore));
+    __result->AddAction(new CActionTo(&_coordinate.y, elapsed, y, restore));
     return __result;
 }
 
-CActionTo* CBaiscProperties::CreateActionOfMoveXTo(size_t elapsed, float x, bool restore, bool pause)
+CActionTo* CBaiscProperties::CreateActionOfMoveXTo(size_t elapsed, float x, bool restore)
 {
-    return new CActionTo(&_coordinate.x, elapsed, x, restore, pause);
+    return new CActionTo(&_coordinate.x, elapsed, x, restore);
 }
 
-CActionTo* CBaiscProperties::CreateActionOfMoveYTo(size_t elapsed, float y, bool restore, bool pause)
+CActionTo* CBaiscProperties::CreateActionOfMoveYTo(size_t elapsed, float y, bool restore)
 {
-    return new CActionTo(&_coordinate.y, elapsed, y, restore, pause);
+    return new CActionTo(&_coordinate.y, elapsed, y, restore);
 }
 
-CSimultaneousOfAction* CBaiscProperties::CreateActionOfMoveBy(size_t elapsed, float x, float y, bool restore, bool pause)
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfMoveBy(size_t elapsed, float x, float y, bool restore)
 {
     CSimultaneousOfAction* __result = new CSimultaneousOfAction();
-    __result->AddAction(new CActionBy(&_coordinate.x, elapsed, x, restore, pause));
-    __result->AddAction(new CActionBy(&_coordinate.y, elapsed, y, restore, pause));
+    __result->AddAction(new CActionBy(&_coordinate.x, elapsed, x, restore));
+    __result->AddAction(new CActionBy(&_coordinate.y, elapsed, y, restore));
     return __result;
 }
 
-CActionBy* CBaiscProperties::CreateActionOfMoveXBy(size_t elapsed, float x, bool restore, bool pause)
+CActionBy* CBaiscProperties::CreateActionOfMoveXBy(size_t elapsed, float x, bool restore)
 {
-    return new CActionBy(&_coordinate.x, elapsed, x, restore, pause);
+    return new CActionBy(&_coordinate.x, elapsed, x, restore);
 }
 
-CActionBy* CBaiscProperties::CreateActionOfMoveYBy(size_t elapsed, float y, bool restore, bool pause)
+CActionBy* CBaiscProperties::CreateActionOfMoveYBy(size_t elapsed, float y, bool restore)
 {
-    return new CActionBy(&_coordinate.y, elapsed, y, restore, pause);
+    return new CActionBy(&_coordinate.y, elapsed, y, restore);
 }
 
 /////////////////////////////////////////////////////
 
-void CBaiscProperties::CreateActionOfRotationToForSelf(size_t elapsed, float rotation, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfRotationToForSelf(size_t elapsed, float rotation, bool restore)
 {
-    _actionList.AddAction(CreateActionOfRotationTo(elapsed, rotation, restore, pause));
+    _actionList.AddAction(CreateActionOfRotationTo(elapsed, rotation, restore));
 }
 
-void CBaiscProperties::CreateActionOfRotationByForSelf(size_t elapsed, float rotation, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfRotationByForSelf(size_t elapsed, float rotation, bool restore)
 {
-    _actionList.AddAction(CreateActionOfRotationBy(elapsed, rotation, restore, pause));
+    _actionList.AddAction(CreateActionOfRotationBy(elapsed, rotation, restore));
 }
 
 
-void CBaiscProperties::CreateActionOfScaleToForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleToForSelf(size_t elapsed, float x, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleTo(elapsed, x, y, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleTo(elapsed, x, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfScaleXToForSelf(size_t elapsed, float x, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleXToForSelf(size_t elapsed, float x, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleXTo(elapsed, x, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleXTo(elapsed, x, restore));
 }
 
-void CBaiscProperties::CreateActionOfScaleYToForSelf(size_t elapsed, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleYToForSelf(size_t elapsed, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleYTo(elapsed, y, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleYTo(elapsed, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfScaleByForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleByForSelf(size_t elapsed, float x, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleBy(elapsed, x, y, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleBy(elapsed, x, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfScaleXByForSelf(size_t elapsed, float x, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleXByForSelf(size_t elapsed, float x, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleXBy(elapsed, x, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleXBy(elapsed, x, restore));
 }
 
-void CBaiscProperties::CreateActionOfScaleYByForSelf(size_t elapsed, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfScaleYByForSelf(size_t elapsed, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfScaleYBy(elapsed, y, restore, pause));
+    _actionList.AddAction(CreateActionOfScaleYBy(elapsed, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveToForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveToForSelf(size_t elapsed, float x, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveTo(elapsed, x, y, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveTo(elapsed, x, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveXToForSelf(size_t elapsed, float x, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveXToForSelf(size_t elapsed, float x, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveXTo(elapsed, x, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveXTo(elapsed, x, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveYToForSelf(size_t elapsed, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveYToForSelf(size_t elapsed, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveYTo(elapsed, y, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveYTo(elapsed, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveByForSelf(size_t elapsed, float x, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveByForSelf(size_t elapsed, float x, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveBy(elapsed, x, y, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveBy(elapsed, x, y, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveXByForSelf(size_t elapsed, float x, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveXBy(elapsed, x, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveXBy(elapsed, x, restore));
 }
 
-void CBaiscProperties::CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore, bool pause)
+void CBaiscProperties::CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore)
 {
-    _actionList.AddAction(CreateActionOfMoveYBy(elapsed, y, restore, pause));
+    _actionList.AddAction(CreateActionOfMoveYBy(elapsed, y, restore));
 }
 
 void CBaiscProperties::OnLoop()

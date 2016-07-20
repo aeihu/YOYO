@@ -20,7 +20,7 @@ CMessageBox::CMessageBox()
     AddChildNode(&_frames);
     _frames.SetFlag(FLAG_SCALE);
     _isFramesChanged =
-    _isUserWantToHideMsg = _pause = false;
+    _isUserWantToHideMsg = false;
 }
 
 void CMessageBox::ClearText()
@@ -194,7 +194,8 @@ void CMessageBox::OnLoop()
         CBox::GetPosition().x + _msgOffset.x, 
         CBox::GetPosition().y + _msgOffset.y);
 
-    if (IsTextAllShown() && !GetText().empty()){
+    if (CTextProcessing::GetStatus() == CTextProcessing::FINISH 
+        && !GetText().empty()){
         if (!_isFramesChanged){
             _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f - CBox::_coordinate.x,  
                 CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
@@ -215,11 +216,6 @@ void CMessageBox::OnLoop()
     
     //if (_pauseControl)
     //    *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
-}
-
-void CMessageBox::SetControl(bool* p)
-{
-    _pauseControl = p;
 }
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
@@ -260,11 +256,26 @@ void CMessageBox::SetText(vector<string> args)
 
 void CMessageBox::SetText(string msg)
 {
-    if (_pauseControl)
-        *_pauseControl = true;
-
-    _pause = true;
     CTextProcessing::SetText(msg);
+}
+
+void CMessageBox::SwitchForShowAndHide()
+{
+    _isUserWantToHideMsg = !_isUserWantToHideMsg;
+}
+
+bool CMessageBox::ConfirmForText()
+{
+    switch (GetStatus()){
+        case CTextProcessing::RUNNING:
+            Skip();
+            return true;
+        case CTextProcessing::FINISH:
+            Confirm();
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool CMessageBox::OnLButtonDown(int x, int y)
@@ -274,14 +285,7 @@ bool CMessageBox::OnLButtonDown(int x, int y)
         return true;
     }
 
-    if (IsTextAllShown()){
-        _pause = false;
-        return false;
-    }
-    else
-        Skip();
-
-    return true;
+    return ConfirmForText();
 }
 
 bool CMessageBox::OnLButtonUp(int x, int y)
@@ -291,11 +295,11 @@ bool CMessageBox::OnLButtonUp(int x, int y)
 
 bool CMessageBox::OnRButtonDown(int x, int y)
 {
-    _isUserWantToHideMsg = !_isUserWantToHideMsg;
     return true;
 }
 
 bool CMessageBox::OnRButtonUp(int x, int y)
 {
+    SwitchForShowAndHide();
     return false;
 }

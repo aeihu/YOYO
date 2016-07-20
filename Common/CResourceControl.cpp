@@ -25,11 +25,10 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _fileNameOfCurrentRunningScript = "";
     _isNeedCleanAction =
     _isLoadPlayerData =
-    _pauseOfAction = 
     _isAuto = 
-    _isNeedLuaResume =
     _msgboxPauseRequest =
     _flagForAuto = false;
+    _isLockMutex = true;
     _loadingProcessStatus = CResourceControl::STOP;
 }
 
@@ -213,7 +212,6 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     }
     else
         return false;
-
 
     if (_gameBaiscAsset.has<String>("loading_finish_script"))
     {
@@ -429,34 +427,36 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
     return _loadingProcessStatus;
 }
 
-void CResourceControl::LockMutex()
+void CResourceControl::LockMutexInLua()
 {
-    _mutex.lock();
+    _isLockMutex = false;
+    _mutexMain.lock();
+    _isLockMutex = true;
+    _mutexMain.unlock();
+    _mutexLua.lock();
+    _mutexLua.unlock();
 }
 
-void CResourceControl::UnlockMutex()
+void CResourceControl::UnlockMutexInMain()
 {
-    _mutex.unlock();
+    _mutexLua.lock();
+    _mutexMain.unlock();
 }
 
 void CResourceControl::OnLoop()
 {
-    //_mutex.lock();
+    if (_isLockMutex){
+        _mutexMain.lock();
+        _mutexLua.unlock();
+        _isLockMutex = false;
+    }
+
     _ActionControl.OnLoop();
-    //_mutex.unlock();
+
     if (_isNeedCleanAction) {
         _isNeedCleanAction = false;
         LoadScript(_fileNameOfCurrentRunningScript);
     }
-
-    if (CActionBaseClass::GetNumberOfActionInPause() < 1){
-        if (_pauseOfAction)
-            _isNeedLuaResume = true;
-
-        _pauseOfAction = false;
-    }
-    else
-        _pauseOfAction = true;
     
     _SoundControl.OnLoop();
 
@@ -464,12 +464,6 @@ void CResourceControl::OnLoop()
         _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
         AutoToNextStep();
-    }
-
-    if (_isNeedLuaResume)
-    {
-        _LuaControl.ResumeLuaThread();
-        _isNeedLuaResume = false;
     }
 
     if (_loadingProcessStatus != CResourceControl::STOP){
@@ -488,9 +482,6 @@ void CResourceControl::OnLoop()
 
         return;
     }
-    
-    if (_pauseOfAction)
-        return;
 }
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)

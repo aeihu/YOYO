@@ -8,25 +8,26 @@
 
 #include "CSimultaneousOfAction.h"
 
-CSimultaneousOfAction::CSimultaneousOfAction(string name, bool pause)
+CSimultaneousOfAction::CSimultaneousOfAction(string name)
 {
     _name = name;
-    _pauseRequest = pause;
-
-    if (_pauseRequest)
-        _numOfPauseActions++;
 }
 
 bool CSimultaneousOfAction::OnLoop()
 {
     size_t __count = 0;
-    for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end(); ){
-        if (_skip)
-            (*it)->Skip();
+    for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
+        if (!(*it).second){
+            if (_skip)
+                (*it).first->Skip();
 
-        if ((*it)->OnLoop()){
-            __count++;
+            if ((*it).first->OnLoop()){
+                (*it).second = true;
+                __count++;
+            }
         }
+        else
+            __count++;
             
         ++it;
     }
@@ -42,22 +43,9 @@ bool CSimultaneousOfAction::OnLoop()
     return false;
 }
 
-bool CSimultaneousOfAction::PauseRequest() const
-{
-    size_t __count = 0;
-    for (list<CActionBaseClass*>::const_iterator it=_actionList.begin();it!=_actionList.end(); it++){
-        if ((*it)->PauseRequest())
-            return true;
-
-        __count++;
-    }
-
-    return __count < 1 ? false : _pauseRequest;
-}
-
 CActionBaseClass* CSimultaneousOfAction::Copy()
 {
-    CSimultaneousOfAction* __result = new CSimultaneousOfAction(_name, _pauseRequest);
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction(_name);
     if (!CopyList(__result)){
         delete __result;
         return NULL;

@@ -26,38 +26,38 @@ class CDrawableClass : public CBaiscProperties
         
         virtual unsigned char GetLayerOrder() const;
         virtual void SetLayerOrder(char order);
-        virtual void SetLayerOrder(vector<string> args);
+        virtual void SetLayerOrder(vector<char> args);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
         virtual void OnLoop()=0;
 
-        virtual CSimultaneousOfAction* CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore, bool pause);      
-        virtual CActionTo* CreateActionOfColorRedTo(size_t elapsed, float r, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore, bool pause);
-        virtual CActionTo* CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfColorTo(size_t elapsed, float r, float g, float b, bool restore);      
+        virtual CActionTo* CreateActionOfColorRedTo(size_t elapsed, float r, bool restore);
+        virtual CActionTo* CreateActionOfColorGreenTo(size_t elapsed, float g, bool restore);
+        virtual CActionTo* CreateActionOfColorBlueTo(size_t elapsed, float b, bool restore);
 
-        virtual CSimultaneousOfAction* CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore, bool pause);      
-        virtual CActionBy* CreateActionOfColorRedBy(size_t elapsed, float r, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore, bool pause);
+        virtual CSimultaneousOfAction* CreateActionOfColorBy(size_t elapsed, float r, float g, float b, bool restore);      
+        virtual CActionBy* CreateActionOfColorRedBy(size_t elapsed, float r, bool restore);
+        virtual CActionBy* CreateActionOfColorGreenBy(size_t elapsed, float g, bool restore);
+        virtual CActionBy* CreateActionOfColorBlueBy(size_t elapsed, float b, bool restore);
 
-        virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore, bool pause);
-        virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore, bool pause);
+        virtual CActionTo* CreateActionOfAlphaTo(size_t elapsed, float alpha, bool restore);
+        virtual CActionBy* CreateActionOfAlphaBy(size_t elapsed, float alpha, bool restore);
 
         /////////////////////////////////////////////////////////
 
-        virtual void CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause);
-        virtual void CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore, bool pause);
-        virtual void CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore, bool pause);
-        virtual void CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore, bool pause);
+        virtual void CreateActionOfColorToForSelf(size_t elapsed, float r, float g, float b, bool restore);
+        virtual void CreateActionOfColorRedToForSelf(size_t elapsed, float r, bool restore);
+        virtual void CreateActionOfColorGreenToForSelf(size_t elapsed, float g, bool restore);
+        virtual void CreateActionOfColorBlueToForSelf(size_t elapsed, float b, bool restore);
 
-        virtual void CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore, bool pause);
-        virtual void CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore, bool pause);
-        virtual void CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore, bool pause);
-        virtual void CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore, bool pause);
+        virtual void CreateActionOfColorByForSelf(size_t elapsed, float r, float g, float b, bool restore);
+        virtual void CreateActionOfColorRedByForSelf(size_t elapsed, float r, bool restore);
+        virtual void CreateActionOfColorGreenByForSelf(size_t elapsed, float g, bool restore);
+        virtual void CreateActionOfColorBlueByForSelf(size_t elapsed, float b, bool restore);
 
-        virtual void CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore, bool pause);
-        virtual void CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore, bool pause);
+        virtual void CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore);
+        virtual void CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore);
 
         virtual bool OnLButtonUp(int mX, int mY){return false;}
         virtual bool OnLButtonDown(int mX, int mY){return false;}

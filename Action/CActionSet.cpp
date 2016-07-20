@@ -24,16 +24,16 @@ string CActionSet::GetName() const
 bool CActionSet::DeleteAct(string name, bool skip)
 {
     if (name != ""){
-        for (list<CActionBaseClass*>::iterator it=_actionList.begin();it!=_actionList.end();){
-            if (name == (*it)->GetName()){
+        for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
+            if (name == (*it).first->GetName()){
                 if (skip){
-                    (*it)->Skip();
-                    (*it)->OnLoop();
+                    (*it).first->Skip();
+                    (*it).first->OnLoop();
                 }
 
-                (*it)->OnCleanup();
-                delete (*it);
-                (*it) = NULL;
+                (*it).first->OnCleanup();
+                delete (*it).first;
+                (*it).first = NULL;
                 it = _actionList.erase(it);
             }
             else
@@ -53,7 +53,7 @@ void CActionSet::AddAction(CActionBaseClass* act)
             SetIsDelete(act,  false);
         }
         
-        _actionList.push_back(act);
+        _actionList.push_back(pair<CActionBaseClass*, bool>(act, false));
         _iterator = _actionList.begin();
     }
 }
@@ -67,13 +67,13 @@ void CActionSet::SetIsDelete(CActionBaseClass* act, bool b)
             CActionSet* __actset = static_cast<CActionSet*>(act);
             __actset->_isDelete = b;
 
-            for (list<CActionBaseClass*>::iterator it = __actset->_actionList.begin();
+            for (list<pair<CActionBaseClass*, bool> >::iterator it = __actset->_actionList.begin();
                 it != __actset->_actionList.end(); it++){
 
-                if ((*it)->GetType() == ACTION_SEQ ||
-                    (*it)->GetType() == ACTION_SIM ||
-                    (*it)->GetType() == ACTION_REP){
-                    SetIsDelete((*it), b);
+                if ((*it).first->GetType() == ACTION_SEQ ||
+                    (*it).first->GetType() == ACTION_SIM ||
+                    (*it).first->GetType() == ACTION_REP){
+                    SetIsDelete((*it).first, b);
                 }
             }
         }
@@ -85,10 +85,10 @@ void CActionSet::OnCleanup()
     if (_actionList.empty())
         return;
 
-    for (list<CActionBaseClass*>::iterator it = _actionList.begin(); it != _actionList.end(); it++){
-        (*it)->OnCleanup();
-        delete (*it);
-        (*it) = NULL;
+    for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end(); it++){
+        (*it).first->OnCleanup();
+        delete (*it).first;
+        (*it).first = NULL;
     }
 
     _actionList.clear();
@@ -97,8 +97,8 @@ void CActionSet::OnCleanup()
 bool CActionSet::CopyList(CActionSet* act)
 {
     if (act){
-        for (list<CActionBaseClass*>::iterator it = _actionList.begin(); it != _actionList.end(); it++)
-            act->AddAction((*it)->Copy());
+        for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end(); it++)
+            act->AddAction((*it).first->Copy());
 
         return true;
     }
@@ -108,4 +108,18 @@ bool CActionSet::CopyList(CActionSet* act)
 bool CActionSet::IsDelete() const
 {
     return _isDelete;
+}
+
+void CActionSet::RestoreActionList()
+{
+    for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end(); it++){
+        (*it).second = false;
+
+        if ((*it).first->GetType() == ACTION_SEQ ||
+            (*it).first->GetType() == ACTION_SIM ||
+            (*it).first->GetType() == ACTION_REP)
+        {
+            ((CActionSet*)(*it).first)->RestoreActionList();
+        }
+    }
 }

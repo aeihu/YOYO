@@ -18,9 +18,8 @@ class CRepeatOfAction : public CActionSet
         int     _loopNum;
     protected:
     public:
-        CRepeatOfAction(string name = "", bool pause = false, int loopNum = -1);
+        CRepeatOfAction(string name = "", int loopNum = -1);
         bool OnLoop();
-        bool PauseRequest() const;
         virtual CActionBaseClass* Copy();
         virtual inline EActType GetType() { return ACTION_REP;}
 };

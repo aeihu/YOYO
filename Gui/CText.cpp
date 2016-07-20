@@ -44,16 +44,12 @@ void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
     _sfText.setColor(_textColor);
 }
         
-void CText::SetColor(vector<string> args)
+void CText::SetColor(vector<unsigned char> args)
 {
     if (args.size() > 0){
-        SetColor(
-            atoi(args[0].c_str()),
-            atoi(args[1].c_str()),
-            atoi(args[2].c_str()));
+        SetColor(args[0], args[1], args[2]);
     }
 }
-        
 
 void CText::SetString(string str)
 {
@@ -72,10 +68,10 @@ void CText::SetCharacterSize(size_t size)
     _sfText.setCharacterSize(size);
 }
 
-void CText::SetCharacterSize(vector<string> args)
+void CText::SetCharacterSize(vector<size_t> args)
 {
     if (args.size() > 0){
-        SetCharacterSize(atoi(args[0].c_str()));
+        SetCharacterSize(args[0]);
     }
 }
         
@@ -94,10 +90,10 @@ void CText::SetShadowPercent(float percent)
     _shadowPercent = percent;
 }
         
-void CText::SetShadowPercent(vector<string> args)
+void CText::SetShadowPercent(vector<float> args)
 {
     if (args.size() > 0){
-        SetShadowPercent(atof(args[0].c_str()));
+        SetShadowPercent(args[0]);
     }
 }
 
@@ -135,12 +131,10 @@ void CText::SetShadowEnable(bool b)
     _shadowEnable = b;
 }
 
-void CText::SetShadowEnable(vector<string> args)
+void CText::SetShadowEnable(vector<bool> args)
 {
     if (args.size() > 0)
-        SetShadowEnable(true);
-    else
-        SetShadowEnable(false);
+        SetShadowEnable(args[0]);
 }
         
 void CText::SetStyle(size_t flag)

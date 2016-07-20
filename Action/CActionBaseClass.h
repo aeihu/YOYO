@@ -30,18 +30,14 @@ class CActionBaseClass
             ACTION_CLASS_FUNC_ARGS,
         };
 
-        static int  _numOfPauseActions;
-        bool        _pauseRequest;
         bool        _skip;
     public:
         CActionBaseClass();
         ~CActionBaseClass();
         
-        static int GetNumberOfActionInPause();
         virtual string GetName() const;
         virtual bool OnLoop()=0; 
         virtual void OnCleanup(){}; 
-        virtual bool PauseRequest() const;
         void Skip();
         virtual CActionBaseClass* Copy()=0;
         virtual inline EActType GetType() { return ACTION_BASE; }
