@@ -6,27 +6,29 @@
 * Version 3(GPLv3) as published by the Free Software Foundation.
 */
 
-#ifndef _CFUNCOFACTION_H_
-    #define _CFUNCOFACTION_H_
+#ifndef _CFUNCARGSOFACTION_H_
+    #define _CFUNCARGSOFACTION_H_
 
 #include "CActionBaseClass.h"
 
-template<typename T>
-class CFuncOfAction : public CActionBaseClass
+template<typename T1, typename T2>
+class CFuncArgsOfAction : public CActionBaseClass
 {
     private:
-        T (*_func)();
+        T1 (*_func)(T2);
+        T2 _args;
     protected:
     public:
-        CFuncOfAction(T (*func)())
+        CFuncArgsOfAction(T1(*func)(T2), T2 args)
         {
             _func = func;
+            _args = args;
         }
 
         bool OnLoop()
         {
             if (_func != 0){
-                _func();
+                _func(_args);
             }
 
             return true;
@@ -34,10 +36,10 @@ class CFuncOfAction : public CActionBaseClass
 
         virtual CActionBaseClass* Copy()
         {
-            return new CFuncOfAction<T>(_func);
+            return new CFuncArgsOfAction<T1, T2>(_func, _args);
         }
 
-        virtual inline EActType GetType() { return ACTION_FUNC;}
+        virtual inline EActType GetType() { return ACTION_FUNC_ARGS; }
 };
 
 #endif

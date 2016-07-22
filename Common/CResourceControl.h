@@ -86,7 +86,7 @@ class CResourceControl
         CDrawableObjectControl                  _LoadingObjectControl;
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
-        CSequenceOfAction                       _ActionControl;
+        CSimultaneousOfAction                   _ActionControl;
         CLua                                    _LuaControl;
         
         void Skip();

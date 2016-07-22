@@ -127,6 +127,14 @@ bool CCommon::IsFileExist(string filename)
         return (access(filename.c_str(), 0) == 0);
 }
 
+string CCommon::ConvertToString(float Num)
+{
+    ostringstream __oss;
+    __oss << Num;
+    string __reulst(__oss.str());
+    return __reulst;
+}
+
 //void CCommon::SaveSysData()
 //{
 //    FILE* File = fopen(GAME_SYSDATA.c_str(), "w");

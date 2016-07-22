@@ -11,14 +11,7 @@
 CActionSet::CActionSet()
 {
     _isDelete = true;
-    _name = "";
     _iterator = _actionList.begin();
-}
-
-
-string CActionSet::GetName() const
-{
-    return _name;
 }
         
 bool CActionSet::DeleteAct(string name, bool skip)

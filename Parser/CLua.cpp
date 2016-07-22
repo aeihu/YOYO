@@ -55,6 +55,15 @@ int sim_AddAction(lua_State *L)
     return 0;
 }
 
+int sim_GetAction(lua_State *L)
+{
+    CSimultaneousOfAction **__sim = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
+    luaL_argcheck(L, __sim != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, *__sim);
+    return 1;
+}
+
 int sim_GC(lua_State *L)
 {
     CSimultaneousOfAction **_act = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
@@ -75,6 +84,15 @@ int rep_AddAction(lua_State *L)
 
     (*__rep)->AddAction((CRepeatOfAction*)lua_topointer(L, -1));
     return 0;
+}
+
+int rep_GetAction(lua_State *L)
+{
+    CRepeatOfAction **__rep = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
+    luaL_argcheck(L, __rep != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, *__rep);
+    return 1;
 }
 
 int rep_GC(lua_State *L)
@@ -244,10 +262,11 @@ int luaopen_yoyo(lua_State *L) {
         { "create_sim", Cmd_CreateSimultaneous },
         { "create_seq", Cmd_CreateSequence },
         { "create_rep", Cmd_CreateRepeat },
+        { "create_pause", Cmd_CreateActionOfPause },
+        { "create_resume", Cmd_CreateActionOfResume },
 
         { "add_act", Cmd_AddAction },
-        { "add_actset", Cmd_AddActionSet },
-        { "del_actset", Cmd_DeleteOrSkipAction },
+        { "del_act", Cmd_DeleteOrSkipAction },
 
         //{ "show_particle", Cmd_ShowParticleSystem },
         //{ "hide_particle", Cmd_HideParticleSystem },
@@ -274,6 +293,7 @@ int luaopen_yoyo(lua_State *L) {
 
     static const struct luaL_Reg __sim[] = {
         { "add_act", sim_AddAction },
+        { "get_act", sim_GetAction },
         { "__gc", sim_GC },
         { NULL, NULL }
     };
@@ -284,6 +304,7 @@ int luaopen_yoyo(lua_State *L) {
 
     static const struct luaL_Reg __rep[] = {
         { "add_act", rep_AddAction },
+        { "get_act", rep_GetAction },
         { "__gc", rep_GC },
         { NULL, NULL }
     };

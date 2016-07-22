@@ -21,7 +21,6 @@ class CActionSet : public CActionBaseClass
         
         void SetIsDelete(CActionBaseClass* act, bool b);
     protected:
-        string                                          _name;
         list<pair<CActionBaseClass*, bool> >::iterator  _iterator;
         list<pair<CActionBaseClass*, bool> >            _actionList;
 
@@ -31,7 +30,6 @@ class CActionSet : public CActionBaseClass
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
-        virtual string GetName() const;
         bool DeleteAct(string name, bool skip);
 
         void OnCleanup();

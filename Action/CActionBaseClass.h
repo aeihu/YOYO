@@ -26,16 +26,19 @@ class CActionBaseClass
             ACTION_REP,
             ACTION_DEPLY,
             ACTION_FUNC,
+            ACTION_FUNC_ARGS,
             ACTION_CLASS_FUNC,
             ACTION_CLASS_FUNC_ARGS,
         };
 
         bool        _skip;
+        string      _name;
     public:
         CActionBaseClass();
         ~CActionBaseClass();
         
         virtual string GetName() const;
+        void SetName(string name);
         virtual bool OnLoop()=0; 
         virtual void OnCleanup(){}; 
         void Skip();

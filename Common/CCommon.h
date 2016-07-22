@@ -69,6 +69,7 @@ class CCommon
         //void SaveSysData();
         unsigned long GetTicks();
 
+        string ConvertToString(float Num);
         bool OnInit();
         bool IsFileExist(string filename);
         //void OnCleanup();
