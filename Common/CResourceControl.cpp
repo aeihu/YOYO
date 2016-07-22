@@ -27,8 +27,9 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _isLoadPlayerData =
     _isAuto = 
     _msgboxPauseRequest =
+    _isWaitingUnlockMutexInMain =
     _flagForAuto = false;
-    _isLockMutex = true;
+    _isNeedLockMutex = true;
     _loadingProcessStatus = CResourceControl::STOP;
 }
 
@@ -376,14 +377,7 @@ void CResourceControl::ThreadOfLoadAsset()
                  __msgbox->ClearText();
              }
          }
-
-        //if (_scriptConfig.has<Array>("script")){
-        //    CParser::_Parser.Reset();
-        //    CParser::_Parser.InsertCmd(_scriptConfig.get<Array>("script"));
-        //}
     }
-
-    //CSequenceOfAction* __seq = new CSequenceOfAction();
 
     if (_isLoadPlayerData){
         _isLoadPlayerData = false;
@@ -427,28 +421,30 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
     return _loadingProcessStatus;
 }
 
-void CResourceControl::LockMutexInLua()
+void CResourceControl::LockMutexInLua()//run in lua
 {
-    _isLockMutex = false;
+    _isWaitingUnlockMutexInMain = true;
+    _isNeedLockMutex = false;
     _mutexMainForPause.lock();
-    _isLockMutex = true;
+    _isNeedLockMutex = true;
     _mutexMainForPause.unlock();
     _mutexLuaForPause.lock();
     _mutexLuaForPause.unlock();
+    _isWaitingUnlockMutexInMain = false;
 }
 
-void CResourceControl::UnlockMutexInMain()
+void CResourceControl::UnlockMutexInMain() //run in main
 {
     _mutexLuaForPause.lock();
     _mutexMainForPause.unlock();
 }
 
-void CResourceControl::OnLoop()
+void CResourceControl::OnLoop() //run in main
 {
-    if (_isLockMutex){
+    if (_isNeedLockMutex){
         _mutexMainForPause.lock();
         _mutexLuaForPause.unlock();
-        _isLockMutex = false;
+        _isNeedLockMutex = false;
     }
 
     _ActionControl.OnLoop();
@@ -469,7 +465,7 @@ void CResourceControl::OnLoop()
     if (_loadingProcessStatus != CResourceControl::STOP){
         _LoadingObjectControl.OnLoop();
 
-        if (_loadingProcessStatus == CResourceControl::FINISH)
+        if (_loadingProcessStatus == CResourceControl::FINISH && !_isWaitingUnlockMutexInMain)
             if (_LuaControl.GetLuaThreadStatus() == LUA_OK){
                 bool __b = true;
                 _LuaControl.GetGlobal("YOYO_LUA_LOADING_THREAD_RUNNING", __b);

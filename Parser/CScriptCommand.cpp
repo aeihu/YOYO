@@ -27,6 +27,7 @@ int Common_RetrunYield(string funcname)
 {
     cout << funcname << "(): suspends thread." << endl;
     CResourceControl::_ResourceManager.LockMutexInLua();
+    cout << funcname << "(): resume thread." << endl;
     return 0;
 }
 

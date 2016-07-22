@@ -33,6 +33,15 @@ int seq_GetAction(lua_State *L)
     return 1;
 }
 
+int seq_CpoyAction(lua_State *L)
+{
+    CSequenceOfAction **__seq = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
+    luaL_argcheck(L, __seq != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, (*__seq)->Copy());
+    return 1;
+}
+
 int seq_GC(lua_State *L)
 {
     CSequenceOfAction **_act = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
@@ -64,6 +73,15 @@ int sim_GetAction(lua_State *L)
     return 1;
 }
 
+int sim_CpoyAction(lua_State *L)
+{
+    CSimultaneousOfAction **__sim = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
+    luaL_argcheck(L, __sim != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, (*__sim)->Copy());
+    return 1;
+}
+
 int sim_GC(lua_State *L)
 {
     CSimultaneousOfAction **_act = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
@@ -92,6 +110,15 @@ int rep_GetAction(lua_State *L)
     luaL_argcheck(L, __rep != NULL, 1, "invalid user data");
 
     lua_pushlightuserdata(L, *__rep);
+    return 1;
+}
+
+int rep_CpoyAction(lua_State *L)
+{
+    CRepeatOfAction **__rep = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
+    luaL_argcheck(L, __rep != NULL, 1, "invalid user data");
+
+    lua_pushlightuserdata(L, (*__rep)->Copy());
     return 1;
 }
 
@@ -283,6 +310,7 @@ int luaopen_yoyo(lua_State *L) {
     static const struct luaL_Reg __seq[] = {
         { "add_act", seq_AddAction },
         { "get_act", seq_GetAction },
+        { "copy_act", seq_CpoyAction },
         { "__gc", seq_GC },
         { NULL, NULL }
     };
@@ -294,6 +322,7 @@ int luaopen_yoyo(lua_State *L) {
     static const struct luaL_Reg __sim[] = {
         { "add_act", sim_AddAction },
         { "get_act", sim_GetAction },
+        { "copy_act", sim_CpoyAction },
         { "__gc", sim_GC },
         { NULL, NULL }
     };
@@ -305,6 +334,7 @@ int luaopen_yoyo(lua_State *L) {
     static const struct luaL_Reg __rep[] = {
         { "add_act", rep_AddAction },
         { "get_act", rep_GetAction },
+        { "copy_act", rep_CpoyAction },
         { "__gc", rep_GC },
         { NULL, NULL }
     };

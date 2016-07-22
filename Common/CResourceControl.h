@@ -55,7 +55,8 @@ class CResourceControl
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
         bool                            _msgboxPauseRequest;
-        bool                            _isLockMutex;
+        bool                            _isNeedLockMutex;
+        bool                            _isWaitingUnlockMutexInMain;
 
         EProcStatus                     _loadingProcessStatus;
 
