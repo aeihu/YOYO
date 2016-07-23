@@ -56,23 +56,9 @@ void CText::SetString(string str)
     CTextFunction::SetString(_sfText, str);
 }
         
-void CText::SetString(vector<string> args)
-{
-    if (args.size() > 0){
-        SetString(args[0]);
-    }
-}
-        
 void CText::SetCharacterSize(size_t size)
 {
     _sfText.setCharacterSize(size);
-}
-
-void CText::SetCharacterSize(vector<size_t> args)
-{
-    if (args.size() > 0){
-        SetCharacterSize(args[0]);
-    }
 }
         
 void CText::SetShadowPercent(float percent)
@@ -88,13 +74,6 @@ void CText::SetShadowPercent(float percent)
     }
 
     _shadowPercent = percent;
-}
-        
-void CText::SetShadowPercent(vector<float> args)
-{
-    if (args.size() > 0){
-        SetShadowPercent(args[0]);
-    }
 }
 
 CText* CText::Create()
@@ -119,22 +98,9 @@ void CText::SetFont(string name)
     }
 }
 
-void CText::SetFont(vector<string> args)
-{
-    if (args.size() > 0){
-        SetFont(args[0]);
-    }
-}
-
 void CText::SetShadowEnable(bool b)
 {
     _shadowEnable = b;
-}
-
-void CText::SetShadowEnable(vector<bool> args)
-{
-    if (args.size() > 0)
-        SetShadowEnable(args[0]);
 }
         
 void CText::SetStyle(size_t flag)

@@ -674,7 +674,7 @@ void CResourceControl::Skip()
     _ActionControl.Skip();
 }
 
-void CResourceControl::DelActionForActionControl(vector<string> args)
+void CResourceControl::DelActionForActionControl(string name)
 {
-    _ActionControl.DeleteAct(args[0], true);
+    _ActionControl.DeleteAct(name, true);
 }

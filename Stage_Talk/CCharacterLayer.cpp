@@ -66,12 +66,6 @@ void CCharacterLayer::SetVoice(string name)
 {
     _currcentVoice = name;
 }
-        
-void CCharacterLayer::SetVoice(vector<string> args)
-{
-    if (args.size() > 0)
-        SetVoice(args[0]);
-}
 
 void CCharacterLayer::OnLoop()
 {

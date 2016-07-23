@@ -11,15 +11,15 @@
 
 #include "CActionBaseClass.h"
 
-template<typename T1, typename T2>
+template<typename Targ, typename Tresult>
 class CFuncArgsOfAction : public CActionBaseClass
 {
     private:
-        T1 (*_func)(T2);
-        T2 _args;
+        Tresult(*_func)(Targ);
+        Targ _args;
     protected:
     public:
-        CFuncArgsOfAction(T1(*func)(T2), T2 args)
+        CFuncArgsOfAction(Tresult (*func)(Targ), Targ args)
         {
             _func = func;
             _args = args;
@@ -36,7 +36,7 @@ class CFuncArgsOfAction : public CActionBaseClass
 
         virtual CActionBaseClass* Copy()
         {
-            return new CFuncArgsOfAction<T1, T2>(_func, _args);
+            return new CFuncArgsOfAction<Targ, Tresult>(_func, _args);
         }
 
         virtual inline EActType GetType() { return ACTION_FUNC_ARGS; }

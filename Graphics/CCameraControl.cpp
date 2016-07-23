@@ -68,12 +68,6 @@ void CCameraControl::OnCleanup()
     _cameraList.clear();
 }
 
-void CCameraControl::UseCamera(vector<string> args)
-{
-    if (args.size() >= 1)
-        UseCamera(args[0]);
-}
-
 bool CCameraControl::UseCamera(string name)
 {
     CCamera* __obj = GetCamera(name);

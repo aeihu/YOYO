@@ -24,7 +24,6 @@ class CCameraControl
         bool DelCamera(string name);
         CCamera* GetCamera(string name);
         
-        void UseCamera(vector<string> args);
         bool UseCamera(string name);
         void UseDefaultCamera();
 

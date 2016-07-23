@@ -53,13 +53,13 @@ CSimultaneousOfAction* CScreenEffect::CreateActionShowOrHide(size_t elapsed, boo
     CSimultaneousOfAction* __result = new CSimultaneousOfAction("");
     
     if (isShow && _vertexArray.getVertexCount() > 0)
-        __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
+        __result->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<_vertexArray.getVertexCount(); i++){
         if (!isShow && i == _vertexArray.getVertexCount()-1){
             CSequenceOfAction* __seq = new CSequenceOfAction();
             __seq->AddAction(new CActionTo(&_vertexData[i]._alpha, elapsed, __alpha));
-            __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
+            __seq->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetHide));
             __result->AddAction(__seq);
         }
         else
@@ -78,7 +78,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool is
     CSimultaneousOfAction* __result = new CSimultaneousOfAction("");
     
     if (isShow && __count > 0)
-        __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
+        __result->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<__count; i++){
         __index = L2R ? i<<1 : (__count-i-1)<<1;
@@ -99,7 +99,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionLouver(size_t elapsed, bool is
         __seq->AddAction(__sim);
         
         if (!isShow && i == __count-1)
-            __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
+            __seq->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetHide));
 
         __result->AddAction(__seq);
 
@@ -116,7 +116,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool 
     CSimultaneousOfAction* __result = new CSimultaneousOfAction("");
     
     if (isShow && __count > 0)
-        __result->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetShow));
+        __result->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetShow));
 
     for (size_t i=0; i<__count; i++){
         __index = L2R ? i<<1 : (__count-i-1)<<1;
@@ -133,7 +133,7 @@ CSimultaneousOfAction* CScreenEffect::CreateActionGradient(size_t elapsed, bool 
         __seq->AddAction(__sim);
 
         if (!isShow && i == __count-1)
-            __seq->AddAction(new CClassFuncOfAction<CScreenEffect>(this, &CScreenEffect::SetHide));
+            __seq->AddAction(new CClassFuncOfAction<CScreenEffect, void>(this, &CScreenEffect::SetHide));
 
         __result->AddAction(__seq);
     }

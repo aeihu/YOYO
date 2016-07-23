@@ -95,7 +95,7 @@ class CResourceControl
         bool SetVariable(string name, string val);
         bool DelVariable(string name);
 
-        void DelActionForActionControl(vector<string> args);
+        void DelActionForActionControl(string name);
 
         EProcStatus GetLoadingProcessStatus() const;
         bool GetAuto() const;

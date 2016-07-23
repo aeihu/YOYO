@@ -86,7 +86,6 @@ class CSoundBank {
         void StopSE();
 
         int AddVoice(string name, string filename);
-        void PlayVoice(vector<string> args);
         bool PlayVoice(string name);
         bool DeleteVoice(string name);
         bool GetVoiceStatus();

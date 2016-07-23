@@ -11,14 +11,14 @@
 
 #include "CActionBaseClass.h"
 
-template<typename T>
+template<typename Tresult>
 class CFuncOfAction : public CActionBaseClass
 {
     private:
-        T (*_func)();
+        Tresult (*_func)();
     protected:
     public:
-        CFuncOfAction(T (*func)())
+        CFuncOfAction(Tresult (*func)())
         {
             _func = func;
         }
@@ -34,7 +34,7 @@ class CFuncOfAction : public CActionBaseClass
 
         virtual CActionBaseClass* Copy()
         {
-            return new CFuncOfAction<T>(_func);
+            return new CFuncOfAction<Tresult>(_func);
         }
 
         virtual inline EActType GetType() { return ACTION_FUNC;}

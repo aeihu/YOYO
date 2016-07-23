@@ -158,19 +158,12 @@ void CSoundBank::StopVoice()
     }
 }
 
-void CSoundBank::PlayVoice(vector<string> args)
-{
-    if (args.size() > 0){
-        StopVoice();
-        PlayVoice(args[0]);
-    }
-}
-
 bool CSoundBank::PlayVoice(string name)
 {
     if (_voiceList.count(name) < 1)
         return false;
-    
+
+    StopVoice();
     for (list<CVoiceStream*>::iterator it=_voicePool.begin() ; it != _voicePool.end(); it++){
         if ((*it)->getStatus() == sf::Sound::Stopped){
             (*it)->Load(*_voiceList[name]);

@@ -55,7 +55,6 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void SetPose(vector<string> args);
 
         void SetVoice(string name);
-        void SetVoice(vector<string> args);
         
         void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);

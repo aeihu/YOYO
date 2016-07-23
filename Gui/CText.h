@@ -41,22 +41,13 @@ class CText : public CImageBaseClass
         //void FlipY();
         
         void SetShadowEnable(bool b);
-        void SetShadowEnable(vector<bool> args);
-
         void SetShadowPercent(float percent);
-        void SetShadowPercent(vector<float> args);
-
         void SetFont(string name);
-        void SetFont(vector<string> args);
+        void SetString(string str);
+        void SetCharacterSize(size_t size);
 
         void SetStyle(size_t flag);
         void SetStyle(vector<string> args);
-
-        void SetString(string str);
-        void SetString(vector<string> args);
-
-        void SetCharacterSize(size_t size);
-        void SetCharacterSize(vector<size_t> args);
 
         void SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b); 
         void SetColor(vector<unsigned char> args);
