@@ -44,15 +44,13 @@ bool CActionBy::OnLoop()
     }
 
     if ((*_val) != _valOfFinish){
-        if (_skip){
+        if (_skip || _allSkip){
             *_val = _valOfFinish;
             goto FINISH;
         }
 
         bool __b = (*_val) < _valOfFinish ? true:false; 
         (*_val) += __b ? _incr : -_incr;
-        //(*_val) += (__b ? _incr : -_incr) * (_skip ? 10 : 1);
-        //_skip = false;
 
         if (__b){
             if ((*_val) >= _valOfFinish){
@@ -73,7 +71,7 @@ bool CActionBy::OnLoop()
 FINISH:
         if (_restore) *_val = _orgVal;
         
-        _isRunning = false;
+        _skip = _isRunning = false;
         return true;
     }
 }

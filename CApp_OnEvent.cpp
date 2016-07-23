@@ -42,7 +42,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
         }
                         
         case sf::Keyboard::LControl: {
-            CResourceControl::_ResourceManager.Skip();
+            CResourceControl::_ResourceManager.SkipOn();
             break;
         }
                         
@@ -113,6 +113,11 @@ void CApp::OnKeyUp(sf::Event::KeyEvent key) {
 
         case sf::Keyboard::Escape: {
           
+            break;
+        }
+
+        case sf::Keyboard::LControl: {
+            CResourceControl::_ResourceManager.SkipOff();
             break;
         }
 

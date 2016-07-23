@@ -98,83 +98,77 @@ char CResourceControl::CheckIn(Object& json, string colName, string objTypeName)
 
     Array& __array = json.get<Array>(colName);
 
-    if (objTypeName == "Script"){
-        //if (!AddScript(colName, __array))
-        //    return -2;
-    }
-    else{
-        string __path;
-        for (size_t i=0; i<__array.size(); i++){
-            __path = __array.get<Object>(i).get<String>("path");
-            string& __assetName = __array.get<Object>(i).get<String>("name");
+    string __path;
+    for (size_t i=0; i<__array.size(); i++){
+        __path = __array.get<Object>(i).get<String>("path");
+        string& __assetName = __array.get<Object>(i).get<String>("name");
 
-            cout << "CResourceControl::CheckIn():Loading '" << __assetName << "':'" << __path << "'" << endl;
+        cout << "CResourceControl::CheckIn():Loading '" << __assetName << "':'" << __path << "'" << endl;
 
-            if (objTypeName == "Font"){
-                if (!_ObjectControl.AddObject(__assetName,
-                    objTypeName,
-                    __path))
-                    continue;
+        if (objTypeName == "Font"){
+            if (!_ObjectControl.AddObject(__assetName,
+                objTypeName,
+                __path))
+                continue;
             
-                __assetName = objTypeName + ":" + __assetName;
+            __assetName = objTypeName + ":" + __assetName;
+        }
+        else if (objTypeName == "Voice"){
+            if (_SoundControl.AddVoice(__assetName,
+                __path) != 0)
+                continue;
+        }
+        else if (objTypeName == "Se"){
+            if (_SoundControl.AddSE(__assetName,
+                __path) != 0)
+                continue;
+        }
+        else if (objTypeName == "Camera"){
+            if (!_CameraControl.AddCamera(__assetName,
+                __path)){
+                _CameraControl.ResetCamera(__assetName);
+                continue;
             }
-            else if (objTypeName == "Voice"){
-                if (_SoundControl.AddVoice(__assetName,
-                    __path) != 0)
-                    continue;
+        }
+        else if (objTypeName == "EffctImg"){
+            objTypeName = "Img";
+            if (!_LoadingObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __path)){
+                _LoadingObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                continue;
             }
-            else if (objTypeName == "Se"){
-                if (_SoundControl.AddSE(__assetName,
-                    __path) != 0)
-                    continue;
-            }
-            else if (objTypeName == "Camera"){
-                if (!_CameraControl.AddCamera(__assetName,
-                    __path)){
-                    _CameraControl.ResetCamera(__assetName);
-                    continue;
-                }
-            }
-            else if (objTypeName == "EffctImg"){
-                objTypeName = "Img";
-                if (!_LoadingObjectControl.AddDrawableObject(
-                    __assetName, 
-                    objTypeName, 
-                    __path)){
-                    _LoadingObjectControl.ResetDrawableObject(__assetName, objTypeName);
-                    continue;
-                }
 
-                __assetName = objTypeName + ":" + __assetName;
+            __assetName = objTypeName + ":" + __assetName;
+        }
+        else if (objTypeName == "Music"){
+            if (!_SoundControl.AddBgm(
+                __assetName, 
+                __path))
+                continue;
+        }
+        else if (objTypeName == "Text"){
+            if (!_DrawableObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __path)){
+                _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                continue;
             }
-            else if (objTypeName == "Music"){
-                if (!_SoundControl.AddBgm(
-                    __assetName, 
-                    __path))
-                    continue;
-            }
-            else if (objTypeName == "Text"){
-                if (!_DrawableObjectControl.AddDrawableObject(
-                    __assetName, 
-                    objTypeName, 
-                    __path)){
-                    _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
-                    continue;
-                }
 
-                __assetName = objTypeName + ":" + __assetName;
+            __assetName = objTypeName + ":" + __assetName;
+        }
+        else{
+            if (!_DrawableObjectControl.AddDrawableObject(
+                __assetName, 
+                objTypeName, 
+                __path)){
+                _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
+                continue;
             }
-            else{
-                if (!_DrawableObjectControl.AddDrawableObject(
-                    __assetName, 
-                    objTypeName, 
-                    __path)){
-                    _DrawableObjectControl.ResetDrawableObject(__assetName, objTypeName);
-                    continue;
-                }
 
-                __assetName = objTypeName + ":" + __assetName;
-            }
+            __assetName = objTypeName + ":" + __assetName;
         }
     }
 
@@ -387,14 +381,6 @@ void CResourceControl::ThreadOfLoadAsset()
     _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish, "", "YOYO_LUA_LOADING_THREAD_RUNNING = false");
     _loadingProcessStatus = CResourceControl::FINISH;
 }
-        
-void CResourceControl::LoadScript(vector<string> args)
-{
-    if (args.size() > 0){
-        _fileNameOfCurrentRunningScript = args[0];
-        _isNeedCleanAction = true;
-    }
-}
 
 bool CResourceControl::LoadScript(string filename)
 {
@@ -409,7 +395,6 @@ bool CResourceControl::LoadScript(string filename)
         _loadingProcessStatus = CResourceControl::RUNNING;
         _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin, "YOYO_LUA_LOADING_THREAD_RUNNING = true");
         _threadOfLoading.launch();
-
         return true;
     }
     else
@@ -666,12 +651,17 @@ void CResourceControl::AutoToNextStep()
     }
 }
         
-void CResourceControl::Skip()
+void CResourceControl::SkipOn()
 {
     if (_loadingProcessStatus == CResourceControl::STOP)
         return;
 
-    _ActionControl.Skip();
+    CActionBaseClass::AllSkipOn();
+}
+
+void CResourceControl::SkipOff()
+{
+    CActionBaseClass::AllSkipOff();
 }
 
 void CResourceControl::DelActionForActionControl(string name)

@@ -31,6 +31,7 @@ class CActionBaseClass
             ACTION_CLASS_FUNC_ARGS,
         };
 
+        static bool _allSkip;
         bool        _skip;
         string      _name;
     public:
@@ -41,9 +42,11 @@ class CActionBaseClass
         void SetName(string name);
         virtual bool OnLoop()=0; 
         virtual void OnCleanup(){}; 
-        void Skip();
+        void SetSkip();
         virtual CActionBaseClass* Copy()=0;
         virtual inline EActType GetType() { return ACTION_BASE; }
+        static void AllSkipOn();
+        static void AllSkipOff();
 };
 
 #endif

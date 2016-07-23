@@ -24,8 +24,8 @@ bool CRepeatOfAction::OnLoop()
 
     do {
         if (_actionList.end() != _iterator){
-            if (_skip)
-                (*_iterator).first->Skip();
+            if (_skip || _allSkip)
+                (*_iterator).first->SetSkip();
 
             if ((*_iterator).first->OnLoop()){
                 (*_iterator).second = true;

@@ -21,7 +21,7 @@ bool CActionSet::DeleteAct(string name, bool skip)
         for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
             if (name == (*it).first->GetName()){
                 if (skip){
-                    (*it).first->Skip();
+                    (*it).first->SetSkip();
                     (*it).first->OnLoop();
                 }
 

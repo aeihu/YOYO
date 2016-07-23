@@ -90,7 +90,8 @@ class CResourceControl
         CSimultaneousOfAction                   _ActionControl;
         CLua                                    _LuaControl;
         
-        void Skip();
+        void SkipOn();
+        void SkipOff();
         bool AddVariable(string name, string val);
         bool SetVariable(string name, string val);
         bool DelVariable(string name);
@@ -110,7 +111,6 @@ class CResourceControl
         void UnlockMutexInMain();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
-        void LoadScript(vector<string> args);
         bool LoadScript(string filename);
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);

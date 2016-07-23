@@ -18,8 +18,8 @@ bool CSimultaneousOfAction::OnLoop()
     size_t __count = 0;
     for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
         if (!(*it).second){
-            if (_skip)
-                (*it).first->Skip();
+            if (_skip || _allSkip)
+                (*it).first->SetSkip();
 
             if ((*it).first->OnLoop()){
                 (*it).second = true;
