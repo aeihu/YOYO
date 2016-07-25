@@ -28,6 +28,11 @@ bool CRepeatOfAction::OnLoop()
                 (*_iterator).first->SetSkip();
 
             if ((*_iterator).first->OnLoop()){
+                if (_actionList.size() < 1){ // if run to load script command
+                    _skip = false;
+                    return true;
+                }
+
                 (*_iterator).second = true;
                 _iterator++;
             }
