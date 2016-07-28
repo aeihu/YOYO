@@ -286,16 +286,17 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
         }
 
         CActionBaseClass* __result = __sim;
-        if (__pause){
-            __result = Common_GetResumeIntoActset(__sim);
-        }
 
         if (isCreateAction)
             *act = __result;
-        else
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__sim);
+            
             __obj->AddAction(__result);
+        }
         
-        return __pause ? CMD_YIELD : CMD_OK;
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
     else
         cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
@@ -370,17 +371,17 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
         __sim->AddAction(__obj->CreateActionOfAlphaTo(__inte, __alpha, __reset));
 
         CActionBaseClass* __result = __sim;
-        if (__pause){
-            __result = Common_GetResumeIntoActset(__sim);
-        }
 
         if (isCreateAction)
             *act = __result;
-        else
-            __obj->AddAction(__result);
-        
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__sim);
 
-        return __pause ? CMD_YIELD : CMD_OK;
+            __obj->AddAction(__result);
+        }
+
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
     else
         cout << __funcName << "(): can't find "<< objTypeName <<" \""<< __name << "\"." <<endl;
@@ -428,16 +429,17 @@ int Common_FuncOfHide(string objTypeName, lua_State* args, CActionBaseClass** ac
 
     if (__obj != NULL){
         CActionBaseClass* __result = __obj->CreateActionOfAlphaTo(__inte, 0.0f, __reset);
-        if (__pause){
-            __result = Common_GetResumeIntoActset(__result);
-        }
 
         if (isCreateAction)
             *act = __result;
-        else
-            __obj->AddAction(__result);
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__result);
 
-        return __pause ? CMD_YIELD : CMD_OK;
+            __obj->AddAction(__result);
+        }
+
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
     return CMD_ERR;
 }
@@ -503,50 +505,36 @@ int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** ac
     if (__obj != NULL){
         CActionBaseClass* __result = NULL;
         if (__xIsBe && __yIsBe){
-            if (__isBy){
+            if (__isBy)
                 __result = __obj->CreateActionOfMoveBy(__inte, __x, __y, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
-            else{
+            else
                 __result = __obj->CreateActionOfMoveTo(__inte, __x, __y, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
         }
         else{
             if (__xIsBe){
-                if (__isBy){
+                if (__isBy)
                     __result = __obj->CreateActionOfMoveXBy(__inte, __x, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
-                else{
+                else
                     __result = __obj->CreateActionOfMoveXTo(__inte, __x, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
             }
             else{
-                if (__isBy){
+                if (__isBy)
                     __result = __obj->CreateActionOfMoveYBy(__inte, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
-                else{
+                else
                     __result = __obj->CreateActionOfMoveYTo(__inte, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
             }
         }
 
         if (isCreateAction)
             *act = __result;
-        else
-            __obj->AddAction(__result);
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__result);
 
-        return __pause ? CMD_YIELD : CMD_OK;
+            __obj->AddAction(__result);
+        }
+
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
 
     return CMD_ERR;
@@ -607,50 +595,36 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** 
     if (__obj != NULL){
         CActionBaseClass* __result = NULL;
         if (__xIsBe && __yIsBe){
-            if (__isBy){
+            if (__isBy)
                 __result = __obj->CreateActionOfOriginBy(__inte, __x, __y, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
-            else{
+            else
                 __result = __obj->CreateActionOfOriginTo(__inte, __x, __y, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
         }
         else{
             if (__xIsBe){
-                if (__isBy){
+                if (__isBy)
                     __result = __obj->CreateActionOfOriginXBy(__inte, __x, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
-                else{
+                else
                     __result = __obj->CreateActionOfOriginXTo(__inte, __x, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
             }
             else{
-                if (__isBy){
+                if (__isBy)
                     __result = __obj->CreateActionOfOriginYBy(__inte, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
-                else{
+                else
                     __result = __obj->CreateActionOfOriginYTo(__inte, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
             }
         }
 
         if (isCreateAction)
             *act = __result;
-        else
-            __obj->AddAction(__result);
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__result);
 
-        return __pause ? CMD_YIELD : CMD_OK;
+            __obj->AddAction(__result);
+        }
+
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
 
     return CMD_ERR;
@@ -713,23 +687,22 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args, CActionBaseClass*
 
     if (__obj != NULL){
         CActionBaseClass* __result = NULL;
-        if (__isBy){
+        if (__isBy)
             __result = __obj->CreateActionOfRotationBy(__inte, __rotation, __reset);
-            if (__pause)
-                __result = Common_GetResumeIntoActset(__result);
-        }
-        else{
+        else
             __result = __obj->CreateActionOfRotationTo(__inte, __rotation, __reset);
-            if (__pause)
-                __result = Common_GetResumeIntoActset(__result);
-        }
+        
 
         if (isCreateAction)
             *act = __result;
-        else
-            __obj->AddAction(__result);
+        else{
+            if (__pause)
+                __result = Common_GetResumeIntoActset(__result);
 
-        return __pause ? CMD_YIELD : CMD_OK;
+            __obj->AddAction(__result);
+        }
+
+        return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
     }
 
     return CMD_ERR;
@@ -782,23 +755,21 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
         __obj = CResourceControl::_ResourceManager._CameraControl.GetCamera(__name);//Camera
 
         if (__obj != NULL){
-            if (__isBy){
+            if (__isBy)
                 __result = __obj->CreateActionOfScaleXBy(__inte, __z, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
-            else{
+            else
                 __result = __obj->CreateActionOfScaleXTo(__inte, __z, __reset);
-                if (__pause)
-                    __result = Common_GetResumeIntoActset(__result);
-            }
 
             if (isCreateAction)
                 *act = __result;
-            else
-                __obj->AddAction(__result);
+            else{
+                if (__pause)
+                    __result = Common_GetResumeIntoActset(__result);
 
-            return __pause ? CMD_YIELD : CMD_OK;
+                __obj->AddAction(__result);
+            }
+
+            return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
         }
     }
     else{
@@ -828,50 +799,36 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
 
         if (__obj != NULL){
             if (__xIsBe && __yIsBe){
-                if (__isBy){
+                if (__isBy)
                     __result = __obj->CreateActionOfScaleBy(__inte, __x, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
-                else{
+                else
                     __result = __obj->CreateActionOfScaleTo(__inte, __x, __y, __reset);
-                    if (__pause)
-                        __result = Common_GetResumeIntoActset(__result);
-                }
             }
             else{
                 if (__xIsBe){
-                    if (__isBy){
+                    if (__isBy)
                         __result = __obj->CreateActionOfScaleXBy(__inte, __x, __reset);
-                        if (__pause)
-                            __result = Common_GetResumeIntoActset(__result);
-                    }
-                    else{
+                    else
                         __result = __obj->CreateActionOfScaleXTo(__inte, __x, __reset);
-                        if (__pause)
-                            __result = Common_GetResumeIntoActset(__result);
-                    }
                 }
                 else{
-                    if (__isBy){
+                    if (__isBy)
                         __result = __obj->CreateActionOfScaleYBy(__inte, __y, __reset);
-                        if (__pause)
-                            __result = Common_GetResumeIntoActset(__result);
-                    }
-                    else{
+                    else
                         __result = __obj->CreateActionOfScaleYTo(__inte, __y, __reset);
-                        if (__pause)
-                            __result = Common_GetResumeIntoActset(__result);
-                    }
                 }
             }
 
             if (isCreateAction)
                 *act = __result;
-            else
-                __obj->AddAction(__result);
+            else{
+                if (__pause)
+                    __result = Common_GetResumeIntoActset(__result);
 
-            return __pause ? CMD_YIELD : CMD_OK;
+                __obj->AddAction(__result);
+            }
+
+            return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
         }
     }
 
@@ -1045,15 +1002,17 @@ int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = N
     }
 
     CActionBaseClass* __result = __sim;
-    if (__pause)
-        __result = Common_GetResumeIntoActset(__sim);
 
     if (isCreateAction)
         *act = __result;
-    else
-        __obj->AddAction(__result);
+    else{
+        if (__pause)
+            __result = Common_GetResumeIntoActset(__result);
 
-    return __pause ? CMD_YIELD : CMD_OK;
+        __obj->AddAction(__result);
+    }
+
+    return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
 }
 
 int Common_SetPoseCharacterLayer(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
@@ -1347,25 +1306,23 @@ int Common_SetBGMVolume(lua_State* args, CActionBaseClass** act = NULL, bool isC
     Common_GetValueInTable(args, "r", __reset);
 
     CActionBaseClass* __result = NULL;
-    if (__isBy){
+    if (__isBy)
         CActionBaseClass* __result = CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolBy(
             __inte, __vol, __reset);
-        if (__pause)
-            __result = Common_GetResumeIntoActset(__result);
-    }
-    else{
+    else
         CActionBaseClass* __result = CResourceControl::_ResourceManager._SoundControl.CreateActionOfMusicVolTo(
             __inte, __vol, __reset);
-        if (__pause)
-            __result = Common_GetResumeIntoActset(__result);
-    }
 
     if (isCreateAction)
         *act = __result;
-    else
-        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    else{
+        if (__pause)
+            __result = Common_GetResumeIntoActset(__result);
 
-    return __pause ? CMD_YIELD : CMD_OK;
+        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    }
+
+    return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
 }
 
 int Common_StopBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
@@ -1394,15 +1351,17 @@ int Common_StopBGM(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
         &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::StopBgm));
 
     CActionBaseClass* __result = __seq;
-    if (__pause)
-        __result = Common_GetResumeIntoActset(__seq);
 
     if (isCreateAction)
         *act = __result;
-    else
-        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    else{
+        if (__pause)
+            __result = Common_GetResumeIntoActset(__result);
 
-    return __pause ? CMD_YIELD : CMD_OK;
+        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    }
+
+    return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
 }
 
 int Common_StopSE(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAction = false)
@@ -1556,15 +1515,17 @@ int Common_Delay(lua_State* args, CActionBaseClass** act = NULL, bool isCreateAc
     Common_GetValueInTable(args, "p", __pause);
 
     CActionBaseClass* __result = new CDeplayOfAction(__time);
-    if (__pause)
-        __result = Common_GetResumeIntoActset(__result);
 
     if (isCreateAction)
         *act = __result;
-    else
-        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    else{
+        if (__pause)
+            __result = Common_GetResumeIntoActset(__result);
 
-    return __pause ? CMD_YIELD : CMD_OK;
+        CResourceControl::_ResourceManager._ActionControl.AddAction(__result);
+    }
+
+    return !__pause || isCreateAction  ? CMD_OK : CMD_YIELD;
 }
 
 int Common_CreateActionSet(lua_State* args, string funcname)
@@ -2833,7 +2794,15 @@ int Cmd_LoadScript(lua_State* args)
         cout << __FUNCTION__ << "(): type of first argument must string." << endl;
         return CMD_ERR;
     }
-    return CMD_OK;
+
+    //CResourceControl::_ResourceManager.LoadScript(__filename);
+    CResourceControl::_ResourceManager._ActionControl.AddAction(
+        new CClassFuncArgsOfAction<CResourceControl, string, bool>(
+            &CResourceControl::_ResourceManager,
+            &CResourceControl::LoadScript,
+            __filename));
+
+    return lua_yield(args, 0);
 }
 
 int Cmd_AddAction(lua_State* args)
