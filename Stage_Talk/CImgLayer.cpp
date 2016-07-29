@@ -14,7 +14,6 @@ CImgLayer::CImgLayer()
     _baseNode = NULL;
     _flipX =
     _flipY = false;
-    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
     _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
@@ -25,7 +24,6 @@ CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
     _flipX =
     _flipY = false;
     _sprite.setPosition(x,y);
-    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
     _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
@@ -73,10 +71,11 @@ bool CImgLayer::LoadImg(const char* fileName)
     if (fileName == NULL)
         return false;
 
-    if (!CSurface::OnLoad(fileName, _texture))
+    sf::Texture* __texture = CSurface::GetTexture(fileName);
+    if (__texture == NULL)
         return false;
 
-    _sprite.setTexture(_texture,true);
+    _sprite.setTexture(*__texture, true);
     return true;
 }
 

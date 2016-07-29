@@ -11,16 +11,20 @@
 
 #include "../Common/CZlib.h"
 #include <SFML/Graphics.hpp>
-//#include "CImage.h"
+
+using namespace std;
 
 //==============================================================================
 class CSurface {
+    private:
+        static map<string, sf::Texture*> _textureList;
+        static sf::Texture* OnLoad(string File);
     public:
         CSurface();
 
     public:
-        static bool OnLoad(std::string File, sf::Texture &Img);
-        static bool OnLoad(std::string File, sf::Image &Img);
+        static sf::Texture* GetTexture(string File);
+        static bool OnLoad(std::string File, sf::Image& Img);
 
         //static CImage* OnCreate(size_t W, size_t H);
 

@@ -10,9 +10,9 @@
 #include "CSurface.h"
 #include <iostream>
 
-using namespace std;
+map<string, sf::Texture*> CSurface::_textureList;
 
-bool CSurface::OnLoad(std::string File, sf::Image &Img)
+bool CSurface::OnLoad(std::string File, sf::Image& Img)
 {
     if (File.find("*") == string::npos){
         if (!Img.loadFromFile(File)){
@@ -46,14 +46,28 @@ bool CSurface::OnLoad(std::string File, sf::Image &Img)
     }
 }
 
-bool CSurface::OnLoad(string File,  sf::Texture &Img) {
+sf::Texture* CSurface::GetTexture(string File)
+{
+    if (_textureList.count(File) > 0){
+        return _textureList[File];
+    }
+    else{
+        return OnLoad(File);
+    }
+}
+
+sf::Texture* CSurface::OnLoad(string File) 
+{
+    sf::Texture* __result = new sf::Texture();
     if (File.find("*") == string::npos){
-        if (!Img.loadFromFile(File)){
+        if (!__result->loadFromFile(File)){
             cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
-            return false;
         }
-        else
-            return true;
+        else{
+            __result->setSmooth(true);
+            _textureList[File] = __result;
+            return __result;
+        }
     }
     else {
         char* __image = NULL;
@@ -61,22 +75,26 @@ bool CSurface::OnLoad(string File,  sf::Texture &Img) {
         CZlib::OpenFileInZip(File, __image, __size);
 
         if (__image != NULL){
-            if (Img.loadFromMemory(__image, __size)){
+            if (__result->loadFromMemory(__image, __size)){
                 CZlib::CloseFileInZip(__image);
-                return true;
+                __result->setSmooth(true);
+                _textureList[File] = __result;
+                return __result;
             }
             else{
                 CZlib::CloseFileInZip(__image);
                 cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
-                return false;
             }
         }
         else{
             CZlib::CloseFileInZip(__image);
-            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
-            return false;
+            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
         }
     }
+
+    delete __result;
+    __result = NULL;
+    return NULL;
 }
 
 //==============================================================================
