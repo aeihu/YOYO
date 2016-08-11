@@ -289,7 +289,7 @@ int luaopen_yoyo(lua_State *L) {
         { "create_sim", Cmd_CreateSimultaneous },
         { "create_seq", Cmd_CreateSequence },
         { "create_rep", Cmd_CreateRepeat },
-        { "create_pause", Cmd_CreateActionOfPause },
+        //{ "create_pause", Cmd_CreateActionOfPause },
         { "create_resume", Cmd_CreateActionOfResume },
 
         { "add_act", Cmd_AddAction },
@@ -475,11 +475,9 @@ int CLua::GetLuaThreadStatus() const
 int CLua::ResumeLuaThread()
 {
     int __result = GetLuaThreadStatus();
-    if (__result == LUA_YIELD)
-    {
+    if (__result == LUA_YIELD){
         __result = lua_resume(_luaThread, NULL, 0);
-        if (LUA_YIELD < __result)
-        {
+        if (LUA_YIELD < __result){
             cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
         }
     }
