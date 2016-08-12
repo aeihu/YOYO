@@ -23,13 +23,73 @@ bool CZlib::SplitFileName(string filename, string symbol, string& s1, string& s2
     return true;
 }
 
+int CZlib::GetFileNamesInZip(std::string filename, list<string>& fileList)
+{
+    unzFile __file = NULL;
+    unz_file_info __fileInfo;
+    string __zip = "";
+    string __dir = "";
+
+    if (!SplitFileName(filename, "*", __zip, __dir)){
+        cout << "CZlib::GetFileNamesInZip(): can't find split symbol." << endl;
+        return -1;
+    }
+
+    __file = unzOpen(__zip.c_str());
+
+    if (__file == NULL){
+        cout << "CZlib::GetFileNamesInZip(): failed to open \"" << __zip << "\"" << endl;
+        return -2;
+    }
+
+    if (unzGoToFirstFile(__file) == UNZ_OK){
+
+        string __str; 
+        do{
+            char __name[256] = "";
+            unzGetCurrentFileInfo(__file, &__fileInfo, __name, 256, NULL, 0, NULL, 0);
+            __str = __name;
+
+            if (__dir == ""){
+                if (__str.find("/") == string::npos)
+                    fileList.push_back(__name);
+                else{
+                    if (fileList.size() > 0)
+                        break;
+                }
+            }
+            else{
+                if (__str[__str.length() - 1] != '/'){
+                    if (__dir[__dir.length() - 1] != '/')
+                        __dir += '/';
+
+                    size_t __findPos = __str.find(__dir);
+                    if (__findPos != string::npos && __findPos == 0){
+                        if (__str.find_last_of("/") < __dir.length()){
+                            fileList.push_back(__name);
+                        }
+                    }
+                    else{
+                        if (fileList.size() > 0)
+                            break;
+                    }
+                }
+            }
+        } while (unzGoToNextFile(__file) == UNZ_OK);
+    }
+
+    unzClose(__file);
+
+    return 0;
+}
+
 int CZlib::OpenFileInZip(string filename, char* &file, unsigned long& size)
 {
     CloseFileInZip(file);
     size = 0;
 
     unzFile __file = NULL;
-    unz_file_info    __fileInfo;
+    unz_file_info __fileInfo;
     string __zip = "";
     string __fileName = "";
 

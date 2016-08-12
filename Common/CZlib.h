@@ -10,6 +10,7 @@
     #define _CZLIB_H_
 #include "unzip.h"
 #include <string>
+#include <list>
 
 class CZlib
 {
@@ -19,6 +20,8 @@ class CZlib
         static bool SplitFileName(std::string filename, std::string symbol, std::string& s1, std::string& s2);
         static int OpenFileInZip(std::string filename, char* &file, unsigned long& size);
         static void CloseFileInZip(char* file);
+
+        static int GetFileNamesInZip(std::string filename, std::list<std::string>& fileList);
 };
 
 #endif
