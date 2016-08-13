@@ -52,7 +52,7 @@ int CZlib::GetFileNamesInZip(std::string filename, list<string>& fileList)
 
             if (__dir == ""){
                 if (__str.find("/") == string::npos)
-                    fileList.push_back(__name);
+                    fileList.push_back(__zip + "*" + __name);
                 else{
                     if (fileList.size() > 0)
                         break;
@@ -66,7 +66,7 @@ int CZlib::GetFileNamesInZip(std::string filename, list<string>& fileList)
                     size_t __findPos = __str.find(__dir);
                     if (__findPos != string::npos && __findPos == 0){
                         if (__str.find_last_of("/") < __dir.length()){
-                            fileList.push_back(__name);
+                            fileList.push_back(__zip + "*" + __name);
                         }
                     }
                     else{

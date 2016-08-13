@@ -135,6 +135,27 @@ string CCommon::ConvertToString(float Num)
     return __reulst;
 }
 
+void CCommon::GetFileNamesInDir(string path, list<string>& filenames)
+{
+    if (path.length() > 0){
+        if (path[path.length() - 1] != '/')
+            path += '/';
+
+        long __hFile = 0;
+        _finddata_t __fileinfo;
+
+        string __path;
+        if ((__hFile = _findfirst(__path.assign(path).append("*").c_str(), &__fileinfo)) != -1){
+            do{
+                if (!(__fileinfo.attrib &  _A_SUBDIR)){
+                    filenames.push_back(__path.assign(path).append(__fileinfo.name));
+                }
+            } while (_findnext(__hFile, &__fileinfo) == 0);
+            _findclose(__hFile);
+        }
+    }
+}
+
 //void CCommon::SaveSysData()
 //{
 //    FILE* File = fopen(GAME_SYSDATA.c_str(), "w");

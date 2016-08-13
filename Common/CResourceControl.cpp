@@ -27,9 +27,9 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _isLoadPlayerData =
     _isAuto = 
     _msgboxPauseRequest =
-    _isWaitingUnlockMutexInMain =
+    _isWaitingForActionEnd =
     _flagForAuto = false;
-    _isNeedLockMutex = true;
+    //_isNeedLockMutex = true;
     _loadingProcessStatus = CResourceControl::STOP;
 }
 
@@ -255,10 +255,31 @@ bool CResourceControl::JsonProcess(Object& src, Object& des, string colName)
         else{
             for (size_t i=0; i<__array.size(); i++){
                 Object __obj;
-                __obj << "name" << CTextFunction::GetNameInFilename(__array.get<String>(i));
-                __obj << "path" << __array.get<String>(i);
-                __obj << "isdelete" << true;
-                __arrayResult << __obj;
+
+                list<string> __list;
+                if (__array.has<String>(i)){
+                    if (__array.get<String>(i).find('*') == string::npos)
+                        CCommon::_Common.GetFileNamesInDir(__array.get<String>(i), __list);
+                    else
+                        CZlib::GetFileNamesInZip(__array.get<String>(i), __list);
+
+                    for (list<string>::iterator it = __list.begin(); it != __list.end(); it++){
+                        __obj << "name" << CTextFunction::GetNameInFilename(*it);
+                        __obj << "path" << *it;
+                        __obj << "isdelete" << true;
+                        __arrayResult << __obj;
+                    }
+                }
+                else if (__array.has<Array>(i)){
+                    Array& __tmp = __array.get<Array>(i);
+
+                    for (size_t j = 0; j < __tmp.size(); j++){
+                        __obj << "name" << CTextFunction::GetNameInFilename(__tmp.get<String>(j));
+                        __obj << "path" << __tmp.get<String>(j);
+                        __obj << "isdelete" << true;
+                        __arrayResult << __obj;
+                    }
+                }
             }
         }
 
@@ -406,31 +427,45 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
     return _loadingProcessStatus;
 }
 
-void CResourceControl::LockMutexInLua()//run in lua
+// for mutex
+//void CResourceControl::LockMutexInLua()//run in lua
+//{
+//    _isWaitingUnlockMutexInMain = true;
+//    _isNeedLockMutex = false;
+//    _mutexMainForPause.lock();
+//    _isNeedLockMutex = true;
+//    _mutexMainForPause.unlock();
+//    _mutexLuaForPause.lock();
+//    _mutexLuaForPause.unlock();
+//    _isWaitingUnlockMutexInMain = false;
+//}
+//
+// for mutex
+//void CResourceControl::UnlockMutexInMain() //run in main
+//{
+//    _mutexLuaForPause.lock();
+//    _mutexMainForPause.unlock();
+//}
+
+void CResourceControl::OnWaitingAction()
 {
-    _isWaitingUnlockMutexInMain = true;
-    _isNeedLockMutex = false;
-    _mutexMainForPause.lock();
-    _isNeedLockMutex = true;
-    _mutexMainForPause.unlock();
-    _mutexLuaForPause.lock();
-    _mutexLuaForPause.unlock();
-    _isWaitingUnlockMutexInMain = false;
+    _isWaitingForActionEnd = true;
 }
 
-void CResourceControl::UnlockMutexInMain() //run in main
+void CResourceControl::OffWaitingAction()
 {
-    _mutexLuaForPause.lock();
-    _mutexMainForPause.unlock();
+    _isWaitingForActionEnd = false;
 }
 
 void CResourceControl::OnLoop() //run in main
 {
-    if (_isNeedLockMutex){
-        _mutexMainForPause.lock();
-        _mutexLuaForPause.unlock();
-        _isNeedLockMutex = false;
-    }
+
+    // for mutex
+    //if (_isNeedLockMutex){
+    //    _mutexMainForPause.lock();
+    //    _mutexLuaForPause.unlock();
+    //    _isNeedLockMutex = false;
+    //}
 
     _ActionControl.OnLoop();
 
@@ -450,7 +485,7 @@ void CResourceControl::OnLoop() //run in main
     if (_loadingProcessStatus != CResourceControl::STOP){
         _LoadingObjectControl.OnLoop();
 
-        if (_loadingProcessStatus == CResourceControl::FINISH && !_isWaitingUnlockMutexInMain)
+        if (_loadingProcessStatus == CResourceControl::FINISH && !_isWaitingForActionEnd)
             if (_LuaControl.GetLuaThreadStatus() == LUA_OK){
                 bool __b = true;
                 _LuaControl.GetGlobal("YOYO_LUA_LOADING_THREAD_RUNNING", __b);

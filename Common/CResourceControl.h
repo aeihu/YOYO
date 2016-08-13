@@ -38,8 +38,10 @@ class CResourceControl
         };
     private:
         sf::Thread                      _threadOfLoading;
-        sf::Mutex                       _mutexMainForPause;
-        sf::Mutex                       _mutexLuaForPause;
+
+        // for mutex
+        //sf::Mutex                       _mutexMainForPause;
+        //sf::Mutex                       _mutexLuaForPause;
 
         string                          _fileNameOfScriptForLoadingBegin;
         string                          _fileNameOfScriptForLoadingfinish;
@@ -55,8 +57,8 @@ class CResourceControl
         bool                            _isLoadPlayerData;
         bool                            _isNeedCleanAction;
         bool                            _msgboxPauseRequest;
-        bool                            _isNeedLockMutex;
-        bool                            _isWaitingUnlockMutexInMain;
+        bool                            _isWaitingForActionEnd;
+        //bool                            _isNeedLockMutex;
 
         EProcStatus                     _loadingProcessStatus;
 
@@ -90,6 +92,9 @@ class CResourceControl
         CSimultaneousOfAction                   _ActionControl;
         CLua                                    _LuaControl;
         
+        void OnWaitingAction();
+        void OffWaitingAction();
+
         void SkipOn();
         void SkipOff();
         bool AddVariable(string name, string val);
@@ -107,8 +112,8 @@ class CResourceControl
         void OnMsgboxPause();
         void OffMsgboxPause();
 
-        void LockMutexInLua();
-        void UnlockMutexInMain();
+        //void LockMutexInLua();
+        //void UnlockMutexInMain();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
         bool LoadScript(string filename);

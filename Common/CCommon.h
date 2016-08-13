@@ -70,6 +70,7 @@ class CCommon
         unsigned long GetTicks();
 
         string ConvertToString(float Num);
+        void GetFileNamesInDir(string path, list<string>& filenames);
         bool OnInit();
         bool IsFileExist(string filename);
         //void OnCleanup();
