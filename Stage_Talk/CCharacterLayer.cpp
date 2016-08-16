@@ -13,7 +13,7 @@
 
 CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
 {
-    _isBodyNeedChange = false;
+    _isBodyChangeing = false;
     _framesOfMouth._Type = CAnimation::Oscillate;
     _framesOfEyes._Type = CAnimation::Oscillate;
     _currcentBody = _currcentMouth = _currcentEyes = _currcentVoice = "";
@@ -70,10 +70,10 @@ void CCharacterLayer::SetVoice(string name)
 void CCharacterLayer::OnLoop()
 {
     CBaiscProperties::OnLoop();
-    if (_isBodyNeedChange){
+    if (_isBodyChangeing){ 
         if (_simAct.OnLoop()){
-            _isBodyNeedChange = false;
-            _sprite.setTexture(*CSurface::GetTexture(_bodyToFilenameList[_currcentBody]), true);
+            _isBodyChangeing = false;
+            _sprite.setTexture(_textureList[_currcentBody],true);
         }
         
         _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
@@ -142,7 +142,7 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
     if (_isShowed)
         Surf_Dest->draw(_sprite);
 
-    if (_isBodyNeedChange)
+    if (_isBodyChangeing)
         Surf_Dest->draw(_swapSprite);
 }
 
@@ -286,26 +286,34 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
             __body = __bodyList.get<Object>(i);
             __name = CTextFunction::GetNameInFilename(__body.get<String>("BODY_PATH"));
 
-            sf::Texture* __texture = CSurface::GetTexture(__body.get<String>("BODY_PATH").c_str());
-
-            if (__texture == NULL)
-                return false;
-            
-            _bodyToFilenameList[__name] = __body.get<String>("BODY_PATH");
-
-            if (i == 0){
-                _currcentBody = __name;
-                _sprite.setTexture(*__texture, true);
+            if (_textureList.count(__name) > 0){
+                cout << "CCharacterLayer::SetProperty(): body texture " 
+                    " \""<< __name << "\" has existed." <<endl;
                 
-                _framesOfMouth.SetOffset(__body.get<Number>("MOUTH_OFFSET_X"), __body.get<Number>("MOUTH_OFFSET_Y"));
-                _framesOfMouth.SetSize(__body.get<Number>("MOUTH_WIDTH"), __body.get<Number>("MOUTH_HEIGHT"));
-                _framesOfMouth.SetFrameRate(__body.get<Number>("MOUTH_FRAME_RATE"));
-                _framesOfMouth.SetDestTexture(__texture);
+                return false;
+            }
+            else{
+                _textureList[__name] = sf::Texture();
 
-                _framesOfEyes.SetOffset(__body.get<Number>("EYE_OFFSET_X"), __body.get<Number>("EYE_OFFSET_Y"));
-                _framesOfEyes.SetSize(__body.get<Number>("EYE_WIDTH"), __body.get<Number>("EYE_HEIGHT"));
-                _framesOfEyes.SetFrameRate(__body.get<Number>("EYE_FRAME_RATE"));
-                _framesOfEyes.SetDestTexture(__texture);
+                if (!CSurface::OnLoad(__body.get<String>("BODY_PATH").c_str(), _textureList[__name]))
+                    return false;
+            
+                _textureList[__name].setSmooth(true);
+
+                if (i == 0){
+                    _currcentBody = __name;
+                    _sprite.setTexture(_textureList[__name],true);
+                
+                    _framesOfMouth.SetOffset(__body.get<Number>("MOUTH_OFFSET_X"), __body.get<Number>("MOUTH_OFFSET_Y"));
+                    _framesOfMouth.SetSize(__body.get<Number>("MOUTH_WIDTH"), __body.get<Number>("MOUTH_HEIGHT"));
+                    _framesOfMouth.SetFrameRate(__body.get<Number>("MOUTH_FRAME_RATE"));
+                    _framesOfMouth.SetDestTexture(&_textureList[__name]);
+
+                    _framesOfEyes.SetOffset(__body.get<Number>("EYE_OFFSET_X"), __body.get<Number>("EYE_OFFSET_Y"));
+                    _framesOfEyes.SetSize(__body.get<Number>("EYE_WIDTH"), __body.get<Number>("EYE_HEIGHT"));
+                    _framesOfEyes.SetFrameRate(__body.get<Number>("EYE_FRAME_RATE"));
+                    _framesOfEyes.SetDestTexture(&_textureList[__name]);
+                }
             }
         }
     
@@ -365,27 +373,27 @@ void CCharacterLayer::SetPose(vector<string> args)
 bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffect)
 {
     bool __isBodyChanged = _currcentBody != body;
-    if (__isBodyChanged && !body.empty() && _bodyToFilenameList.count(body) > 0){
+    if (__isBodyChanged && !body.empty() && _textureList.count(body) > 0){
         _currcentBody = body;
         
         if (_isShowed && isEffect){
-            _swapSprite.setTexture(*CSurface::GetTexture(_bodyToFilenameList[body]), true);
+            _swapSprite.setTexture(_textureList[body],true);
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
             _simAct.AddAction(new CActionTo(&_alphaOfSwap, 400, 0, true));
-            _isBodyNeedChange = true;
+            _isBodyChangeing = true;
             _timer += 1000;
         }
         else{
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
-            _sprite.setTexture(*CSurface::GetTexture(_bodyToFilenameList[body]), true);
+            _sprite.setTexture(_textureList[body],true);
         }
 
-        _framesOfEyes.SetDestTexture(CSurface::GetTexture(_bodyToFilenameList[body]));
-        _framesOfMouth.SetDestTexture(CSurface::GetTexture(_bodyToFilenameList[body]));
+        _framesOfEyes.SetDestTexture(&_textureList[body]);
+        _framesOfMouth.SetDestTexture(&_textureList[body]);
     }
-    else if (_bodyToFilenameList.count(body) < 1 && !body.empty()){
+    else if(_textureList.count(body) < 1 && !body.empty()){
         cout << "CCharacterLayer::SetPose(): can't find BODY \"" << body << "\"." << endl;
         return false;
     }

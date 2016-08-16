@@ -30,6 +30,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         bool SetBaseNode(CImgLayer* baseNode);
         void Flip();
     protected:
+        sf::Texture         _texture;
         sf::Sprite          _sprite;
 
         virtual bool LoadImg(const char* filename);

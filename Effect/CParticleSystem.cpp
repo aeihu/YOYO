@@ -74,7 +74,7 @@ void CParticleSystem::OnLoop()
                 _particles.push_back(Particle());
                 _particles[_particles.size()-1]._Rectangle.setSize(sf::Vector2f(_width, _height));
                 _particles[_particles.size()-1]._Rectangle.setOrigin(_origin);
-                _particles[_particles.size() - 1]._Rectangle.setTexture(CSurface::GetTexture(_textureName));
+                _particles[_particles.size()-1]._Rectangle.setTexture(&_texture);
             }
         }
 
@@ -108,14 +108,13 @@ void CParticleSystem::OnRender(sf::RenderTarget* Surf_Dest)
 
 bool CParticleSystem::SetTexture(string filename)
 {
-    sf::Texture* __texture = CSurface::GetTexture(filename);
-    if (__texture == NULL){
+    if (!CSurface::OnLoad(filename, _texture)){
         cout << "CParticleSystem::SetTexture(): failed to load."<< endl;
         return false;
     }
 
     for (std::size_t i = 0; i < _particles.size(); ++i){
-        _particles[i]._Rectangle.setTexture(__texture);
+        _particles[i]._Rectangle.setTexture(&_texture);
     }
 
     return true;
@@ -185,12 +184,10 @@ bool CParticleSystem::CheckList(Object json)
 bool CParticleSystem::SetProperty(Object json, bool isLoad)
 {
     if (json.has<String>("PARTICLE_TEXTURE")){
-        sf::Texture* __texture = CSurface::GetTexture(json.get<String>("PARTICLE_TEXTURE"));
-        if (__texture == NULL)
+        if (!CSurface::OnLoad(json.get<String>("PARTICLE_TEXTURE"), _texture))
             return false;
     }
 
-    _textureName = json.get<String>("PARTICLE_TEXTURE");
     _angleMin = json.get<Number>("PARTICLE_ANGLE_MIN");
     int _angleMax = json.get<Number>("PARTICLE_ANGLE_MAX");
 

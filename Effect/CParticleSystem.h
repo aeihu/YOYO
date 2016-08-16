@@ -37,7 +37,7 @@ class CParticleSystem : public CDrawableClass, public CConfigFile
         int                     _speedMin;
         int                     _speedOffet;
         int                     _number;
-        string                  _textureName;
+        sf::Texture             _texture;
         float                   _rotation;
         float                   _ratio;
         float                   _width;

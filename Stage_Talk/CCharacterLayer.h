@@ -31,13 +31,13 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         unsigned long                           _timer;
         map<string, pair<sf::Image, int> >      _mouthList;
         map<string, pair<sf::Image, int> >      _eyeList;
-        map<string, string>                     _bodyToFilenameList;
+        map<string, sf::Texture>                _textureList;
 
         float                                   _alphaOfSwap;
         sf::Sprite                              _swapSprite;
         sf::Sprite                              _sprite;
         CSimultaneousOfAction                   _simAct;
-        bool                                    _isBodyNeedChange;
+        bool                                    _isBodyChangeing;
         
         bool CheckList(Object json);
         bool SetProperty(Object json, bool isLoad=true);

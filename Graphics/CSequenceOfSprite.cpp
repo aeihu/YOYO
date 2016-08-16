@@ -69,7 +69,7 @@ bool CSequenceOfSprite::LoadImg(const char* filename)
 
 void CSequenceOfSprite::SetCurrentImageFrame(int frame)
 {
-    size_t TilesetWidth = _sprite.getTexture()->getSize().x / _rect.width;
+    size_t TilesetWidth  = _texture.getSize().x / _rect.width;
 
     if (TilesetWidth == 0)
         return;

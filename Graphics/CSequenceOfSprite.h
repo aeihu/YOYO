@@ -19,6 +19,7 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
         virtual bool CheckList(Object json);
         virtual bool SetProperty(Object json, bool isLoad=true);
     public:
+        using CImgLayer::_texture;
         using CImgLayer::_sprite;
 
         CSequenceOfSprite(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
