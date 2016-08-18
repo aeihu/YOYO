@@ -688,7 +688,7 @@ void CResourceControl::AutoToNextStep()
         
 void CResourceControl::SkipOn()
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus != CResourceControl::STOP)
         return;
 
     CActionBaseClass::AllSkipOn();
