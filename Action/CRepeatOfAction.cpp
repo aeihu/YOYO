@@ -17,6 +17,9 @@ CRepeatOfAction::CRepeatOfAction(string name, int loopNum)
 
 bool CRepeatOfAction::OnLoop()
 {
+    if (_actionList.size() < 1)
+        return true;
+
     if (_loopNum == 0){
         OnCleanup();
         return true;

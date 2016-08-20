@@ -15,6 +15,9 @@ CSimultaneousOfAction::CSimultaneousOfAction(string name)
 
 bool CSimultaneousOfAction::OnLoop()
 {
+    if (_actionList.size() < 1)
+        return true;
+
     size_t __count = 0;
     for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end();){
         if (!(*it).second){

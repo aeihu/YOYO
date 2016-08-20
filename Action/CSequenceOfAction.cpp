@@ -16,6 +16,9 @@ CSequenceOfAction::CSequenceOfAction(string name)
 
 bool CSequenceOfAction::OnLoop()
 {
+    if (_actionList.size() < 1)
+        return true;
+
     do {
         if (_iterator != _actionList.end()){
             if (_skip || _allSkip)
