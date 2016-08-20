@@ -194,6 +194,7 @@ void CDrawableObjectControl::OnCleanup()
     for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
             delete (*it).second;
+            (*it).second = NULL;
     }
 
     _drawableObjectList.clear();
