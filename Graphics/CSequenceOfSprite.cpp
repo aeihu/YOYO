@@ -45,16 +45,11 @@ bool CSequenceOfSprite::SetProperty(Object json, bool isLoad)
         _scale.y = _scale.x = json.get<Number>("SCALE");
     }
     else{
-        if (json.has<Number>("SCALE_X"))
-            _scale.x = json.get<Number>("SCALE_X");
-
-        if (json.has<Number>("SCALE_Y"))
-            _scale.y = json.get<Number>("SCALE_Y");
+        _scale.x = json.has<Number>("SCALE_X") ? json.get<Number>("SCALE_X") : 1.0f;
+        _scale.y = json.has<Number>("SCALE_Y") ? json.get<Number>("SCALE_Y") : 1.0f;
     }
 
-    if (json.has<Number>("ROTATION")){
-        _rotation = json.get<Number>("ROTATION");
-    }
+    _rotation = json.has<Number>("ROTATION") ? json.get<Number>("ROTATION") : 0.0f;
     return true;
 }
 

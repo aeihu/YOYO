@@ -20,7 +20,7 @@ using namespace jsonxx;
 class CConfigFile
 {
     private:
-        Object __json;
+        Object _json;
     protected:
         virtual bool CheckList(Object json)=0;
         virtual bool SetProperty(Object json, bool isLoad=true)=0;

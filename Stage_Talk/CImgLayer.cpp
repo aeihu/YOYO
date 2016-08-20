@@ -109,32 +109,15 @@ bool CImgLayer::SetProperty(Object json, bool isLoad)
         _scale.y = _scale.x = json.get<Number>("SCALE");
     }
     else{
-        if (json.has<Number>("SCALE_X"))
-            _scale.x = json.get<Number>("SCALE_X");
-
-        if (json.has<Number>("SCALE_Y"))
-            _scale.y = json.get<Number>("SCALE_Y");
-    }
-        
-    if (json.has<Number>("ROTATION")){
-        _rotation = json.get<Number>("ROTATION");
-    }
-        
-    if (json.has<Number>("ORIGIN_X")){
-        _origin.x = json.get<Number>("ORIGIN_X");
+        _scale.x = json.has<Number>("SCALE_X") ? json.get<Number>("SCALE_X") : 1.0f;
+        _scale.y = json.has<Number>("SCALE_Y") ? json.get<Number>("SCALE_Y") : 1.0f;
     }
 
-    if (json.has<Number>("ORIGIN_Y")){
-        _origin.y = json.get<Number>("ORIGIN_Y");
-    }
-        
-    if (json.has<Number>("X")){
-        _coordinate.x = json.get<Number>("X");
-    }
-
-    if (json.has<Number>("Y")){
-        _coordinate.y = json.get<Number>("Y");
-    }
+    _rotation = json.has<Number>("ROTATION") ? json.get<Number>("ROTATION") : 0.0f;
+    _origin.x = json.has<Number>("ORIGIN_X") ? json.get<Number>("ORIGIN_X") : 0.0f;
+    _origin.y = json.has<Number>("ORIGIN_Y") ? json.get<Number>("ORIGIN_Y") : 0.0f;
+    _coordinate.x = json.has<Number>("X") ? json.get<Number>("X") : 0.0f;
+    _coordinate.y = json.has<Number>("Y") ? json.get<Number>("Y") : 0.0f;
 
     if (_flipX)
         FlipX();
@@ -195,18 +178,20 @@ void CImgLayer::OnLoop()
         if (_rotation != _sprite.getRotation())
             _sprite.setRotation(_rotation);
         
-        list<CImgLayer*>::iterator it;
-        for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
-            if ((*it)->GetFlag() & FLAG_ALPHA)
-                (*it)->SetAlpha(_alpha);
+        if (_childrenList.size() > 0){
+            list<CImgLayer*>::iterator it;
+            for (it = _childrenList.begin(); it != _childrenList.end(); it++){
+                if ((*it)->GetFlag() & FLAG_ALPHA)
+                    (*it)->SetAlpha(_alpha);
 
-            if ((*it)->GetFlag() & FLAG_SCALE)
-                (*it)->SetScale(_scale.x, _scale.y);
+                if ((*it)->GetFlag() & FLAG_SCALE)
+                    (*it)->SetScale(_scale.x, _scale.y);
 
-            if ((*it)->GetFlag() & FLAG_ROTATION)
-                (*it)->SetRotation(_rotation);
+                if ((*it)->GetFlag() & FLAG_ROTATION)
+                    (*it)->SetRotation(_rotation);
 
-            (*it)->OnLoop();
+                (*it)->OnLoop();
+            }
         }
     }
 }
