@@ -32,9 +32,11 @@ class CResourceControl
 {
     public:
         enum EProcStatus{
-            STOP,
-            RUNNING,
-            FINISH
+            INIT,
+            LOADING,
+            LOADSAVEDATA,
+            LOADED,
+            PLAYING
         };
     private:
         sf::Thread                      _threadOfLoading;
@@ -43,19 +45,17 @@ class CResourceControl
         //sf::Mutex                       _mutexMainForPause;
         //sf::Mutex                       _mutexLuaForPause;
 
-        string                          _fileNameOfScriptForLoadingBegin;
-        string                          _fileNameOfScriptForLoadingfinish;
         string                          _fileNameOfCurrentRunningScript;
-        string                          _fileNameOfCurrentLuaScript;
+        string                          _fileNameOfLoadSavedataScriptInPlaying;
 
         unsigned long                   _oldTimeForAuto;
+        int                             _currentMgsLine;
 
         Object                          _playerData;
         Object                          _scriptConfig;
         Object                          _gameBaiscAsset;
 
         bool                            _isLoadPlayerData;
-        bool                            _isNeedCleanAction;
         bool                            _msgboxPauseRequest;
         bool                            _isWaitingForActionEnd;
         //bool                            _isNeedLockMutex;
@@ -79,6 +79,8 @@ class CResourceControl
         bool CheckOut(Object& json, string colName, string objTypeName);
 
         void AutoToNextStep();
+        void OffWaitingAction();
+        void CopyActForLoadingFinishToActionControl();
     protected:
 
         CResourceControl();
@@ -90,10 +92,9 @@ class CResourceControl
         CObjectControl                          _ObjectControl;
         CCameraControl                          _CameraControl;
         CSimultaneousOfAction                   _ActionControl;
+        CSimultaneousOfAction                   _ActForLoadingBegin;
+        CSimultaneousOfAction                   _ActForLoadingFinish;
         CLua                                    _LuaControl;
-        
-        void OnWaitingAction();
-        void OffWaitingAction();
 
         void SkipOn();
         void SkipOff();

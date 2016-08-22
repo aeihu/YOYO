@@ -28,7 +28,6 @@ string func_name = "";
 int Common_YieldCont(lua_State *L, int, lua_KContext ctx)
 {
     cout << func_name << "(): resume thread." << endl;
-    CResourceControl::_ResourceManager.OffWaitingAction();
     return 0;
 }
 
@@ -36,7 +35,6 @@ int Common_RetrunYield(lua_State *L, string funcname)
 {
     func_name = funcname;
     cout << funcname << "(): suspends thread." << endl;
-    CResourceControl::_ResourceManager.OnWaitingAction();
     return lua_yieldk(L, 0, 0, Common_YieldCont);
 }
 
@@ -217,6 +215,41 @@ CActionBaseClass* Common_GetResumeIntoActset(CActionBaseClass* act)
     return __seq;
 }
 
+int Common_AddAction(lua_State* args, char flag, string funcname)
+{
+    {
+        int __numOfargs = lua_gettop(args);
+        if (__numOfargs != 1){
+            cout << funcname << "(): command invaild. can't set " << __numOfargs
+                << " argument(s) in the command." << endl;
+
+            lua_pushboolean(args, false);
+            return 1;
+        }
+    }
+
+    CActionBaseClass* __act = (CActionBaseClass*)lua_topointer(args, 1);
+
+    if (__act){
+        switch (flag){
+            case 0:
+                CResourceControl::_ResourceManager._ActionControl.AddAction(__act);
+                break;
+            case 1:
+                CResourceControl::_ResourceManager._ActForLoadingBegin.AddAction(__act);
+                break;
+            case 2:
+                CResourceControl::_ResourceManager._ActForLoadingFinish.AddAction(__act);
+                break;
+        }
+        lua_pushboolean(args, true);
+    }
+    else
+        lua_pushboolean(args, false);
+
+    return 1;
+}
+
 enum
 {
     CMD_ERR = -1,
@@ -272,8 +305,8 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
     size_t __inte = CCommon::_Common.INTERVAL; //interval
     Common_GetValueInTable(args, "i", __inte);
 
-    CDrawableObjectControl* __doc = 
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+    CDrawableObjectControl* __doc =
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -356,7 +389,7 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
     Common_GetValueInTable(args, "i", __inte);
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -437,7 +470,7 @@ int Common_FuncOfHide(string objTypeName, lua_State* args, CActionBaseClass** ac
     Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -511,7 +544,7 @@ int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
     else{
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -601,7 +634,7 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** 
     Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -694,7 +727,7 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args, CActionBaseClass*
     }
     else{
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -807,7 +840,7 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
         }
 
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -867,21 +900,19 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args, CActionBaseClas
     }
 
     string __name;
-    if (!Common_GetValueInTable(args, "n", __name))
-    {
+    if (!Common_GetValueInTable(args, "n", __name)){
         cout << __funcName << "(): parameter \"n\" must be need." << endl;
         return CMD_ERR;
     }
 
     int __layer;
-    if (!Common_GetValueInTable(args, "l", __layer))
-    {
+    if (!Common_GetValueInTable(args, "l", __layer)){
         cout << __funcName << "(): parameter \"l\" must be need." << endl;
         return CMD_ERR;
     }
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -917,14 +948,13 @@ int Common_FuncOfFlip(string objTypeName, lua_State* args, CActionBaseClass** ac
         }
     }
     
-    if (!lua_isstring(args, 1))
-    {
+    if (!lua_isstring(args, 1)){
         cout << __funcName << "(): parameter must be string." << endl;
         return CMD_ERR;
     }
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -981,7 +1011,7 @@ int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = N
 
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1074,7 +1104,7 @@ int Common_SetPoseCharacterLayer(lua_State* args, CActionBaseClass** act = NULL,
         __args.push_back("");
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
         :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1155,7 +1185,7 @@ int Common_SetText(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
     Common_GetValueInTable(args, "ss", __styleStrikeThrough);
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::STOP ?
+        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
         :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -2824,27 +2854,17 @@ int Cmd_LoadScript(lua_State* args)
 
 int Cmd_AddAction(lua_State* args)
 {
-    {
-        int __numOfargs = lua_gettop(args);
-        if (__numOfargs < 1){
-            cout << "Cmd_AddAction(): command invaild. can't set " << __numOfargs
-                << " argument(s) in the command." << endl;
+    return Common_AddAction(args, 0, __FUNCTION__);
+}
 
-            lua_pushboolean(args, false);
-            return 1;
-        }
-    }
+int Cmd_AddActionForLoadBegin(lua_State* args)
+{
+    return Common_AddAction(args, 1, __FUNCTION__);
+}
 
-    CActionBaseClass* __act = (CActionBaseClass*)lua_topointer(args, 1);
-
-    if (__act){
-        CResourceControl::_ResourceManager._ActionControl.AddAction(__act);
-        lua_pushboolean(args, true);
-    }
-    else
-        lua_pushboolean(args, false);
-
-    return 1;
+int Cmd_AddActionForLoadFinish(lua_State* args)
+{
+    return Common_AddAction(args, 2, __FUNCTION__);
 }
 
 int Cmd_CreateActionOfResume(lua_State* args)

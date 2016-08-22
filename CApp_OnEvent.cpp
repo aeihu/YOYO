@@ -69,12 +69,12 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
         }
 
         case sf::Keyboard::F6: {
-            //CResourceControl::_ResourceManager.OnSaveData(0);
+            CResourceControl::_ResourceManager.OnSaveData(0);
             break;
         }
 
         case sf::Keyboard::F10: {
-            //CResourceControl::_ResourceManager.OnLoadData(0);
+            CResourceControl::_ResourceManager.OnLoadData(0);
             break;
         }
         
@@ -87,6 +87,7 @@ void CApp::OnKeyDown(sf::Event::KeyEvent key) {
 void CApp::OnKeyUp(sf::Event::KeyEvent key) {
     switch(key.code) {
         case sf::Keyboard::Up: {
+                                   CResourceControl::_ResourceManager._LuaControl.GetLuaThreadInfo();
             break;
         }
 

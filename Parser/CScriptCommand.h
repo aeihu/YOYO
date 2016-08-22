@@ -180,5 +180,7 @@ int Cmd_CreateActionOfResume(lua_State* args);
 //int Cmd_Pause(lua_State* args);
 int Cmd_LoadScript(lua_State* args);
 int Cmd_AddAction(lua_State* args);
+int Cmd_AddActionForLoadBegin(lua_State* args);
+int Cmd_AddActionForLoadFinish(lua_State* args);
 
 #endif

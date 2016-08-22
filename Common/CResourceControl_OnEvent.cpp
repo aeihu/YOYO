@@ -11,7 +11,7 @@
 //------------------------------------------------------------------------------
 void CResourceControl::OnLButtonDown(int mX, int mY)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP){
+    if (_loadingProcessStatus == CResourceControl::PLAYING){
         if (GetMsgboxPauseStatus()){
             OffMsgboxPause();
             _LuaControl.ResumeLuaThread();
@@ -23,21 +23,21 @@ void CResourceControl::OnLButtonDown(int mX, int mY)
 
 void CResourceControl::OnRButtonDown(int mX, int mY)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus == CResourceControl::PLAYING)
         if (CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonDown(mX, mY))
             return;
 }
 
 void CResourceControl::OnRButtonUp(int mX, int mY)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus == CResourceControl::PLAYING)
         if (CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonUp(mX, mY))
             return;
 }
 //------------------------------------------------------------------------------
 void CResourceControl::OnLButtonUp(int mX, int mY)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus == CResourceControl::PLAYING)
         if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonUp(mX, mY))
             return;
 }
@@ -46,7 +46,7 @@ void CResourceControl::OnLButtonUp(int mX, int mY)
 //------------------------------------------------------------------------------
 void CResourceControl::OnMouseMove(int mX, int mY)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus == CResourceControl::PLAYING)
         if (CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseMove(mX, mY))
             return;
 }

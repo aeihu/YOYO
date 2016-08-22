@@ -18,19 +18,17 @@ CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::ThreadOfLoadAsset, this)
 {
+    _currentMgsLine = 
     _oldTimeForAuto = 0;
     _scriptConfig.reset();
-    _fileNameOfScriptForLoadingBegin =
-    _fileNameOfScriptForLoadingfinish =
     _fileNameOfCurrentRunningScript = "";
-    _isNeedCleanAction =
     _isLoadPlayerData =
     _isAuto = 
     _msgboxPauseRequest =
     _isWaitingForActionEnd =
     _flagForAuto = false;
     //_isNeedLockMutex = true;
-    _loadingProcessStatus = CResourceControl::STOP;
+    _loadingProcessStatus = CResourceControl::INIT;
 }
 
 bool CResourceControl::GetMsgboxPauseStatus() const
@@ -40,6 +38,7 @@ bool CResourceControl::GetMsgboxPauseStatus() const
 
 void CResourceControl::OnMsgboxPause()
 {
+    _currentMgsLine++;
     _msgboxPauseRequest = true;
 }
 
@@ -188,38 +187,14 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
 
     if (!_LuaControl.OnInit())
         return false;
-    
+
+    _loadingProcessStatus = CResourceControl::INIT;
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
     _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
 
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
     
-    if (_gameBaiscAsset.has<String>("loading_begin_script"))
-    {
-        if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_begin_script")))
-            _fileNameOfScriptForLoadingBegin = _gameBaiscAsset.get<String>("loading_begin_script");
-        else
-        {
-            _fileNameOfScriptForLoadingBegin = "";
-            return false;
-        }
-    }
-    else
-        return false;
-
-    if (_gameBaiscAsset.has<String>("loading_finish_script"))
-    {
-        if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_finish_script")))
-            _fileNameOfScriptForLoadingfinish = _gameBaiscAsset.get<String>("loading_finish_script");
-        else
-        {
-            _fileNameOfScriptForLoadingfinish = "";
-            return false;
-        }
-    }
-    else
-        return false;
 
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
@@ -228,6 +203,13 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
+
+    if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_script"))){
+        _LuaControl.LoadScript(_gameBaiscAsset.get<String>("loading_script"), true);
+    }
+    else{
+        return false;
+    }
 
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
@@ -317,11 +299,8 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     if (__json.has<String>("script"))
         obj << "script" << __json.get<String>("script");
 
-    if (__json.has<string>("loading_begin_script"))
-        obj << "loading_begin_script" << __json.get<String>("loading_begin_script");
-
-    if (__json.has<string>("loading_finish_script"))
-        obj << "loading_finish_script" << __json.get<String>("loading_finish_script");
+    if (__json.has<string>("loading_script"))
+        obj << "loading_script" << __json.get<String>("loading_script");
     
     return true;
 }
@@ -371,7 +350,7 @@ void CResourceControl::ThreadOfLoadAsset()
         }
 
         if (__obj.has<string>("script"))
-            _fileNameOfCurrentLuaScript = __obj.get<string>("script");
+            _fileNameOfLoadSavedataScriptInPlaying = __obj.get<string>("script");
 
         _scriptConfig = __obj;
         _scriptConfig << "filename" << _fileNameOfCurrentRunningScript;
@@ -395,26 +374,28 @@ void CResourceControl::ThreadOfLoadAsset()
     }
 
     if (_isLoadPlayerData){
-        _isLoadPlayerData = false;
-        LoadPlayerDataProcess();
+        //_isLoadPlayerData = false;
+        //LoadPlayerDataProcess();
+        _loadingProcessStatus = CResourceControl::LOADSAVEDATA;
     }
-
-    _LuaControl.LoadScript(_fileNameOfScriptForLoadingfinish, "", "YOYO_LUA_LOADING_THREAD_RUNNING = false");
-    _loadingProcessStatus = CResourceControl::FINISH;
+    else{
+        CopyActForLoadingFinishToActionControl();
+        _loadingProcessStatus = CResourceControl::LOADED;
+    }
 }
 
 bool CResourceControl::LoadScript(string filename)
 {
-    if (CCommon::_Common.IsFileExist(filename))
-    {
+    if (CCommon::_Common.IsFileExist(filename)){
         _SoundControl.StopBgm();
         _SoundControl.StopSE();
         _SoundControl.StopVoice();
         _ActionControl.OnCleanup();
 
+        _currentMgsLine = 0;
         _fileNameOfCurrentRunningScript = filename;
-        _loadingProcessStatus = CResourceControl::RUNNING;
-        _LuaControl.LoadScript(_fileNameOfScriptForLoadingBegin, "YOYO_LUA_LOADING_THREAD_RUNNING = true");
+        _loadingProcessStatus = CResourceControl::LOADING;
+        _ActionControl.AddAction(_ActForLoadingBegin.Copy());
         _threadOfLoading.launch();
         return true;
     }
@@ -446,20 +427,23 @@ CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
 //    _mutexLuaForPause.lock();
 //    _mutexMainForPause.unlock();
 //}
-
-void CResourceControl::OnWaitingAction()
-{
-    _isWaitingForActionEnd = true;
-}
-
 void CResourceControl::OffWaitingAction()
 {
     _isWaitingForActionEnd = false;
 }
 
+
+void CResourceControl::CopyActForLoadingFinishToActionControl()
+{
+    _isWaitingForActionEnd = true;
+    CSequenceOfAction* __seq = new CSequenceOfAction();
+    __seq->AddAction(_ActForLoadingFinish.Copy());
+    __seq->AddAction(new CClassFuncOfAction<CResourceControl, void>(this, &CResourceControl::OffWaitingAction));
+    _ActionControl.AddAction(__seq);
+}
+
 void CResourceControl::OnLoop() //run in main
 {
-
     // for mutex
     //if (_isNeedLockMutex){
     //    _mutexMainForPause.lock();
@@ -468,41 +452,44 @@ void CResourceControl::OnLoop() //run in main
     //}
 
     _ActionControl.OnLoop();
-
-    if (_isNeedCleanAction) {
-        _isNeedCleanAction = false;
-        LoadScript(_fileNameOfCurrentRunningScript);
-    }
-    
     _SoundControl.OnLoop();
 
-    if (_loadingProcessStatus == CResourceControl::STOP){
+    if (_loadingProcessStatus == CResourceControl::PLAYING){
         _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
         AutoToNextStep();
     }
 
-    if (_loadingProcessStatus != CResourceControl::STOP){
+    if (_loadingProcessStatus == CResourceControl::LOADING || 
+        _loadingProcessStatus == CResourceControl::LOADSAVEDATA ||
+        _loadingProcessStatus == CResourceControl::LOADED){
         _LoadingObjectControl.OnLoop();
 
-        if (_loadingProcessStatus == CResourceControl::FINISH && !_isWaitingForActionEnd)
-            if (_LuaControl.GetLuaThreadStatus() == LUA_OK){
-                bool __b = true;
-                _LuaControl.GetGlobal("YOYO_LUA_LOADING_THREAD_RUNNING", __b);
-
-                if (!__b){
-                    _loadingProcessStatus = CResourceControl::STOP;
-                    _LuaControl.LoadScript(_fileNameOfCurrentLuaScript);
-                }
+        if (_loadingProcessStatus == CResourceControl::LOADSAVEDATA){
+            CActionBaseClass::AllSkipOn();
+            if (GetMsgboxPauseStatus()){
+                OffMsgboxPause();
+                _LuaControl.ResumeLuaThread();
             }
 
-        return;
+            if (_playerData.get<Number>("current_message_line") <= _currentMgsLine){
+                CActionBaseClass::AllSkipOff();
+                _isLoadPlayerData = false;
+                CopyActForLoadingFinishToActionControl();
+                _loadingProcessStatus = CResourceControl::LOADED;
+            }
+        }
+
+        if (_loadingProcessStatus == CResourceControl::LOADED && !_isWaitingForActionEnd){
+            _loadingProcessStatus = CResourceControl::PLAYING;
+            _LuaControl.LoadScript(_fileNameOfLoadSavedataScriptInPlaying);
+        }
     }
 }
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_loadingProcessStatus != CResourceControl::STOP)
+    if (_loadingProcessStatus != CResourceControl::PLAYING)
         _LoadingObjectControl.OnRender(Surf_Dest);
     else
         _DrawableObjectControl.OnRender(Surf_Dest);
@@ -517,58 +504,6 @@ void CResourceControl::OnCleanup()
     _ObjectControl.OnCleanup();
     _CameraControl.OnCleanup();
     _ActionControl.OnCleanup();
-}
-
-bool CResourceControl::OnSaveData(int index) const
-{
-    cout << "CResourceControl::OnSaveData(): saving..." <<endl;
-    Object __json;
-    __json << "script" << _fileNameOfCurrentRunningScript;
-
-    {
-        char __strTime[20];
-        time_t __time = time(NULL);
-        strftime(__strTime, sizeof(__strTime),"%y-%m-%d %H:%M", localtime(&__time));
-        __json << "date_time" << __strTime;
-    }
-
-    {
-        Object __usrVar;
-        for (map<string, string>::const_iterator it=_userVariableList.begin();it!=_userVariableList.end();it++)
-            __usrVar << (*it).first << (*it).second;
-        
-        __json << "user_variable" << __usrVar;
-    }
-
-    _DrawableObjectControl.OnSaveData(__json);
-    _SoundControl.OnSaveData(__json);
-    _CameraControl.OnSaveData(__json);
-
-    char __path[260];
-    sprintf(__path, "./savedata/%d.sav", index);
-    ofstream __savefile(__path, ofstream::binary|ofstream::out);
-
-    if(!__savefile.is_open()){
-#ifdef WIN32
-        if (mkdir("./savedata") == 0){
-            __savefile.open(__path, ofstream::binary|ofstream::out);
-            if(!__savefile.is_open())
-                cout << "CResourceControl::OnSaveData(): failed to save." <<endl;
-                return false;
-        }
-        else{
-            cout << "CResourceControl::OnSaveData(): failed to create directory 'savedata'." <<endl;
-            return false;
-        }
-#else
-    
-#endif
-    }
-
-    __savefile << __json.json();
-    __savefile.close();
-    cout << "CResourceControl::OnSaveData(): saved." <<endl;
-    return true;
 }
 
 void CResourceControl::LoadPlayerDataProcess()
@@ -588,6 +523,60 @@ void CResourceControl::LoadPlayerDataProcess()
     cout << "CResourceControl::OnLoadData(): loaded." <<endl;
 }
 
+
+bool CResourceControl::OnSaveData(int index) const
+{
+    cout << "CResourceControl::OnSaveData(): saving..." << endl;
+    Object __json;
+    __json << "script" << _fileNameOfCurrentRunningScript;
+    __json << "current_message_line" << _currentMgsLine;
+
+    //{
+    //    char __strTime[20];
+    //    time_t __time = time(NULL);
+    //    strftime(__strTime, sizeof(__strTime),"%y-%m-%d %H:%M", localtime(&__time));
+    //    __json << "date_time" << __strTime;
+    //}
+
+    //{
+    //    Object __usrVar;
+    //    for (map<string, string>::const_iterator it=_userVariableList.begin();it!=_userVariableList.end();it++)
+    //        __usrVar << (*it).first << (*it).second;
+    //    
+    //    __json << "user_variable" << __usrVar;
+    //}
+
+    //_DrawableObjectControl.OnSaveData(__json);
+    //_SoundControl.OnSaveData(__json);
+    //_CameraControl.OnSaveData(__json);
+
+    char __path[260];
+    sprintf(__path, "./savedata/%d.sav", index);
+    ofstream __savefile(__path, ofstream::binary | ofstream::out);
+
+    if (!__savefile.is_open()){
+#ifdef WIN32
+        if (mkdir("./savedata") == 0){
+            __savefile.open(__path, ofstream::binary | ofstream::out);
+            if (!__savefile.is_open())
+                cout << "CResourceControl::OnSaveData(): failed to save." << endl;
+            return false;
+        }
+        else{
+            cout << "CResourceControl::OnSaveData(): failed to create directory 'savedata'." << endl;
+            return false;
+        }
+#else
+
+#endif
+    }
+
+    __savefile << __json.json();
+    __savefile.close();
+    cout << "CResourceControl::OnSaveData(): saved." << endl;
+    return true;
+}
+
 bool CResourceControl::OnLoadData(int index)
 {
     cout << "CResourceControl::OnLoadData(): loading..." <<endl;
@@ -596,12 +585,13 @@ bool CResourceControl::OnLoadData(int index)
 
     _playerData.reset();
     if (_playerData.parse(Cio::LoadTxtFile(__path))){
-        if (!_playerData.has<String>("script"))
-            return false;
-        
-        _isLoadPlayerData = true;
-        LoadScript(_playerData.get<String>("script"));
-        return true;
+        if (_playerData.has<String>("script") &&
+            _playerData.has<Number>("current_message_line")){
+            _isLoadPlayerData = true;
+            if (LoadScript(_playerData.get<String>("script"))){
+                return true;
+            }
+        }
     }
         
     cout << "CResourceControl::OnLoadData(): failed to load." <<endl;
@@ -634,7 +624,7 @@ bool CResourceControl::GetAuto() const
 
 void CResourceControl::SetAuto(bool isAuto)
 {
-    if (_loadingProcessStatus == CResourceControl::STOP)
+    if (_loadingProcessStatus == CResourceControl::PLAYING)
         _isAuto = isAuto;
 }
 
@@ -659,7 +649,7 @@ bool CResourceControl::DelVariable(string name)
 
 void CResourceControl::AutoToNextStep()
 {
-    if (_isAuto && _loadingProcessStatus == CResourceControl::STOP){
+    if (_isAuto && _loadingProcessStatus == CResourceControl::PLAYING){
         Array& __array = _gameBaiscAsset.get<Array>("messagebox");
         for (size_t i=0; i<__array.size(); i++){
             CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
@@ -688,10 +678,13 @@ void CResourceControl::AutoToNextStep()
         
 void CResourceControl::SkipOn()
 {
-    if (_loadingProcessStatus != CResourceControl::STOP)
-        return;
-
-    CActionBaseClass::AllSkipOn();
+    if (_loadingProcessStatus == CResourceControl::PLAYING){
+        CActionBaseClass::AllSkipOn();
+        if (GetMsgboxPauseStatus()){
+            OffMsgboxPause();
+            _LuaControl.ResumeLuaThread();
+        }
+    }
 }
 
 void CResourceControl::SkipOff()

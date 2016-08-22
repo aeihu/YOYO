@@ -224,8 +224,8 @@ int luaopen_yoyo(lua_State *L) {
         { "play_se", Cmd_PlaySE },
         { "stop_se", Cmd_StopSE },
 
-        { "act_play_se", Cmd_CreateActionForStopSE },
-        { "act_stop_se", Cmd_CreateActionForPlaySE },
+        { "act_play_se", Cmd_CreateActionForPlaySE },
+        { "act_stop_se", Cmd_CreateActionForStopSE },
 
         { "play_bgm", Cmd_PlayBGM },
         { "pause_bgm", Cmd_PauseBGM },
@@ -275,9 +275,6 @@ int luaopen_yoyo(lua_State *L) {
         //{ "set_var", Cmd_SetVariable },
         //{ "del_var", Cmd_DelVariable },
 
-        //{ "del_act", Cmd_DelAction },
-        //{ "skip_act", Cmd_SkipAction },
-
         { "show_curtain", Cmd_ShowCurtain },
         { "hide_curtain", Cmd_HideCurtain },
         { "color_curtain", Cmd_ColorCurtain },
@@ -294,6 +291,9 @@ int luaopen_yoyo(lua_State *L) {
 
         { "add_act", Cmd_AddAction },
         { "del_act", Cmd_DeleteOrSkipAction },
+
+        { "add_lb", Cmd_AddActionForLoadBegin },
+        { "add_lf", Cmd_AddActionForLoadFinish },
 
         //{ "show_particle", Cmd_ShowParticleSystem },
         //{ "hide_particle", Cmd_HideParticleSystem },
@@ -353,8 +353,6 @@ CLua::CLua() : _thread(&CLua::RunScript, this)
 {
     _luaThread = 
     _luaState = NULL;
-    _codeAtBeginOfScript =
-    _codeAtEndOfScript =
     _currentScriptName = "";
 }
 
@@ -382,16 +380,14 @@ bool CLua::OnInit()
         { "yoyo", luaopen_yoyo },
         { NULL, NULL }
     };
-    //3.注册Lua标准库并清空栈
+
     const luaL_Reg *lib = lualibs;
-    for (; lib->func != NULL; lib++)
-    {
+    for (; lib->func != NULL; lib++){
         luaL_requiref(_luaState, lib->name, lib->func, 1);
         lua_pop(_luaState, 1);
     }
 
-    if (LUA_OK != luaL_dostring(_luaState, "YOYO_LUA_THREAD_RUNNING = false"))
-    {
+    if (LUA_OK != luaL_dostring(_luaState, "YOYO_LUA_THREAD_RUNNING = false")){
         cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
         return false;
     }
@@ -403,33 +399,33 @@ void CLua::RunScript()
 {
     _luaThread = lua_newthread(_luaState);
     _mutex.lock();
-    string __scr = _codeAtBeginOfScript +
-        ";YOYO_LUA_THREAD_RUNNING = true;" +
+    string __scr = "YOYO_LUA_THREAD_RUNNING = true;" +
         Cio::LoadTxtFile(_currentScriptName) + 
-        "\n YOYO_LUA_THREAD_RUNNING = false\n" +
-        _codeAtEndOfScript;
+        "\n YOYO_LUA_THREAD_RUNNING = false\n";
 
-    if (LUA_OK != luaL_loadstring(_luaThread, __scr.c_str()))
-    {
+    if (LUA_OK != luaL_loadstring(_luaThread, __scr.c_str())){
         cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
+        _mutex.unlock();
+        return;
     }
+
     _mutex.unlock();
 
     if (LUA_YIELD < lua_resume(_luaThread, NULL, 0))
-    {
         cout << "[LUA]:" << lua_tostring(_luaThread, -1) << endl;
-    }
 }
 
-bool CLua::LoadScript(string filename, string codeAtB, string codeAtE)
+bool CLua::LoadScript(string filename, bool wait)
 {
-    _codeAtBeginOfScript = codeAtB;
-    _codeAtBeginOfScript = codeAtE;
     _thread.terminate();
     _mutex.lock();
     _currentScriptName = filename;
     _mutex.unlock();
     _thread.launch();
+
+    if (wait)
+        _thread.wait();
+
     return true;
 }
 
@@ -471,6 +467,22 @@ int CLua::GetLuaThreadStatus() const
         break;
     } 
 }
+
+void CLua::GetLuaThreadInfo() const
+{
+    Object __json;
+    lua_Debug __ar;
+    lua_getstack(_luaThread, 1, &__ar);
+    lua_getinfo(_luaThread, "nSltufL", &__ar);
+
+    __json << "currentline" << __ar.currentline;
+    __json << "linedefined" << __ar.linedefined;
+    __json << "lastlinedefined" << __ar.lastlinedefined;
+    __json << "what" << __ar.what;
+    if (__ar.name != NULL)
+        __json << "name" << __ar.name;
+}
+
 
 int CLua::ResumeLuaThread()
 {
