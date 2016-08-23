@@ -2353,15 +2353,13 @@ int Cmd_Message(lua_State* args)
     }
 
     string __msgBoxName;//MessageBoxName
-    if (!Common_GetValueInTable(args, "n", __msgBoxName))
-    {
+    if (!Common_GetValueInTable(args, "n", __msgBoxName)){
         cout << "Cmd_Message(): parameter \"n\" must be need." << endl;
         return 0;
     }
 
     string __msg;//message
-    if (!Common_GetValueInTable(args, "m", __msg))
-    {
+    if (!Common_GetValueInTable(args, "m", __msg)){
         cout << "Cmd_Message(): parameter \"m\" must be need." << endl;
         return 0;
     }

@@ -350,7 +350,7 @@ void CResourceControl::ThreadOfLoadAsset()
         }
 
         if (__obj.has<string>("script"))
-            _fileNameOfLoadSavedataScriptInPlaying = __obj.get<string>("script");
+            _fileNameOfLuaForRun = __obj.get<string>("script");
 
         _scriptConfig = __obj;
         _scriptConfig << "filename" << _fileNameOfCurrentRunningScript;
@@ -374,9 +374,7 @@ void CResourceControl::ThreadOfLoadAsset()
     }
 
     if (_isLoadPlayerData){
-        //_isLoadPlayerData = false;
-        //LoadPlayerDataProcess();
-        _loadingProcessStatus = CResourceControl::LOADSAVEDATA;
+        _loadingProcessStatus = CResourceControl::LOADINGSAVEDATA;
     }
     else{
         CopyActForLoadingFinishToActionControl();
@@ -391,6 +389,7 @@ bool CResourceControl::LoadScript(string filename)
         _SoundControl.StopSE();
         _SoundControl.StopVoice();
         _ActionControl.OnCleanup();
+        OffMsgboxPause();
 
         _currentMgsLine = 0;
         _fileNameOfCurrentRunningScript = filename;
@@ -461,11 +460,14 @@ void CResourceControl::OnLoop() //run in main
     }
 
     if (_loadingProcessStatus == CResourceControl::LOADING || 
-        _loadingProcessStatus == CResourceControl::LOADSAVEDATA ||
+        _loadingProcessStatus == CResourceControl::LOADINGSAVEDATA ||
+        _loadingProcessStatus == CResourceControl::LOADEDSAVEDATA ||
         _loadingProcessStatus == CResourceControl::LOADED){
         _LoadingObjectControl.OnLoop();
 
-        if (_loadingProcessStatus == CResourceControl::LOADSAVEDATA){
+        if (_loadingProcessStatus == CResourceControl::LOADEDSAVEDATA){
+            _CameraControl.OnLoop();
+            _DrawableObjectControl.OnLoop();
             CActionBaseClass::AllSkipOn();
             if (GetMsgboxPauseStatus()){
                 OffMsgboxPause();
@@ -474,7 +476,6 @@ void CResourceControl::OnLoop() //run in main
 
             if (_playerData.get<Number>("current_message_line") <= _currentMgsLine){
                 CActionBaseClass::AllSkipOff();
-                _isLoadPlayerData = false;
                 CopyActForLoadingFinishToActionControl();
                 _loadingProcessStatus = CResourceControl::LOADED;
             }
@@ -482,7 +483,15 @@ void CResourceControl::OnLoop() //run in main
 
         if (_loadingProcessStatus == CResourceControl::LOADED && !_isWaitingForActionEnd){
             _loadingProcessStatus = CResourceControl::PLAYING;
-            _LuaControl.LoadScript(_fileNameOfLoadSavedataScriptInPlaying);
+            if (_isLoadPlayerData)
+                _isLoadPlayerData = false;
+            else
+                _LuaControl.LoadScript(_fileNameOfLuaForRun);
+        }
+
+        if (_loadingProcessStatus == CResourceControl::LOADINGSAVEDATA){
+            _LuaControl.LoadScript(_fileNameOfLuaForRun);
+            _loadingProcessStatus = CResourceControl::LOADEDSAVEDATA;
         }
     }
 }

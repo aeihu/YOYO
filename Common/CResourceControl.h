@@ -34,7 +34,8 @@ class CResourceControl
         enum EProcStatus{
             INIT,
             LOADING,
-            LOADSAVEDATA,
+            LOADINGSAVEDATA,
+            LOADEDSAVEDATA,
             LOADED,
             PLAYING
         };
@@ -46,7 +47,7 @@ class CResourceControl
         //sf::Mutex                       _mutexLuaForPause;
 
         string                          _fileNameOfCurrentRunningScript;
-        string                          _fileNameOfLoadSavedataScriptInPlaying;
+        string                          _fileNameOfLuaForRun;
 
         unsigned long                   _oldTimeForAuto;
         int                             _currentMgsLine;
