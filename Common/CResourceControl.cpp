@@ -390,6 +390,8 @@ bool CResourceControl::LoadScript(string filename)
         _SoundControl.StopSE();
         _SoundControl.StopVoice();
         _ActionControl.OnCleanup();
+        _DrawableObjectControl.ClearActionList();
+        _CameraControl.ClearActionList();
         OffMsgboxPause();
         CActionBaseClass::GC();
 
@@ -517,8 +519,8 @@ void CResourceControl::OnCleanup()
     _ActionControl.OnCleanup();   
     _ActForLoadingBegin.OnCleanup();
     _ActForLoadingFinish.OnCleanup();
-    _LuaControl.OnCleanup();
     CActionBaseClass::GC();
+    _LuaControl.OnCleanup();
 }
 
 void CResourceControl::LoadPlayerDataProcess()

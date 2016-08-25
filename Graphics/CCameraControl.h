@@ -25,7 +25,8 @@ class CCameraControl
         CCamera* GetCamera(string name);
         
         bool UseCamera(string name);
-        void UseDefaultCamera();
+        void UseDefaultCamera(); 
+        void ClearActionList();
 
         bool OnInit(sf::RenderTarget* display);
         void OnLoop();

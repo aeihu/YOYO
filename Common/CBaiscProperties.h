@@ -40,6 +40,7 @@ class CBaiscProperties : public CObject
         virtual void SetScale(float x, float y);
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
+        virtual void ClearActionList();
 
         virtual CActionTo* CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore);
         virtual CActionBy* CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore);
@@ -82,7 +83,6 @@ class CBaiscProperties : public CObject
         virtual void CreateActionOfMoveYByForSelf(size_t elapsed, float y, bool restore);
 
         virtual void OnLoop();
-        virtual void OnCleanup();
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
 };

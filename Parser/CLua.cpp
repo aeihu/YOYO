@@ -437,10 +437,11 @@ bool CLua::LoadScript(string filename, bool wait)
 
 void CLua::OnCleanup()
 {
-    if (_luaState != NULL)
-        lua_close(_luaState);
-
     _thread.terminate();
+    if (_luaState != NULL){
+        lua_close(_luaState);
+        _luaState = NULL;
+    }
 }
 
 bool CLua::GetGlobal(const char* name, bool &val)

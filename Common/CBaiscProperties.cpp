@@ -229,7 +229,7 @@ void CBaiscProperties::OnLoop()
     _isActionRunning = _actionList.OnLoop();
 }
 
-void CBaiscProperties::OnCleanup()
+void CBaiscProperties::ClearActionList()
 {
     _actionList.OnCleanup();
 }

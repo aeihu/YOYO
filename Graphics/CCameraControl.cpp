@@ -54,18 +54,24 @@ CCamera* CCameraControl::GetCamera(string name)
 
 void CCameraControl::OnLoop()
 {
-    map<string, CCamera*>::iterator it;
-    for (it=_cameraList.begin(); it !=_cameraList.end(); it++ )
+    for (map<string, CCamera*>::iterator it = _cameraList.begin(); it != _cameraList.end(); it++)
         (*it).second->OnLoop();
 }
         
 void CCameraControl::OnCleanup()
 {
-    map<string, CCamera*>::iterator it;
-    for (it=_cameraList.begin(); it !=_cameraList.end(); it++ )
+    for (map<string, CCamera*>::iterator it = _cameraList.begin(); it != _cameraList.end(); it++){
+        (*it).second->ClearActionList();
         delete (*it).second;
+    }
 
     _cameraList.clear();
+}
+
+void CCameraControl::ClearActionList()
+{
+    for (map<string, CCamera*>::iterator it = _cameraList.begin(); it != _cameraList.end(); it++)
+        (*it).second->ClearActionList();
 }
 
 bool CCameraControl::UseCamera(string name)

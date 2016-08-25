@@ -217,7 +217,15 @@ bool CImgLayer::SetBaseNode(CImgLayer* baseNode)
 
     return false;
 }
-        
+
+void CImgLayer::ClearActionList()
+{
+    for (list<CImgLayer*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++){
+        (*it)->ClearActionList();
+    }
+    CBaiscProperties::ClearActionList();
+}
+
 bool CImgLayer::AddChildNode(CImgLayer* child)
 {
     if (child){

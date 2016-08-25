@@ -48,6 +48,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
 
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
+        virtual void ClearActionList();
 
         virtual bool AddChildNode(CImgLayer* child);
         const sf::Vector2f& GetGlobalPosition() const;

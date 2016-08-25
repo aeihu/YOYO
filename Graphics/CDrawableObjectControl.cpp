@@ -193,11 +193,19 @@ void CDrawableObjectControl::OnCleanup()
 {
     for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
-            delete (*it).second;
-            (*it).second = NULL;
+        (*it).second->ClearActionList();
+        delete (*it).second;
+        (*it).second = NULL;
     }
 
     _drawableObjectList.clear();
+}
+
+void CDrawableObjectControl::ClearActionList()
+{
+    for (vector<pair<string, CDrawableClass*> >::iterator it = _drawableObjectList.begin();
+        it != _drawableObjectList.end(); it++)
+        (*it).second->ClearActionList();
 }
 
 void CDrawableObjectControl::OnSaveData(Object& json) const
