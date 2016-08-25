@@ -18,9 +18,11 @@ int seq_AddAction(lua_State *L)
     CSequenceOfAction **__seq = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
     luaL_argcheck(L, __seq != NULL, 1, "invalid user data");
 
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    if (!lua_isnil(L, -1)){
+        luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
 
-    (*__seq)->AddAction((CSequenceOfAction*)lua_topointer(L, -1));
+        (*__seq)->AddAction((CSequenceOfAction*)lua_topointer(L, -1));
+    }
     return 0;
 }
 
@@ -58,9 +60,11 @@ int sim_AddAction(lua_State *L)
     CSimultaneousOfAction **__sim = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
     luaL_argcheck(L, __sim != NULL, 1, "invalid user data");
 
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    if (!lua_isnil(L, -1)){
+        luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
 
-    (*__sim)->AddAction((CSimultaneousOfAction*)lua_topointer(L, -1));
+        (*__sim)->AddAction((CSimultaneousOfAction*)lua_topointer(L, -1));
+    }
     return 0;
 }
 
@@ -98,9 +102,11 @@ int rep_AddAction(lua_State *L)
     CRepeatOfAction **__rep = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
     luaL_argcheck(L, __rep != NULL, 1, "invalid user data");
 
-    luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
+    if (!lua_isnil(L, -1)){
+        luaL_checktype(L, -1, LUA_TLIGHTUSERDATA);
 
-    (*__rep)->AddAction((CRepeatOfAction*)lua_topointer(L, -1));
+        (*__rep)->AddAction((CRepeatOfAction*)lua_topointer(L, -1));
+    }
     return 0;
 }
 
@@ -431,9 +437,10 @@ bool CLua::LoadScript(string filename, bool wait)
 
 void CLua::OnCleanup()
 {
-    _thread.terminate();
     if (_luaState != NULL)
         lua_close(_luaState);
+
+    _thread.terminate();
 }
 
 bool CLua::GetGlobal(const char* name, bool &val)

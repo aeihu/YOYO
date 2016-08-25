@@ -228,6 +228,12 @@ int Common_AddAction(lua_State* args, char flag, string funcname)
         }
     }
 
+    if (lua_isnil(args, 1)){
+        cout << funcname << "(): argument(s) is nil. " << endl;
+        lua_pushboolean(args, false);
+        return 1;
+    }
+
     CActionBaseClass* __act = (CActionBaseClass*)lua_topointer(args, 1);
 
     if (__act){
@@ -2182,15 +2188,21 @@ int Cmd_CreateActionForStopSE(lua_State* args)
 
 int Cmd_PlaySE(lua_State* args)
 {
-    if (Common_PlaySE(args) == CMD_YIELD)
-        Common_RetrunYield(args, __FUNCTION__);
+    if (CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::LOADEDSAVEDATA)
+        if (Common_PlaySE(args) == CMD_YIELD)
+            Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
 
 int Cmd_CreateActionForPlaySE(lua_State* args)
 {
-    return Common_CreateActionForXXX(Common_PlaySE, args);
+    if (CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::LOADEDSAVEDATA)
+        return Common_CreateActionForXXX(Common_PlaySE, args);
+    else{
+        lua_pushnil(args);
+        return 1;
+    }
 }
 
 int Cmd_ShowButton(lua_State* args)
@@ -2465,8 +2477,7 @@ int Cmd_CleanMessageBox(lua_State* args)
     }
 
     string __msgBoxName;//MessageBoxName
-    if (!Common_GetValueInTable(args, "n", __msgBoxName))
-    {
+    if (!Common_GetValueInTable(args, "n", __msgBoxName)){
         cout << "Cmd_CleanMessageBox(): parameter \"n\" must be need." << endl;
         return 0;
     }

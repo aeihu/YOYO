@@ -45,6 +45,7 @@ void CResourceControl::OnMsgboxPause()
 void CResourceControl::OffMsgboxPause()
 {
     _msgboxPauseRequest = false;
+    _SoundControl.StopVoice();
 }
 
 bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName)

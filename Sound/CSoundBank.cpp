@@ -380,11 +380,11 @@ char CSoundBank::IsVoiceSilence(string name)
                     return VOICE_PLAYING;
             }
             else
-                return VOICE_STOPPED;   
+                return VOICE_STOPPED;
         }
     }
 
-    return VOICE_STOPPED;   
+    return VOICE_STOPPED;
 }
 
 bool CSoundBank::GetVoiceStatus()
