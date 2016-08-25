@@ -10,7 +10,6 @@
     #define _CACTIONSET_H_
 
 #include "CActionBaseClass.h"
-#include <list>
 
 using namespace std;
 
@@ -27,13 +26,14 @@ class CActionSet : public CActionBaseClass
         bool CopyList(CActionSet* act);
         bool IsDelete() const;
         void RestoreActionList();
+        virtual void OutAllActions();
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
         bool DeleteAct(string name, bool skip);
 
         void OnCleanup();
-        virtual inline EActType GetType() { return ACTION_SET;}
+        virtual inline EActType GetType() { return ACTION_SET; }
 };
 
 #endif

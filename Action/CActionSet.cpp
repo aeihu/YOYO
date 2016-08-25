@@ -89,6 +89,20 @@ void CActionSet::SetIsDelete(CActionBaseClass* act, bool b)
     }
 }
 
+void CActionSet::OutAllActions()
+{
+    for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end(); it++){
+        (*it).first->OutAllActions();
+    }
+
+    for (list<CActionBaseClass*>::iterator it = _allActions.begin(); it != _allActions.end(); it++){
+        if ((*it) == this){
+            _allActions.erase(it);
+            return;
+        }
+    }
+}
+
 void CActionSet::OnCleanup()
 {
     if (_actionList.empty())
@@ -105,7 +119,7 @@ void CActionSet::OnCleanup()
 
 bool CActionSet::CopyList(CActionSet* act)
 {
-    if (act){
+    if (act && _actionList.size() > 0){
         for (list<pair<CActionBaseClass*, bool> >::iterator it = _actionList.begin(); it != _actionList.end(); it++)
             act->AddAction((*it).first->Copy());
 

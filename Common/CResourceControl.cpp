@@ -390,6 +390,7 @@ bool CResourceControl::LoadScript(string filename)
         _SoundControl.StopVoice();
         _ActionControl.OnCleanup();
         OffMsgboxPause();
+        CActionBaseClass::GC();
 
         _currentMgsLine = 0;
         _fileNameOfCurrentRunningScript = filename;
@@ -512,7 +513,11 @@ void CResourceControl::OnCleanup()
     _LoadingObjectControl.OnCleanup();
     _ObjectControl.OnCleanup();
     _CameraControl.OnCleanup();
-    _ActionControl.OnCleanup();
+    _ActionControl.OnCleanup();   
+    _ActForLoadingBegin.OnCleanup();
+    _ActForLoadingFinish.OnCleanup();
+    _LuaControl.OnCleanup();
+    CActionBaseClass::GC();
 }
 
 void CResourceControl::LoadPlayerDataProcess()

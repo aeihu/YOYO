@@ -237,9 +237,11 @@ int Common_AddAction(lua_State* args, char flag, string funcname)
                 break;
             case 1:
                 CResourceControl::_ResourceManager._ActForLoadingBegin.AddAction(__act);
+                CActionBaseClass::ClearListOfActions(__act);
                 break;
             case 2:
                 CResourceControl::_ResourceManager._ActForLoadingFinish.AddAction(__act);
+                CActionBaseClass::ClearListOfActions(__act);
                 break;
         }
         lua_pushboolean(args, true);

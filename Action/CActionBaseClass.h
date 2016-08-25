@@ -10,6 +10,7 @@
     #define _CACTIONBASECLASS_H_
 
 #include <string>
+#include <list>
 
 using namespace std;
 
@@ -31,22 +32,32 @@ class CActionBaseClass
             ACTION_CLASS_FUNC_ARGS,
         };
 
+        static list<CActionBaseClass*> _allActions;
         static bool _allSkip;
         bool        _skip;
         string      _name;
+
     public:
         CActionBaseClass();
         ~CActionBaseClass();
+
+        void* operator new(size_t size);
+        void operator delete(void *ptr);
         
         virtual string GetName() const;
         void SetName(string name);
         virtual bool OnLoop()=0; 
         virtual void OnCleanup(){}; 
         void SetSkip();
+        virtual void OutAllActions();
         virtual CActionBaseClass* Copy()=0;
         virtual inline EActType GetType() { return ACTION_BASE; }
+
         static void AllSkipOn();
         static void AllSkipOff();
+        static void GC();
+        static void ClearListOfAllActions();
+        static void ClearListOfActions(CActionBaseClass* act);
 };
 
 #endif

@@ -44,11 +44,11 @@ int seq_CpoyAction(lua_State *L)
 
 int seq_GC(lua_State *L)
 {
-    CSequenceOfAction **_act = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
-    if (*_act){
-        delete *_act;
-        *_act = NULL;
-    }
+    //CSequenceOfAction **_act = (CSequenceOfAction**)luaL_checkudata(L, 1, "yoyo.seq");
+    //if (*_act){
+    //    delete *_act;
+    //    *_act = NULL;
+    //}
 
     return 0;
 }
@@ -84,11 +84,11 @@ int sim_CpoyAction(lua_State *L)
 
 int sim_GC(lua_State *L)
 {
-    CSimultaneousOfAction **_act = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
-    if (*_act){
-        delete *_act;
-        *_act = NULL;
-    }
+    //CSimultaneousOfAction **_act = (CSimultaneousOfAction**)luaL_checkudata(L, 1, "yoyo.sim");
+    //if (*_act){
+    //    delete *_act;
+    //    *_act = NULL;
+    //}
 
     return 0;
 }
@@ -124,11 +124,11 @@ int rep_CpoyAction(lua_State *L)
 
 int rep_GC(lua_State *L)
 {
-    CRepeatOfAction **_act = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
-    if (*_act){
-        delete *_act;
-        *_act = NULL;
-    }
+    //CRepeatOfAction **_act = (CRepeatOfAction**)luaL_checkudata(L, 1, "yoyo.rep");
+    //if (*_act){
+    //    delete *_act;
+    //    *_act = NULL;
+    //}
 
     return 0;
 }
@@ -431,10 +431,9 @@ bool CLua::LoadScript(string filename, bool wait)
 
 void CLua::OnCleanup()
 {
+    _thread.terminate();
     if (_luaState != NULL)
         lua_close(_luaState);
-
-    _thread.terminate();
 }
 
 bool CLua::GetGlobal(const char* name, bool &val)
