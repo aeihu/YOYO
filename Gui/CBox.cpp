@@ -16,6 +16,23 @@ CBox::~CBox()
 {
 }
 
+//================================
+//property:
+//* ORDER,
+//* TILESET_PATH,
+//* TILE_ENABLE,
+//* TILE_SIZE,
+//* MAP_PATH,
+//* X,
+//* Y,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//================================
+
 bool CBox::CheckList(Object json)
 {
     bool __result = true;

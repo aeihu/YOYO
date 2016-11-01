@@ -88,6 +88,40 @@ bool CMessageBox::SetProperty(Object json, bool isLoad)
     return CBox::SetProperty(json);
 }
 
+//================================
+//property:
+//* ORDER,
+//* TILESET_PATH,
+//* TILE_ENABLE,
+//* TILE_SIZE,
+//* MAP_PATH,
+//* X,
+//* Y,
+//* MSG_OFFSET_X,
+//* MSG_OFFSET_Y,
+//* MSG_WIDTH,
+//* MSG_FONT,
+//* CURSOR_PATH,
+//* CURSOR_WIDTH,
+//* CURSOR_HEIGHT,
+//* CURSOR_FRAME_RATE,
+//* CURSOR_MAX_FRAMES,
+//* SPEAKER_OFFSET_X,
+//* SPEAKER_OFFSET_Y,
+//* CHAR_COLOR_RED,
+//* CHAR_COLOR_GREEN,
+//* CHAR_COLOR_BLUE,
+//* CHAR_SHADOW_COLOR_RED,
+//* CHAR_SHADOW_COLOR_GREEN,
+//* CHAR_SHADOW_COLOR_BLUE,
+//* CHAR_SHADOW_PERCENT,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//================================
 bool CMessageBox::CheckList(Object json)
 {
     bool result = CBox::CheckList(json);

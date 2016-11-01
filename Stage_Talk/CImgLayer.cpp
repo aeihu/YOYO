@@ -80,6 +80,20 @@ bool CImgLayer::LoadImg(const char* fileName)
     return true;
 }
 
+//================================
+//property:
+//* PATH,
+//* ORDER,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//X,
+//Y,
+//================================
+
 bool CImgLayer::CheckList(Object json)
 {
     bool __result = true;

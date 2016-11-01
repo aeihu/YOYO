@@ -16,6 +16,17 @@ CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int wi
     _rect.height = height;
 }
 
+//================================
+//property:
+//* TILESET_PATH,
+//* ORDER,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//================================
 bool CSequenceOfSprite::CheckList(Object json)
 {
     bool __result = true;

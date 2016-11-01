@@ -13,6 +13,19 @@ void CButton::Exec(void* data)
     //CParser::_Parser.InsertCmdList(_cmdList);
 }
 
+//================================
+//property:
+//* TILESET_PATH,
+//* WIDTH,
+//* HEIGHT,
+//* MAX_FRAMES,
+//* FRAME_RATE,
+//* X,
+//* Y,
+//* SCRIPT_PATH,
+//* SCRIPT_SECTION,
+//? ORDER,
+//================================
 bool CButton::CheckList(Object json)
 {
     bool result = CButtonBase::CheckList(json);

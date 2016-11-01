@@ -91,6 +91,17 @@ bool CButtonBase::OnMouseMove(int x, int y)
     return false;
 }
 
+//================================
+//property:
+//* TILESET_PATH,
+//* WIDTH,
+//* HEIGHT,
+//* MAX_FRAMES,
+//* FRAME_RATE,
+//* X,
+//* Y,
+//? ORDER,
+//================================
 bool CButtonBase::CheckList(Object json) 
 {
     bool result = true;
