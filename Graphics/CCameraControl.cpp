@@ -36,6 +36,7 @@ bool CCameraControl::ResetCamera(string name)
 bool CCameraControl::DelCamera(string name)
 {
     if(_cameraList.count(name) > 0){
+        _cameraList[name]->OnCleanup();
         delete _cameraList[name];
         _cameraList.erase(name);
         return true;

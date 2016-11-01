@@ -81,21 +81,26 @@ bool CBox::CheckList(Object json)
 bool CBox::SetProperty(Object json, bool isLoad)
 {
     if (isLoad){
-        sf::Image __tileset, __dest;
-        if (!CSurface::OnLoad(json.get<String>("TILESET_PATH").c_str(), __tileset))
-            return false;
-
         if (json.get<Boolean>("TILE_ENABLE")){
+            //need fix
+            //need fix
+            //need fix
+            sf::Image __tileset, __dest;
+            if (!CSurface::OnLoad(json.get<String>("TILESET_PATH").c_str(), __tileset))
+                return false;
+
             if (!CGuiCommon::CreateBoxBackground(
                 &__dest, &__tileset, json.get<String>("MAP_PATH").c_str(), json.get<Number>("TILE_SIZE")))
                 return false;
 
-            _texture.loadFromImage(__dest);
+            _texture->loadFromImage(__dest);
         }
-        else
-            _texture.loadFromImage(__tileset);
+        else{
+            if (!CSurface::GetTextureFromTextureList(json.get<String>("TILESET_PATH").c_str(), _texture))
+                return false;
+        }
 
-        _sprite.setTexture(_texture,true);
+        _sprite.setTexture(*_texture,true);
     }
     
     SetPosition(json.get<Number>("X"), json.get<Number>("Y"));

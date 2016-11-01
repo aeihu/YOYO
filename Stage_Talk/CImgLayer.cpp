@@ -12,9 +12,9 @@ using namespace std;
 CImgLayer::CImgLayer()
 {
     _baseNode = NULL;
+    _texture = NULL;
     _flipX =
     _flipY = false;
-    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
     _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
@@ -22,10 +22,10 @@ CImgLayer::CImgLayer()
 CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
 {
     _baseNode = NULL;
+    _texture = NULL;
     _flipX =
     _flipY = false;
     _sprite.setPosition(x,y);
-    _texture.setSmooth(true);
     _origin = _sprite.getOrigin();
     _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
 }
@@ -73,10 +73,10 @@ bool CImgLayer::LoadImg(const char* fileName)
     if (fileName == NULL)
         return false;
 
-    if (!CSurface::OnLoad(fileName, _texture))
+    if (!CSurface::GetTextureFromTextureList(fileName, _texture))
         return false;
 
-    _sprite.setTexture(_texture,true);
+    _sprite.setTexture(*_texture, true);
     return true;
 }
 
@@ -260,5 +260,14 @@ void CImgLayer::OnRender(sf::RenderTarget* Surf_Dest)
         for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
             (*it)->OnRender(Surf_Dest);
         }
+    }
+}
+
+void CImgLayer::OnCleanup()
+{
+    CBaiscProperties::OnCleanup();
+    if (_texture == NULL){
+        delete _texture;
+        _texture == NULL;
     }
 }

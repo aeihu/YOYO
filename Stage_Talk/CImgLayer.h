@@ -30,7 +30,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         bool SetBaseNode(CImgLayer* baseNode);
         void Flip();
     protected:
-        sf::Texture         _texture;
+        sf::Texture*        _texture;
         sf::Sprite          _sprite;
 
         virtual bool LoadImg(const char* filename);
@@ -57,6 +57,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
+        virtual void OnCleanup();
 };
 
 #endif

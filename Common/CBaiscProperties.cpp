@@ -234,6 +234,11 @@ void CBaiscProperties::ClearActionList()
     _actionList.OnCleanup();
 }
 
+void CBaiscProperties::OnCleanup()
+{
+    ClearActionList();
+}
+
 void CBaiscProperties::OnSaveData(Object& json) const
 {
     CObject::OnSaveData(json);

@@ -11,30 +11,32 @@
 
 #include "../Common/CZlib.h"
 #include <SFML/Graphics.hpp>
-//#include "CImage.h"
+#include <map>
+
+using namespace std;
 
 //==============================================================================
 class CSurface {
+    private:
+        static map<string, pair<sf::Texture, list<sf::Texture*> > > _textureList;
     public:
         CSurface();
 
     public:
-        static bool OnLoad(std::string File, sf::Texture &Img);
-        static bool OnLoad(std::string File, sf::Image &Img);
+        static bool GetTextureFromTextureList(string file, sf::Texture* &texture);
+        static void GCForTextureList();
+        static bool OnLoad(string file, sf::Texture &img);
+        static bool OnLoad(string file, sf::Image &img);
 
-        //static CImage* OnCreate(size_t W, size_t H);
+        static bool OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src);
 
-        //static CImage* OnCreate(size_t W, size_t H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
+        static bool OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src, int X, int Y);
 
-        static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src);
+        static bool OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H);
 
-        static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, int X, int Y);
-
-        static bool OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H);
-
-        static bool Transparent(sf::Image* Surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
+        static bool Transparent(sf::Image* surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A);
         
-        static void FreeSurface(sf::Image* Surf_Dest);
+        static void FreeSurface(sf::Image* surf_Dest);
 };
 
 //==============================================================================

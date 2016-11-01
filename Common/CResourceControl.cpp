@@ -80,6 +80,7 @@ bool CResourceControl::CheckOut(Object& json, string colName, string objTypeName
             }
         }
     }
+    CSurface::GCForTextureList();
 
     return true;
 }

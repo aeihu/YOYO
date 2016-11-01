@@ -10,13 +10,53 @@
 #include "CSurface.h"
 #include <iostream>
 
-using namespace std;
+map<string, pair<sf::Texture, list<sf::Texture*>>> CSurface::_textureList;
 
-bool CSurface::OnLoad(std::string File, sf::Image &Img)
+bool CSurface::GetTextureFromTextureList(string file, sf::Texture* &texture)
 {
-    if (File.find("*") == string::npos){
-        if (!Img.loadFromFile(File)){
-            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+    if (_textureList.count(file) > 0){
+        texture = &_textureList[file].first;
+        _textureList[file].second.push_back(texture);
+        return true;
+    }
+    else{
+        sf::Texture __texture;
+        if (OnLoad(file, __texture)){
+            __texture.setSmooth(true);
+            _textureList[file] = pair<sf::Texture, list<sf::Texture*>>(__texture, list<sf::Texture*>());
+
+            texture = &_textureList[file].first;
+            _textureList[file].second.push_back(texture);
+            return true;
+        }
+    }
+    return false;
+}
+
+void CSurface::GCForTextureList()
+{
+    for (map<string, pair<sf::Texture, list<sf::Texture*>>>::iterator it = _textureList.begin(); it != _textureList.end(); ){
+        for (list<sf::Texture*>::iterator itList = it->second.second.begin(); itList != it->second.second.end(); ){
+            if ((*itList) == NULL){
+                itList = it->second.second.erase(itList);
+            }
+            else
+                itList++;
+        }
+
+        if (it->second.second.size() < 1){
+            it = _textureList.erase(it);
+        }
+        else
+            it++;
+    }
+}
+
+bool CSurface::OnLoad(string file, sf::Image &img)
+{
+    if (file.find("*") == string::npos){
+        if (!img.loadFromFile(file)){
+            cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;
             return false;
         }
         else
@@ -25,31 +65,31 @@ bool CSurface::OnLoad(std::string File, sf::Image &Img)
     else {
         char* __image = NULL;
         unsigned long __size = 0;
-        CZlib::OpenFileInZip(File, __image, __size);
+        CZlib::OpenFileInZip(file, __image, __size);
 
         if (__image != NULL){
-            if (Img.loadFromMemory(__image, __size)){
+            if (img.loadFromMemory(__image, __size)){
                 CZlib::CloseFileInZip(__image);
                 return true;
             }
             else{
                 CZlib::CloseFileInZip(__image);
-                cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+                cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;
                 return false;
             }
         }
         else{
             CZlib::CloseFileInZip(__image);
-            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
+            cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;    
             return false;
         }
     }
 }
 
-bool CSurface::OnLoad(string File,  sf::Texture &Img) {
-    if (File.find("*") == string::npos){
-        if (!Img.loadFromFile(File)){
-            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+bool CSurface::OnLoad(string file,  sf::Texture &img) {
+    if (file.find("*") == string::npos){
+        if (!img.loadFromFile(file)){
+            cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;
             return false;
         }
         else
@@ -58,97 +98,71 @@ bool CSurface::OnLoad(string File,  sf::Texture &Img) {
     else {
         char* __image = NULL;
         unsigned long __size = 0;
-        CZlib::OpenFileInZip(File, __image, __size);
+        CZlib::OpenFileInZip(file, __image, __size);
 
         if (__image != NULL){
-            if (Img.loadFromMemory(__image, __size)){
+            if (img.loadFromMemory(__image, __size)){
                 CZlib::CloseFileInZip(__image);
                 return true;
             }
             else{
                 CZlib::CloseFileInZip(__image);
-                cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;
+                cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;
                 return false;
             }
         }
         else{
             CZlib::CloseFileInZip(__image);
-            cout << "CSurface::OnLoad(): failed to load '" << File << "'" << endl;    
+            cout << "CSurface::OnLoad(): failed to load '" << file << "'" << endl;    
             return false;
         }
     }
 }
 
-//==============================================================================
-//CImage* CSurface::OnCreate(size_t W, size_t H, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A)
-//{
-//    CImage* result = new CImage();
-//    CColor color(R,G,B,A);
-//
-////    if (
-//        result->Create(W,H);//)
-//        return result;
-//    //else{
-//    //    if (result != NULL){
-//    //        delete result;
-//    //        result = NULL;
-//    //    }
-//
-//    //    return NULL;
-//    //}
-//}
-
-//==============================================================================
-//CImage* CSurface::OnCreate(size_t W, size_t H)
-//{
-//    return CSurface::OnCreate(W, H, 0, 0, 0, 255);
-//}
-
-//==============================================================================
-bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src)
+bool CSurface::OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src)
 {
-    if(Surf_Dest == NULL || Surf_Src == NULL) {
+    if(surf_Dest == NULL || surf_Src == NULL) {
         return false;
     }
 
-    Surf_Dest->copy(*Surf_Src, 0, 0, sf::IntRect(0, 0, Surf_Src->getSize().x,  Surf_Src->getSize().y), true);
+    surf_Dest->copy(*surf_Src, 0, 0, sf::IntRect(0, 0, surf_Src->getSize().x,  surf_Src->getSize().y), true);
     return true;
 }
 
 //==============================================================================
-bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, int X, int Y)
+bool CSurface::OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src, int X, int Y)
 {
-    if(Surf_Dest == NULL || Surf_Src == NULL) {
+    if(surf_Dest == NULL || surf_Src == NULL) {
         return false;
     }
 
-    Surf_Dest->copy(*Surf_Src, X, Y, sf::IntRect(0, 0, Surf_Src->getSize().x,  Surf_Src->getSize().y), true);
+    surf_Dest->copy(*surf_Src, X, Y, sf::IntRect(0, 0, surf_Src->getSize().x,  surf_Src->getSize().y), true);
     return true;
 }
 
 //==============================================================================
-bool CSurface::OnDraw(sf::Image* Surf_Dest, sf::Image* Surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H) {
-    if(Surf_Dest == NULL || Surf_Src == NULL) {
+bool CSurface::OnDraw(sf::Image* surf_Dest, sf::Image* surf_Src, size_t X, size_t Y, int X2, int Y2, int W, int H) {
+    if(surf_Dest == NULL || surf_Src == NULL) {
         return false;
     }
 
-    Surf_Dest->copy(*Surf_Src, X, Y, sf::IntRect(X2, Y2, X2+W, Y2+H), true);
+    surf_Dest->copy(*surf_Src, X, Y, sf::IntRect(X2, Y2, X2+W, Y2+H), true);
     return true;
 }
 
 //==============================================================================
-bool CSurface::Transparent(sf::Image* Surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A) {
-    if(Surf_Dest == NULL) {
+bool CSurface::Transparent(sf::Image* surf_Dest, sf::Uint8 R, sf::Uint8 G, sf::Uint8 B, sf::Uint8 A) {
+    if(surf_Dest == NULL) {
         return false;
     }
 
     return true;
 }
 
-void CSurface::FreeSurface(sf::Image* Surf_Dest)
+void CSurface::FreeSurface(sf::Image* surf_Dest)
 {
-    if (Surf_Dest != NULL){
-        delete Surf_Dest;
-        Surf_Dest = NULL;
+    if (surf_Dest != NULL){
+        delete surf_Dest;
+        surf_Dest = NULL;
     }
 }

@@ -96,6 +96,7 @@ bool CDrawableObjectControl::DelDrawableObject(string name)
 {
     for (size_t i=0; i<_drawableObjectList.size(); i++){
         if (_drawableObjectList[i].first == name){
+            _drawableObjectList[i].second->OnCleanup();
             delete _drawableObjectList[i].second;
             _drawableObjectList.erase(_drawableObjectList.begin()+i);
             return true;
@@ -193,7 +194,7 @@ void CDrawableObjectControl::OnCleanup()
 {
     for (vector<pair<string, CDrawableClass*> >::iterator it=_drawableObjectList.begin(); 
         it!=_drawableObjectList.end(); it++){
-        (*it).second->ClearActionList();
+        (*it).second->OnCleanup();
         delete (*it).second;
         (*it).second = NULL;
     }
