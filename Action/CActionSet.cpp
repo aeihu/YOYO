@@ -60,9 +60,9 @@ void CActionSet::AddAction(CActionBaseClass* act)
         if (this->GetType() == ACTION_REP){
             SetIsDelete(act,  false);
         }
-        
+
         _actionList.push_back(pair<CActionBaseClass*, bool>(act, false));
-        if (_actionList.size() < 1);
+        if (_actionList.size() == 1)
             _iterator = _actionList.begin();
     }
 }
