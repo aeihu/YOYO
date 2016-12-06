@@ -435,6 +435,16 @@ bool CLua::LoadScript(string filename, bool wait)
     return true;
 }
 
+bool CLua::RunScript(string scr)
+{
+    if (LUA_OK != luaL_dostring(_luaState, scr.c_str())){
+        cout << "[LUA]:" << lua_tostring(_luaState, -1) << endl;
+        return false;
+    }
+
+    return true;
+}
+
 void CLua::OnCleanup()
 {
     _thread.terminate();

@@ -25,8 +25,7 @@ CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int fram
 bool CButtonBase::OnLButtonDown(int x, int y)
 {
     if (_isShowed)
-        if (_isMouseOver)
-        {
+        if (_isMouseOver){
             _isMouseDown = true;
             SetCurrentImageFrame(GetMaxFrames());
             SetCurrentFrame(GetMaxFrames()-1);

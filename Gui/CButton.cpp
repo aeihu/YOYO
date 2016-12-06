@@ -10,7 +10,7 @@
 
 void CButton::Exec(void* data)
 {
-    //CParser::_Parser.InsertCmdList(_cmdList);
+    CResourceControl::_ResourceManager._LuaControl.RunScript(_scr);
 }
 
 //================================
@@ -30,26 +30,18 @@ bool CButton::CheckList(Object json)
 {
     bool result = CButtonBase::CheckList(json);
 
-    if (!json.has<String>("SCRIPT_PATH")){
-        cout << "can't find value of SCRIPT_PATH." << endl;
+    if (!json.has<String>("SCRIPT")){
+        cout << "can't find value of SCRIPT." << endl;
         result = false;
     }
-    
-    if (!json.has<String>("SCRIPT_SECTION")){
-        cout << "can't find value of SCRIPT_SECTION." << endl;
-        result = false;
-    }
+
     return result;
 }
 
 bool CButton::SetProperty(Object json, bool isLoad)
 {
+    _scr = json.get<String>("SCRIPT");
     return CButtonBase::SetProperty(json, isLoad);
-    //return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
-    //    json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 
-    //    CButtonBase::SetProperty(json);
-
-    return true;
 }
 
 CButton* CButton::Create(const char* filename)

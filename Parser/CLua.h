@@ -33,6 +33,7 @@ class CLua
         bool OnInit();
         void OnCleanup();
         bool LoadScript(string filename, bool wait = false);
+        bool RunScript(string scr);
         bool GetGlobal(const char* name, bool &val);
         int GetLuaThreadStatus() const;
         void GetLuaThreadInfo() const;

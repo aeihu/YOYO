@@ -16,12 +16,12 @@ using namespace std;
 class CButton : public CButtonBase
 {
     private:
+        string  _scr;
+
         void Exec(void* data=NULL);
         bool CheckList(Object json);
         bool SetProperty(Object json, bool isLoad=true);
     public:
-        list<string>    _cmdList;
-        
         static CButton* Create(const char* filename);
 };
 
