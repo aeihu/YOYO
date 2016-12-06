@@ -17,8 +17,8 @@ CAnimation::CAnimation()
     _frameInc = 1;
     _frameRate = 100; //Milliseconds
     _oldTime = 0;
-    _counter = -1;
     _Type = Forward;
+    _isLoop =
     _enable = false;
 }
 
@@ -33,9 +33,6 @@ void CAnimation::OnAnimate(unsigned long time)
     switch(_Type){
         case Oscillate:
             OnOscillate();
-        break;
-        case Loop:
-            OnALoop();
         break;
         case Forward:
             OnForWard();
@@ -58,24 +55,14 @@ void CAnimation::OnOscillate()
     else{
         if(_currentFrame <= 0) {
             _frameInc = -_frameInc;
-            _currentFrame = 0;
             
-            if (_counter == 1)
+            if (!_isLoop){
+                _currentFrame = 0;
                 TurnOff();
-            
-            _counter -= 1;
+            }
+            else
+                _currentFrame = 0;
         }
-    }
-}
-
-void CAnimation::OnALoop()
-{
-    if (_frameInc<0)
-        _frameInc = -_frameInc;
-
-    _currentFrame += _frameInc;
-    if(_currentFrame >= _maxFrames) {
-        _currentFrame = 0;
     }
 }
 
@@ -86,7 +73,12 @@ void CAnimation::OnForWard()
 
     _currentFrame += _frameInc;
     if(_currentFrame >= _maxFrames) {
+        if (!_isLoop){
             _currentFrame = _maxFrames - 1;
+            TurnOff();
+        }
+        else
+            _currentFrame = 0;
     }
 }
 
@@ -97,7 +89,12 @@ void CAnimation::OnBackWard()
 
     _currentFrame += _frameInc;
     if(_currentFrame <= 0) {
-        _currentFrame = 0;
+        if (!_isLoop){
+            _currentFrame = 0;
+            TurnOff();
+        }
+        else
+            _currentFrame = _maxFrames - 1;
     }
 }
 
@@ -135,20 +132,17 @@ void CAnimation::SetFrameInc(int inc)
 
 //------------------------------------------------------------------------------
 
-void CAnimation::TurnOn(int counter)
+void CAnimation::TurnOn(bool loop)
 {
-    if (counter != 0){
-        _counter = counter;
-        _enable = true;
-    }
+    _isLoop = loop;
+    _enable = true;
 }
 
 //------------------------------------------------------------------------------
 
-void CAnimation::TurnOff(int frame)
+void CAnimation::TurnOff()
 {
     _enable = false;
-    SetCurrentFrame(frame);
 }
 
 //==============================================================================

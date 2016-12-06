@@ -124,13 +124,13 @@ void CCharacterLayer::OnLoop()
                     //_framesOfMouth.TurnOff();
                 break;
                 case CSoundBank::VOICE_PLAYING:
-                    _framesOfMouth.TurnOn(1);
+                    _framesOfMouth.TurnOn(false);
                 break;
             }
 
         if (_timer < CCommon::_Common.GetTicks()){
             if (_timer != 0)
-                _framesOfEyes.TurnOn(1);
+                _framesOfEyes.TurnOn(false);
                 
             _timer = std::rand() % 20000 + CCommon::_Common.GetTicks();
         }

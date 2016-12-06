@@ -234,7 +234,7 @@ void CMessageBox::OnLoop()
             _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f - CBox::_coordinate.x,  
                 CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
         
-            _frames.TurnOn();
+            _frames.TurnOn(true);
             _isFramesChanged = true;
         }
             
@@ -306,7 +306,7 @@ bool CMessageBox::ConfirmForText()
             return true;
         case CTextProcessing::FINISH:
             Confirm();
-            return true;
+            return false; // ***临时处理 后面需要添加事件响应的状态机
         default:
             return false;
     }

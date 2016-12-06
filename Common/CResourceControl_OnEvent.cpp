@@ -12,12 +12,13 @@
 void CResourceControl::OnLButtonDown(int mX, int mY)
 {
     if (_loadingProcessStatus == CResourceControl::PLAYING){
+        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
+            return;
+
         if (GetMsgboxPauseStatus()){
             OffMsgboxPause();
             _LuaControl.ResumeLuaThread();
         }
-        else if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
-            return;
     }
 }
 

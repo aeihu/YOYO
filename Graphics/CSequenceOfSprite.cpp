@@ -125,8 +125,8 @@ void CSequenceOfSprite::OnLoop()
     }
 }
 
-void CSequenceOfSprite::TurnOff(int frame)
+void CSequenceOfSprite::TurnOff()
 {
-    CAnimation::TurnOff(frame);
+    CAnimation::TurnOff();
     SetCurrentImageFrame(GetCurrentFrame());
 }

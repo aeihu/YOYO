@@ -31,7 +31,7 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
         sf::Vector2f GetPosition();
         int GetWidth();
         int GetHeight();
-        void TurnOff(int frame = 0);
+        void TurnOff();
 
         void OnLoop();
 };

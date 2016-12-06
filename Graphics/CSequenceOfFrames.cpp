@@ -104,9 +104,9 @@ int CSequenceOfFrames::GetHeight() const
     return _rect.height;
 }
 
-void CSequenceOfFrames::TurnOff(int frame)
+void CSequenceOfFrames::TurnOff()
 {
-    CAnimation::TurnOff(frame);
+    CAnimation::TurnOff();
     SetCurrentImageFrame(GetCurrentFrame());
 }
 

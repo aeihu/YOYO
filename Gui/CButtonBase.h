@@ -30,7 +30,7 @@ class CButtonBase : public CSequenceOfSprite
         virtual bool SetProperty(Object json, bool isLoad=true);
         virtual void Exec(void* data=NULL)=0;
     public:
-        CAnimation      _AnimationControl;
+        //CAnimation      _AnimationControl;
 
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 

@@ -35,7 +35,7 @@ class CSequenceOfFrames : public CAnimation
 
         int GetWidth() const;
         int GetHeight() const;
-        void TurnOff(int frame = 0);
+        void TurnOff();
 
         void OnLoop();
 };

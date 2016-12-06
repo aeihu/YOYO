@@ -44,6 +44,7 @@ bool CButton::CheckList(Object json)
 
 bool CButton::SetProperty(Object json, bool isLoad)
 {
+    return CButtonBase::SetProperty(json, isLoad);
     //return CParser::_Parser.LoadScript(json.get<String>("SCRIPT_PATH").c_str(), 
     //    json.get<String>("SCRIPT_SECTION").c_str(), _cmdList) && 
     //    CButtonBase::SetProperty(json);
@@ -57,7 +58,7 @@ CButton* CButton::Create(const char* filename)
     if (__btn->LoadConfigFile(filename)){
         __btn->SetClassName("Button");
         __btn->SetPath(filename);
-        __btn->SetLayerOrder(6);
+        __btn->SetLayerOrder(106);
         return __btn;
     }
     

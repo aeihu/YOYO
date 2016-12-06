@@ -13,21 +13,19 @@
 class CAnimation {
     private:
         bool                    _enable;
+        bool                    _isLoop;
         int                     _currentFrame;
         int                     _frameInc;
         int                     _frameRate; //Milliseconds
         unsigned long           _oldTime;
         int                     _maxFrames;
-        int                     _counter;
 
         void                    OnOscillate();
-        void                    OnALoop();
         void                    OnForWard();
         void                    OnBackWard();
     public:
         typedef enum{
             Oscillate,
-            Loop,
             Forward,
             Backward
         } eAnimationType;
@@ -41,8 +39,8 @@ class CAnimation {
         int GetCurrentFrame() const;
         bool GetEnable() const;
         void SetFrameInc(int inc);
-        virtual void TurnOn(int counter = -1);
-        virtual void TurnOff(int frame = 0);
+        virtual void TurnOn(bool loop);
+        virtual void TurnOff();
         void SetMaxFrames(int frame);
         int GetMaxFrames() const;
 };
