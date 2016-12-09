@@ -75,6 +75,21 @@ void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture, sf::IntRect rect)
     _image.create(rect.width, rect.height);
 }
 
+void CSequenceOfFrames::Composite(sf::Image& baseImage, sf::Image& compositeImage)
+{
+    for (int y = 0; y < _rect.height; ++y) {
+        for (int x = 0; x < _rect.width; ++x) {
+            sf::Color compositeColor = compositeImage.getPixel(x, y);
+            sf::Color baseColor = baseImage.getPixel(x, y);
+            float alpha = (float)compositeColor.a / 255.f;
+            sf::Uint8 newRed = (sf::Uint8)((1.f - alpha) * (float)baseColor.r + alpha * (float)compositeColor.r);
+            sf::Uint8 newGreen = (sf::Uint8)((1.f - alpha) * (float)baseColor.g + alpha * (float)compositeColor.g);
+            sf::Uint8 newBlue = (sf::Uint8)((1.f - alpha) * (float)baseColor.b + alpha * (float)compositeColor.b);
+            compositeImage.setPixel(x, y, sf::Color(newRed, newGreen, newBlue, 255));
+        }
+    }
+}
+
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
     if (_destTexture != NULL){
@@ -92,7 +107,7 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
             _image.copy(_tile, 0,0 ,_rect);
 
             if (_destOriImage)
-                _destTexture->update(*_destOriImage, _offset.x, _offset.y);
+                Composite(*_destOriImage, _image);
 
             _destTexture->update(_image, _offset.x, _offset.y);
         }

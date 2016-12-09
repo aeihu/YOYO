@@ -20,6 +20,8 @@ class CSequenceOfFrames : public CAnimation
         sf::Image           _tile;
         sf::Texture*        _destTexture;
         sf::Vector2i        _offset;
+
+        void Composite(sf::Image& baseImage, sf::Image& compositeImage);
     public:
         CSequenceOfFrames(int left=0, int top=0, int width=1, int height=1);
         ~CSequenceOfFrames();

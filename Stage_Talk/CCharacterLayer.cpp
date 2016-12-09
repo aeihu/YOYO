@@ -276,6 +276,9 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
         json.get<Number>("MOUTH_WIDTH"),
         json.get<Number>("MOUTH_HEIGHT"));
 
+    bool _isEyeComposite = json.has<Boolean>("EYE_COMPOSITE") ? json.get<Boolean>("EYE_COMPOSITE") : false;
+    bool _isMouthComposite = json.has<Boolean>("MOUTH_COMPOSITE") ? json.get<Boolean>("MOUTH_COMPOSITE") : false;
+
     if (isLoad){
         string __name;
     
@@ -357,10 +360,16 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
     _sprite.setTexture(_textureList[_currcentBody]._Texture, true);
 
     _framesOfMouth.SetFrameRate(json.get<Number>("MOUTH_FRAME_RATE"));
-    _framesOfMouth.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForMouth, &_textureList[_currcentBody]._ImageForMouth);
+    if (_isMouthComposite)
+        _framesOfMouth.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForMouth, &_textureList[_currcentBody]._ImageForMouth);
+    else
+        _framesOfMouth.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForMouth);
 
     _framesOfEyes.SetFrameRate(json.get<Number>("EYE_FRAME_RATE"));
-    _framesOfEyes.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForEye, &_textureList[_currcentBody]._ImageForEye);
+    if (_isEyeComposite)
+        _framesOfEyes.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForEye, &_textureList[_currcentBody]._ImageForEye);
+    else
+        _framesOfEyes.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForEye);
 
     SetLayerOrder(json.get<Number>("ORDER"));
     return true;
