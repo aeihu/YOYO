@@ -14,6 +14,7 @@ CSequenceOfFrames::CSequenceOfFrames(int left, int top, int width, int height)
     _rect.left = top;
     _rect.width = width;
     _rect.height = height;
+    _destOriImage = NULL;
     _destTexture = NULL;
 }
 
@@ -40,9 +41,38 @@ void CSequenceOfFrames::SetTexture(sf::Image& image)
     SetCurrentImageFrame(GetCurrentFrame());
 }
 
-void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture)
+void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture, sf::IntRect rect, sf::Image* pImg)
+{
+    if (pImg != NULL)
+    {
+        _offset.x = rect.left;
+        _offset.y = rect.top;
+        _destTexture = pTexture;
+        _destOriImage = pImg;
+        _rect.width = rect.width;
+        _rect.height = rect.height;
+        _image.create(rect.width, rect.height);
+    }
+}
+
+void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture, sf::Image* pImg)
+{
+    if (pImg != NULL)
+    {
+        _destTexture = pTexture;
+        _destOriImage = pImg;
+    }
+}
+
+void CSequenceOfFrames::SetDestTexture(sf::Texture* pTexture, sf::IntRect rect)
 {
     _destTexture = pTexture;
+    _destOriImage = NULL;
+    _offset.x = rect.left;
+    _offset.y = rect.top;
+    _rect.width = rect.width;
+    _rect.height = rect.height;
+    _image.create(rect.width, rect.height);
 }
 
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
@@ -59,8 +89,11 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
         if ((_tile.getSize().x >= _rect.left + _rect.width)
             &&
             (_tile.getSize().y >= _rect.top + _rect.height)){
-            
             _image.copy(_tile, 0,0 ,_rect);
+
+            if (_destOriImage)
+                _destTexture->update(*_destOriImage, _offset.x, _offset.y);
+
             _destTexture->update(_image, _offset.x, _offset.y);
         }
     }
@@ -69,29 +102,6 @@ void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 sf::Vector2i CSequenceOfFrames::GetOffset()
 {
     return _offset;
-}
-
-void CSequenceOfFrames::SetOffset(int x, int y)
-{
-    _offset.x = x;
-    _offset.y = y;
-}
-
-void CSequenceOfFrames::SetOffsetX(int x)
-{
-    _offset.x = x;
-}
-
-void CSequenceOfFrames::SetOffsetY(int y)
-{
-    _offset.y = y;
-}
-
-void CSequenceOfFrames::SetSize(int w, int h)
-{
-    _rect.width = w;
-    _rect.height = h;
-    _image.create(w,h);
 }
 
 int CSequenceOfFrames::GetWidth() const

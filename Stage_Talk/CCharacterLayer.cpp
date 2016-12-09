@@ -73,7 +73,7 @@ void CCharacterLayer::OnLoop()
     if (_isBodyChangeing){ 
         if (_simAct.OnLoop()){
             _isBodyChangeing = false;
-            _sprite.setTexture(_textureList[_currcentBody],true);
+            _sprite.setTexture(_textureList[_currcentBody]._Texture, true);
         }
         
         _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
@@ -153,6 +153,48 @@ bool CCharacterLayer::CheckList(Object json)
     if (!json.has<Number>("ORDER")){
         cout << "can't find value of ORDER." << endl;
         __result = false;
+    }            
+    
+    if (!json.has<Number>("EYE_OFFSET_X")){
+        cout << "' can't find value of EYE_OFFSET_X." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("EYE_OFFSET_Y")){
+        cout << "' can't find value of EYE_OFFSET_Y." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("EYE_WIDTH")){
+        cout << "' can't find value of EYE_WIDTH." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("EYE_HEIGHT")){
+        cout << "' can't find value of EYE_HEIGHT." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("EYE_FRAME_RATE")){
+        cout << "' can't find value of EYE_FRAME_RATE." << endl;
+        __result = false;
+    }
+
+    if (!json.has<Number>("MOUTH_OFFSET_X")){
+        cout << "' can't find value of MOUTH_OFFSET_X." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("MOUTH_OFFSET_Y")){
+        cout << "' can't find value of MOUTH_OFFSET_Y." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("MOUTH_WIDTH")){
+        cout << "' can't find value of MOUTH_WIDTH." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("MOUTH_HEIGHT")){
+        cout << "' can't find value of MOUTH_HEIGHT." << endl;
+        __result = false;
+    }
+    if (!json.has<Number>("MOUTH_FRAME_RATE")){
+        cout << "' can't find value of MOUTH_FRAME_RATE." << endl;
+        __result = false;
     }
     
     if (!json.has<Array>("BODY")){
@@ -163,58 +205,6 @@ bool CCharacterLayer::CheckList(Object json)
         if (json.get<Array>("BODY").size() < 1){
             cout << "value of BODY must be has one." << endl;
             __result = false;
-        }
-
-        Object __body;
-        for (size_t i=0; i<json.get<Array>("BODY").size(); i++){
-            __body = json.get<Array>("BODY").get<Object>(i);
-            if (!__body.has<String>("BODY_PATH")){
-                cout << "can't find value of BODY_PATH." << endl;
-                __result = false;
-            }
-
-            __name = CTextFunction::GetNameInFilename(__body.get<String>("BODY_PATH"));
-            if (!__body.has<Number>("EYE_OFFSET_X")){
-                cout << "BODY '" << __name << "' can't find value of EYE_OFFSET_X." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("EYE_OFFSET_Y")){
-                cout << "BODY '" << __name << "' can't find value of EYE_OFFSET_Y." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("EYE_WIDTH")){
-                cout << "BODY '" << __name << "' can't find value of EYE_WIDTH." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("EYE_HEIGHT")){
-                cout << "BODY '" << __name << "' can't find value of EYE_HEIGHT." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("EYE_FRAME_RATE")){
-                cout << "BODY '" << __name << "' can't find value of EYE_FRAME_RATE." << endl;
-                __result = false;
-            }
-
-            if (!__body.has<Number>("MOUTH_OFFSET_X")){
-                cout << "BODY '" << __name << "' can't find value of MOUTH_OFFSET_X." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("MOUTH_OFFSET_Y")){
-                cout << "BODY '" << __name << "' can't find value of MOUTH_OFFSET_Y." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("MOUTH_WIDTH")){
-                cout << "BODY '" << __name << "' can't find value of MOUTH_WIDTH." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("MOUTH_HEIGHT")){
-                cout << "BODY '" << __name << "' can't find value of MOUTH_HEIGHT." << endl;
-                __result = false;
-            }
-            if (!__body.has<Number>("MOUTH_FRAME_RATE")){
-                cout << "BODY '" << __name << "' can't find value of MOUTH_FRAME_RATE." << endl;
-                __result = false;
-            }    
         }
     }
 
@@ -273,18 +263,27 @@ bool CCharacterLayer::CheckList(Object json)
 
 bool CCharacterLayer::SetProperty(Object json, bool isLoad)
 {
-    Array __bodyList = json.get<Array>("BODY");
+    Array __bodies = json.get<Array>("BODY");
+    sf::IntRect _rectForEye(
+        json.get<Number>("EYE_OFFSET_X"),
+        json.get<Number>("EYE_OFFSET_Y"),
+        json.get<Number>("EYE_WIDTH"),
+        json.get<Number>("EYE_HEIGHT"));
+
+    sf::IntRect _rectForMouth(
+        json.get<Number>("MOUTH_OFFSET_X"),
+        json.get<Number>("MOUTH_OFFSET_Y"),
+        json.get<Number>("MOUTH_WIDTH"),
+        json.get<Number>("MOUTH_HEIGHT"));
 
     if (isLoad){
-        Object __body;
         string __name;
     
-        for (size_t i=0; i<__bodyList.size(); i++){
-            if (!__bodyList.has<Object>(i))
+        for (size_t i = 0; i<__bodies.size(); i++){
+            if (!__bodies.has<String>(i))
                 return false;
 
-            __body = __bodyList.get<Object>(i);
-            __name = CTextFunction::GetNameInFilename(__body.get<String>("BODY_PATH"));
+            __name = CTextFunction::GetNameInFilename(__bodies.get<String>(i));
 
             if (_textureList.count(__name) > 0){
                 cout << "CCharacterLayer::SetProperty(): body texture " 
@@ -293,33 +292,28 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
                 return false;
             }
             else{
-                _textureList[__name] = sf::Texture();
+                _textureList[__name] = SDataAboutTexture();
+                sf::Image __image;
 
-                if (!CSurface::OnLoad(__body.get<String>("BODY_PATH").c_str(), _textureList[__name]))
+                _textureList[__name]._ImageForEye.create(_rectForEye.width, _rectForEye.height);
+                _textureList[__name]._ImageForMouth.create(_rectForMouth.width, _rectForMouth.height);
+
+                if (!CSurface::OnLoad(__bodies.get<String>(i).c_str(), __image))
                     return false;
-            
-                _textureList[__name].setSmooth(true);
 
-                if (i == 0){
+                _textureList[__name]._ImageForEye.copy(__image, 0, 0, _rectForEye, true);
+                _textureList[__name]._ImageForMouth.copy(__image, 0, 0, _rectForMouth, true);
+                _textureList[__name]._Texture.loadFromImage(__image);
+                _textureList[__name]._Texture.setSmooth(true);
+
+                if (i == 0)
                     _currcentBody = __name;
-                    _sprite.setTexture(_textureList[__name],true);
-                
-                    _framesOfMouth.SetOffset(__body.get<Number>("MOUTH_OFFSET_X"), __body.get<Number>("MOUTH_OFFSET_Y"));
-                    _framesOfMouth.SetSize(__body.get<Number>("MOUTH_WIDTH"), __body.get<Number>("MOUTH_HEIGHT"));
-                    _framesOfMouth.SetFrameRate(__body.get<Number>("MOUTH_FRAME_RATE"));
-                    _framesOfMouth.SetDestTexture(&_textureList[__name]);
-
-                    _framesOfEyes.SetOffset(__body.get<Number>("EYE_OFFSET_X"), __body.get<Number>("EYE_OFFSET_Y"));
-                    _framesOfEyes.SetSize(__body.get<Number>("EYE_WIDTH"), __body.get<Number>("EYE_HEIGHT"));
-                    _framesOfEyes.SetFrameRate(__body.get<Number>("EYE_FRAME_RATE"));
-                    _framesOfEyes.SetDestTexture(&_textureList[__name]);
-                }
             }
         }
     
-        Array __eye = json.get<Array>("EYE");
-        for (size_t i=0; i<__eye.size(); i++){
-            __name = CTextFunction::GetNameInFilename(__eye.get<Object>(i).get<String>("PATH"));
+        Array __eyes = json.get<Array>("EYE");
+        for (size_t i = 0; i<__eyes.size(); i++){
+            __name = CTextFunction::GetNameInFilename(__eyes.get<Object>(i).get<String>("PATH"));
 
             if (_eyeList.count(__name) > 0){
                 cout << "CCharacterLayer::SetProperty(): eye texture " 
@@ -328,17 +322,17 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
                 return false;
             }
             else{
-                _eyeList[__name] = make_pair(sf::Image(), __eye.get<Object>(i).get<Number>("MAX_FRAMES"));
+                _eyeList[__name] = make_pair(sf::Image(), __eyes.get<Object>(i).get<Number>("MAX_FRAMES"));
             
                 if (isLoad)
-                    if (!CSurface::OnLoad(__eye.get<Object>(i).get<String>("PATH").c_str(), _eyeList[__name].first))
+                    if (!CSurface::OnLoad(__eyes.get<Object>(i).get<String>("PATH").c_str(), _eyeList[__name].first))
                         return false;
             }
         }
 
-        Array __mouth = json.get<Array>("MOUTH");
-        for (size_t i=0; i<__mouth.size(); i++){
-            __name = CTextFunction::GetNameInFilename(__mouth.get<Object>(i).get<String>("PATH"));
+        Array __mouths = json.get<Array>("MOUTH");
+        for (size_t i = 0; i<__mouths.size(); i++){
+            __name = CTextFunction::GetNameInFilename(__mouths.get<Object>(i).get<String>("PATH"));
 
             if (_mouthList.count(__name) > 0){
                 cout << "CCharacterLayer::SetProperty(): mouth texture " 
@@ -347,8 +341,8 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
                 return false;
             }
             else{
-                _mouthList[__name] = make_pair(sf::Image(), __mouth.get<Object>(i).get<Number>("MAX_FRAMES"));
-                if (!CSurface::OnLoad(__mouth.get<Object>(i).get<String>("PATH").c_str(), _mouthList[__name].first))
+                _mouthList[__name] = make_pair(sf::Image(), __mouths.get<Object>(i).get<Number>("MAX_FRAMES"));
+                if (!CSurface::OnLoad(__mouths.get<Object>(i).get<String>("PATH").c_str(), _mouthList[__name].first))
                     return false;
             }
         }
@@ -359,6 +353,14 @@ bool CCharacterLayer::SetProperty(Object json, bool isLoad)
 
     if (_flipY)
         FlipY();
+
+    _sprite.setTexture(_textureList[_currcentBody]._Texture, true);
+
+    _framesOfMouth.SetFrameRate(json.get<Number>("MOUTH_FRAME_RATE"));
+    _framesOfMouth.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForMouth, &_textureList[_currcentBody]._ImageForMouth);
+
+    _framesOfEyes.SetFrameRate(json.get<Number>("EYE_FRAME_RATE"));
+    _framesOfEyes.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForEye, &_textureList[_currcentBody]._ImageForEye);
 
     SetLayerOrder(json.get<Number>("ORDER"));
     return true;
@@ -377,7 +379,7 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
         _currcentBody = body;
         
         if (_isShowed && isEffect){
-            _swapSprite.setTexture(_textureList[body],true);
+            _swapSprite.setTexture(_textureList[body]._Texture, true);
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
             _simAct.AddAction(new CActionTo(&_alphaOfSwap, 400, 0, true));
@@ -387,11 +389,11 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
         else{
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
-            _sprite.setTexture(_textureList[body],true);
+            _sprite.setTexture(_textureList[body]._Texture, true);
         }
 
-        _framesOfEyes.SetDestTexture(&_textureList[body]);
-        _framesOfMouth.SetDestTexture(&_textureList[body]);
+        _framesOfEyes.SetDestTexture(&_textureList[body]._Texture, &_textureList[body]._ImageForEye);
+        _framesOfMouth.SetDestTexture(&_textureList[body]._Texture, &_textureList[body]._ImageForMouth);
     }
     else if(_textureList.count(body) < 1 && !body.empty()){
         cout << "CCharacterLayer::SetPose(): can't find BODY \"" << body << "\"." << endl;

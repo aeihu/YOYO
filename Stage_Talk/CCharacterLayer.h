@@ -21,7 +21,14 @@ using namespace std;
 
 class CCharacterLayer : public CImageBaseClass, public CConfigFile
 {
-  private:
+    private:
+        struct SDataAboutTexture
+        {
+            sf::Texture _Texture;
+            sf::Image _ImageForEye;
+            sf::Image _ImageForMouth;
+        };
+
         CSequenceOfFrames                       _framesOfEyes;
         CSequenceOfFrames                       _framesOfMouth;
         string                                  _currcentBody;
@@ -31,7 +38,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         unsigned long                           _timer;
         map<string, pair<sf::Image, int> >      _mouthList;
         map<string, pair<sf::Image, int> >      _eyeList;
-        map<string, sf::Texture>                _textureList;
+        map<string, SDataAboutTexture>          _textureList;
 
         float                                   _alphaOfSwap;
         sf::Sprite                              _swapSprite;
@@ -42,7 +49,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         bool CheckList(Object json);
         bool SetProperty(Object json, bool isLoad=true);
         void Flip();
-  public:
+    public:
         CCharacterLayer(float x=0.0f, float y=0.0f);
 
         virtual void FlipX();

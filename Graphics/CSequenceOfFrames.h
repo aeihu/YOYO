@@ -15,6 +15,7 @@ class CSequenceOfFrames : public CAnimation
 {
     private:
         sf::IntRect         _rect;
+        sf::Image*          _destOriImage;
         sf::Image           _image;
         sf::Image           _tile;
         sf::Texture*        _destTexture;
@@ -25,11 +26,9 @@ class CSequenceOfFrames : public CAnimation
         
         void SetCurrentImageFrame(int frame);
         sf::Vector2i GetOffset();
-        void SetOffset(int x, int y);
-        void SetOffsetX(int x);
-        void SetOffsetY(int y);
-        void SetSize(int w, int h);
-        void SetDestTexture(sf::Texture* pTexture);
+        void SetDestTexture(sf::Texture* pTexture, sf::IntRect rect, sf::Image* pImg);
+        void SetDestTexture(sf::Texture* pTexture, sf::Image* pImg);
+        void SetDestTexture(sf::Texture* pTexture, sf::IntRect rect);
         void SetTexture(sf::Image& image);
         bool LoadImg(const char* filename);
 
