@@ -11,23 +11,10 @@ using namespace std;
 
 CImgLayer::CImgLayer()
 {
-    _baseNode = NULL;
     _texture = NULL;
     _flipX =
     _flipY = false;
-    _origin = _sprite.getOrigin();
-    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
-}
-
-CImgLayer::CImgLayer(float x, float y):CImageBaseClass(x,y)
-{
-    _baseNode = NULL;
-    _texture = NULL;
-    _flipX =
-    _flipY = false;
-    _sprite.setPosition(x,y);
-    _origin = _sprite.getOrigin();
-    _flag = FLAG_ALPHA | FLAG_SCALE | FLAG_ROTATION;
+    SetOrigin(_sprite.getOrigin().x, _sprite.getOrigin().y);
 }
 
 void CImgLayer::Flip()
@@ -53,19 +40,12 @@ void CImgLayer::FlipY()
     Flip();
 }
 
-void CImgLayer::SetFlag(char flag)
+sf::Transform CImgLayer::GetTransform()
 {
-    _flag = flag;
-}
+    if (_baseNode)
+        return _sprite.getTransform() * _baseNode->GetTransform();
 
-char CImgLayer::GetFlag() const
-{
-    return _flag;
-}
-
-const sf::Vector2f& CImgLayer::GetGlobalPosition() const
-{
-    return _sprite.getPosition();
+    return _sprite.getTransform();
 }
 
 bool CImgLayer::LoadImg(const char* fileName)
@@ -92,6 +72,10 @@ bool CImgLayer::LoadImg(const char* fileName)
 //ORIGIN_Y,
 //X,
 //Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
 //================================
 
 bool CImgLayer::CheckList(Object json)
@@ -120,24 +104,33 @@ bool CImgLayer::SetProperty(Object json, bool isLoad)
     SetLayerOrder(json.get<Number>("ORDER"));
 
     if (json.has<Number>("SCALE")){
-        _scale.y = _scale.x = json.get<Number>("SCALE");
+        SetScale(json.get<Number>("SCALE"), json.get<Number>("SCALE"));
     }
     else{
-        _scale.x = json.has<Number>("SCALE_X") ? json.get<Number>("SCALE_X") : 1.0f;
-        _scale.y = json.has<Number>("SCALE_Y") ? json.get<Number>("SCALE_Y") : 1.0f;
+        SetScale(
+            json.has<Number>("SCALE_X") ? json.get<Number>("SCALE_X") : 1.0f,
+            json.has<Number>("SCALE_Y") ? json.get<Number>("SCALE_Y") : 1.0f);
     }
 
-    _rotation = json.has<Number>("ROTATION") ? json.get<Number>("ROTATION") : 0.0f;
-    _origin.x = json.has<Number>("ORIGIN_X") ? json.get<Number>("ORIGIN_X") : 0.0f;
-    _origin.y = json.has<Number>("ORIGIN_Y") ? json.get<Number>("ORIGIN_Y") : 0.0f;
-    _coordinate.x = json.has<Number>("X") ? json.get<Number>("X") : 0.0f;
-    _coordinate.y = json.has<Number>("Y") ? json.get<Number>("Y") : 0.0f;
+    SetRotation(json.has<Number>("ROTATION") ? json.get<Number>("ROTATION") : 0.0f);
+    SetOrigin(
+        json.has<Number>("ORIGIN_X") ? json.get<Number>("ORIGIN_X") : 0.0f,
+        json.has<Number>("ORIGIN_Y") ? json.get<Number>("ORIGIN_Y") : 0.0f);
+
+    SetPosition(
+        json.has<Number>("X") ? json.get<Number>("X") : 0.0f,
+        json.has<Number>("Y") ? json.get<Number>("Y") : 0.0f);
 
     if (_flipX)
         FlipX();
 
     if (_flipY)
         FlipY();
+
+    SetRed(json.has<Number>("RED") ? json.get<Number>("RED") : 255);
+    SetGreen(json.has<Number>("GREEN") ? json.get<Number>("GREEN") : 255);
+    SetBlue(json.has<Number>("BLUE") ? json.get<Number>("BLUE") : 255);
+    SetAlpha(json.has<Number>("ALPHA") ? json.get<Number>("ALPHA") : 255);
 
     return true;
 }
@@ -159,55 +152,19 @@ CImgLayer* CImgLayer::Create(const char* filename)
 void CImgLayer::OnLoop()
 {
     CBaiscProperties::OnLoop();
-    _isShowed = _alpha > 0 ? true : false;
     
-    if (_sprite.getColor().a != _alpha ||
-        _sprite.getColor().r != _red ||
-        _sprite.getColor().g != _green ||
-        _sprite.getColor().b != _blue)
-        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha));
+    if (_sprite.getColor().a != (sf::Uint8)GetAlpha() ||
+        _sprite.getColor().r != (sf::Uint8)GetRed() ||
+        _sprite.getColor().g != (sf::Uint8)GetGreen() ||
+        _sprite.getColor().b != (sf::Uint8)GetBlue())
+        _sprite.setColor(
+            sf::Color(
+                (sf::Uint8)GetRed(), 
+                (sf::Uint8)GetGreen(), 
+                (sf::Uint8)GetBlue(), 
+                (sf::Uint8)GetAlpha()));
 
-    if (_isShowed){
-        if (_coordinate != 
-            (_baseNode == NULL ? 
-                _sprite.getPosition() : GetGlobalPosition() - _baseNode->GetPosition())){
-
-            if (_baseNode){
-                _sprite.setPosition(_baseNode->GetGlobalPosition() + _coordinate);
-            }
-            else
-                _sprite.setPosition(_coordinate);
-        }
-        
-        if ((_origin.x * _sprite.getLocalBounds().width != _sprite.getOrigin().x) ||
-            (_origin.y * _sprite.getLocalBounds().height != _sprite.getOrigin().y)){
-            _sprite.setOrigin(_origin.x * _sprite.getLocalBounds().width,
-                _origin.y * _sprite.getLocalBounds().height);
-        }
-        
-        if (_scale != _sprite.getScale()){
-            _sprite.setScale(_scale);
-        }
-
-        if (_rotation != _sprite.getRotation())
-            _sprite.setRotation(_rotation);
-        
-        if (_childrenList.size() > 0){
-            list<CImgLayer*>::iterator it;
-            for (it = _childrenList.begin(); it != _childrenList.end(); it++){
-                if ((*it)->GetFlag() & FLAG_ALPHA)
-                    (*it)->SetAlpha(_alpha);
-
-                if ((*it)->GetFlag() & FLAG_SCALE)
-                    (*it)->SetScale(_scale.x, _scale.y);
-
-                if ((*it)->GetFlag() & FLAG_ROTATION)
-                    (*it)->SetRotation(_rotation);
-
-                (*it)->OnLoop();
-            }
-        }
-    }
+    Loop(&_sprite);
 }
 
 void CImgLayer::OnSaveData(Object& json) const
@@ -222,44 +179,17 @@ void CImgLayer::OnLoadData(Object json)
     _flag = json.get<Number>("flag");
 }
 
-bool CImgLayer::SetBaseNode(CImgLayer* baseNode)
-{
-    if (baseNode){
-        _baseNode = baseNode;
-        return true;
-    }
-
-    return false;
-}
-
-void CImgLayer::ClearActionList()
-{
-    for (list<CImgLayer*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++){
-        (*it)->ClearActionList();
-    }
-    CBaiscProperties::ClearActionList();
-}
-
-bool CImgLayer::AddChildNode(CImgLayer* child)
-{
-    if (child){
-        child->SetBaseNode(this);
-        _childrenList.push_back(child);
-        return true;
-    }
-
-    return false;
-}
-
 void CImgLayer::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_isShowed){
-        Surf_Dest->draw(_sprite);
+    if (IsShowed()){
+        if (_baseNode)
+            Surf_Dest->draw(_sprite, _baseNode->GetTransform());
+        else
+            Surf_Dest->draw(_sprite);
 
-        list<CImgLayer*>::iterator it;
-        for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ ){
+        list<CImageBaseClass*>::iterator it;
+        for ( it=_childrenList.begin(); it !=_childrenList.end(); it++ )
             (*it)->OnRender(Surf_Dest);
-        }
     }
 }
 

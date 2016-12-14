@@ -13,8 +13,79 @@ CDrawableClass::CDrawableClass()
 {
     _layerOrder = 0;
     _alpha = 0.0f;
-    _isShowed = false;
     _red = _green = _blue = 255.0f;
+}
+
+bool CDrawableClass::IsShowed() const
+{
+    return _alpha > 0;
+}
+
+float CDrawableClass::GetAlpha() const
+{
+    return _alpha;
+}
+
+float CDrawableClass::GetRed() const
+{
+    return _red;
+}
+
+float CDrawableClass::GetGreen() const
+{
+    return _green;
+}
+
+float CDrawableClass::GetBlue() const
+{
+    return _blue;
+}
+
+void CDrawableClass::SetRed(int r)
+{
+    if (r < 0.0f)
+        _red = 0.0f;
+    else if (r > 255.f)
+        _red = 255.0f;
+    else
+        _red = r;
+}
+
+void CDrawableClass::SetGreen(int g)
+{
+    if (g < 0.0f)
+        _green = 0.0f;
+    else if (g > 255.f)
+        _green = 255.0f;
+    else
+        _green = g;
+}
+
+void CDrawableClass::SetBlue(int b)
+{
+    if (b < 0.0f)
+        _blue = 0.0f;
+    else if (b > 255.f)
+        _blue = 255.0f;
+    else
+        _blue = b;
+}
+
+void CDrawableClass::SetColor(int r, int g, int b)
+{
+    SetRed(r);
+    SetGreen(g);
+    SetBlue(b);
+}
+
+void CDrawableClass::SetAlpha(int alpha)
+{
+    if (alpha > 255)
+        _alpha = 255;
+    else if (_alpha < 0)
+        _alpha = 0;
+    else
+        _alpha = alpha;
 }
 
 unsigned char CDrawableClass::GetLayerOrder() const

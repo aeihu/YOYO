@@ -24,6 +24,7 @@ class CCamera : public CBaiscProperties, public CConfigFile
 
         bool CheckList(Object json);
         bool SetProperty(Object json, bool isLoad=true);
+        using CBaiscProperties::SetPosition;
     protected:
     public:
         CCamera();
@@ -34,7 +35,6 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void SetCenter(float x, float y);
         //void SetSize(float w, float h);
         void SetZoom(float zoom);
-        void SetRotation(float angle);
         void Bind(sf::RenderTarget* window);
         void UnBind();
         void OnLoop();

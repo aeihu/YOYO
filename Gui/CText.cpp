@@ -7,14 +7,15 @@
 */
 
 #include "CText.h"
+#include "../Common/CResourceControl.h"
 
 CText::CText()
 {
     _currcentFont = "";
-    _textColor.r = 255;
-    _textColor.g = 255;
-    _textColor.b = 255;
-    _textColor.a = 255;
+    SetRed(255);
+    SetGreen(255);
+    SetBlue(255);
+    SetAlpha(255);
     
     _shadowColor.r = 10;
     _shadowColor.g = 10;
@@ -24,31 +25,17 @@ CText::CText()
     _shadowEnable = true;
     _shadowPercent = 1.0f;
 }
-        
-sf::Color CText::GetColor() const
+
+void CText::SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
 {
-    return _textColor;
-}
-        
-const sf::Vector2f& CText::GetGlobalPosition() const
-{
-    return _sfText.getPosition();
+    _shadowColor.r = r;
+    _shadowColor.g = g;
+    _shadowColor.b = b;
 }
 
-void CText::SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
+const sf::Color& CText::GetShadowColor() const
 {
-    _textColor.r = r;
-    _textColor.g = g;
-    _textColor.b = b;
-
-    _sfText.setColor(_textColor);
-}
-        
-void CText::SetColor(vector<unsigned char> args)
-{
-    if (args.size() > 0){
-        SetColor(args[0], args[1], args[2]);
-    }
+    return _shadowColor;
 }
 
 void CText::SetString(string str)
@@ -60,7 +47,12 @@ void CText::SetCharacterSize(size_t size)
 {
     _sfText.setCharacterSize(size);
 }
-        
+
+float CText::GetShadowPercent() const
+{
+    return _shadowPercent;
+}
+
 void CText::SetShadowPercent(float percent)
 {
     if (percent < 0.0f){
@@ -131,57 +123,56 @@ void CText::SetStyle(vector<string> args)
 
 void CText::OnLoop()
 {
-    CBaiscProperties::_actionList.OnLoop();
-    _isShowed = _alpha > 0 ? true : false;
+    CBaiscProperties::OnLoop();
 
-    if (_sfText.getColor().a != _alpha){
-        _textColor.a = _alpha;
-        _shadowColor.a = _alpha * _shadowPercent;
-    }
-    
-    if (_sfText.getColor().r != _red ||
-        _sfText.getColor().g != _green ||
-        _sfText.getColor().b != _blue){
-        _textColor.r = _red; 
-        _textColor.g = _green;
-        _textColor.b = _blue;
+    if (_sfText.getColor().r != GetRed() ||
+        _sfText.getColor().g != GetGreen() ||
+        _sfText.getColor().b != GetBlue() ||
+        _sfText.getColor().a != GetAlpha()){
+        _sfText.setColor(sf::Color(GetRed(), GetGreen(), GetBlue(), GetAlpha()));
+        _shadowColor.a = GetAlpha() * _shadowPercent;
     }
 
-    if (_isShowed){
-        if (_coordinate != _sfText.getPosition())
-            _sfText.setPosition(_coordinate);
-        
-        if ((_origin.x * _sfText.getLocalBounds().width != _sfText.getOrigin().x) ||
-            (_origin.y * _sfText.getLocalBounds().height != _sfText.getOrigin().y)){
-            _sfText.setOrigin(_origin.x * _sfText.getLocalBounds().width,
-                _origin.y * _sfText.getLocalBounds().height);
-        }
-        
-        if (_scale != _sfText.getScale())
-            _sfText.setScale(_scale);
-
-        if (_rotation != _sfText.getRotation())
-            _sfText.setRotation(_rotation);
-    }
+    Loop(&_sfText);
 }
 
 void CText::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_isShowed){
+    if (IsShowed()){
         if (_shadowEnable){
+            sf::Color __color(_sfText.getColor());
             sf::Vector2f __tmp = _sfText.getOrigin();
+
             _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
             _sfText.setColor(_shadowColor);
-            Surf_Dest->draw(_sfText);
+
+            if (_baseNode)
+                Surf_Dest->draw(_sfText, _baseNode->GetTransform());
+            else
+                Surf_Dest->draw(_sfText);
 
             _sfText.setOrigin(__tmp);
+            _sfText.setColor(__color);
         }
+        
+        if (_baseNode)
+            Surf_Dest->draw(_sfText, _baseNode->GetTransform());
+        else
+            Surf_Dest->draw(_sfText);
 
-        _sfText.setColor(_textColor);
-        Surf_Dest->draw(_sfText);
+        list<CImageBaseClass*>::iterator it;
+        for (it = _childrenList.begin(); it != _childrenList.end(); it++)
+            (*it)->OnRender(Surf_Dest);
     }
 }
 
+sf::Transform CText::GetTransform()
+{
+    if (_baseNode)
+        return _sfText.getTransform() * _baseNode->GetTransform();
+
+    return _sfText.getTransform();
+}
 //void CText::FlipX()
 //{
 //

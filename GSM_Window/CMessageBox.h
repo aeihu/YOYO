@@ -18,12 +18,13 @@
 #include "../Graphics/CSequenceOfSprite.h"
 #include "../Common/CResourceControl.h"
 
-class CMessageBox : public CBox , public CTextProcessing
+class CMessageBox : public CBox
 {        
     private:
         sf::Vector2f        _speakerNameOffset;
         sf::Vector2f        _msgOffset;
-        sf::Text            _speakerName;
+        CText               _speakerName;
+        CTextProcessing     _textProcessor;
         CSequenceOfSprite   _frames;
         bool                _isFramesChanged;
         bool                _isUserWantToHideMsg;
@@ -33,7 +34,6 @@ class CMessageBox : public CBox , public CTextProcessing
         bool ConfirmForText();
         void SwitchForShowAndHide();
     protected:
-        using CBox::_isShowed;
     public:
         CMessageBox();
         
@@ -44,12 +44,12 @@ class CMessageBox : public CBox , public CTextProcessing
         void SetText(vector<string> args);
         void SetText(string msg);
 
-        void SetFont(sf::Font& font);
+        void SetFont(string font);
 
         void SetSpeakerName(vector<string> args);
         void SetSpeakerName(string name);
 
-        //bool OnMouseMove(int x, int y);
+        CTextProcessing::EStatus GetStatus() const;
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         bool OnRButtonDown(int x, int y);

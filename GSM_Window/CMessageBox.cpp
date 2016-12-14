@@ -18,15 +18,17 @@ CMessageBox::CMessageBox()
     _frames.SetCurrentFrame(0);
     _frames._Type = CAnimation::Oscillate;
     AddChildNode(&_frames);
-    _frames.SetFlag(FLAG_SCALE);
+    AddChildNode(&_textProcessor);
+    AddChildNode(&_speakerName);
+    _frames.SetFlag(FLAG_NONE);
     _isFramesChanged =
     _isUserWantToHideMsg = false;
 }
 
 void CMessageBox::ClearText()
 {
-    _speakerName.setString("");
-    CTextProcessing::Clear();
+    _speakerName.SetString("");
+    _textProcessor.Clear();
 }
 
 CMessageBox* CMessageBox::Create(const char* filename)
@@ -42,15 +44,15 @@ CMessageBox* CMessageBox::Create(const char* filename)
     return NULL;
 }
 
-void CMessageBox::SetFont(sf::Font& font)
+void CMessageBox::SetFont(string font)
 {
-    CTextProcessing::SetFont(font);
-    _speakerName.setFont(font);
+    _textProcessor.SetFont(font);
+    _speakerName.SetFont(font);
 }
 
 bool CMessageBox::SetProperty(Object json, bool isLoad)
 {
-    CTextProcessing::SetRowWidth(json.get<Number>("MSG_WIDTH"));
+    _textProcessor.SetRowWidth(json.get<Number>("MSG_WIDTH"));
 
 //=================Init cursor==================================
     if (isLoad){
@@ -68,33 +70,20 @@ bool CMessageBox::SetProperty(Object json, bool isLoad)
     _msgOffset.x = json.get<Number>("MSG_OFFSET_X");
     _msgOffset.y = json.get<Number>("MSG_OFFSET_Y");
 
-    CFont* __fnt = NULL;
-    CObject* __obj = 
-        CResourceControl::_ResourceManager._ObjectControl.GetObject(
-        "Font:"+json.get<String>("MSG_FONT"));
-   
-    if (__obj != NULL){
-        __fnt = static_cast<CFont*>(__obj);
-        SetFont(__fnt->GetFont());
-    }
-    else
-        return false;
+    SetFont(json.get<String>("MSG_FONT"));
     
-    SetTextColor(json.get<Number>("CHAR_COLOR_RED"), json.get<Number>("CHAR_COLOR_GREEN"), json.get<Number>("CHAR_COLOR_BLUE"));
-    SetShadowColor(json.get<Number>("CHAR_SHADOW_COLOR_RED"), json.get<Number>("CHAR_SHADOW_COLOR_GREEN"), json.get<Number>("CHAR_SHADOW_COLOR_BLUE"));
-    SetShadowPercent(json.get<Number>("CHAR_SHADOW_PERCENT"));
+    _textProcessor.SetColor(json.get<Number>("CHAR_COLOR_RED"), json.get<Number>("CHAR_COLOR_GREEN"), json.get<Number>("CHAR_COLOR_BLUE"));
+    _textProcessor.SetShadowColor(json.get<Number>("CHAR_SHADOW_COLOR_RED"), json.get<Number>("CHAR_SHADOW_COLOR_GREEN"), json.get<Number>("CHAR_SHADOW_COLOR_BLUE"));
+    _textProcessor.SetShadowPercent(json.get<Number>("CHAR_SHADOW_PERCENT"));
 
-    SetPointAlpha(&_alpha);
+    //_textProcessor.SetPointAlpha(&_alpha);
     return CBox::SetProperty(json);
 }
 
 //================================
 //property:
 //* ORDER,
-//* TILESET_PATH,
-//* TILE_ENABLE,
-//* TILE_SIZE,
-//* MAP_PATH,
+//* PATH,
 //* X,
 //* Y,
 //* MSG_OFFSET_X,
@@ -222,23 +211,18 @@ bool CMessageBox::CheckList(Object json)
 void CMessageBox::OnLoop()
 {
     CBox::OnLoop();
-    _speakerName.setPosition(CBox::GetPosition() + _speakerNameOffset);
 
-    CTextProcessing::SetPosition(
-        CBox::GetPosition().x + _msgOffset.x, 
-        CBox::GetPosition().y + _msgOffset.y);
-
-    if (CTextProcessing::GetStatus() == CTextProcessing::FINISH 
-        && !GetText().empty()){
+    if (_textProcessor.GetStatus() == CTextProcessing::FINISH
+        && !_textProcessor.GetText().empty()){
         if (!_isFramesChanged){
-            _frames.SetPosition(CTextProcessing::GetLastCharacterPos().x+5.0f - CBox::_coordinate.x,  
-                CTextProcessing::GetLastCharacterPos().y - CBox::_coordinate.y);
+            _frames.SetPosition(_textProcessor.GetLastCharacterPos().x + 5.0f,
+                _textProcessor.GetLastCharacterPos().y);
         
             _frames.TurnOn(true);
             _isFramesChanged = true;
         }
             
-        _frames.SetAlpha(_alpha);
+        _frames.SetAlpha(GetAlpha());
     }
     else{
         _frames.SetAlpha(0);
@@ -246,7 +230,7 @@ void CMessageBox::OnLoop()
         _isFramesChanged = false;
     }
 
-    CTextProcessing::OnLoop();
+    _textProcessor.OnLoop();
     
     //if (_pauseControl)
     //    *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
@@ -254,21 +238,8 @@ void CMessageBox::OnLoop()
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_isShowed && !_isUserWantToHideMsg){
+    if (!_isUserWantToHideMsg)
         CBox::OnRender(Surf_Dest);
-        _speakerName.setOrigin(-2.0f, -2.0f);
-        _speakerName.setColor(
-            sf::Color(GetShadowColor().r, GetShadowColor().g, GetShadowColor().b, _alpha * GetShadowPercent()));
-        Surf_Dest->draw(_speakerName);
-
-        _speakerName.setOrigin(0.0f, 0.0f);
-        _speakerName.setColor(
-            sf::Color(GetTextColor().r, GetTextColor().g, GetTextColor().b, _alpha));
-        Surf_Dest->draw(_speakerName);
-
-        CTextProcessing::OnRender(Surf_Dest);
-        _frames.OnRender(Surf_Dest);
-    }
 }
 
 void CMessageBox::SetSpeakerName(vector<string> args)
@@ -279,7 +250,7 @@ void CMessageBox::SetSpeakerName(vector<string> args)
 
 void CMessageBox::SetSpeakerName(string name)
 {
-    CTextFunction::SetString(_speakerName, name.c_str());
+    _speakerName.SetString(name);
 }
 
 void CMessageBox::SetText(vector<string> args)
@@ -290,7 +261,7 @@ void CMessageBox::SetText(vector<string> args)
 
 void CMessageBox::SetText(string msg)
 {
-    CTextProcessing::SetText(msg);
+    _textProcessor.SetString(msg);
 }
 
 void CMessageBox::SwitchForShowAndHide()
@@ -300,12 +271,12 @@ void CMessageBox::SwitchForShowAndHide()
 
 bool CMessageBox::ConfirmForText()
 {
-    switch (GetStatus()){
+    switch (_textProcessor.GetStatus()){
         case CTextProcessing::RUNNING:
-            Skip();
+            _textProcessor.Skip();
             return true;
         case CTextProcessing::FINISH:
-            Confirm();
+            _textProcessor.Confirm();
             return false; // ***临时处理 后面需要添加事件响应的状态机
         default:
             return false;
@@ -336,4 +307,9 @@ bool CMessageBox::OnRButtonUp(int x, int y)
 {
     SwitchForShowAndHide();
     return false;
+}
+
+CTextProcessing::EStatus CMessageBox::GetStatus() const
+{
+    return _textProcessor.GetStatus();
 }

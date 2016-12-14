@@ -672,7 +672,7 @@ void CResourceControl::AutoToNextStep()
         for (size_t i=0; i<__array.size(); i++){
             CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
             if (__msgbox){
-                if (__msgbox->GetStatus() == CMessageBox::RUNNING){
+                if (__msgbox->GetStatus() == CTextProcessing::RUNNING){
                     return;
                 }
             }

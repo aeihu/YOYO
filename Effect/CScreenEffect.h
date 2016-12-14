@@ -32,6 +32,7 @@ class CScreenEffect : public CDrawableClass
         vector<PData>           _vertexData;
         sf::VertexArray         _vertexArray;
         CSimultaneousOfAction*  _act;
+        bool                    _isShowed;
         
         void SetShow();
         void SetHide();
@@ -39,12 +40,12 @@ class CScreenEffect : public CDrawableClass
         CScreenEffect();
         static CScreenEffect* Create(size_t num, float width, float height);
 
-        bool GetVisible() const;
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
         void OnSaveData(Object& json) const;
         void OnLoadData(Object json);
 
+        virtual bool IsShowed() const;
         void SetColor(vector<string> args);
 
         CSimultaneousOfAction* CreateActionShowOrHide(size_t elapsed, bool isShow);

@@ -10,10 +10,11 @@
 
 CScreenEffect::CScreenEffect()
 {
-    _red = _green = _blue = 0.0f;
+    _isShowed = false;
+    CDrawableClass::SetColor(0, 0, 0);
 }
 
-bool CScreenEffect::GetVisible() const
+bool CScreenEffect::IsShowed() const
 {
     return _isShowed;
 }
@@ -200,14 +201,14 @@ void CScreenEffect::OnLoop()
         if (_vertexArray[i].color.a != (sf::Uint8)_vertexData[i]._alpha)
             _vertexArray[i].color.a = (sf::Uint8)_vertexData[i]._alpha;
         
-        if (_vertexArray[i].color.r != (sf::Uint8)_red)
-            _vertexArray[i].color.r = (sf::Uint8)_red;
+        if (_vertexArray[i].color.r != (sf::Uint8)GetRed())
+            _vertexArray[i].color.r = (sf::Uint8)GetRed();
 
-        if (_vertexArray[i].color.g != (sf::Uint8)_green)
-            _vertexArray[i].color.g = (sf::Uint8)_green;
+        if (_vertexArray[i].color.g != (sf::Uint8)GetGreen())
+            _vertexArray[i].color.g = (sf::Uint8)GetGreen();
 
-        if (_vertexArray[i].color.b != (sf::Uint8)_blue)
-            _vertexArray[i].color.b = (sf::Uint8)_blue;
+        if (_vertexArray[i].color.b != (sf::Uint8)GetBlue())
+            _vertexArray[i].color.b = (sf::Uint8)GetBlue();
     }
 }
 

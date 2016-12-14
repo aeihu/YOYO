@@ -13,6 +13,11 @@ bool CBaiscProperties::_isActionRunning = false;
 
 CBaiscProperties::CBaiscProperties()
 {
+    _scale.x =
+    _scale.y = 1.0f;
+    _rotation =
+    _coordinate.x =
+    _coordinate.y =
     _rotation = 0.0f;
 }
 
@@ -21,7 +26,7 @@ void CBaiscProperties::AddAction(CActionBaseClass* act)
     _actionList.AddAction(act);
 }
 
-float& CBaiscProperties::GetRotation()
+float CBaiscProperties::GetRotation()
 {
     return _rotation;
 }
@@ -31,7 +36,7 @@ void CBaiscProperties::SetRotation(float r)
     _rotation = r;
 }
 
-sf::Vector2f& CBaiscProperties::GetPosition() 
+sf::Vector2f CBaiscProperties::GetPosition() 
 {
     return _coordinate;
 }
@@ -224,6 +229,93 @@ void CBaiscProperties::CreateActionOfMoveYByForSelf(size_t elapsed, float y, boo
     _actionList.AddAction(CreateActionOfMoveYBy(elapsed, y, restore));
 }
 
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore)
+{
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CActionBy(&_origin.x, elapsed, x, restore));
+    __result->AddAction(new CActionBy(&_origin.y, elapsed, y, restore));
+    return __result;
+}
+
+CActionBy* CBaiscProperties::CreateActionOfOriginXBy(size_t elapsed, float x, bool restore)
+{
+    return new CActionBy(&_origin.x, elapsed, x, restore);
+}
+
+CActionBy* CBaiscProperties::CreateActionOfOriginYBy(size_t elapsed, float y, bool restore)
+{
+    return new CActionBy(&_origin.y, elapsed, y, restore);
+}
+
+CSimultaneousOfAction* CBaiscProperties::CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore)
+{
+    CSimultaneousOfAction* __result = new CSimultaneousOfAction();
+    __result->AddAction(new CActionTo(&_origin.x, elapsed, x, restore));
+    __result->AddAction(new CActionTo(&_origin.y, elapsed, y, restore));
+    return __result;
+}
+
+CActionTo* CBaiscProperties::CreateActionOfOriginXTo(size_t elapsed, float x, bool restore)
+{
+    return new CActionTo(&_origin.x, elapsed, x, restore);
+}
+
+CActionTo* CBaiscProperties::CreateActionOfOriginYTo(size_t elapsed, float y, bool restore)
+{
+    return new CActionTo(&_origin.y, elapsed, y, restore);
+}
+
+void CBaiscProperties::CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginTo(elapsed, x, y, restore));
+}
+
+void CBaiscProperties::CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginXTo(elapsed, x, restore));
+}
+
+void CBaiscProperties::CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginYTo(elapsed, y, restore));
+}
+
+void CBaiscProperties::CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginBy(elapsed, x, y, restore));
+}
+
+void CBaiscProperties::CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginXBy(elapsed, x, restore));
+}
+
+void CBaiscProperties::CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore)
+{
+    _actionList.AddAction(CreateActionOfOriginYBy(elapsed, y, restore));
+}
+
+sf::Vector2f CBaiscProperties::GetOrigin()
+{
+    return _origin;
+}
+
+void CBaiscProperties::SetOrigin(float x, float y)
+{
+    _origin.x = x;
+    _origin.y = y;
+}
+
+void CBaiscProperties::SetOriginX(float x)
+{
+    _origin.x = x;
+}
+
+void CBaiscProperties::SetOriginY(float y)
+{
+    _origin.y = y;
+}
+
 void CBaiscProperties::OnLoop()
 {
     _isActionRunning = _actionList.OnLoop();
@@ -247,6 +339,8 @@ void CBaiscProperties::OnSaveData(Object& json) const
     json << "scale_x" << _scale.x;
     json << "scale_y" << _scale.y;
     json << "rotation" << _rotation;
+    json << "origin_x" << _origin.x;
+    json << "origin_y" << _origin.y;
 }
 
 void CBaiscProperties::OnLoadData(Object json)
@@ -256,4 +350,6 @@ void CBaiscProperties::OnLoadData(Object json)
     _scale.x = json.get<Number>("scale_x");
     _scale.y = json.get<Number>("scale_y");
     _rotation = json.get<Number>("rotation");
+    _origin.x = json.get<Number>("origin_x");
+    _origin.y = json.get<Number>("origin_y");
 }

@@ -17,50 +17,41 @@
 
 class CImageBaseClass : public CDrawableClass
 {
-    protected:
-        sf::Vector2f                      _origin;
-        bool                              _flipX;
-        bool                              _flipY;
     public:
-        CImageBaseClass(float x=0.0f, float y=0.0f);
+        enum ESubNodeFlag{
+            FLAG_NONE = 0,
+            FLAG_ALPHA = 1,
+            FLAG_COLOR = 2,
+        };
+    protected:
+        bool                    _flipX;
+        bool                    _flipY;
+        list<CImageBaseClass*>  _childrenList;
+        CImageBaseClass*        _baseNode;
+        char                    _flag;
+
+        bool SetBaseNode(CImageBaseClass* baseNode);
+        void Loop(sf::Transformable* obj);
+    public:
+        CImageBaseClass();
         virtual ~CImageBaseClass();
         
         virtual void FlipX();
         virtual void FlipY();
-        virtual const sf::Vector2f& GetGlobalPosition() const =0;
-
-        virtual const float& GetAlpha() const;
-        virtual void SetAlpha(int alpha);
-
-        virtual const sf::Vector2f& GetOrigin() const;
-        virtual void SetOrigin(float x, float y);
-        virtual void SetOriginX(float x);
-        virtual void SetOriginY(float y);
-        
-        virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore);      
-        virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore);
-        virtual CActionTo* CreateActionOfOriginYTo(size_t elapsed, float y, bool restore);
-        
-        virtual CSimultaneousOfAction* CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore);      
-        virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore);
-        virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore);
-
-        /////////////////////////////////////////////////
-
-        virtual void CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore);
-        virtual void CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore);
-        virtual void CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore);
-
-        virtual void CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore);
-        virtual void CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore);
-        virtual void CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore);
 
         virtual void OnRender(sf::RenderTarget* Surf_Dest)=0;
         virtual void OnLoop()=0;
         
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
-        virtual bool GetVisible() const;
+
+        virtual bool AddChildNode(CImageBaseClass* child);
+
+        virtual void SetFlag(char flag);
+        virtual char GetFlag() const;
+        virtual sf::Transform GetTransform() = 0;
+
+        virtual void ClearActionList();
 };
 
 #endif

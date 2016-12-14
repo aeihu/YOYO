@@ -20,19 +20,22 @@ using namespace std;
 
 class CBaiscProperties : public CObject
 {
-    protected:
+    private:
         sf::Vector2f                        _scale;
         sf::Vector2f                        _coordinate;
+        sf::Vector2f                        _origin;
         float                               _rotation;
+
+    protected:
         CSimultaneousOfAction               _actionList;
         static bool                         _isActionRunning;
     public:
         CBaiscProperties();
 
         void AddAction(CActionBaseClass* act);
-        virtual float& GetRotation();
+        virtual float GetRotation();
         void SetRotation(float r);
-        sf::Vector2f& GetPosition();
+        sf::Vector2f GetPosition();
         virtual void SetPosition(float x, float y);
         virtual void SetPosition(vector<float> args);
 
@@ -40,7 +43,31 @@ class CBaiscProperties : public CObject
         virtual void SetScale(float x, float y);
         virtual void SetScaleX(float x);
         virtual void SetScaleY(float y);
+
+        virtual sf::Vector2f GetOrigin();
+        virtual void SetOrigin(float x, float y);
+        virtual void SetOriginX(float x);
+        virtual void SetOriginY(float y);
+
         virtual void ClearActionList();
+
+        virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore);
+        virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore);
+        virtual CActionTo* CreateActionOfOriginYTo(size_t elapsed, float y, bool restore);
+
+        virtual CSimultaneousOfAction* CreateActionOfOriginBy(size_t elapsed, float x, float y, bool restore);
+        virtual CActionBy* CreateActionOfOriginXBy(size_t elapsed, float x, bool restore);
+        virtual CActionBy* CreateActionOfOriginYBy(size_t elapsed, float y, bool restore);
+
+        /////////////////////////////////////////////////
+
+        virtual void CreateActionOfOriginToForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfOriginXToForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfOriginYToForSelf(size_t elapsed, float y, bool restore);
+
+        virtual void CreateActionOfOriginByForSelf(size_t elapsed, float x, float y, bool restore);
+        virtual void CreateActionOfOriginXByForSelf(size_t elapsed, float x, bool restore);
+        virtual void CreateActionOfOriginYByForSelf(size_t elapsed, float y, bool restore);
 
         virtual CActionTo* CreateActionOfRotationTo(size_t elapsed, float rotation, bool restore);
         virtual CActionBy* CreateActionOfRotationBy(size_t elapsed, float rotation, bool restore);

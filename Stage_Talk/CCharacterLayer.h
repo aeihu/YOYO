@@ -50,11 +50,10 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         bool SetProperty(Object json, bool isLoad=true);
         void Flip();
     public:
-        CCharacterLayer(float x=0.0f, float y=0.0f);
+        CCharacterLayer();
 
         virtual void FlipX();
         virtual void FlipY();
-        const sf::Vector2f& GetGlobalPosition() const;
         
         static CCharacterLayer* Create(const char* filename);
         
@@ -62,6 +61,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void SetPose(vector<string> args);
 
         void SetVoice(string name);
+
+        virtual sf::Transform GetTransform();
         
         void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);

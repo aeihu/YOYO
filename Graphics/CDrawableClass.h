@@ -15,15 +15,27 @@ class CDrawableClass : public CBaiscProperties
 {
     private:
         unsigned char                     _layerOrder;
-    protected:
-        bool                              _isShowed;
+        //bool                              _isShowed;
         float                             _alpha;
         float                             _red;
         float                             _green;
         float                             _blue;
+    protected:
     public:
         CDrawableClass();
         
+        virtual bool IsShowed() const;
+        virtual float GetAlpha() const;
+        virtual float GetRed() const;
+        virtual float GetGreen() const;
+        virtual float GetBlue() const;
+
+        virtual void SetAlpha(int alpha);
+        virtual void SetRed(int r);
+        virtual void SetGreen(int g);
+        virtual void SetBlue(int b);
+        virtual void SetColor(int r, int g, int b);
+
         virtual unsigned char GetLayerOrder() const;
         virtual void SetLayerOrder(char order);
         virtual void SetLayerOrder(vector<char> args);

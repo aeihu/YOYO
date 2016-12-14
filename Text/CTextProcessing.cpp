@@ -13,8 +13,6 @@ using namespace std;
 
 CTextProcessing::CTextProcessing()
 {
-    _pAlpha = NULL;
-    _coordinate.x = _coordinate.y = 0.0f;
     _status = CONFIRMED;
     _isSkip = false;
     _rowWidth =
@@ -23,17 +21,6 @@ CTextProcessing::CTextProcessing()
     _length = 0;
     _textOfShown =
     _text = "";
-    _textColor.r = 255;
-    _textColor.g = 255;
-    _textColor.b = 255;
-    _textColor.a = 255;
-    
-    _shadowColor.r = 10;
-    _shadowColor.g = 10;
-    _shadowColor.b = 10;
-    _shadowColor.a = 200;
-
-    _shadowPercent = 1.0f;
 }
 
 bool CTextProcessing::isWordOrNumber(char c)
@@ -48,54 +35,9 @@ void CTextProcessing::SetCharacterSize(size_t size)
     _sfText.setCharacterSize(size);
 }
 
-void CTextProcessing::SetPointAlpha(float* alpha)
-{
-    if (alpha)
-        _pAlpha = alpha;
-}
-
 void CTextProcessing::SetRowWidth(size_t width)
 {
     _rowWidth = width;
-}
-
-void CTextProcessing::SetFont(sf::Font& font)
-{
-    _sfText.setFont(font);
-}
-        
-void CTextProcessing::SetTextColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
-{
-    _textColor.r = r;
-    _textColor.g = g;
-    _textColor.b = b;
-}
-        
-void CTextProcessing::SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
-{
-    _shadowColor.r = r;
-    _shadowColor.g = g;
-    _shadowColor.b = b;
-}
-        
-void CTextProcessing::SetShadowPercent(float percent)
-{
-    if (percent < 0.0f){
-        _shadowPercent = 0.0f;
-        return;
-    }
-
-    if (percent > 1.0f){
-        _shadowPercent = 1.0f;
-        return;
-    }
-
-    _shadowPercent = percent;
-}
-
-float CTextProcessing::GetShadowPercent() const
-{
-    return _shadowPercent;
 }
 
 void CTextProcessing::Clear()
@@ -107,7 +49,7 @@ void CTextProcessing::Clear()
     _sfText.setString("");
 }
 
-void CTextProcessing::SetText(string msg)
+void CTextProcessing::SetString(string msg)
 {
     _status = RUNNING;
     _textOfShown = "";
@@ -168,29 +110,32 @@ void CTextProcessing::Process()
 
 void CTextProcessing::OnLoop()
 {
-    _sfText.setPosition(_coordinate);
-    if (_oldTime + CCommon::_Common.TEXT_FRAMERATE <= CCommon::_Common.GetTicks() || _isSkip){
-        _oldTime = CCommon::_Common.GetTicks();
-    }
-    else
-        return;
+    CText::OnLoop();
 
-    if (_status == RUNNING){
-        if (_index < _text.length()){
-            if (_isSkip){
-                _textOfShown = _text;
-                _index = _text.length();
-                _isSkip = false;
+    if (IsShowed()){
+        if (_oldTime + CCommon::_Common.TEXT_FRAMERATE <= CCommon::_Common.GetTicks() || _isSkip){
+            _oldTime = CCommon::_Common.GetTicks();
+        }
+        else
+            return;
+
+        if (_status == RUNNING){
+            if (_index < _text.length()){
+                if (_isSkip){
+                    _textOfShown = _text;
+                    _index = _text.length();
+                    _isSkip = false;
+                }
+                else{
+                    size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
+                    _textOfShown.append(_text.substr(_index, __size));
+                    _index += __size;
+                }
+                CTextFunction::SetString(_sfText, _textOfShown);
             }
             else{
-                size_t __size = CTextFunction::SizeOfCharWithUTF8(_text[_index]);
-                _textOfShown.append(_text.substr(_index, __size));
-                _index += __size;
+                _status = FINISH;
             }
-            CTextFunction::SetString(_sfText, _textOfShown);
-        }
-        else{
-            _status = FINISH;
         }
     }
 }
@@ -203,18 +148,6 @@ void CTextProcessing::Confirm()
 void CTextProcessing::Skip()
 {
     _isSkip = true;
-}
-
-void CTextProcessing::OnRender(sf::RenderTarget* Surf_Dest)
-{
-    sf::Vector2f __tmp = _sfText.getOrigin();
-    _sfText.setOrigin(__tmp.x - 2.0f, __tmp.y - 2.0f);
-    _sfText.setColor(sf::Color(_shadowColor.r, _shadowColor.g, _shadowColor.b, _pAlpha == NULL ? 200 : *_pAlpha * _shadowPercent));
-    Surf_Dest->draw(_sfText);
-
-    _sfText.setOrigin(__tmp);
-    _sfText.setColor(sf::Color(_textColor.r, _textColor.g, _textColor.b, _pAlpha == NULL ? 255 : *_pAlpha));
-    Surf_Dest->draw(_sfText);
 }
 
 CTextProcessing::EStatus CTextProcessing::GetStatus() const
@@ -235,25 +168,4 @@ float CTextProcessing::GetHeight()
 sf::Vector2f CTextProcessing::GetLastCharacterPos()
 {
     return _sfText.findCharacterPos(_length);
-}
-
-sf::Vector2f CTextProcessing::GetPosition()
-{
-    return _coordinate;
-}
-
-void CTextProcessing::SetPosition(float x, float y)
-{
-    _coordinate.x = x;
-    _coordinate.y = y;
-}
-
-const sf::Color& CTextProcessing::GetTextColor() const
-{
-    return _textColor;
-}
-    
-const sf::Color& CTextProcessing::GetShadowColor() const
-{
-    return _shadowColor;
 }

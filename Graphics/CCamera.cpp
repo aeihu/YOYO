@@ -16,10 +16,7 @@ CCamera::CCamera()
 
 void CCamera::SetCamera(float x, float y, float w, float h)
 {
-    _coordinate.x = x;
-    _coordinate.y = y;
-    //_size.x = w;
-    //_size.y = h;
+    SetPosition(x, y);
     _orgSize.x = w;
     _orgSize.y = h;
     _camera.reset(sf::FloatRect(x, y, w, h));
@@ -32,8 +29,7 @@ void CCamera::SetViewport(float x, float y, float w, float h)
 
 void CCamera::SetCenter(float x, float y)
 {
-    _coordinate.x = x;
-    _coordinate.y = y;
+    SetPosition(x, y);
 }
     
 //void CCamera::SetSize(float w, float h)
@@ -45,15 +41,10 @@ void CCamera::SetCenter(float x, float y)
     
 void CCamera::SetZoom(float zoom)
 {
+    SetScaleX(zoom);
     _camera.setSize(_orgSize);
-    _zoom = _scale.x = zoom;
+    _zoom = zoom;
     _camera.zoom(zoom);
-    //_size = _camera.getSize();
-}
-
-void CCamera::SetRotation(float angle)
-{
-    _rotation = angle;
 }
 
 void CCamera::Bind(sf::RenderTarget* window)
@@ -74,13 +65,13 @@ void CCamera::OnLoop()
     CBaiscProperties::OnLoop();
     bool __isChanged = false;
     
-    if (_coordinate != _camera.getCenter()){
-        _camera.setCenter(_coordinate.x, _coordinate.y);
+    if (GetPosition() != _camera.getCenter()){
+        _camera.setCenter(GetPosition());
         __isChanged = true;
     }
 
-    if (_rotation != _camera.getRotation()){
-        _camera.setRotation(_rotation);
+    if (GetRotation() != _camera.getRotation()){
+        _camera.setRotation(GetRotation());
         __isChanged = true;
     }
 
@@ -89,8 +80,8 @@ void CCamera::OnLoop()
     //    __isChanged = true;
     //}
 
-    if (_zoom != _scale.x){
-        SetZoom(_scale.x);
+    if (_zoom != GetScale().x){
+        SetZoom(GetScale().x);
         __isChanged = true;
     }
 
@@ -141,6 +132,17 @@ CCamera* CCamera::Create(const char* filename)
     delete __camera;
     return NULL;
 }
+
+
+//================================
+//property:
+//* X,
+//* Y,
+//* ZOOM,
+//* ROTATION,
+//WIDTH,
+//HEIGHT,
+//================================
 
 bool CCamera::CheckList(Object json) 
 {

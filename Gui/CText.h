@@ -13,18 +13,16 @@
 #include "../Graphics/CImageBaseClass.h"
 #include "../Text/CFont.h"
 #include "../Text/CTextFunction.h"
-#include "../Common/CResourceControl.h"
 
 class CText : public CImageBaseClass
 {
     private:
+    protected:
         string              _currcentFont;
         sf::Text            _sfText;
-        sf::Color           _textColor;
         sf::Color           _shadowColor;
         bool                _shadowEnable;
         float               _shadowPercent;
-    protected:
         
     public:
         CText();
@@ -34,23 +32,24 @@ class CText : public CImageBaseClass
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual void OnLoop();
         
-        sf::Color GetColor() const;
-        const sf::Vector2f& GetGlobalPosition() const;
+        const sf::Color& GetShadowColor() const;
 
         //void FlipX();
         //void FlipY();
-        
+
+        float GetShadowPercent() const;
+
+        virtual sf::Transform GetTransform();
         void SetShadowEnable(bool b);
         void SetShadowPercent(float percent);
         void SetFont(string name);
-        void SetString(string str);
+        virtual void SetString(string str);
         void SetCharacterSize(size_t size);
 
         void SetStyle(size_t flag);
         void SetStyle(vector<string> args);
 
-        void SetColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b); 
-        void SetColor(vector<unsigned char> args);
+        void SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b);
         
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);

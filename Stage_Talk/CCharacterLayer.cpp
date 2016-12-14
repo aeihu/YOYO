@@ -11,7 +11,7 @@
 #include "../Common/Cio.h"
 #include "../Common/CResourceControl.h"
 
-CCharacterLayer::CCharacterLayer(float x, float y):CImageBaseClass(x,y)
+CCharacterLayer::CCharacterLayer()
 {
     _isBodyChangeing = false;
     _framesOfMouth._Type = CAnimation::Oscillate;
@@ -32,6 +32,14 @@ CCharacterLayer* CCharacterLayer::Create(const char* filename)
     
     delete __chr;
     return NULL;
+}
+
+sf::Transform CCharacterLayer::GetTransform()
+{
+    if (_baseNode)
+        return _sprite.getTransform() * _baseNode->GetTransform();
+
+    return _sprite.getTransform();
 }
 
 void CCharacterLayer::Flip()
@@ -56,11 +64,6 @@ void CCharacterLayer::FlipY()
     _flipY = !_flipY;
     Flip();
 }
-        
-const sf::Vector2f& CCharacterLayer::GetGlobalPosition() const
-{
-    return _sprite.getPosition();
-}
 
 void CCharacterLayer::SetVoice(string name)
 {
@@ -76,41 +79,19 @@ void CCharacterLayer::OnLoop()
             _sprite.setTexture(_textureList[_currcentBody]._Texture, true);
         }
         
-        _swapSprite.setColor(sf::Color(_red, _green, _blue, (1.0f-_alphaOfSwap)*_alpha));
+        _swapSprite.setColor(sf::Color(GetRed(), GetGreen(), GetBlue(), (1.0f - _alphaOfSwap) * GetAlpha()));
     }
 
-    _isShowed = _alpha > 0 ? true : false;
+    if (_sprite.getColor().a != GetAlpha() ||
+        _sprite.getColor().r != GetRed() ||
+        _sprite.getColor().g != GetGreen() ||
+        _sprite.getColor().b != GetBlue())
+        _sprite.setColor(sf::Color(GetRed(), GetGreen(), GetBlue(), GetAlpha() * _alphaOfSwap));
 
-    if (_sprite.getColor().a != _alpha ||
-        _sprite.getColor().r != _red ||
-        _sprite.getColor().g != _green ||
-        _sprite.getColor().b != _blue)
-        _sprite.setColor(sf::Color(_red, _green, _blue, _alpha*_alphaOfSwap));
+    Loop(&_sprite);
+    Loop(&_swapSprite);
 
-    if (_isShowed){
-        if (_coordinate != _sprite.getPosition()){
-            _sprite.setPosition(_coordinate);
-            _swapSprite.setPosition(_coordinate);
-        }
-        
-        if ((_origin.x * _sprite.getLocalBounds().width != _sprite.getOrigin().x) ||
-            (_origin.y * _sprite.getLocalBounds().height != _sprite.getOrigin().y)){
-            _sprite.setOrigin(_origin.x * _sprite.getLocalBounds().width,
-                _origin.y * _sprite.getLocalBounds().height);
-
-            _swapSprite.setOrigin(_sprite.getOrigin());
-        }
-        
-        if (_scale != _sprite.getScale()){
-            _sprite.setScale(_scale);
-            _swapSprite.setScale(_scale);
-        }
-
-        if (_rotation != _sprite.getRotation()){
-            _sprite.setRotation(_rotation);
-            _swapSprite.setRotation(_rotation);
-        }
-
+    if (IsShowed()){
         _framesOfMouth.OnLoop();
         _framesOfEyes.OnLoop();
 
@@ -139,12 +120,47 @@ void CCharacterLayer::OnLoop()
          
 void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 {
-    if (_isShowed)
-        Surf_Dest->draw(_sprite);
+    if (IsShowed()){
+        if (_baseNode)
+            Surf_Dest->draw(_sprite, _baseNode->GetTransform());
+        else
+            Surf_Dest->draw(_sprite);
 
-    if (_isBodyChangeing)
-        Surf_Dest->draw(_swapSprite);
+        if (_isBodyChangeing)
+            if (_baseNode)
+                Surf_Dest->draw(_swapSprite, _baseNode->GetTransform());
+            else
+                Surf_Dest->draw(_swapSprite);
+    }
 }
+
+//================================
+//property:
+//* ORDER,
+//* EYE_OFFSET_X,
+//* EYE_OFFSET_Y,
+//* EYE_WIDTH,
+//* EYE_HEIGHT,
+//* EYE_FRAME_RATE,
+//* MOUTH_OFFSET_X,
+//* MOUTH_OFFSET_Y,
+//* MOUTH_WIDTH,
+//* MOUTH_HEIGHT,
+//* MOUTH_FRAME_RATE,
+//* BODY,
+//* EYE:
+//{
+//  *PATH,
+//  *MAX_FRAMES,
+//}
+//* MOUTH:
+//{
+//  *PATH,
+//  *MAX_FRAMES,
+//}
+//EYE_COMPOSITE,
+//MOUTH_COMPOSITE,
+//================================
 
 bool CCharacterLayer::CheckList(Object json) 
 {
@@ -387,7 +403,7 @@ bool CCharacterLayer::SetPose(string body, string eye, string mouth, bool isEffe
     if (__isBodyChanged && !body.empty() && _textureList.count(body) > 0){
         _currcentBody = body;
         
-        if (_isShowed && isEffect){
+        if (IsShowed() && isEffect){
             _swapSprite.setTexture(_textureList[body]._Texture, true);
             _alphaOfSwap = 1.0f;
             _simAct.OnCleanup();
