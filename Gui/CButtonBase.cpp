@@ -83,8 +83,6 @@ bool CButtonBase::OnMouseMove(int x, int y)
             }
 
             _Type = CAnimation::Forward;
-            sf::FloatRect d = _sprite.getLocalBounds();
-            sf::FloatRect f = _sprite.getGlobalBounds();
             return true;
         }
         else{
