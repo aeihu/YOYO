@@ -15,18 +15,27 @@ void CButton::Exec(void* data)
 
 //================================
 //property:
-//* TILESET_PATH,
+//* PATH,
+//* ORDER,
 //* WIDTH,
 //* HEIGHT,
 //* MAX_FRAMES,
 //* FRAME_RATE,
-//* X,
-//* Y,
-//* SCRIPT_PATH,
-//* SCRIPT_SECTION,
-//? ORDER,
+//* SCRIPT,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
 //================================
-bool CButton::CheckList(Object json)
+bool CButton::CheckList(const Object& json)
 {
     bool result = CButtonBase::CheckList(json);
 
@@ -38,7 +47,7 @@ bool CButton::CheckList(Object json)
     return result;
 }
 
-bool CButton::SetProperty(Object json, bool isLoad)
+bool CButton::SetProperty(const Object& json, bool isLoad)
 {
     _scr = json.get<String>("SCRIPT");
     return CButtonBase::SetProperty(json, isLoad);

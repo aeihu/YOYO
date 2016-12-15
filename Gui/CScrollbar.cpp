@@ -140,7 +140,7 @@ int CScrollbar::GetValue() const
     return _value;
 }
 
-bool CScrollbar::CheckList(Object json)
+bool CScrollbar::CheckList(const Object& json)
 {
     bool __result = true;
 
@@ -167,7 +167,7 @@ bool CScrollbar::CheckList(Object json)
     return __result;
 }
 
-bool CScrollbar::SetProperty(Object json, bool isLoad)
+bool CScrollbar::SetProperty(const Object& json, bool isLoad)
 {
     _height = json.get<Number>("SCROLLBAR_HEIGHT");
 

@@ -71,7 +71,7 @@ void CLogBox::OnCleanup()
     _logList.clear();
 }
 
-bool CLogBox::CheckList(Object json)
+bool CLogBox::CheckList(const Object& json)
 {
     bool __result = CBox::CheckList(json);
 
@@ -116,7 +116,7 @@ bool CLogBox::CheckList(Object json)
     return __result;
 }
 
-bool CLogBox::SetProperty(Object json, bool isLoad)
+bool CLogBox::SetProperty(const Object& json, bool isLoad)
 {
     _logMax = json.get<Number>("LOG_MAXNUM");
     _visNum = json.get<Number>("LOG_VISIBLE_NUM");

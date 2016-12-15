@@ -22,8 +22,8 @@ class CCamera : public CBaiscProperties, public CConfigFile
         //sf::Vector2f        _size;
         sf::RenderTarget*   _window;
 
-        bool CheckList(Object json);
-        bool SetProperty(Object json, bool isLoad=true);
+        bool CheckList(const Object& json);
+        bool SetProperty(const Object& json, bool isLoad = true);
         using CBaiscProperties::SetPosition;
     protected:
     public:
@@ -39,7 +39,6 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void UnBind();
         void OnLoop();
         sf::Vector2f GetCenter();
-        sf::Vector2f GetPosition();
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
 };

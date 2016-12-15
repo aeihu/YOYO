@@ -46,8 +46,8 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         CSimultaneousOfAction                   _simAct;
         bool                                    _isBodyChangeing;
         
-        bool CheckList(Object json);
-        bool SetProperty(Object json, bool isLoad=true);
+        bool CheckList(const Object& json);
+        bool SetProperty(const Object& json, bool isLoad = true);
         void Flip();
     public:
         CCharacterLayer();

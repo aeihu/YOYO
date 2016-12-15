@@ -19,8 +19,8 @@ class CButton : public CButtonBase
         string  _scr;
 
         void Exec(void* data=NULL);
-        bool CheckList(Object json);
-        bool SetProperty(Object json, bool isLoad=true);
+        bool CheckList(const Object& json);
+        bool SetProperty(const Object& json, bool isLoad = true);
     public:
         static CButton* Create(const char* filename);
 };

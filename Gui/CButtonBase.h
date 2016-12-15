@@ -26,12 +26,8 @@ class CButtonBase : public CSequenceOfSprite
         string          _seNameOfMouseOver;
         string          _seNameOfMouseDown;
     protected:
-        virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json, bool isLoad=true);
         virtual void Exec(void* data=NULL)=0;
     public:
-        //CAnimation      _AnimationControl;
-
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 
         bool IsMouseOver() const;

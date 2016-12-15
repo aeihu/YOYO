@@ -21,11 +21,8 @@ CBox::~CBox()
 
 //================================
 //property:
-//* ORDER,
 //* PATH,
-//* TILE_SIZE,
-//* X,
-//* Y,
+//* ORDER,
 //JIUGONG
 //{
 //* LEFT_WIDTH,
@@ -39,22 +36,17 @@ CBox::~CBox()
 //ROTATION,
 //ORIGIN_X,
 //ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
 //================================
-
-bool CBox::CheckList(Object json)
+bool CBox::CheckList(const Object& json)
 {
-    bool __result = true;
+    bool __result = CImgLayer::CheckList(json);
     
-    if (!json.has<Number>("ORDER")){
-        cout << "can't find value of ORDER." << endl;
-        __result = false;
-    }
-
-    if (!json.has<String>("PATH")){
-        cout << "can't find value of PATH." << endl;
-        __result = false;
-    }
-
     if (json.has<Object>("JIUGONG")){
         Object __obj = json.get<Object>("JIUGONG");
         if (!__obj.has<Number>("WIDTH")){
@@ -88,54 +80,30 @@ bool CBox::CheckList(Object json)
         }
     }
 
-    if (!json.has<Number>("X")){
-        cout << "can't find value of X." << endl;
-        __result = false;
-    }
-
-    if (!json.has<Number>("Y")){
-        cout << "can't find value of Y." << endl;
-        __result = false;
-    }
-
     return __result;
 }
 
-bool CBox::SetProperty(Object json, bool isLoad)
+bool CBox::LoadImgForSetProperty(const Object& json, string key)
 {
-    if (isLoad){
-        if (json.has<Object>("JIUGONG")){
-            sf::Image __tileset, __dest;
-            if (!CSurface::GetTextureFromTextureList(json.get<String>("PATH").c_str(), _texture))
-                return false;
+    if (json.has<Object>("JIUGONG")){
+        sf::Image __tileset, __dest;
+        if (!CSurface::GetTextureFromTextureList(json.get<String>(key).c_str(), _texture))
+            return false;
 
-            Object __obj = json.get<Object>("JIUGONG");
+        Object __obj = json.get<Object>("JIUGONG");
 
-            _isJiugone = true;
-            _jiugong.SetTexture(*_texture, __obj.get<Number>("WIDTH"), __obj.get<Number>("HEIGHT"),
-                __obj.get<Number>("LEFT_WIDTH"), __obj.get<Number>("RIGHT_WIDTH"),
-                __obj.get<Number>("TOP_HEIGHT"), __obj.get<Number>("BOTTOM_HEIGHT"));
-        }
-        else{
-            if (!CSurface::GetTextureFromTextureList(json.get<String>("PATH").c_str(), _texture))
-                return false;
-
-            _isJiugone = false;
-            _sprite.setTexture(*_texture, true);
-        }
-
+        _isJiugone = true;
+        _jiugong.SetTexture(*_texture, __obj.get<Number>("WIDTH"), __obj.get<Number>("HEIGHT"),
+            __obj.get<Number>("LEFT_WIDTH"), __obj.get<Number>("RIGHT_WIDTH"),
+            __obj.get<Number>("TOP_HEIGHT"), __obj.get<Number>("BOTTOM_HEIGHT"));
     }
-    
-    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
-    SetLayerOrder(json.get<Number>("ORDER"));
-    
-    if (_flipX)
-        FlipX();
+    else{
+        if (!CSurface::GetTextureFromTextureList(json.get<String>(key).c_str(), _texture))
+            return false;
 
-    if (_flipY)
-        FlipY();
-
-    return true;
+        _isJiugone = false;
+        _sprite.setTexture(*_texture, true);
+    }
 }
 
 void CBox::OnLoop()

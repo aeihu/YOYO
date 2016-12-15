@@ -62,41 +62,37 @@ void CCamera::UnBind()
 
 void CCamera::OnLoop()
 {
-    CBaiscProperties::OnLoop();
-    bool __isChanged = false;
-    
-    if (GetPosition() != _camera.getCenter()){
-        _camera.setCenter(GetPosition());
-        __isChanged = true;
+    if (_window != NULL){
+        CBaiscProperties::OnLoop();
+        bool __isChanged = false;
+
+        if (GetPosition() != _camera.getCenter()){
+            _camera.setCenter(GetPosition());
+            __isChanged = true;
+        }
+
+        if (GetRotation() != _camera.getRotation()){
+            _camera.setRotation(GetRotation());
+            __isChanged = true;
+        }
+
+        //if (_size != _camera.getSize()){
+        //    _camera.setSize(_size);
+        //    __isChanged = true;
+        //}
+
+        if (_zoom != GetScale().x){
+            SetZoom(GetScale().x);
+            __isChanged = true;
+        }
+
+        if (__isChanged)
+            _window->setView(_camera);
     }
-
-    if (GetRotation() != _camera.getRotation()){
-        _camera.setRotation(GetRotation());
-        __isChanged = true;
-    }
-
-    //if (_size != _camera.getSize()){
-    //    _camera.setSize(_size);
-    //    __isChanged = true;
-    //}
-
-    if (_zoom != GetScale().x){
-        SetZoom(GetScale().x);
-        __isChanged = true;
-    }
-
-    if (__isChanged && _window != NULL)
-        _window->setView(_camera);
 }
 
 sf::Vector2f CCamera::GetCenter()
 {
-    return _camera.getCenter();
-}
-
-sf::Vector2f CCamera::GetPosition()
-{
-    std::cout << _camera.getCenter().x << ":" << _camera.getCenter().y << std::endl;
     return _camera.getCenter();
 }
 
@@ -124,7 +120,7 @@ CCamera* CCamera::Create(const char* filename)
 {
     CCamera* __camera = new CCamera();
     if (__camera->LoadConfigFile(filename)){
-        __camera->SetClassName("camera");
+        __camera->SetClassName("Camera");
         __camera->SetPath(filename);
         return __camera;
     }
@@ -144,7 +140,7 @@ CCamera* CCamera::Create(const char* filename)
 //HEIGHT,
 //================================
 
-bool CCamera::CheckList(Object json) 
+bool CCamera::CheckList(const Object& json)
 {
     bool result = true;
     if (!json.has<Number>("X")){
@@ -170,7 +166,7 @@ bool CCamera::CheckList(Object json)
     return result;
 }
 
-bool CCamera::SetProperty(Object json, bool isLoad)
+bool CCamera::SetProperty(const Object& json, bool isLoad)
 {
     float __w = CCommon::_Common.WWIDTH;
     float __h = CCommon::_Common.WHEIGHT;

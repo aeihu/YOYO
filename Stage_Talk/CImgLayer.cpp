@@ -48,12 +48,9 @@ sf::Transform CImgLayer::GetTransform()
     return _sprite.getTransform();
 }
 
-bool CImgLayer::LoadImg(const char* fileName)
+bool CImgLayer::LoadImgForSetProperty(const Object& json, string key)
 {
-    if (fileName == NULL)
-        return false;
-
-    if (!CSurface::GetTextureFromTextureList(fileName, _texture))
+    if (!CSurface::GetTextureFromTextureList(json.get<String>(key), _texture))
         return false;
 
     _sprite.setTexture(*_texture, true);
@@ -78,7 +75,7 @@ bool CImgLayer::LoadImg(const char* fileName)
 //ALPHA,
 //================================
 
-bool CImgLayer::CheckList(Object json)
+bool CImgLayer::CheckList(const Object& json)
 {
     bool __result = true;
 
@@ -95,10 +92,10 @@ bool CImgLayer::CheckList(Object json)
     return __result;
 }
 
-bool CImgLayer::SetProperty(Object json, bool isLoad)
+bool CImgLayer::SetProperty(const Object& json, bool isLoad)
 {
     if (isLoad)
-        if (!LoadImg(json.get<String>("PATH").c_str()))
+        if (!LoadImgForSetProperty(json, "PATH"))
             return false;
 
     SetLayerOrder(json.get<Number>("ORDER"));

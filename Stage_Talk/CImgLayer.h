@@ -20,9 +20,9 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         sf::Texture*        _texture;
         sf::Sprite          _sprite;
 
-        virtual bool LoadImg(const char* filename);
-        virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json, bool isLoad=true);
+        virtual bool LoadImgForSetProperty(const Object& json, string key);
+        virtual bool CheckList(const Object& json);
+        virtual bool SetProperty(const Object& json, bool isLoad = true);
     public:
         CImgLayer();
         ~CImgLayer(){};

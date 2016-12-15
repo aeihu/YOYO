@@ -57,8 +57,8 @@ class CBox : public CImgLayer
 
         CJiugong    _jiugong;
 
-        virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json, bool isLoad=true);
+        virtual bool CheckList(const Object& json);
+        virtual bool LoadImgForSetProperty(const Object& json, string key);
     public:
         CBox();
         ~CBox();

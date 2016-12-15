@@ -50,13 +50,13 @@ void CMessageBox::SetFont(string font)
     _speakerName.SetFont(font);
 }
 
-bool CMessageBox::SetProperty(Object json, bool isLoad)
+bool CMessageBox::SetProperty(const Object& json, bool isLoad)
 {
     _textProcessor.SetRowWidth(json.get<Number>("MSG_WIDTH"));
 
 //=================Init cursor==================================
     if (isLoad){
-        if (!_frames.LoadImg(json.get<String>("CURSOR_PATH").c_str()))
+        if (!_frames.LoadImgForSetProperty(json, "CURSOR_PATH"))
             return false;
 
         _frames.SetWidth(json.get<Number>("CURSOR_WIDTH"));
@@ -65,15 +65,20 @@ bool CMessageBox::SetProperty(Object json, bool isLoad)
         _frames.SetFrameRate(json.get<Number>("CURSOR_FRAME_RATE"));
     }
 
-    _speakerNameOffset.x = json.get<Number>("SPEAKER_OFFSET_X");
-    _speakerNameOffset.y = json.get<Number>("SPEAKER_OFFSET_Y");
-    _msgOffset.x = json.get<Number>("MSG_OFFSET_X");
-    _msgOffset.y = json.get<Number>("MSG_OFFSET_Y");
-
+    _speakerName.SetPosition(json.get<Number>("SPEAKER_OFFSET_X"), json.get<Number>("SPEAKER_OFFSET_Y"));
+    _textProcessor.SetPosition(json.get<Number>("MSG_OFFSET_X"), json.get<Number>("MSG_OFFSET_Y"));
     SetFont(json.get<String>("MSG_FONT"));
     
-    _textProcessor.SetColor(json.get<Number>("CHAR_COLOR_RED"), json.get<Number>("CHAR_COLOR_GREEN"), json.get<Number>("CHAR_COLOR_BLUE"));
-    _textProcessor.SetShadowColor(json.get<Number>("CHAR_SHADOW_COLOR_RED"), json.get<Number>("CHAR_SHADOW_COLOR_GREEN"), json.get<Number>("CHAR_SHADOW_COLOR_BLUE"));
+    _textProcessor.SetColor(
+        json.get<Number>("CHAR_COLOR_RED"), 
+        json.get<Number>("CHAR_COLOR_GREEN"), 
+        json.get<Number>("CHAR_COLOR_BLUE"));
+
+    _textProcessor.SetShadowColor(
+        json.get<Number>("CHAR_SHADOW_COLOR_RED"), 
+        json.get<Number>("CHAR_SHADOW_COLOR_GREEN"), 
+        json.get<Number>("CHAR_SHADOW_COLOR_BLUE"));
+
     _textProcessor.SetShadowPercent(json.get<Number>("CHAR_SHADOW_PERCENT"));
 
     //_textProcessor.SetPointAlpha(&_alpha);
@@ -82,10 +87,8 @@ bool CMessageBox::SetProperty(Object json, bool isLoad)
 
 //================================
 //property:
-//* ORDER,
 //* PATH,
-//* X,
-//* Y,
+//* ORDER,
 //* MSG_OFFSET_X,
 //* MSG_OFFSET_Y,
 //* MSG_WIDTH,
@@ -104,14 +107,27 @@ bool CMessageBox::SetProperty(Object json, bool isLoad)
 //* CHAR_SHADOW_COLOR_GREEN,
 //* CHAR_SHADOW_COLOR_BLUE,
 //* CHAR_SHADOW_PERCENT,
+//JIUGONG
+//{
+//* LEFT_WIDTH,
+//* RIGHT_WIDTH,
+//* TOP_HEIGHT,
+//* BOTTOM_HEIGHT,
+//}
 //SCALE,
 //SCALE_X,
 //SCALE_Y,
 //ROTATION,
 //ORIGIN_X,
 //ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
 //================================
-bool CMessageBox::CheckList(Object json)
+bool CMessageBox::CheckList(const Object& json)
 {
     bool result = CBox::CheckList(json);
 
@@ -215,25 +231,19 @@ void CMessageBox::OnLoop()
     if (_textProcessor.GetStatus() == CTextProcessing::FINISH
         && !_textProcessor.GetText().empty()){
         if (!_isFramesChanged){
-            _frames.SetPosition(_textProcessor.GetLastCharacterPos().x + 5.0f,
+            _frames.SetPosition(_textProcessor.GetLastCharacterPos().x,
                 _textProcessor.GetLastCharacterPos().y);
-        
+
+            _frames.SetAlpha(255);
             _frames.TurnOn(true);
             _isFramesChanged = true;
         }
-            
-        _frames.SetAlpha(GetAlpha());
     }
     else{
         _frames.SetAlpha(0);
         _frames.TurnOff();
         _isFramesChanged = false;
     }
-
-    _textProcessor.OnLoop();
-    
-    //if (_pauseControl)
-    //    *_pauseControl = (_pause || !IsTextAllShown()) ? true : *_pauseControl;
 }
 
 void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
@@ -242,21 +252,9 @@ void CMessageBox::OnRender(sf::RenderTarget* Surf_Dest)
         CBox::OnRender(Surf_Dest);
 }
 
-void CMessageBox::SetSpeakerName(vector<string> args)
-{
-    if (args.size() > 0)
-        SetSpeakerName(args[0]);
-}
-
 void CMessageBox::SetSpeakerName(string name)
 {
     _speakerName.SetString(name);
-}
-
-void CMessageBox::SetText(vector<string> args)
-{
-    if (args.size() > 0)
-        SetText(args[0]);
 }
 
 void CMessageBox::SetText(string msg)

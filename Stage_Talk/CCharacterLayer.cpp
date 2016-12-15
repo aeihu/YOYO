@@ -162,7 +162,7 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 //MOUTH_COMPOSITE,
 //================================
 
-bool CCharacterLayer::CheckList(Object json) 
+bool CCharacterLayer::CheckList(const Object& json)
 {
     bool __result = true;
     string __name;
@@ -277,7 +277,7 @@ bool CCharacterLayer::CheckList(Object json)
     return __result;
 }
 
-bool CCharacterLayer::SetProperty(Object json, bool isLoad)
+bool CCharacterLayer::SetProperty(const Object& json, bool isLoad)
 {
     Array __bodies = json.get<Array>("BODY");
     sf::IntRect _rectForEye(

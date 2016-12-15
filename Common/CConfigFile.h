@@ -22,8 +22,8 @@ class CConfigFile
     private:
         Object _json;
     protected:
-        virtual bool CheckList(Object json)=0;
-        virtual bool SetProperty(Object json, bool isLoad=true)=0;
+        virtual bool CheckList(const Object& json)=0;
+        virtual bool SetProperty(const Object& json, bool isLoad = true) = 0;
     public:
         virtual bool LoadConfigFile(const char* FileName);
         virtual void Reset();

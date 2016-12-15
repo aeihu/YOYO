@@ -81,7 +81,7 @@ void CText::SetFont(string name)
 {
     CFont* __fnt = NULL;
     CObject* __object = 
-        CResourceControl::_ResourceManager._ObjectControl.GetObject(name);
+        CResourceControl::_ResourceManager._ObjectControl.GetObject("Font:" + name);
    
     if (__object != NULL){
         __fnt = static_cast<CFont*>(__object);

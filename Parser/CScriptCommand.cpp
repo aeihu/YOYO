@@ -1218,26 +1218,14 @@ int Common_SetText(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
         __colorGreen != "" ||
         __colorBlue != ""){
 
-        sf::Color __color = __txt->GetColor();
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, int, void>(
+            __txt, &CText::SetRed, __colorRed == "" ? __txt->GetRed() : atoi(__colorRed.c_str())));
 
-        if (__colorRed != ""){
-            __color.r = atoi(__colorRed.c_str());
-        }
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, int, void>(
+            __txt, &CText::SetGreen, __colorGreen == "" ? __txt->GetGreen() : atoi(__colorGreen.c_str())));
 
-        if (__colorGreen != ""){
-            __color.g = atoi(__colorGreen.c_str());
-        }
-
-        if (__colorBlue != ""){
-            __color.b = atoi(__colorBlue.c_str());
-        }
-
-        vector<unsigned char> __args;
-        __args.push_back(__color.r);
-        __args.push_back(__color.g);
-        __args.push_back(__color.b);
-
-        __sim->AddAction(new CClassFuncArgsOfAction<CText, vector<unsigned char>, void>(__txt, &CText::SetColor, __args));
+        __sim->AddAction(new CClassFuncArgsOfAction<CText, int, void>(
+            __txt, &CText::SetBlue, __colorBlue == "" ? __txt->GetBlue() : atoi(__colorBlue.c_str())));
     }
 
     if (__font != "")

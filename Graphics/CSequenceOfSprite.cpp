@@ -8,69 +8,80 @@
 
 #include "CSequenceOfSprite.h"
 
-CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int width, int height):CImgLayer(x,y)
+CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int width, int height)
 {
+    SetPosition(x, y);
     _rect.top = left;
     _rect.left = top;
     _rect.width = width;
     _rect.height = height;
 }
 
+bool CSequenceOfSprite::LoadImgForSetProperty(const Object& json, string key)
+{
+    if (CImgLayer::LoadImgForSetProperty(json, key)){
+        SetCurrentImageFrame(0);
+        return true;
+    }
+    return false;
+}
+
 //================================
 //property:
-//* TILESET_PATH,
+//* PATH,
 //* ORDER,
+//* WIDTH,
+//* HEIGHT,
+//* MAX_FRAMES,
+//* FRAME_RATE,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,
 //ROTATION,
 //ORIGIN_X,
 //ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
 //================================
-bool CSequenceOfSprite::CheckList(Object json)
+bool CSequenceOfSprite::CheckList(const Object& json)
 {
-    bool __result = true;
+    bool result = CImgLayer::CheckList(json);
 
-    if (!json.has<String>("TILESET_PATH")){
-        cout << "can't find value of TILESET_PATH." << endl;
-        __result = false;
+    if (!json.has<Number>("WIDTH")){
+        cout << "can't find value of WIDTH." << endl;
+        result = false;
     }
 
-    if (!json.has<Number>("ORDER")){
-        cout << "can't find value of ORDER." << endl;
-        __result = false;
+    if (!json.has<Number>("HEIGHT")){
+        cout << "can't find value of HEIGHT." << endl;
+        result = false;
     }
 
-    return __result;
+    if (!json.has<Number>("MAX_FRAMES")){
+        cout << "can't find value of MAX_FRAMES." << endl;
+        result = false;
+    }
+
+    if (!json.has<Number>("FRAME_RATE")){
+        cout << "can't find value of FRAME_RATE." << endl;
+        result = false;
+    }
+
+    return result;
 }
 
-bool CSequenceOfSprite::SetProperty(Object json, bool isLoad)
+bool CSequenceOfSprite::SetProperty(const Object& json, bool isLoad)
 {
-    if (isLoad)
-        if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
-            return false;
+    SetWidth(json.get<Number>("WIDTH"));
+    SetHeight(json.get<Number>("HEIGHT"));
+    SetMaxFrames(json.get<Number>("MAX_FRAMES"));
+    SetFrameRate(json.get<Number>("FRAME_RATE"));
 
-    SetLayerOrder(json.get<Number>("ORDER"));
-
-    if (json.has<Number>("SCALE")){
-        _scale.y = _scale.x = json.get<Number>("SCALE");
-    }
-    else{
-        _scale.x = json.has<Number>("SCALE_X") ? json.get<Number>("SCALE_X") : 1.0f;
-        _scale.y = json.has<Number>("SCALE_Y") ? json.get<Number>("SCALE_Y") : 1.0f;
-    }
-
-    _rotation = json.has<Number>("ROTATION") ? json.get<Number>("ROTATION") : 0.0f;
-    return true;
-}
-
-bool CSequenceOfSprite::LoadImg(const char* filename)
-{
-    if (CImgLayer::LoadImg(filename)){
-        SetCurrentImageFrame(0);
-        return true;
-    }
-    return false;
+    return CImgLayer::SetProperty(json);
 }
 
 void CSequenceOfSprite::SetCurrentImageFrame(int frame)

@@ -16,17 +16,15 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
     private:
         sf::IntRect        _rect;
     protected:
-        virtual bool CheckList(Object json);
-        virtual bool SetProperty(Object json, bool isLoad=true);
+        virtual bool CheckList(const Object& json);
+        virtual bool SetProperty(const Object& json, bool isLoad = true);
     public:
-        using CImgLayer::_texture;
-        using CImgLayer::_sprite;
+        virtual bool LoadImgForSetProperty(const Object& json, string key);
 
         CSequenceOfSprite(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);
         void SetWidth(int w);
         void SetHeight(int h);
-        bool LoadImg(const char* filename);
 
         sf::Vector2f GetPosition();
         int GetWidth();

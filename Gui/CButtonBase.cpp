@@ -24,7 +24,7 @@ CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int fram
 
 bool CButtonBase::OnLButtonDown(int x, int y)
 {
-    if (_isShowed)
+    if (IsShowed())
         if (_isMouseOver){
             _isMouseDown = true;
             SetCurrentImageFrame(GetMaxFrames());
@@ -39,7 +39,7 @@ bool CButtonBase::OnLButtonDown(int x, int y)
 
 bool CButtonBase::OnLButtonUp(int x, int y)
 {
-    if (_isShowed){
+    if (IsShowed()){
         if(_isMouseOver){
             _isMouseDown = false;
             SetCurrentImageFrame(GetMaxFrames()-1);
@@ -73,7 +73,7 @@ bool CButtonBase::IsMouseDown() const
 
 bool CButtonBase::OnMouseMove(int x, int y)
 {
-    if (_isShowed){
+    if (IsShowed()){
         if(( x > GetPosition().x ) && ( x < GetPosition().x + GetWidth()) && 
             ( y > GetPosition().y ) && ( y < GetPosition().y + GetHeight())){
             if (!_isMouseOver)
@@ -95,72 +95,4 @@ bool CButtonBase::OnMouseMove(int x, int y)
         }
     }
     return false;
-}
-
-//================================
-//property:
-//* TILESET_PATH,
-//* WIDTH,
-//* HEIGHT,
-//* MAX_FRAMES,
-//* FRAME_RATE,
-//* X,
-//* Y,
-//? ORDER,
-//================================
-bool CButtonBase::CheckList(Object json) 
-{
-    bool result = true;
-    if (!json.has<String>("TILESET_PATH")){
-        cout << "can't find value of TILESET_PATH." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("WIDTH")){
-        cout << "can't find value of WIDTH." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("HEIGHT")){
-        cout << "can't find value of HEIGHT." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("MAX_FRAMES")){
-        cout << "can't find value of MAX_FRAMES." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("FRAME_RATE")){
-        cout << "can't find value of FRAME_RATE." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("X")){
-        cout << "can't find value of X." << endl;
-        result = false;
-    }
-
-    if (!json.has<Number>("Y")){
-        cout << "can't find value of Y." << endl;
-        result = false;
-    }
-
-    return result;
-}
-
-bool CButtonBase::SetProperty(Object json, bool isLoad)
-{    
-    SetWidth(json.get<Number>("WIDTH"));
-    SetHeight(json.get<Number>("HEIGHT"));
-
-    if (isLoad)
-        if (!LoadImg(json.get<String>("TILESET_PATH").c_str()))
-            return false;
-
-    SetMaxFrames(json.get<Number>("MAX_FRAMES"));
-    SetFrameRate(json.get<Number>("FRAME_RATE"));
-    SetPosition(json.get<Number>("X"), json.get<Number>("Y"));
-
-    return true;
 }
