@@ -87,6 +87,7 @@ class CSoundBank {
 
         int AddVoice(string name, string filename);
         bool PlayVoice(string name);
+        bool PlayVoice(sf::SoundBuffer* buffer);
         bool DeleteVoice(string name);
         bool GetVoiceStatus();
         bool GetVoiceStatus(string name);

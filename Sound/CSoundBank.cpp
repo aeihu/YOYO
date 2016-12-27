@@ -141,13 +141,34 @@ bool CSoundBank::PlaySE(string name, float vol, bool loop)
     }
 
     _soundPool.push_back(make_pair(name, sf::Sound()));
-    _soundPool.back().first = name;
     _soundPool.back().second.setBuffer(*_seList[name]);
     _soundPool.back().second.setLoop(loop);
     _soundPool.back().second.setVolume(vol * CCommon::_Common.SE_VOLUME);
     _soundPool.back().second.play();
     return true;
 }
+
+bool CSoundBank::PlayVoice(sf::SoundBuffer* buffer)
+{
+    StopVoice();
+    for (list<CVoiceStream*>::iterator it = _voicePool.begin(); it != _voicePool.end(); it++){
+        if ((*it)->getStatus() == sf::Sound::Stopped){
+            (*it)->Load(*buffer);
+            (*it)->_Name = ":from_log:";
+            (*it)->setVolume(CCommon::_Common.VOICE_VOLUME);
+            (*it)->play();
+            return true;
+        }
+    }
+
+    _voicePool.push_back(new CVoiceStream());
+    _voicePool.back()->Load(*buffer);
+    _voicePool.back()->_Name = ":from_log:";
+    _voicePool.back()->setVolume(CCommon::_Common.VOICE_VOLUME);
+    _voicePool.back()->play();
+    return true;
+}
+
 
 void CSoundBank::StopVoice()
 {
