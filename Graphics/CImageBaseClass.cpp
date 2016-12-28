@@ -90,14 +90,39 @@ bool CImageBaseClass::AddChildNode(CImageBaseClass* child)
     return false;
 }
 
-void CImageBaseClass::ClearActionList()
+bool CImageBaseClass::RemoveChildNode(CImageBaseClass* child)
 {
-    for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
-        (*it)->ClearActionList();
-    
-    CBaiscProperties::ClearActionList();
+    bool __result = false;
+    if (child)
+        for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end();){
+            if ((*it) == child){
+                it = _childrenList.erase(it);
+                __result = true;
+            }
+            else
+                it++;
+        }
+
+    return __result;
 }
 
+void CImageBaseClass::CleanActionList()
+{
+    for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+        (*it)->CleanActionList();
+    
+    CBaiscProperties::CleanActionList();
+}
+
+void CImageBaseClass::OnCleanup()
+{
+    for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++){
+        (*it)->CleanActionList();
+        (*it)->OnCleanup();
+    }
+
+    CBaiscProperties::OnCleanup();
+}
 
 void CImageBaseClass::Loop(sf::Transformable* obj)
 {

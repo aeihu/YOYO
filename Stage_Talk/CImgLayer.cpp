@@ -192,7 +192,7 @@ void CImgLayer::OnRender(sf::RenderTarget* Surf_Dest)
 
 void CImgLayer::OnCleanup()
 {
-    CBaiscProperties::OnCleanup();
+    CImageBaseClass::OnCleanup();
     if (_texture == NULL){
         delete _texture;
         _texture == NULL;

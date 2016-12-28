@@ -62,17 +62,17 @@ void CCameraControl::OnLoop()
 void CCameraControl::OnCleanup()
 {
     for (map<string, CCamera*>::iterator it = _cameraList.begin(); it != _cameraList.end(); it++){
-        (*it).second->ClearActionList();
+        (*it).second->CleanActionList();
         delete (*it).second;
     }
 
     _cameraList.clear();
 }
 
-void CCameraControl::ClearActionList()
+void CCameraControl::CleanActionList()
 {
     for (map<string, CCamera*>::iterator it = _cameraList.begin(); it != _cameraList.end(); it++)
-        (*it).second->ClearActionList();
+        (*it).second->CleanActionList();
 }
 
 bool CCameraControl::UseCamera(string name)

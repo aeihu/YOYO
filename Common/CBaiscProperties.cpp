@@ -321,14 +321,14 @@ void CBaiscProperties::OnLoop()
     _isActionRunning = _actionList.OnLoop();
 }
 
-void CBaiscProperties::ClearActionList()
+void CBaiscProperties::CleanActionList()
 {
     _actionList.OnCleanup();
 }
 
 void CBaiscProperties::OnCleanup()
 {
-    ClearActionList();
+    CleanActionList();
 }
 
 void CBaiscProperties::OnSaveData(Object& json) const

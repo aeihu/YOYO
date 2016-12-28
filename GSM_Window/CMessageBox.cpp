@@ -37,6 +37,7 @@ CMessageBox* CMessageBox::Create(const char* filename)
     if (__msgbox->LoadConfigFile(filename)){
         __msgbox->SetClassName("MessageBox");
         __msgbox->SetPath(filename);
+        __msgbox->SetLayerOrder(160);
         return __msgbox;
     }
     

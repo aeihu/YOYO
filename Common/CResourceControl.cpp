@@ -190,28 +190,37 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!_LuaControl.OnInit())
         return false;
 
+    if (_gameBaiscAsset.has<String>("logbox")){
+        if (!_DrawableObjectControl.AddDrawableObject(
+            "logbox",
+            "LogBox",
+            _gameBaiscAsset.get<String>("logbox")))
+            return false;
+    }
+    else
+        return false;
+
     _loadingProcessStatus = CResourceControl::INIT;
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
     _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
 
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
-    
 
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "logbox", "LogBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
 
     if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_script"))){
         _LuaControl.LoadScript(_gameBaiscAsset.get<String>("loading_script"), true);
     }
-    else{
+    else
         return false;
-    }
 
     return LoadScript(_gameBaiscAsset.get<String>("main_script"));
 }
@@ -391,8 +400,8 @@ bool CResourceControl::LoadScript(string filename)
         _SoundControl.StopSE();
         _SoundControl.StopVoice();
         _ActionControl.OnCleanup();
-        _DrawableObjectControl.ClearActionList();
-        _CameraControl.ClearActionList();
+        _DrawableObjectControl.CleanActionList();
+        _CameraControl.CleanActionList();
         OffMsgboxPause();
         CActionBaseClass::GC();
 

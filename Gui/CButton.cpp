@@ -59,7 +59,7 @@ CButton* CButton::Create(const char* filename)
     if (__btn->LoadConfigFile(filename)){
         __btn->SetClassName("Button");
         __btn->SetPath(filename);
-        __btn->SetLayerOrder(106);
+        __btn->SetLayerOrder(161);
         return __btn;
     }
     

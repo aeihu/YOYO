@@ -49,7 +49,7 @@ class CBaiscProperties : public CObject
         virtual void SetOriginX(float x);
         virtual void SetOriginY(float y);
 
-        virtual void ClearActionList();
+        virtual void CleanActionList();
 
         virtual CSimultaneousOfAction* CreateActionOfOriginTo(size_t elapsed, float x, float y, bool restore);
         virtual CActionTo* CreateActionOfOriginXTo(size_t elapsed, float x, bool restore);

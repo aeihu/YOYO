@@ -46,12 +46,14 @@ class CImageBaseClass : public CDrawableClass
         virtual void OnLoadData(Object json);
 
         virtual bool AddChildNode(CImageBaseClass* child);
+        virtual bool RemoveChildNode(CImageBaseClass* child);
 
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
         virtual sf::Transform GetTransform() = 0;
 
-        virtual void ClearActionList();
+        virtual void CleanActionList();
+        virtual void OnCleanup();
 };
 
 #endif

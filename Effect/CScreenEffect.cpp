@@ -174,7 +174,7 @@ CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
     __result->_vertexArray.resize(num);
     __result->_vertexData.resize(num);
     __result->_vertexArray.setPrimitiveType(sf::Quads);
-    __result->SetLayerOrder(100);
+    __result->SetLayerOrder(150);
     for (size_t i=0; i<num; i++){
         __result->_vertexData[i]._x = ((i+2)>>2)*distance;
         __result->_vertexData[i]._y = (i>>1)%2 == i%2 ? 0:height;

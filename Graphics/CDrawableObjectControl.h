@@ -36,7 +36,7 @@ class CDrawableObjectControl
         bool ResetDrawableObject(string name, string objTypeName);
         bool DelDrawableObject(string name);
         CDrawableClass* GetDrawableObject(string name);
-        void ClearActionList();
+        void CleanActionList();
 
         bool OnLButtonUp(int mX, int mY);
         bool OnLButtonDown(int mX, int mY);
