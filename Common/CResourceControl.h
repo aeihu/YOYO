@@ -32,19 +32,23 @@ class CResourceControl
 {
     public:
         enum EProcStatus{
-            INIT,
-            LOADING,
-            LOADINGSAVEDATA,
-            LOADEDSAVEDATA,
+            INIT = 0,
+
+            LOADING_ASSET = 10,
+            LOADED_ASSET,
+            LOADING_SAVEDATA,
             LOADED,
-            PLAYING
+            EXIT_LOADING,
+
+            PLAYING = 20,
+            PLAYING_MSGBOX_TYPING,
+            PLAYING_MSGBOX_TYPED,
+            PLAYING_LOGBOX,
+            PLAYING_SAVEBOX,
+            PLAYING_LOADBOX
         };
     private:
         sf::Thread                      _threadOfLoading;
-
-        // for mutex
-        //sf::Mutex                       _mutexMainForPause;
-        //sf::Mutex                       _mutexLuaForPause;
 
         string                          _fileNameOfCurrentRunningScript;
         string                          _fileNameOfLuaForRun;
@@ -58,10 +62,8 @@ class CResourceControl
 
         bool                            _isLoadPlayerData;
         bool                            _msgboxPauseRequest;
-        bool                            _isWaitingForActionEnd;
-        //bool                            _isNeedLockMutex;
 
-        EProcStatus                     _loadingProcessStatus;
+        EProcStatus                     _processStatus;
 
         bool                            _isAuto;
         bool                            _flagForAuto;
@@ -80,7 +82,7 @@ class CResourceControl
         bool CheckOut(Object& json, string colName, string objTypeName);
 
         void AutoToNextStep();
-        void OffWaitingAction();
+        void ExitLoadingStatus();
         void CopyActForLoadingFinishToActionControl();
     protected:
 
@@ -105,7 +107,7 @@ class CResourceControl
 
         void DelActionForActionControl(string name);
 
-        EProcStatus GetLoadingProcessStatus() const;
+        EProcStatus GetProcessStatus() const;
         bool GetAuto() const;
         void SetAuto(bool isAuto);
         string GetVariable(string name);

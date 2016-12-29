@@ -46,8 +46,8 @@ void CEvent::OnEvent(sf::Event* Event) {
             break;
         }
 
-        case sf::Event::MouseWheelMoved: {
-            OnMouseWheel(Event->mouseWheel.delta);
+        case sf::Event::MouseWheelScrolled: {
+            OnMouseWheel(Event->mouseWheelScroll.delta);
             break;
         }
 

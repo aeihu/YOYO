@@ -25,10 +25,9 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _isLoadPlayerData =
     _isAuto = 
     _msgboxPauseRequest =
-    _isWaitingForActionEnd =
     _flagForAuto = false;
     //_isNeedLockMutex = true;
-    _loadingProcessStatus = CResourceControl::INIT;
+    _processStatus = CResourceControl::INIT;
 }
 
 bool CResourceControl::GetMsgboxPauseStatus() const
@@ -190,17 +189,17 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!_LuaControl.OnInit())
         return false;
 
-    if (_gameBaiscAsset.has<String>("logbox")){
-        if (!_DrawableObjectControl.AddDrawableObject(
-            "logbox",
-            "LogBox",
-            _gameBaiscAsset.get<String>("logbox")))
-            return false;
-    }
-    else
-        return false;
+    //if (_gameBaiscAsset.has<String>("logbox")){
+    //    if (!_DrawableObjectControl.AddDrawableObject(
+    //        "logbox",
+    //        "LogBox",
+    //        _gameBaiscAsset.get<String>("logbox")))
+    //        return false;
+    //}
+    //else
+    //    return false;
 
-    _loadingProcessStatus = CResourceControl::INIT;
+    _processStatus = CResourceControl::INIT;
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
     _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
 
@@ -212,7 +211,6 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "logbox", "LogBox") < 1) return false;
     if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
     if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
 
@@ -384,13 +382,7 @@ void CResourceControl::ThreadOfLoadAsset()
          }
     }
 
-    if (_isLoadPlayerData){
-        _loadingProcessStatus = CResourceControl::LOADINGSAVEDATA;
-    }
-    else{
-        CopyActForLoadingFinishToActionControl();
-        _loadingProcessStatus = CResourceControl::LOADED;
-    }
+    _processStatus = CResourceControl::LOADED_ASSET;
 }
 
 bool CResourceControl::LoadScript(string filename)
@@ -407,7 +399,7 @@ bool CResourceControl::LoadScript(string filename)
 
         _currentMgsLine = 0;
         _fileNameOfCurrentRunningScript = filename;
-        _loadingProcessStatus = CResourceControl::LOADING;
+        _processStatus = CResourceControl::LOADING_ASSET;
         _ActionControl.AddAction(_ActForLoadingBegin.Copy());
         _threadOfLoading.launch();
         return true;
@@ -416,103 +408,71 @@ bool CResourceControl::LoadScript(string filename)
         return false;
 }
 
-CResourceControl::EProcStatus CResourceControl::GetLoadingProcessStatus() const
+CResourceControl::EProcStatus CResourceControl::GetProcessStatus() const
 {
-    return _loadingProcessStatus;
+    return _processStatus;
 }
 
-// for mutex
-//void CResourceControl::LockMutexInLua()//run in lua
-//{
-//    _isWaitingUnlockMutexInMain = true;
-//    _isNeedLockMutex = false;
-//    _mutexMainForPause.lock();
-//    _isNeedLockMutex = true;
-//    _mutexMainForPause.unlock();
-//    _mutexLuaForPause.lock();
-//    _mutexLuaForPause.unlock();
-//    _isWaitingUnlockMutexInMain = false;
-//}
-//
-// for mutex
-//void CResourceControl::UnlockMutexInMain() //run in main
-//{
-//    _mutexLuaForPause.lock();
-//    _mutexMainForPause.unlock();
-//}
-void CResourceControl::OffWaitingAction()
+void CResourceControl::ExitLoadingStatus()
 {
-    _isWaitingForActionEnd = false;
+    _processStatus = EXIT_LOADING;
 }
-
 
 void CResourceControl::CopyActForLoadingFinishToActionControl()
 {
-    _isWaitingForActionEnd = true;
     CSequenceOfAction* __seq = new CSequenceOfAction();
     __seq->AddAction(_ActForLoadingFinish.Copy());
-    __seq->AddAction(new CClassFuncOfAction<CResourceControl, void>(this, &CResourceControl::OffWaitingAction));
+    __seq->AddAction(new CClassFuncOfAction<CResourceControl, void>(this, &CResourceControl::ExitLoadingStatus));
     _ActionControl.AddAction(__seq);
 }
 
 void CResourceControl::OnLoop() //run in main
 {
-    // for mutex
-    //if (_isNeedLockMutex){
-    //    _mutexMainForPause.lock();
-    //    _mutexLuaForPause.unlock();
-    //    _isNeedLockMutex = false;
-    //}
-
     _ActionControl.OnLoop();
     _SoundControl.OnLoop();
 
-    if (_loadingProcessStatus == CResourceControl::PLAYING){
+    if (_processStatus == CResourceControl::PLAYING){
         _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
         AutoToNextStep();
     }
-
-    if (_loadingProcessStatus == CResourceControl::LOADING || 
-        _loadingProcessStatus == CResourceControl::LOADINGSAVEDATA ||
-        _loadingProcessStatus == CResourceControl::LOADEDSAVEDATA ||
-        _loadingProcessStatus == CResourceControl::LOADED){
+    else if (_processStatus >= LOADING_ASSET && _processStatus < PLAYING){
         _LoadingObjectControl.OnLoop();
 
-        if (_loadingProcessStatus == CResourceControl::LOADEDSAVEDATA){
-            _CameraControl.OnLoop();
-            _DrawableObjectControl.OnLoop();
-            CActionBaseClass::AllSkipOn();
-            if (GetMsgboxPauseStatus()){
-                OffMsgboxPause();
-                _LuaControl.ResumeLuaThread();
-            }
-
-            if (_playerData.get<Number>("current_message_line") <= _currentMgsLine){
-                CActionBaseClass::AllSkipOff();
-                CopyActForLoadingFinishToActionControl();
-                _loadingProcessStatus = CResourceControl::LOADED;
-            }
-        }
-
-        if (_loadingProcessStatus == CResourceControl::LOADED && !_isWaitingForActionEnd){
-            _loadingProcessStatus = CResourceControl::PLAYING;
-            if (_isLoadPlayerData)
-                _isLoadPlayerData = false;
-            else
+        switch (_processStatus)
+        {
+            case CResourceControl::LOADED_ASSET:
+                _processStatus = _isLoadPlayerData ? LOADING_SAVEDATA : LOADED;
                 _LuaControl.LoadScript(_fileNameOfLuaForRun);
-        }
+            break;
+            case CResourceControl::LOADING_SAVEDATA:
+                _CameraControl.OnLoop();
+                _DrawableObjectControl.OnLoop();
+                CActionBaseClass::AllSkipOn();
+                if (GetMsgboxPauseStatus()){
+                    OffMsgboxPause();
+                    _LuaControl.ResumeLuaThread();
+                }
 
-        if (_loadingProcessStatus == CResourceControl::LOADINGSAVEDATA){
-            _LuaControl.LoadScript(_fileNameOfLuaForRun);
-            _loadingProcessStatus = CResourceControl::LOADEDSAVEDATA;
+                if (_playerData.get<Number>("current_message_line") <= _currentMgsLine){
+                    CActionBaseClass::AllSkipOff();
+                    _processStatus = CResourceControl::LOADED;
+                }
+            break;
+            case CResourceControl::LOADED:
+                CopyActForLoadingFinishToActionControl();
+            break;
+            case CResourceControl::EXIT_LOADING:
+                _isLoadPlayerData = false;
+                _processStatus = CResourceControl::PLAYING;
+            break;
         }
     }
 }
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_loadingProcessStatus != CResourceControl::PLAYING)
+    if (_processStatus != CResourceControl::PLAYING)
         _LoadingObjectControl.OnRender(Surf_Dest);
     else
         _DrawableObjectControl.OnRender(Surf_Dest);
@@ -651,7 +611,7 @@ bool CResourceControl::GetAuto() const
 
 void CResourceControl::SetAuto(bool isAuto)
 {
-    if (_loadingProcessStatus == CResourceControl::PLAYING)
+    if (_processStatus == CResourceControl::PLAYING)
         _isAuto = isAuto;
 }
 
@@ -676,7 +636,7 @@ bool CResourceControl::DelVariable(string name)
 
 void CResourceControl::AutoToNextStep()
 {
-    if (_isAuto && _loadingProcessStatus == CResourceControl::PLAYING){
+    if (_isAuto && _processStatus == CResourceControl::PLAYING){
         Array& __array = _gameBaiscAsset.get<Array>("messagebox");
         for (size_t i=0; i<__array.size(); i++){
             CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(__array.get<Object>(i).get<String>("name")));
@@ -705,7 +665,7 @@ void CResourceControl::AutoToNextStep()
         
 void CResourceControl::SkipOn()
 {
-    if (_loadingProcessStatus == CResourceControl::PLAYING){
+    if (_processStatus == CResourceControl::PLAYING){
         CActionBaseClass::AllSkipOn();
         if (GetMsgboxPauseStatus()){
             OffMsgboxPause();
