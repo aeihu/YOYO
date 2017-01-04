@@ -7,6 +7,7 @@
 */
 
 #include "CButton.h"
+#include "../Common/CResourceControl.h"
 
 void CButton::Exec(void* data)
 {

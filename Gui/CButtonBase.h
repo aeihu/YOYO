@@ -11,10 +11,7 @@
 
 #include <string>
 #include <map>
-#include "../Animation/CAnimation.h"
 #include "../Graphics/CSequenceOfSprite.h"
-#include "../Common/CConfigFile.h"
-#include "../Common/CResourceControl.h"
 
 using namespace std;
 
@@ -26,7 +23,7 @@ class CButtonBase : public CSequenceOfSprite
         string          _seNameOfMouseOver;
         string          _seNameOfMouseDown;
     protected:
-        virtual void Exec(void* data=NULL)=0;
+        virtual void Exec(void* data = NULL) = 0;
     public:
         CButtonBase(float x=0.0f, float y=0.0f, int w=1, int h=1, int maxframes=1, int framerate=10);
 

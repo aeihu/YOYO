@@ -19,7 +19,6 @@ class CCamera : public CBaiscProperties, public CConfigFile
         float               _zoom;
         sf::View            _camera;
         sf::Vector2f        _orgSize;
-        //sf::Vector2f        _size;
         sf::RenderTarget*   _window;
 
         bool CheckList(const Object& json);
@@ -33,7 +32,6 @@ class CCamera : public CBaiscProperties, public CConfigFile
         void SetCamera(float x, float y, float w, float h);
         void SetViewport(float x, float y, float w, float h);
         void SetCenter(float x, float y);
-        //void SetSize(float w, float h);
         void SetZoom(float zoom);
         void Bind(sf::RenderTarget* window);
         void UnBind();

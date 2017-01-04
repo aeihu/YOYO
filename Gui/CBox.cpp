@@ -25,6 +25,8 @@ CBox::~CBox()
 //* ORDER,
 //JIUGONG
 //{
+//* WIDTH,
+//* HEIGHT,
 //* LEFT_WIDTH,
 //* RIGHT_WIDTH,
 //* TOP_HEIGHT,

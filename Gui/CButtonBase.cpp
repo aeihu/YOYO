@@ -8,6 +8,7 @@
 
 #include "CButtonBase.h"
 #include "../Sound/CSoundBank.h"
+#include "../Common/CResourceControl.h"
 
 CButtonBase::CButtonBase(float x, float y, int w, int h, int maxframes, int framerate):CSequenceOfSprite(x,y,0,0,w,h)
 {

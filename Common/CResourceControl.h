@@ -20,6 +20,7 @@
 #include "../Action/CClassFuncOfAction.h"
 #include "../Effect/CScreenEffect.h"
 #include "../GSM_Window/CMessageBox.h"
+#include "../GSM_Window/CLogBox.h"
 #include "../Parser/CLua.h"
 
 using namespace std;
@@ -41,8 +42,6 @@ class CResourceControl
             EXIT_LOADING,
 
             PLAYING = 20,
-            PLAYING_MSGBOX_TYPING,
-            PLAYING_MSGBOX_TYPED,
             PLAYING_LOGBOX,
             PLAYING_SAVEBOX,
             PLAYING_LOADBOX
@@ -70,6 +69,8 @@ class CResourceControl
 
         map<string, string>             _userVariableList;
         map<string, string>             _systemVariableList;
+
+        CLogBox*                        _logbox;
         
         void LoadPlayerDataProcess();
         void ThreadOfLoadAsset();
@@ -83,7 +84,6 @@ class CResourceControl
 
         void AutoToNextStep();
         void ExitLoadingStatus();
-        void CopyActForLoadingFinishToActionControl();
     protected:
 
         CResourceControl();
@@ -112,12 +112,12 @@ class CResourceControl
         void SetAuto(bool isAuto);
         string GetVariable(string name);
 
+        void ShowLogbox();
+        void HideLogbox();
+
         bool GetMsgboxPauseStatus() const;
         void OnMsgboxPause();
         void OffMsgboxPause();
-
-        //void LockMutexInLua();
-        //void UnlockMutexInMain();
 
         bool OnInit(string filename, sf::RenderWindow* Window);
         bool LoadScript(string filename);

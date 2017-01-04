@@ -18,6 +18,7 @@ CResourceControl  CResourceControl::_ResourceManager;
 
 CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::ThreadOfLoadAsset, this)
 {
+    _logbox = NULL;
     _currentMgsLine = 
     _oldTimeForAuto = 0;
     _scriptConfig.reset();
@@ -26,8 +27,17 @@ CResourceControl::CResourceControl() :_threadOfLoading(&CResourceControl::Thread
     _isAuto = 
     _msgboxPauseRequest =
     _flagForAuto = false;
-    //_isNeedLockMutex = true;
     _processStatus = CResourceControl::INIT;
+}
+
+void CResourceControl::ShowLogbox()
+{
+    _processStatus = PLAYING_LOGBOX;
+}
+
+void CResourceControl::HideLogbox()
+{
+    _processStatus = PLAYING;
 }
 
 bool CResourceControl::GetMsgboxPauseStatus() const
@@ -189,15 +199,17 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!_LuaControl.OnInit())
         return false;
 
-    //if (_gameBaiscAsset.has<String>("logbox")){
-    //    if (!_DrawableObjectControl.AddDrawableObject(
-    //        "logbox",
-    //        "LogBox",
-    //        _gameBaiscAsset.get<String>("logbox")))
-    //        return false;
-    //}
-    //else
-    //    return false;
+    if (_gameBaiscAsset.has<String>("logbox")){
+        if (_DrawableObjectControl.AddDrawableObject(
+            "logbox",
+            "LogBox",
+            _gameBaiscAsset.get<String>("logbox")))
+            _logbox = static_cast<CLogBox*>(_DrawableObjectControl.GetDrawableObject("LogBox:logbox"));
+        else
+            return false;
+    }
+    else
+        return false;
 
     _processStatus = CResourceControl::INIT;
     _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
@@ -418,14 +430,6 @@ void CResourceControl::ExitLoadingStatus()
     _processStatus = EXIT_LOADING;
 }
 
-void CResourceControl::CopyActForLoadingFinishToActionControl()
-{
-    CSequenceOfAction* __seq = new CSequenceOfAction();
-    __seq->AddAction(_ActForLoadingFinish.Copy());
-    __seq->AddAction(new CClassFuncOfAction<CResourceControl, void>(this, &CResourceControl::ExitLoadingStatus));
-    _ActionControl.AddAction(__seq);
-}
-
 void CResourceControl::OnLoop() //run in main
 {
     _ActionControl.OnLoop();
@@ -460,7 +464,12 @@ void CResourceControl::OnLoop() //run in main
                 }
             break;
             case CResourceControl::LOADED:
-                CopyActForLoadingFinishToActionControl();
+            {
+                CSequenceOfAction* __seq = new CSequenceOfAction();
+                __seq->AddAction(_ActForLoadingFinish.Copy());
+                __seq->AddAction(new CClassFuncOfAction<CResourceControl, void>(this, &CResourceControl::ExitLoadingStatus));
+                _ActionControl.AddAction(__seq);
+            }
             break;
             case CResourceControl::EXIT_LOADING:
                 _isLoadPlayerData = false;
@@ -491,6 +500,8 @@ void CResourceControl::OnCleanup()
     _ActForLoadingFinish.OnCleanup();
     CActionBaseClass::GC();
     _LuaControl.OnCleanup();
+
+    _logbox = NULL;
 }
 
 void CResourceControl::LoadPlayerDataProcess()

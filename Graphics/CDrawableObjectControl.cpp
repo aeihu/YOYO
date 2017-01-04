@@ -15,6 +15,7 @@
 #include "../Stage_Talk/CCharacterLayer.h"
 #include "../Effect/CParticleSystem.h"
 #include "../GSM_Window/CLogBox.h"
+#include "../GSM_Window/CMessageBox.h"
 
 bool CDrawableObjectControl::IsExists(string name)
 {

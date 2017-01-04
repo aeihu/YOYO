@@ -314,7 +314,7 @@ int Common_FuncOfColor(string objTypeName, lua_State* args, CActionBaseClass** a
     Common_GetValueInTable(args, "i", __inte);
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -397,7 +397,7 @@ int Common_FuncOfShow(string objTypeName, lua_State* args, CActionBaseClass** ac
     Common_GetValueInTable(args, "i", __inte);
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -478,7 +478,7 @@ int Common_FuncOfHide(string objTypeName, lua_State* args, CActionBaseClass** ac
     Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -552,7 +552,7 @@ int Common_FuncOfMove(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
     else{
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+            CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -642,7 +642,7 @@ int Common_FuncOfOrigin(string objTypeName, lua_State* args, CActionBaseClass** 
     Common_GetValueInTable(args, "i", __inte);
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -735,7 +735,7 @@ int Common_FuncOfRotation(string objTypeName, lua_State* args, CActionBaseClass*
     }
     else{
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+            CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -848,7 +848,7 @@ int Common_FuncOfScale(string objTypeName, lua_State* args, CActionBaseClass** a
         }
 
         CDrawableObjectControl* __doc =
-            CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+            CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
             &CResourceControl::_ResourceManager._LoadingObjectControl
                 :
             &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -920,7 +920,7 @@ int Common_FuncOfLayerOrder(string objTypeName, lua_State* args, CActionBaseClas
     }
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -962,7 +962,7 @@ int Common_FuncOfFlip(string objTypeName, lua_State* args, CActionBaseClass** ac
     }
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1019,7 +1019,7 @@ int Common_FuncOfScreen(lua_State* args, bool isShow, CActionBaseClass** act = N
 
     
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
             :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1112,7 +1112,7 @@ int Common_SetPoseCharacterLayer(lua_State* args, CActionBaseClass** act = NULL,
         __args.push_back("");
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
         :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -1193,7 +1193,7 @@ int Common_SetText(lua_State* args, CActionBaseClass** act = NULL, bool isCreate
     Common_GetValueInTable(args, "ss", __styleStrikeThrough);
 
     CDrawableObjectControl* __doc =
-        CResourceControl::_ResourceManager.GetLoadingProcessStatus() == CResourceControl::INIT ?
+        CResourceControl::_ResourceManager.GetProcessStatus() == CResourceControl::INIT ?
         &CResourceControl::_ResourceManager._LoadingObjectControl
         :
         &CResourceControl::_ResourceManager._DrawableObjectControl;
@@ -2176,21 +2176,24 @@ int Cmd_CreateActionForStopSE(lua_State* args)
 
 int Cmd_PlaySE(lua_State* args)
 {
-    if (CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::LOADEDSAVEDATA)
-        if (Common_PlaySE(args) == CMD_YIELD)
-            Common_RetrunYield(args, __FUNCTION__);
+    if (Common_PlaySE(args) == CMD_YIELD)
+        Common_RetrunYield(args, __FUNCTION__);
+    //if (CResourceControl::_ResourceManager.GetProcessStatus() != CResourceControl::LOADEDSAVEDATA)
+    //    if (Common_PlaySE(args) == CMD_YIELD)
+    //        Common_RetrunYield(args, __FUNCTION__);
 
     return 0;
 }
 
 int Cmd_CreateActionForPlaySE(lua_State* args)
 {
-    if (CResourceControl::_ResourceManager.GetLoadingProcessStatus() != CResourceControl::LOADEDSAVEDATA)
-        return Common_CreateActionForXXX(Common_PlaySE, args);
-    else{
-        lua_pushnil(args);
-        return 1;
-    }
+    return Common_CreateActionForXXX(Common_PlaySE, args);
+    //if (CResourceControl::_ResourceManager.GetProcessStatus() != CResourceControl::LOADEDSAVEDATA)
+    //    return Common_CreateActionForXXX(Common_PlaySE, args);
+    //else{
+    //    lua_pushnil(args);
+    //    return 1;
+    //}
 }
 
 int Cmd_ShowButton(lua_State* args)
