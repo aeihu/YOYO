@@ -29,7 +29,7 @@ using namespace std;
 LoadScript()->BeginLoadProcess()->LoadAsset()->EndLoadProcess()
 */
 
-class CResourceControl
+class CResourceControl : public CEventFunctions
 {
     public:
         enum EProcStatus{
@@ -126,12 +126,17 @@ class CResourceControl
         void OnCleanup();
         bool OnSaveData(int index) const;
         bool OnLoadData(int index);
-        
-        void OnLButtonDown(int mX, int mY);
-        void OnLButtonUp(int mX, int mY);
-        void OnRButtonDown(int mX, int mY);
-        void OnRButtonUp(int mX, int mY);
-        void OnMouseMove(int mX, int mY);
+
+        virtual bool OnKeyDown(sf::Event::KeyEvent key);
+        virtual bool OnKeyUp(sf::Event::KeyEvent key);
+        virtual bool OnMouseMove(int mX, int mY);
+        virtual bool OnMouseWheel(int delta);
+        virtual bool OnLButtonDown(int mX, int mY);
+        virtual bool OnLButtonUp(int mX, int mY);
+        virtual bool OnRButtonDown(int mX, int mY);
+        virtual bool OnRButtonUp(int mX, int mY);
+        virtual bool OnMButtonDown(int mX, int mY);
+        virtual bool OnMButtonUp(int mX, int mY);
 };
 
 #endif

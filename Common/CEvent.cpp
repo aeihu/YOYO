@@ -87,30 +87,6 @@ void CEvent::OnEvent(sf::Event* Event) {
             break;
         }
 
-        //case SDL_JOYAXISMOTION: {
-        //    OnJoyAxis(Event->jaxis.which,Event->jaxis.axis,Event->jaxis.value);
-        //    break;
-        //}
-
-        //case SDL_JOYBALLMOTION: {
-        //    OnJoyBall(Event->jball.which,Event->jball.ball,Event->jball.xrel,Event->jball.yrel);
-        //    break;
-        //}
-
-        //case SDL_JOYHATMOTION: {
-        //    OnJoyHat(Event->jhat.which,Event->jhat.hat,Event->jhat.value);
-        //    break;
-        //}
-        //case SDL_JOYBUTTONDOWN: {
-        //    OnJoyButtonDown(Event->jbutton.which,Event->jbutton.button);
-        //    break;
-        //}
-
-        //case SDL_JOYBUTTONUP: {
-        //    OnJoyButtonUp(Event->jbutton.which,Event->jbutton.button);
-        //    break;
-        //}
-
         case sf::Event::Closed: {
             OnExit();
             break;
