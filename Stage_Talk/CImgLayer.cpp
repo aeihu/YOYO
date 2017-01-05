@@ -60,7 +60,7 @@ bool CImgLayer::LoadImgForSetProperty(const Object& json, string key)
 //================================
 //property:
 //* PATH,
-//* ORDER,
+//ORDER,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,
@@ -84,11 +84,6 @@ bool CImgLayer::CheckList(const Object& json)
         __result = false;
     }
 
-    if (!json.has<Number>("ORDER")){
-        cout << "can't find value of ORDER." << endl;
-        __result = false;
-    }
-
     return __result;
 }
 
@@ -97,8 +92,6 @@ bool CImgLayer::SetProperty(const Object& json, bool isLoad)
     if (isLoad)
         if (!LoadImgForSetProperty(json, "PATH"))
             return false;
-
-    SetLayerOrder(json.get<Number>("ORDER"));
 
     if (json.has<Number>("SCALE")){
         SetScale(json.get<Number>("SCALE"), json.get<Number>("SCALE"));
@@ -123,6 +116,9 @@ bool CImgLayer::SetProperty(const Object& json, bool isLoad)
 
     if (_flipY)
         FlipY();
+
+    if (json.has<Number>("ORDER"))
+        SetLayerOrder(json.get<Number>("ORDER"));
 
     SetRed(json.has<Number>("RED") ? json.get<Number>("RED") : 255);
     SetGreen(json.has<Number>("GREEN") ? json.get<Number>("GREEN") : 255);

@@ -199,6 +199,13 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!_LuaControl.OnInit())
         return false;
 
+    _processStatus = CResourceControl::INIT;
+    _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
+    _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
+
+    if (!LoadJson(_gameBaiscAsset, filename))
+        return false;
+
     if (_gameBaiscAsset.has<String>("logbox")){
         if (_DrawableObjectControl.AddDrawableObject(
             "logbox",
@@ -209,13 +216,6 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
             return false;
     }
     else
-        return false;
-
-    _processStatus = CResourceControl::INIT;
-    _DrawableObjectControl.AddDrawableObject("screen","ScrEffect","");
-    _LoadingObjectControl.AddDrawableObject("screen","ScrEffect","");
-
-    if (!LoadJson(_gameBaiscAsset, filename))
         return false;
 
     if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
@@ -313,6 +313,9 @@ bool CResourceControl::LoadJson(Object& obj, string filename)
     JsonProcess(__json, obj, "voice");
     JsonProcess(__json, obj, "music");
     JsonProcess(__json, obj, "text");
+
+    if (__json.has<String>("logbox"))
+        obj << "logbox" << __json.get<String>("logbox");
 
     if (__json.has<String>("main_script"))
         obj << "main_script" << __json.get<String>("main_script");

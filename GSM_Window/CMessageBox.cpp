@@ -89,7 +89,6 @@ bool CMessageBox::SetProperty(const Object& json, bool isLoad)
 //================================
 //property:
 //* PATH,
-//* ORDER,
 //* MSG_OFFSET_X,
 //* MSG_OFFSET_Y,
 //* MSG_WIDTH,
@@ -115,6 +114,7 @@ bool CMessageBox::SetProperty(const Object& json, bool isLoad)
 //* TOP_HEIGHT,
 //* BOTTOM_HEIGHT,
 //}
+//ORDER,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,
@@ -290,16 +290,6 @@ bool CMessageBox::OnLButtonDown(int x, int y)
     }
 
     return ConfirmForText();
-}
-
-bool CMessageBox::OnLButtonUp(int x, int y)
-{
-    return false;
-}
-
-bool CMessageBox::OnRButtonDown(int x, int y)
-{
-    return true;
 }
 
 bool CMessageBox::OnRButtonUp(int x, int y)

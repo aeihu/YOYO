@@ -17,12 +17,12 @@ void CButton::Exec(void* data)
 //================================
 //property:
 //* PATH,
-//* ORDER,
 //* WIDTH,
 //* HEIGHT,
 //* MAX_FRAMES,
 //* FRAME_RATE,
 //* SCRIPT,
+//ORDER,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,

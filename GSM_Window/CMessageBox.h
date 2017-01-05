@@ -44,11 +44,10 @@ class CMessageBox : public CBox
         void SetSpeakerName(string name);
 
         CTextProcessing::EStatus GetStatus() const;
-        bool OnLButtonDown(int x, int y);
-        bool OnLButtonUp(int x, int y);
-        bool OnRButtonDown(int x, int y);
-        bool OnRButtonUp(int x, int y);
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);
+
+        virtual bool OnLButtonDown(int x, int y);
+        virtual bool OnRButtonUp(int x, int y);
 };
 #endif

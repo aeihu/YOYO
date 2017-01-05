@@ -29,11 +29,11 @@ bool CSequenceOfSprite::LoadImgForSetProperty(const Object& json, string key)
 //================================
 //property:
 //* PATH,
-//* ORDER,
 //* WIDTH,
 //* HEIGHT,
 //* MAX_FRAMES,
 //* FRAME_RATE,
+//ORDER,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,

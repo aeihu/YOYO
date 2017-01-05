@@ -10,8 +10,9 @@
     #define _CDRAWABLEOBJECTCONTROL_H_
 
 #include "../Graphics/CDrawableClass.h"
+#include "../Common/CEventFunctions.h"
 
-class CDrawableObjectControl
+class CDrawableObjectControl : public CEventFunctions
 {
     private:
         friend void CDrawableClass::SetLayerOrder(char order);
@@ -38,16 +39,22 @@ class CDrawableObjectControl
         CDrawableClass* GetDrawableObject(string name);
         void CleanActionList();
 
-        bool OnLButtonUp(int mX, int mY);
-        bool OnLButtonDown(int mX, int mY);
-        bool OnRButtonUp(int mX, int mY);
-        bool OnRButtonDown(int mX, int mY);
-        bool OnMouseMove(int mX, int mY);
         void OnLoop();
         void OnRender(sf::RenderWindow* Surf_Dest);
         void OnCleanup();
         void OnSaveData(Object& json) const;
         void OnLoadData(Object json);
+
+        virtual bool OnKeyDown(sf::Event::KeyEvent key);
+        virtual bool OnKeyUp(sf::Event::KeyEvent key);
+        virtual bool OnMouseMove(int mX, int mY);
+        virtual bool OnMouseWheel(int delta);
+        virtual bool OnLButtonDown(int mX, int mY);
+        virtual bool OnLButtonUp(int mX, int mY);
+        virtual bool OnRButtonDown(int mX, int mY);
+        virtual bool OnRButtonUp(int mX, int mY);
+        virtual bool OnMButtonDown(int mX, int mY);
+        virtual bool OnMButtonUp(int mX, int mY);
 };
 
 #endif

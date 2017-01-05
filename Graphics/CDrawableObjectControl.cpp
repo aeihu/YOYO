@@ -117,67 +117,6 @@ CDrawableClass* CDrawableObjectControl::GetDrawableObject(string name)
     return NULL;
 }
 
-bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
-{
-    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
-        if ((*it).second->OnLButtonUp(mX, mY)){
-#ifdef _DEBUG
-            cout << "OnLButtonUp: " << (*it).first << endl;
-#endif
-            return true;
-        }
-
-    return false;
-}
-
-bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
-{
-    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
-        if ((*it).second->OnLButtonDown(mX, mY)){
-#ifdef _DEBUG
-            cout << "OnLButtonDown: " << (*it).first << endl;
-#endif
-            return true;
-        }
-
-    return false;
-}
-        
-bool CDrawableObjectControl::OnRButtonUp(int mX, int mY)
-{
-    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
-        if ((*it).second->OnRButtonUp(mX, mY)){
-#ifdef _DEBUG
-            cout << "OnRButtonUp: " << (*it).first << endl;
-#endif
-            return true;
-        }
-
-    return false;
-}
-
-bool CDrawableObjectControl::OnRButtonDown(int mX, int mY)
-{
-    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
-        if ((*it).second->OnRButtonDown(mX, mY)){
-#ifdef _DEBUG
-            cout << "OnRButtonDown: " << (*it).first << endl;
-#endif
-            return true;
-        }
-
-    return false;
-}
-
-bool CDrawableObjectControl::OnMouseMove(int mX, int mY)
-{
-    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it=_drawableObjectList.rbegin() ; it != _drawableObjectList.rend();it++)
-        if ((*it).second->OnMouseMove(mX, mY))
-            return true;
-
-    return false;
-}
-
 void CDrawableObjectControl::OnLoop()
 {
     if (_isNeedSort){
@@ -256,4 +195,112 @@ void CDrawableObjectControl::OnLoadData(Object json)
             }
         }
     }
+}
+
+//================================================
+
+bool CDrawableObjectControl::OnLButtonUp(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnLButtonUp(mX, mY)){
+#ifdef _DEBUG
+        cout << "OnLButtonUp: " << (*it).first << endl;
+#endif
+        return true;
+    }
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnLButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnLButtonDown(mX, mY)){
+#ifdef _DEBUG
+        cout << "OnLButtonDown: " << (*it).first << endl;
+#endif
+        return true;
+    }
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnRButtonUp(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnRButtonUp(mX, mY)){
+#ifdef _DEBUG
+        cout << "OnRButtonUp: " << (*it).first << endl;
+#endif
+        return true;
+    }
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnRButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnRButtonDown(mX, mY)){
+#ifdef _DEBUG
+        cout << "OnRButtonDown: " << (*it).first << endl;
+#endif
+        return true;
+    }
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnMouseMove(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnMouseMove(mX, mY))
+        return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnMButtonDown(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnMButtonDown(mX, mY))
+        return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnMButtonUp(int mX, int mY)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnMButtonUp(mX, mY))
+        return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnMouseWheel(int delta)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnMouseWheel(delta))
+        return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnKeyDown(sf::Event::KeyEvent key)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnKeyDown(key))
+        return true;
+
+    return false;
+}
+
+bool CDrawableObjectControl::OnKeyUp(sf::Event::KeyEvent key)
+{
+    for (vector<pair<string, CDrawableClass*> >::reverse_iterator it = _drawableObjectList.rbegin(); it != _drawableObjectList.rend(); it++)
+    if ((*it).second->OnKeyUp(key))
+        return true;
+
+    return false;
 }

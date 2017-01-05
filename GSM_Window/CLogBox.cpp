@@ -7,14 +7,60 @@
 */
 
 #include "CLogBox.h"
+#include "../Common/CResourceControl.h"
+
+CLogBox::CTextLog::CTextLog()
+{
+    AddChildNode(&_btnVoice);
+}
+
+void CLogBox::CTextLog::SetTextLog(string text, sf::SoundBuffer* voice)
+{
+    SetString(text);
+    _btnVoice._voice = voice != NULL ? voice : NULL;
+}
+
+bool CLogBox::CTextLog::SetVoiceButton(const Object& json)
+{
+    return _btnVoice.SetProperty(json);
+}
+
+void CLogBox::CTextLog::Clean()
+{
+    SetString("");
+    _btnVoice._voice = NULL;
+}
+
+void CLogBox::CTextLog::OnCleanup()
+{
+    Clean();
+    CImageBaseClass::OnCleanup();
+}
+
+bool CLogBox::CTextLog::OnLButtonDown(int x, int y)
+{
+    return _btnVoice.OnLButtonDown(x, y);
+}
+
+//==========================================
+
+CLogBox::CVoiceButton::CVoiceButton()
+{
+    _voice = NULL;
+}
+
+void CLogBox::CVoiceButton::Exec(void* data)
+{
+    if (_voice)
+        CResourceControl::_ResourceManager._SoundControl.PlayVoice(_voice);
+}
+
+//==========================================
 
 CLogBox::CLogBox()
 {
     _logRowHeight = _logMax = _visNum = 0;
-    AddChildNode(&_scrollbar);
-    //_spriteList.push_back(make_pair(&_btnArrowUp._sprite, &_btnArrowUp.GetPosition()));
-    //_spriteList.push_back(make_pair(&_btnArrowDown._sprite, &_btnArrowDown.GetPosition()));
-    //_spriteList.push_back(make_pair(&_btnBar._sprite, &_btnBar.GetPosition()));
+    //AddChildNode(&_scrollbar);
 }
 
 CLogBox* CLogBox::Create(const char* filename)
@@ -23,6 +69,7 @@ CLogBox* CLogBox::Create(const char* filename)
     if (__logBox->LoadConfigFile(filename)){
         __logBox->SetClassName("LogBox");
         __logBox->SetPath(filename);
+        __logBox->SetLayerOrder(165);
         return __logBox;
     }
     
@@ -30,77 +77,159 @@ CLogBox* CLogBox::Create(const char* filename)
     return NULL;
 }
 
-void CLogBox::OnSubLoop()
+void CLogBox::Up()
 {
-    for (size_t __i = 0; __i < _visNum; __i++){
-        if (_scrollbar.GetValue()+__i < _logList.size()){
-            _logList[_scrollbar.GetValue()+__i]->SetPosition(CBox::GetPosition().x+_logOffset.x, 
-                CBox::GetPosition().y+_logOffset.y + __i * _logRowHeight);
-            _logList[_scrollbar.GetValue()+__i]->SetAlpha(CBox::GetAlpha());
-            _logList[_scrollbar.GetValue()+__i]->OnLoop();
-        }
-        else
-            break;
-    }
-
-    //bool __result = CBox::OnLoop();
-
-    _scrollbar.OnLoop();
+    
 }
 
-void CLogBox::OnSubRender(sf::RenderTarget* Surf_Dest)
+void CLogBox::Down()
 {
-    for (size_t __i = 0; __i < _visNum; __i++){
-        if (_scrollbar.GetValue()+__i < _logList.size()){
-            _logList[_scrollbar.GetValue()+__i]->OnRender(Surf_Dest);
-        }
-        else
-            break;
-    }
 
-    _scrollbar.OnRender(Surf_Dest);
 }
 
 void CLogBox::OnCleanup()
 {
-    for (size_t __i=0; __i<_logList.size(); __i++){
-        _logList[__i]->OnCleanup();
-        delete _logList[__i];
-    }
+    CleanLogList();
+    CBox::OnCleanup();
 
-    _logList.clear();
+    for (vector<CTextLog*>::iterator it = _textLogs.begin(); it != _textLogs.end(); it++){
+        //(*it)->OnCleanup();
+        delete (*it);
+        (*it) = NULL;
+    }
+    
+    _textLogs.clear();
 }
 
+//================================
+//property:
+//* PATH,
+//* SCROLLBAR_OFFSET_X
+//* SCROLLBAR_OFFSET_Y
+//* LOG
+//{
+//* OFFSET_X,
+//* OFFSET_Y,
+//* MAXNUM,
+//* ROW_HEIGHT,
+//* VISIBLE_NUM,
+//}
+//JIUGONG
+//{
+//* WIDTH,
+//* HEIGHT,
+//* LEFT_WIDTH,
+//* RIGHT_WIDTH,
+//* TOP_HEIGHT,
+//* BOTTOM_HEIGHT,
+//}
+//* PLAY_BUTTON
+//{
+//* PATH,
+//* WIDTH,
+//* HEIGHT,
+//* MAX_FRAMES,
+//* FRAME_RATE,
+//}
+//ORDER,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
+//}
+//ORDER,
+//SCALE,
+//SCALE_X,
+//SCALE_Y,
+//ROTATION,
+//ORIGIN_X,
+//ORIGIN_Y,
+//X,
+//Y,
+//RED,
+//GREEN,
+//BLUE,
+//ALPHA,
+//================================
 bool CLogBox::CheckList(const Object& json)
 {
     bool __result = CBox::CheckList(json);
 
-    if (!_scrollbar.CheckList(json))
-        __result = false;
+    //if (!_scrollbar.CheckList(json))
+    //    __result = false;
 
-    if (!json.has<Number>("LOG_OFFSET_X")){
-        cout << "can't find value of LOG_OFFSET_X." << endl;
+    if (!json.has<Object>("LOG")){
+        cout << "can't find value of LOG." << endl;
         __result = false;
     }
+    else{
+        const Object& __obj = json.get<Object>("LOG");
 
-    if (!json.has<Number>("LOG_OFFSET_Y")){
-        cout << "can't find value of LOG_OFFSET_Y." << endl;
-        __result = false;
+        if (!__obj.has<Number>("OFFSET_X")){
+            cout << "can't find value of OFFSET_X." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("OFFSET_Y")){
+            cout << "can't find value of OFFSET_Y." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("MAXNUM")){
+            cout << "can't find value of MAXNUM." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("VISIBLE_NUM")){
+            cout << "can't find value of VISIBLE_NUM." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("ROW_HEIGHT")){
+            cout << "can't find value of ROW_HEIGHT." << endl;
+            __result = false;
+        }
     }
 
-    if (!json.has<Number>("LOG_MAXNUM")){
-        cout << "can't find value of LOG_MAXNUM." << endl;
+    if (!json.has<Object>("PLAY_BUTTON")){
+        cout << "can't find value of PLAY_BUTTON." << endl;
         __result = false;
     }
+    else{
+        const Object& __obj = json.get<Object>("PLAY_BUTTON");
 
-    if (!json.has<Number>("LOG_VISIBLE_NUM")){
-        cout << "can't find value of LOG_VISIBLE_NUM." << endl;
-        __result = false;
-    }
+        if (!__obj.has<String>("PATH")){
+            cout << "can't find value of PATH." << endl;
+            __result = false;
+        }
 
-    if (!json.has<Number>("LOG_ROW_HEIGHT")){
-        cout << "can't find value of LOG_ROW_HEIGHT." << endl;
-        __result = false;
+        if (!__obj.has<Number>("WIDTH")){
+            cout << "can't find value of WIDTH." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("HEIGHT")){
+            cout << "can't find value of HEIGHT." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("MAX_FRAMES")){
+            cout << "can't find value of MAX_FRAMES." << endl;
+            __result = false;
+        }
+
+        if (!__obj.has<Number>("FRAME_RATE")){
+            cout << "can't find value of FRAME_RATE." << endl;
+            __result = false;
+        }
     }
 
     if (!json.has<Number>("SCROLLBAR_OFFSET_X")){
@@ -118,83 +247,71 @@ bool CLogBox::CheckList(const Object& json)
 
 bool CLogBox::SetProperty(const Object& json, bool isLoad)
 {
-    _logMax = json.get<Number>("LOG_MAXNUM");
-    _visNum = json.get<Number>("LOG_VISIBLE_NUM");
-    _logRowHeight = json.get<Number>("LOG_ROW_HEIGHT");
-    _logOffset.x = json.get<Number>("LOG_OFFSET_X");
-    _logOffset.y = json.get<Number>("LOG_OFFSET_Y");
+    if (isLoad){
+        const Object& __obj = json.get<Object>("LOG");
+        _logMax = __obj.get<Number>("MAXNUM");
+        _visNum = __obj.get<Number>("VISIBLE_NUM");
+        _logRowHeight = __obj.get<Number>("ROW_HEIGHT");
+        _logOffset.x = __obj.get<Number>("OFFSET_X");
+        _logOffset.y = __obj.get<Number>("OFFSET_Y");
+
+        for (size_t i = 0; i < _visNum; i++){
+            _textLogs.push_back(new CTextLog());
+            _textLogs.back()->SetPosition(_logOffset.x, _logOffset.y + _logRowHeight * (_visNum - i));
+            _textLogs.back()->SetVoiceButton(json.get<Object>("PLAY_BUTTON"));
+            AddChildNode(_textLogs.back());
+            _childrenList.size();
+        }
+    }
+    else
+        CleanLogList();
+
     //_scrollbar.SetOffset(json.get<Number>("SCROLLBAR_OFFSET_X"), json.get<Number>("SCROLLBAR_OFFSET_Y"));
 
-    if (!_scrollbar.SetProperty(json))
-        return false;
+    //if (!_scrollbar.SetProperty(json))
+    //    return false;
 
     return CBox::SetProperty(json);
 }
 
-void CLogBox::AddLog(string text, sf::SoundBuffer* voice, sf::Font& font)
+void CLogBox::CleanLogList()
 {
-    if (_logList.size() < _logMax){
-        _logList.push_back(new CTextLog());
-    }else{
-        _logList.push_back(_logList.front());
-        _logList.pop_front();
-    }
+    for (size_t i = 0; i < _logList.size(); i++)
+        if (_logList[i].second){
+            delete _logList[i].second;
+            _logList[i].second = NULL;
+        }
+
+    _logList.clear();
     
-    _logList.back()->SetTextLog(text, voice, font);
-    _scrollbar.SetMaxValue(_logList.size() <= _visNum ? 0 : _logList.size()-_visNum);
-    _scrollbar.SetValue(_logList.size() <= _visNum ? 0 : _logList.size()-_visNum);
+    for (size_t i = 0; i < _textLogs.size(); i++)
+        _textLogs[i]->SetTextLog("", NULL);
 }
 
 void CLogBox::AddLog(string text, sf::SoundBuffer* voice)
 {
-    if (_logList.size() < _logMax){
-        _logList.push_back(new CTextLog());
-    }else{
-        _logList.push_back(_logList.front());
-        _logList.pop_front();
+    _logList.push_front(pair<string, sf::SoundBuffer*>(text, voice == NULL ? NULL : new sf::SoundBuffer(*voice)));
+    if (_logList.size() >= _logMax){
+        if (_logList.back().second){
+            delete _logList.back().second;
+            _logList.back().second = NULL;
+        }
+
+        _logList.pop_back();
     }
-    
-    _logList.back()->SetTextLog(text, voice);
 }
 
 bool CLogBox::OnMouseMove(int x, int y)
 {
-    for (size_t __i = 0; __i < _visNum; __i++){
-        if (_scrollbar.GetValue()+__i < _logList.size()){
-            if (_logList[_scrollbar.GetValue()+__i]->OnMouseMove(x, y))
-                return true;
-        }
-        else
-            break;
-    }
-
-    return _scrollbar.OnMouseMove(x, y);
+    return false;
 }
 
 bool CLogBox::OnLButtonDown(int x, int y)
 {
-    for (size_t __i = 0; __i < _visNum; __i++){
-        if (_scrollbar.GetValue()+__i < _logList.size()){
-            if (_logList[_scrollbar.GetValue()+__i]->OnLButtonDown(x, y))
-                return true;
-        }
-        else
-            break;
-    }
-
-    return _scrollbar.OnLButtonDown(x, y);
+    return false;
 }
 
 bool CLogBox::OnLButtonUp(int x, int y)
 {
-    for (size_t __i = 0; __i < _visNum; __i++){
-        if (_scrollbar.GetValue()+__i < _logList.size()){
-            if (_logList[_scrollbar.GetValue()+__i]->OnLButtonUp(x, y))
-                return true;
-        }
-        else
-            break;
-    }
-
-    return _scrollbar.OnLButtonUp(x, y);
+    return false;
 }

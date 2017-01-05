@@ -22,7 +22,6 @@ CBox::~CBox()
 //================================
 //property:
 //* PATH,
-//* ORDER,
 //JIUGONG
 //{
 //* WIDTH,
@@ -32,6 +31,7 @@ CBox::~CBox()
 //* TOP_HEIGHT,
 //* BOTTOM_HEIGHT,
 //}
+//ORDER,
 //SCALE,
 //SCALE_X,
 //SCALE_Y,
@@ -106,6 +106,8 @@ bool CBox::LoadImgForSetProperty(const Object& json, string key)
         _isJiugone = false;
         _sprite.setTexture(*_texture, true);
     }
+
+    return true;
 }
 
 void CBox::OnLoop()

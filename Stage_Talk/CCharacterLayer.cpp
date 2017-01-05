@@ -136,7 +136,6 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 
 //================================
 //property:
-//* ORDER,
 //* EYE_OFFSET_X,
 //* EYE_OFFSET_Y,
 //* EYE_WIDTH,
@@ -158,6 +157,7 @@ void CCharacterLayer::OnRender(sf::RenderTarget* Surf_Dest)
 //  *PATH,
 //  *MAX_FRAMES,
 //}
+//ORDER,
 //EYE_COMPOSITE,
 //MOUTH_COMPOSITE,
 //================================
@@ -166,10 +166,6 @@ bool CCharacterLayer::CheckList(const Object& json)
 {
     bool __result = true;
     string __name;
-    if (!json.has<Number>("ORDER")){
-        cout << "can't find value of ORDER." << endl;
-        __result = false;
-    }            
     
     if (!json.has<Number>("EYE_OFFSET_X")){
         cout << "' can't find value of EYE_OFFSET_X." << endl;
@@ -387,7 +383,9 @@ bool CCharacterLayer::SetProperty(const Object& json, bool isLoad)
     else
         _framesOfEyes.SetDestTexture(&_textureList[_currcentBody]._Texture, _rectForEye);
 
-    SetLayerOrder(json.get<Number>("ORDER"));
+    if (json.has<Number>("ORDER"))
+        SetLayerOrder(json.get<Number>("ORDER"));
+
     return true;
 }
 

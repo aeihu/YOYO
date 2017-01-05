@@ -10,12 +10,12 @@
     #define _CDRAWABLECLASS_H_
 
 #include "../Common/CBaiscProperties.h"
+#include "../Common/CEventFunctions.h"
 
-class CDrawableClass : public CBaiscProperties
+class CDrawableClass : public CBaiscProperties, public CEventFunctions
 {
     private:
         unsigned char                     _layerOrder;
-        //bool                              _isShowed;
         float                             _alpha;
         float                             _red;
         float                             _green;
@@ -70,12 +70,6 @@ class CDrawableClass : public CBaiscProperties
 
         virtual void CreateActionOfAlphaToForSelf(size_t elapsed, float alpha, bool restore);
         virtual void CreateActionOfAlphaByForSelf(size_t elapsed, float alpha, bool restore);
-
-        virtual bool OnLButtonUp(int mX, int mY){return false;}
-        virtual bool OnLButtonDown(int mX, int mY){return false;}
-        virtual bool OnRButtonUp(int mX, int mY){return false;}
-        virtual bool OnRButtonDown(int mX, int mY){return false;}
-        virtual bool OnMouseMove(int mX, int mY){return false;}
 
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);
