@@ -252,6 +252,11 @@ bool CSoundBank::DeleteVoice(string name)
     return DelBuffer(_voiceList, name);
 }
 
+const sf::SoundBuffer* CSoundBank::GetVoice(string name)
+{
+    return _musicList.count(name) > 0 ? _voiceList[name] : NULL;
+}
+
 //==============================================================================
 
 bool CSoundBank::AddBgm(string name, string FileName) 

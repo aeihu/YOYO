@@ -46,6 +46,14 @@ class CResourceControl : public CEventFunctions
             PLAYING_SAVEBOX,
             PLAYING_LOADBOX
         };
+
+        struct SMessageData
+        {
+            string _Name;
+            string _Message;
+            string _VoiceName;
+            string _FromMsgbox;
+        };
     private:
         sf::Thread                      _threadOfLoading;
 
@@ -98,6 +106,7 @@ class CResourceControl : public CEventFunctions
         CSimultaneousOfAction                   _ActForLoadingBegin;
         CSimultaneousOfAction                   _ActForLoadingFinish;
         CLua                                    _LuaControl;
+        SMessageData                            _CurrentMsg;
 
         void SkipOn();
         void SkipOff();
@@ -114,6 +123,7 @@ class CResourceControl : public CEventFunctions
 
         void ShowLogbox();
         void HideLogbox();
+        void AddLog(string text, sf::SoundBuffer* voice);
 
         bool GetMsgboxPauseStatus() const;
         void OnMsgboxPause();

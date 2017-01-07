@@ -43,6 +43,9 @@ class CMessageBox : public CBox
         void SetFont(string font);
         void SetSpeakerName(string name);
 
+        string GetText();
+        string GetSpeakerName();
+
         CTextProcessing::EStatus GetStatus() const;
         void OnLoop();
         void OnRender(sf::RenderTarget* Surf_Dest);

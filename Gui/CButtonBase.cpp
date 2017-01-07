@@ -75,8 +75,9 @@ bool CButtonBase::IsMouseDown() const
 bool CButtonBase::OnMouseMove(int x, int y)
 {
     if (IsShowed()){
-        if(( x > GetPosition().x ) && ( x < GetPosition().x + GetWidth()) && 
-            ( y > GetPosition().y ) && ( y < GetPosition().y + GetHeight())){
+        sf::FloatRect __rect;
+        __rect = GetTransform().transformRect(_sprite.getGlobalBounds());
+        if (__rect.contains(sf::Vector2f(x, y))){
             if (!_isMouseOver)
             {
                 _isMouseOver = true;

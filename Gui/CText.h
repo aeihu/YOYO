@@ -50,6 +50,8 @@ class CText : public CImageBaseClass
         void SetStyle(vector<string> args);
 
         void SetShadowColor(sf::Uint8 r, sf::Uint8 g, sf::Uint8 b);
+
+        string GetString();
         
         virtual void OnSaveData(Object& json) const;
         virtual void OnLoadData(Object json);

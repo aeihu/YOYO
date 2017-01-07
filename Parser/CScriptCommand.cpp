@@ -38,15 +38,6 @@ int Common_RetrunYield(lua_State *L, string funcname)
     return lua_yieldk(L, 0, 0, Common_YieldCont);
 }
 
-//for mutex
-//int Common_RetrunYield(string funcname)
-//{
-//    cout << funcname << "(): suspends thread." << endl;
-//    CResourceControl::_ResourceManager.LockMutexInLua();
-//    cout << funcname << "(): resume thread." << endl;
-//    return 0;
-//}
-
 bool Common_GetValue(lua_State* L, string& val)
 {
     if (lua_isstring(L, -1)){
@@ -2411,6 +2402,11 @@ int Cmd_Message(lua_State* args)
             &CResourceControl::_ResourceManager._SoundControl, &CSoundBank::PlayVoice, __voiceName));
 
     __msgbox->AddAction(__sim);
+
+    CResourceControl::_ResourceManager._CurrentMsg._FromMsgbox = "MessageBox:" + __msgBoxName;
+    CResourceControl::_ResourceManager._CurrentMsg._VoiceName = __voiceName;
+    CResourceControl::_ResourceManager._CurrentMsg._Message = __msg;
+    CResourceControl::_ResourceManager._CurrentMsg._Name = __speakerName;
     CResourceControl::_ResourceManager.OnMsgboxPause();
     Common_RetrunYield(args, __FUNCTION__);
 

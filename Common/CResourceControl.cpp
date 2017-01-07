@@ -40,6 +40,11 @@ void CResourceControl::HideLogbox()
     _processStatus = PLAYING;
 }
 
+void CResourceControl::AddLog(string text, sf::SoundBuffer* voice)
+{
+    _logbox->AddLog(text, voice);
+}
+
 bool CResourceControl::GetMsgboxPauseStatus() const
 {
     return _msgboxPauseRequest;
@@ -210,8 +215,10 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
         if (_DrawableObjectControl.AddDrawableObject(
             "logbox",
             "LogBox",
-            _gameBaiscAsset.get<String>("logbox")))
+            _gameBaiscAsset.get<String>("logbox"))){
             _logbox = static_cast<CLogBox*>(_DrawableObjectControl.GetDrawableObject("LogBox:logbox"));
+            _logbox->SetAlpha(0);
+        }
         else
             return false;
     }
@@ -416,6 +423,7 @@ bool CResourceControl::LoadScript(string filename)
         _fileNameOfCurrentRunningScript = filename;
         _processStatus = CResourceControl::LOADING_ASSET;
         _ActionControl.AddAction(_ActForLoadingBegin.Copy());
+        _logbox->CleanLogList();
         _threadOfLoading.launch();
         return true;
     }

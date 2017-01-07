@@ -42,6 +42,11 @@ void CText::SetString(string str)
 {
     CTextFunction::SetString(_sfText, str);
 }
+
+string CText::GetString()
+{
+    return _sfText.getString();
+}
         
 void CText::SetCharacterSize(size_t size)
 {

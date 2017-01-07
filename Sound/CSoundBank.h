@@ -89,6 +89,7 @@ class CSoundBank {
         bool PlayVoice(string name);
         bool PlayVoice(sf::SoundBuffer* buffer);
         bool DeleteVoice(string name);
+        const sf::SoundBuffer* GetVoice(string name);
         bool GetVoiceStatus();
         bool GetVoiceStatus(string name);
         char IsVoiceSilence(string name);

@@ -262,6 +262,15 @@ void CMessageBox::SetText(string msg)
 {
     _textProcessor.SetString(msg);
 }
+string CMessageBox::GetText()
+{
+    return _textProcessor.GetText();
+}
+
+string CMessageBox::GetSpeakerName()
+{
+    return _speakerName.GetString();
+}
 
 void CMessageBox::SwitchForShowAndHide()
 {
