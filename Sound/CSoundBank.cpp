@@ -254,7 +254,7 @@ bool CSoundBank::DeleteVoice(string name)
 
 const sf::SoundBuffer* CSoundBank::GetVoice(string name)
 {
-    return _musicList.count(name) > 0 ? _voiceList[name] : NULL;
+    return _voiceList.count(name) > 0 ? _voiceList[name] : NULL;
 }
 
 //==============================================================================
