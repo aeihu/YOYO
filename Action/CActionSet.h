@@ -30,6 +30,7 @@ class CActionSet : public CActionBaseClass
     public:
         CActionSet();
         virtual void AddAction(CActionBaseClass* act);
+        virtual int GetSize();
         bool DeleteAct(string name, bool skip);
 
         void OnCleanup();

@@ -41,6 +41,15 @@ bool CLogBox::CTextLog::OnLButtonDown(int x, int y)
 {
     return _btnVoice.OnLButtonDown(x, y);
 }
+bool CLogBox::CTextLog::OnMouseMove(int x, int y)
+{
+    return _btnVoice.OnMouseMove(x, y);
+}
+
+bool CLogBox::CTextLog::OnLButtonUp(int x, int y)
+{
+    return _btnVoice.OnLButtonUp(x, y);
+}
 
 //==========================================
 
@@ -77,14 +86,49 @@ CLogBox* CLogBox::Create(const char* filename)
     return NULL;
 }
 
-void CLogBox::Up()
+bool CLogBox::Down()
 {
-    
+    if (_logList.size() > _visNum){
+        if ((int)(_logList.size() - _visNum) > _index){
+            _index++;
+            RefTextLogs();
+            return true;
+        }
+    }
+    return false;
 }
 
-void CLogBox::Down()
+bool CLogBox::Up()
 {
+    if (_logList.size() > _visNum){
+        if (_index > 0){
+            _index--;
+            RefTextLogs();
+            return true;
+        }
+    }
+    return false;
+}
 
+void CLogBox::Show()
+{
+    if (!IsShowed()){
+        _index = (int)(_logList.size() - _visNum) < 0 ? 0 : (int)(_logList.size() - _visNum);
+        RefTextLogs();
+        CreateActionOfAlphaToForSelf(300, 255.f, false);
+    }
+}
+
+void CLogBox::Hide()
+{
+    CSequenceOfAction* __seq = new CSequenceOfAction();
+    __seq->AddAction(CreateActionOfAlphaTo(300, 0.f, false));
+    __seq->AddAction(
+        new CClassFuncOfAction<CResourceControl, void>
+        (&CResourceControl::_ResourceManager, 
+        &CResourceControl::ReturnProcessStatusToPlaying));
+
+    _actionList.AddAction(__seq);
 }
 
 void CLogBox::OnCleanup()
@@ -93,12 +137,21 @@ void CLogBox::OnCleanup()
     CBox::OnCleanup();
 
     for (vector<CTextLog*>::iterator it = _textLogs.begin(); it != _textLogs.end(); it++){
-        //(*it)->OnCleanup();
         delete (*it);
         (*it) = NULL;
     }
     
     _textLogs.clear();
+}
+
+void CLogBox::RefTextLogs()
+{
+    for (size_t i = 0; i < _textLogs.size(); i++){
+        if (_logList.size() > i + _index)
+            _textLogs[i]->SetTextLog(_logList[i + _index].first, _logList[i + _index].second);
+        else
+            _textLogs[i]->SetTextLog("", NULL);
+    }
 }
 
 //================================
@@ -108,11 +161,13 @@ void CLogBox::OnCleanup()
 //* SCROLLBAR_OFFSET_Y
 //* LOG
 //{
+//* FONT,
 //* OFFSET_X,
 //* OFFSET_Y,
 //* MAXNUM,
 //* ROW_HEIGHT,
 //* VISIBLE_NUM,
+//  SIZE
 //}
 //JIUGONG
 //{
@@ -172,6 +227,11 @@ bool CLogBox::CheckList(const Object& json)
     }
     else{
         const Object& __obj = json.get<Object>("LOG");
+
+        if (!__obj.has<String>("FONT")){
+            cout << "can't find value of FONT." << endl;
+            __result = false;
+        }
 
         if (!__obj.has<Number>("OFFSET_X")){
             cout << "can't find value of OFFSET_X." << endl;
@@ -257,8 +317,13 @@ bool CLogBox::SetProperty(const Object& json, bool isLoad)
 
         for (size_t i = 0; i < _visNum; i++){
             _textLogs.push_back(new CTextLog());
-            _textLogs.back()->SetPosition(_logOffset.x, _logOffset.y + _logRowHeight * (_visNum - i));
+            _textLogs.back()->SetFont(__obj.get<String>("FONT"));
+            _textLogs.back()->SetPosition(_logOffset.x, _logOffset.y + _logRowHeight * i);
             _textLogs.back()->SetVoiceButton(json.get<Object>("PLAY_BUTTON"));
+
+            if (__obj.has<Number>("SIZE"))
+                _textLogs.back()->SetCharacterSize(__obj.get<Number>("SIZE"));
+
             AddChildNode(_textLogs.back());
             _childrenList.size();
         }
@@ -288,30 +353,73 @@ void CLogBox::CleanLogList()
         _textLogs[i]->SetTextLog("", NULL);
 }
 
-void CLogBox::AddLog(string text, sf::SoundBuffer* voice)
+void CLogBox::AddLog(string text, const sf::SoundBuffer* voice)
 {
-    _logList.push_front(pair<string, sf::SoundBuffer*>(text, voice == NULL ? NULL : new sf::SoundBuffer(*voice)));
+    _logList.push_back(pair<string, sf::SoundBuffer*>(text, voice == NULL ? NULL : new sf::SoundBuffer(*voice)));
     if (_logList.size() >= _logMax){
-        if (_logList.back().second){
-            delete _logList.back().second;
-            _logList.back().second = NULL;
+        if (_logList.front().second){
+            delete _logList.front().second;
+            _logList.front().second = NULL;
         }
 
-        _logList.pop_back();
+        _logList.pop_front();
     }
 }
 
 bool CLogBox::OnMouseMove(int x, int y)
 {
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (vector<CTextLog*>::iterator it = _textLogs.begin(); it != _textLogs.end(); it++)
+                if ((*it)->OnMouseMove(x, y))
+                    return true;
+        }
+    }
+    
+    return false;
+}
+
+bool CLogBox::OnMouseWheel(int delta)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            if (delta > 0){
+                Up();
+            }
+            else{
+                if (!Down()){
+                    Hide();
+                }
+            }
+            return true;
+        }
+    }
+
     return false;
 }
 
 bool CLogBox::OnLButtonDown(int x, int y)
 {
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (vector<CTextLog*>::iterator it = _textLogs.begin(); it != _textLogs.end(); it++)
+                if ((*it)->OnLButtonDown(x, y))
+                    return true;
+        }
+    }
+
     return false;
 }
 
 bool CLogBox::OnLButtonUp(int x, int y)
 {
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (vector<CTextLog*>::iterator it = _textLogs.begin(); it != _textLogs.end(); it++)
+                if ((*it)->OnLButtonUp(x, y))
+                    return true;
+        }
+    }
+
     return false;
 }

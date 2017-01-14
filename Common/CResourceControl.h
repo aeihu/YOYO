@@ -117,6 +117,8 @@ class CResourceControl : public CEventFunctions
         void DelActionForActionControl(string name);
 
         EProcStatus GetProcessStatus() const;
+        void ReturnProcessStatusToPlaying();
+
         bool GetAuto() const;
         void SetAuto(bool isAuto);
         string GetVariable(string name);

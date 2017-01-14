@@ -174,8 +174,8 @@ CBox::CJiugong::CJiugong()
 
 void CBox::CJiugong::SetColor(const sf::Color& color)
 {
-    for (int i = 0; i < 16; i++)
-        _vertexArray[0].color = color;
+    for (int i = 0; i < 36; i++)
+        _vertexArray[i].color = color;
 }
 
 const sf::Color& CBox::CJiugong::GetColor() const

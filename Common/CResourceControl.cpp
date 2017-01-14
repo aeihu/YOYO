@@ -211,6 +211,14 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     if (!LoadJson(_gameBaiscAsset, filename))
         return false;
 
+    if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
+    if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
+    if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
+
     if (_gameBaiscAsset.has<String>("logbox")){
         if (_DrawableObjectControl.AddDrawableObject(
             "logbox",
@@ -224,14 +232,6 @@ bool CResourceControl::OnInit(string filename, sf::RenderWindow* Window)
     }
     else
         return false;
-
-    if (CheckIn(_gameBaiscAsset, "image_for_effect", "EffctImg") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "font", "Font") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "text", "Text") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "se", "Se") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "messagebox", "MessageBox") < 1) return false;
-    if (CheckIn(_gameBaiscAsset, "button", "Button") < 0) return false;
-    if (CheckIn(_gameBaiscAsset, "camera", "Camera") < 0) return false;
 
     if (CCommon::_Common.IsFileExist(_gameBaiscAsset.get<String>("loading_script"))){
         _LuaControl.LoadScript(_gameBaiscAsset.get<String>("loading_script"), true);
@@ -436,6 +436,11 @@ CResourceControl::EProcStatus CResourceControl::GetProcessStatus() const
     return _processStatus;
 }
 
+void CResourceControl::ReturnProcessStatusToPlaying()
+{
+    _processStatus = PLAYING;
+}
+
 void CResourceControl::ExitLoadingStatus()
 {
     _processStatus = EXIT_LOADING;
@@ -446,10 +451,13 @@ void CResourceControl::OnLoop() //run in main
     _ActionControl.OnLoop();
     _SoundControl.OnLoop();
 
-    if (_processStatus == CResourceControl::PLAYING){
+    if (_processStatus >= CResourceControl::PLAYING &&
+        _processStatus <= PLAYING_LOADBOX){
         _CameraControl.OnLoop();
         _DrawableObjectControl.OnLoop();
-        AutoToNextStep();
+
+        if (_processStatus == CResourceControl::PLAYING)
+            AutoToNextStep();
     }
     else if (_processStatus >= LOADING_ASSET && _processStatus < PLAYING){
         _LoadingObjectControl.OnLoop();
@@ -492,10 +500,11 @@ void CResourceControl::OnLoop() //run in main
 
 void CResourceControl::OnRender(sf::RenderWindow* Surf_Dest)
 {
-    if (_processStatus != CResourceControl::PLAYING)
-        _LoadingObjectControl.OnRender(Surf_Dest);
-    else
+    if (_processStatus >= CResourceControl::PLAYING && 
+        _processStatus <= PLAYING_LOADBOX)
         _DrawableObjectControl.OnRender(Surf_Dest);
+    else
+        _LoadingObjectControl.OnRender(Surf_Dest);
 }
 
 void CResourceControl::OnCleanup()

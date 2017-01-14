@@ -43,7 +43,9 @@ class CLogBox : public CBox
                 void SetTextLog(string text, sf::SoundBuffer* voice);
                 bool SetVoiceButton(const Object& json);
 
+                bool OnMouseMove(int x, int y);
                 bool OnLButtonDown(int x, int y);
+                bool OnLButtonUp(int x, int y);
                 void OnCleanup();
 
                 void Clean();
@@ -51,11 +53,14 @@ class CLogBox : public CBox
 
         size_t                                  _logMax;
         size_t                                  _visNum;
-        sf::Vector2f                            _logOffset;
         size_t                                  _logRowHeight;
+        sf::Vector2f                            _logOffset;
         deque<pair<string, sf::SoundBuffer*> >  _logList;
         vector<CTextLog*>                       _textLogs;
+        int                                     _index;
         //CScrollbar                              _scrollbar;
+
+        void RefTextLogs();
     protected:
         bool CheckList(const Object& json);
         bool SetProperty(const Object& json, bool isLoad = true);
@@ -64,15 +69,18 @@ class CLogBox : public CBox
         
         static CLogBox* Create(const char* filename);
         bool OnMouseMove(int x, int y);
+        bool OnMouseWheel(int delta);
         bool OnLButtonDown(int x, int y);
         bool OnLButtonUp(int x, int y);
         //bool OnRButtonDown(int x, int y);
         //bool OnRButtonUp(int x, int y);
         void OnCleanup();
 
-        void AddLog(string text, sf::SoundBuffer* voice);
-        void Up();
-        void Down();
+        void AddLog(string text, const sf::SoundBuffer* voice);
+        bool Up();
+        bool Down();
+        void Show();
+        void Hide();
         void CleanLogList();
 };
 

@@ -40,23 +40,15 @@ class CApp : public CEvent {
 
     public:
         bool OnInit();
-
         void OnEvent(sf::Event* Event);
-
         void OnKeyDown(sf::Event::KeyEvent key);
-
         void OnKeyUp(sf::Event::KeyEvent key);
-
         void OnLButtonDown(int mX, int mY);
-        
         void OnLButtonUp(int mX, int mY);
-                
         void OnRButtonDown(int mX, int mY);
-
         void OnRButtonUp(int mX, int mY);
-
         void OnMouseMove(int mX, int mY);
-
+        void OnMouseWheel(int delta);
         void OnExit();
 
         void OnLoop();

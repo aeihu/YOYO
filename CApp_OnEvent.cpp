@@ -157,6 +157,12 @@ void CApp::OnMouseMove(int mX, int mY)
 }
 
 //------------------------------------------------------------------------------
+void CApp::OnMouseWheel(int delta)
+{
+    CResourceControl::_ResourceManager.OnMouseWheel(delta);
+}
+
+//------------------------------------------------------------------------------
 void CApp::OnExit() {
     _running = false;
 }

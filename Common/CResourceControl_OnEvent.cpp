@@ -11,23 +11,43 @@
 //------------------------------------------------------------------------------
 bool CResourceControl::OnLButtonDown(int mX, int mY)
 {
-    if (_processStatus == CResourceControl::PLAYING){
-        if (CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonDown(mX, mY))
-            return true;
+    switch (_processStatus){
+        case CResourceControl::PLAYING:
+            if (_DrawableObjectControl.OnLButtonDown(mX, mY))
+                return true;
 
-        if (GetMsgboxPauseStatus()){
-            OffMsgboxPause();
-            _LuaControl.ResumeLuaThread();
-            return true;
-        }
+            if (GetMsgboxPauseStatus()){
+                OffMsgboxPause();
+
+                CMessageBox* __msgbox = static_cast<CMessageBox*>(_DrawableObjectControl.GetDrawableObject(_CurrentMsg._FromMsgbox));
+                if (__msgbox){
+                    string ss = _CurrentMsg._Name + ":\n" + __msgbox->GetText();
+                    _logbox->AddLog(
+                        ss,
+                        _SoundControl.GetVoice(_CurrentMsg._VoiceName));
+                }
+
+                _LuaControl.ResumeLuaThread();
+                return true;
+            }
+            break;
+        case CResourceControl::PLAYING_LOGBOX:
+            break;
+        case CResourceControl::PLAYING_SAVEBOX:
+            break;
+        case CResourceControl::PLAYING_LOADBOX:
+            break;
+        default:
+            break;
     }
+
     return false;
 }
 
 bool CResourceControl::OnLButtonUp(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnLButtonUp(mX, mY);
+        return _DrawableObjectControl.OnLButtonUp(mX, mY);
 
     return false;
 }
@@ -35,7 +55,7 @@ bool CResourceControl::OnLButtonUp(int mX, int mY)
 bool CResourceControl::OnRButtonDown(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonDown(mX, mY);
+        return _DrawableObjectControl.OnRButtonDown(mX, mY);
         
     return false;
 }
@@ -43,7 +63,7 @@ bool CResourceControl::OnRButtonDown(int mX, int mY)
 bool CResourceControl::OnRButtonUp(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnRButtonUp(mX, mY);
+        return _DrawableObjectControl.OnRButtonUp(mX, mY);
 
     return false;
 }
@@ -51,7 +71,7 @@ bool CResourceControl::OnRButtonUp(int mX, int mY)
 bool CResourceControl::OnMButtonDown(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnMButtonDown(mX, mY);
+        return _DrawableObjectControl.OnMButtonDown(mX, mY);
 
     return false;
 }
@@ -59,7 +79,7 @@ bool CResourceControl::OnMButtonDown(int mX, int mY)
 bool CResourceControl::OnMButtonUp(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnMButtonUp(mX, mY);
+        return _DrawableObjectControl.OnMButtonUp(mX, mY);
 
     return false;
 }
@@ -67,15 +87,32 @@ bool CResourceControl::OnMButtonUp(int mX, int mY)
 bool CResourceControl::OnMouseMove(int mX, int mY)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseMove(mX, mY);
+        return _DrawableObjectControl.OnMouseMove(mX, mY);
 
     return false;
 }
 
 bool CResourceControl::OnMouseWheel(int delta)
 {
-    if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnMouseWheel(delta);
+    switch (_processStatus){
+        case CResourceControl::PLAYING:
+            if (delta > 0){
+                _logbox->Show();
+                _processStatus = CResourceControl::PLAYING_LOGBOX;
+                return true;
+            }
+            break;
+        case CResourceControl::PLAYING_LOGBOX:
+            return _logbox->OnMouseWheel(delta);
+            break;
+        case CResourceControl::PLAYING_SAVEBOX:
+            break;
+        case CResourceControl::PLAYING_LOADBOX:
+            break;
+        default:
+            return _DrawableObjectControl.OnMouseWheel(delta);
+            break;
+    }
 
     return false;
 }
@@ -83,7 +120,7 @@ bool CResourceControl::OnMouseWheel(int delta)
 bool CResourceControl::OnKeyDown(sf::Event::KeyEvent key)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnKeyDown(key);
+        return _DrawableObjectControl.OnKeyDown(key);
 
     return false;
 }
@@ -91,7 +128,7 @@ bool CResourceControl::OnKeyDown(sf::Event::KeyEvent key)
 bool CResourceControl::OnKeyUp(sf::Event::KeyEvent key)
 {
     if (_processStatus == CResourceControl::PLAYING)
-        return CResourceControl::_ResourceManager._DrawableObjectControl.OnKeyUp(key);
+        return _DrawableObjectControl.OnKeyUp(key);
 
     return false;
 }

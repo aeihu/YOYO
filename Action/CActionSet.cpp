@@ -67,6 +67,11 @@ void CActionSet::AddAction(CActionBaseClass* act)
     }
 }
 
+int CActionSet::GetSize()
+{
+    return _actionList.size();
+}
+
 void CActionSet::SetIsDelete(CActionBaseClass* act, bool b)
 {
     if (act){
