@@ -32,6 +32,7 @@ bool CResourceControl::OnLButtonDown(int mX, int mY)
             }
             break;
         case CResourceControl::PLAYING_LOGBOX:
+            return _logbox->OnLButtonDown(mX, mY);
             break;
         case CResourceControl::PLAYING_SAVEBOX:
             break;
@@ -46,17 +47,40 @@ bool CResourceControl::OnLButtonDown(int mX, int mY)
 
 bool CResourceControl::OnLButtonUp(int mX, int mY)
 {
-    if (_processStatus == CResourceControl::PLAYING)
-        return _DrawableObjectControl.OnLButtonUp(mX, mY);
+    switch (_processStatus){
+        case CResourceControl::PLAYING:
+            return _DrawableObjectControl.OnLButtonUp(mX, mY);
+            break;
+        case CResourceControl::PLAYING_LOGBOX:
+            return _logbox->OnLButtonUp(mX, mY);
+            break;
+        case CResourceControl::PLAYING_SAVEBOX:
+            break;
+        case CResourceControl::PLAYING_LOADBOX:
+            break;
+        default:
+            break;
+    }
 
     return false;
 }
 
 bool CResourceControl::OnRButtonDown(int mX, int mY)
 {
-    if (_processStatus == CResourceControl::PLAYING)
-        return _DrawableObjectControl.OnRButtonDown(mX, mY);
-        
+    switch (_processStatus){
+        case CResourceControl::PLAYING:
+            return _DrawableObjectControl.OnRButtonDown(mX, mY);
+            break;
+        case CResourceControl::PLAYING_LOGBOX:
+            return _logbox->OnRButtonDown(mX, mY);
+            break;
+        case CResourceControl::PLAYING_SAVEBOX:
+            break;
+        case CResourceControl::PLAYING_LOADBOX:
+            break;
+        default:
+            break;
+    }
     return false;
 }
 
@@ -86,8 +110,20 @@ bool CResourceControl::OnMButtonUp(int mX, int mY)
 //------------------------------------------------------------------------------
 bool CResourceControl::OnMouseMove(int mX, int mY)
 {
-    if (_processStatus == CResourceControl::PLAYING)
-        return _DrawableObjectControl.OnMouseMove(mX, mY);
+    switch (_processStatus){
+        case CResourceControl::PLAYING:
+            return _DrawableObjectControl.OnMouseMove(mX, mY);
+            break;
+        case CResourceControl::PLAYING_LOGBOX:
+            return _logbox->OnMouseMove(mX, mY);
+            break;
+        case CResourceControl::PLAYING_SAVEBOX:
+            break;
+        case CResourceControl::PLAYING_LOADBOX:
+            break;
+        default:
+            break;
+    }
 
     return false;
 }

@@ -11,13 +11,19 @@
 
 CLogBox::CTextLog::CTextLog()
 {
-    AddChildNode(&_btnVoice);
 }
 
 void CLogBox::CTextLog::SetTextLog(string text, sf::SoundBuffer* voice)
 {
     SetString(text);
-    _btnVoice._voice = voice != NULL ? voice : NULL;
+    if (voice){
+        _btnVoice._voice = voice;
+        AddChildNode(&_btnVoice);
+    }
+    else{
+        _btnVoice._voice = NULL;
+        _childrenList.clear();
+    }
 }
 
 bool CLogBox::CTextLog::SetVoiceButton(const Object& json)
