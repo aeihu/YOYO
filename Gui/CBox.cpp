@@ -10,8 +10,6 @@
 
 CBox::CBox()
 {
-    _width =
-    _height = 100;
     _isJiugone = false;
 }
 
@@ -163,6 +161,16 @@ void CBox::OnRender(sf::RenderTarget* Surf_Dest)
     }
 }
 
+float CBox::GetWidth()
+{
+    return _isJiugone ? _jiugong.GetWidth() : _sprite.getGlobalBounds().width;
+}
+
+float CBox::GetHeight()
+{
+    return _isJiugone ? _jiugong.GetHeight() : _sprite.getGlobalBounds().height;
+}
+
 //======================================================
 
 CBox::CJiugong::CJiugong()
@@ -185,12 +193,12 @@ const sf::Color& CBox::CJiugong::GetColor() const
 
 void CBox::CJiugong::SetVectorForVertexArray(
     sf::Vector2f* vectors,
-    unsigned int width,
-    unsigned int height,
-    unsigned int leftWidth,
-    unsigned int rightWidth,
-    unsigned int topHeight,
-    unsigned int bottomHeight)
+    size_t width,
+    size_t height,
+    size_t leftWidth,
+    size_t rightWidth,
+    size_t topHeight,
+    size_t bottomHeight)
 {
     vectors[0] = sf::Vector2f(0, 0);
     vectors[1] = sf::Vector2f(leftWidth, 0);
@@ -215,12 +223,12 @@ void CBox::CJiugong::SetVectorForVertexArray(
 
 void CBox::CJiugong::SetTexture(
     const sf::Texture& texture,
-    unsigned int width,
-    unsigned int height,
-    unsigned int leftWidth,
-    unsigned int rightWidth,
-    unsigned int topHeight,
-    unsigned int bottomHeight)
+    size_t width,
+    size_t height,
+    size_t leftWidth,
+    size_t rightWidth,
+    size_t topHeight,
+    size_t bottomHeight)
 {
     sf::Vector2f __vec[16];
     SetVectorForVertexArray(
@@ -338,6 +346,16 @@ void CBox::CJiugong::draw(sf::RenderTarget& target, sf::RenderStates states) con
     states.transform *= getTransform(); 
     states.texture = _pTexture;
     target.draw(_vertexArray, states);
+}
+
+size_t CBox::CJiugong::GetWidth() const
+{
+    return _vertexArray[34].position.x;
+}
+
+size_t CBox::CJiugong::GetHeight() const
+{
+    return _vertexArray[34].position.y;
 }
 
 void CBox::CJiugong::SetWidth(float width)

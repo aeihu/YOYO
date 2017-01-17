@@ -151,3 +151,134 @@ void CImageBaseClass::Loop(sf::Transformable* obj)
             }
         }
 }
+
+
+bool CImageBaseClass::OnKeyDown(sf::Event::KeyEvent key)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnKeyDown(key))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnKeyUp(sf::Event::KeyEvent key)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnKeyUp(key))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnMouseMove(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnMouseMove(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnMouseWheel(int delta)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnMouseWheel(delta))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnLButtonDown(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnLButtonDown(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnLButtonUp(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnLButtonUp(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnRButtonDown(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnRButtonDown(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnRButtonUp(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnRButtonUp(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnMButtonDown(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnMButtonDown(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool CImageBaseClass::OnMButtonUp(int mX, int mY)
+{
+    if (IsShowed()){
+        if (_actionList.GetSize() < 1){
+            for (list<CImageBaseClass*>::iterator it = _childrenList.begin(); it != _childrenList.end(); it++)
+            if ((*it)->OnMButtonUp(mX, mY))
+                return true;
+        }
+    }
+
+    return false;
+}

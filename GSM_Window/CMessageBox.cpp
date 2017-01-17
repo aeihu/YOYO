@@ -83,7 +83,7 @@ bool CMessageBox::SetProperty(const Object& json, bool isLoad)
     _textProcessor.SetShadowPercent(json.get<Number>("CHAR_SHADOW_PERCENT"));
 
     //_textProcessor.SetPointAlpha(&_alpha);
-    return CBox::SetProperty(json);
+    return CBox::SetProperty(json, isLoad);
 }
 
 //================================

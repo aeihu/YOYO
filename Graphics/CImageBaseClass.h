@@ -54,6 +54,17 @@ class CImageBaseClass : public CDrawableClass
 
         virtual void CleanActionList();
         virtual void OnCleanup();
+
+        virtual bool OnKeyDown(sf::Event::KeyEvent key);
+        virtual bool OnKeyUp(sf::Event::KeyEvent key);
+        virtual bool OnMouseMove(int mX, int mY);
+        virtual bool OnMouseWheel(int delta);
+        virtual bool OnLButtonDown(int mX, int mY);
+        virtual bool OnLButtonUp(int mX, int mY);
+        virtual bool OnRButtonDown(int mX, int mY);
+        virtual bool OnRButtonUp(int mX, int mY);
+        virtual bool OnMButtonDown(int mX, int mY);
+        virtual bool OnMButtonUp(int mX, int mY);
 };
 
 #endif

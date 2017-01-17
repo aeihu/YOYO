@@ -13,7 +13,7 @@
 #include "../Gui/CBox.h"
 #include "../Gui/CButtonBase.h"
 #include "../Gui/CText.h"
-//#include "../Gui/CScrollbar.h"
+#include "../Gui/CScrollbar.h"
 #include <deque>
 
 using namespace std;
@@ -43,9 +43,9 @@ class CLogBox : public CBox
                 void SetTextLog(string text, sf::SoundBuffer* voice);
                 bool SetVoiceButton(const Object& json);
 
-                bool OnMouseMove(int x, int y);
-                bool OnLButtonDown(int x, int y);
-                bool OnLButtonUp(int x, int y);
+                virtual bool OnMouseMove(int x, int y);
+                virtual bool OnLButtonDown(int x, int y);
+                virtual bool OnLButtonUp(int x, int y);
                 void OnCleanup();
 
                 void Clean();
@@ -58,7 +58,7 @@ class CLogBox : public CBox
         deque<pair<string, sf::SoundBuffer*> >  _logList;
         vector<CTextLog*>                       _textLogs;
         int                                     _index;
-        //CScrollbar                              _scrollbar;
+        CScrollbar                              _scrollbar;
 
         void RefTextLogs();
     protected:
@@ -68,12 +68,8 @@ class CLogBox : public CBox
         CLogBox();
         
         static CLogBox* Create(const char* filename);
-        bool OnMouseMove(int x, int y);
-        bool OnMouseWheel(int delta);
-        bool OnLButtonDown(int x, int y);
-        bool OnLButtonUp(int x, int y);
-        //bool OnRButtonDown(int x, int y);
-        //bool OnRButtonUp(int x, int y);
+        virtual bool OnMouseWheel(int delta);
+        virtual bool OnRButtonDown(int x, int y);
         void OnCleanup();
 
         void AddLog(string text, const sf::SoundBuffer* voice);

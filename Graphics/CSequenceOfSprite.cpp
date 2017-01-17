@@ -81,7 +81,7 @@ bool CSequenceOfSprite::SetProperty(const Object& json, bool isLoad)
     SetMaxFrames(json.get<Number>("MAX_FRAMES"));
     SetFrameRate(json.get<Number>("FRAME_RATE"));
 
-    return CImgLayer::SetProperty(json);
+    return CImgLayer::SetProperty(json, isLoad);
 }
 
 void CSequenceOfSprite::SetCurrentImageFrame(int frame)
