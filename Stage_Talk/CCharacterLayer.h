@@ -56,7 +56,9 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         virtual void FlipY();
         
         static CCharacterLayer* Create(const char* filename);
-        
+
+        virtual float GetWidth() const;
+        virtual float GetHeight() const;
         bool SetPose(string body, string eye, string mouth, bool isEffect);
         void SetPose(vector<string> args);
 

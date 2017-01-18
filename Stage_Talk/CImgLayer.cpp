@@ -40,6 +40,16 @@ void CImgLayer::FlipY()
     Flip();
 }
 
+float CImgLayer::GetWidth() const
+{
+    return _sprite.getGlobalBounds().width;
+}
+
+float CImgLayer::GetHeight() const
+{
+    return _sprite.getGlobalBounds().height;
+}
+
 sf::Transform CImgLayer::GetTransform()
 {
     if (_baseNode)

@@ -14,47 +14,63 @@
 
 class CScrollbar : public CBox
 {
+    public:
+        class CScrollbarCallback
+        {
+            public:
+                virtual void PositiveOverflow() = 0;
+                virtual void NegativeOverflow() = 0;
+                virtual void SetValue(int val) = 0;
+        };
     private:
-        bool                    _isMouseDown;
-        bool                    _isMouseOver;
-        int                     _maxValue;
-        int                     _value;
-        float                   _height;
-
-    protected:
         class CArrowUpButton : public CButtonBase
         {
             private:
                 void Exec(void* data=NULL);
+            public:
+                using  CButtonBase::SetProperty;
         }                       _btnArrowUp;
 
         class CArrowDownButton : public CButtonBase
         {
             private:
-                void Exec(void* data=NULL);
+                void Exec(void* data = NULL);
+            public:
+                using  CButtonBase::SetProperty;
         }                       _btnArrowDown;
 
         class CBarButton : public CButtonBase
         {
             private:
-                void Exec(void* data=NULL);
+                void Exec(void* data = NULL);
+            public:
+                using  CButtonBase::SetProperty;
         }                       _btnBar;
 
+        bool                    _isMouseDown;
+        bool                    _isMouseOver;
+        int                     _maxValue;
+        int                     _value;
+        float                   _incr;
+        CScrollbarCallback*     _obj;
+
+        void Ref();
     public:
         CScrollbar();
 
-        bool OnMouseMove(int x, int y);
-        bool OnLButtonDown(int x, int y);
-        bool OnLButtonUp(int x, int y);
+        virtual bool OnMouseWheel(int delta);
         
         virtual bool CheckList(const Object& json);
         virtual bool SetProperty(const Object& json, bool isLoad = true);
-        void OnSubLoop();
-        void OnRender(sf::RenderTarget* Surf_Dest);
 
         bool SetMaxValue(int value);
         int GetValue() const;
+
         void SetValue(int val);
+        bool Positive();
+        bool Negative();
+
+        void SetObjectForCallback(CScrollbarCallback* obj);
 };
 
 #endif

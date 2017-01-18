@@ -389,6 +389,16 @@ bool CCharacterLayer::SetProperty(const Object& json, bool isLoad)
     return true;
 }
 
+float CCharacterLayer::GetWidth() const
+{
+    return _sprite.getGlobalBounds().width;
+}
+
+float CCharacterLayer::GetHeight() const
+{
+    return _sprite.getGlobalBounds().height;
+}
+
 void CCharacterLayer::SetPose(vector<string> args)
 {
     if (args.size() >= 3)

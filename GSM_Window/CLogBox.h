@@ -18,7 +18,7 @@
 
 using namespace std;
 
-class CLogBox : public CBox
+class CLogBox : public CBox, public CScrollbar::CScrollbarCallback
 {
     private:
         class CVoiceButton : public CButtonBase
@@ -53,14 +53,10 @@ class CLogBox : public CBox
 
         size_t                                  _logMax;
         size_t                                  _visNum;
-        size_t                                  _logRowHeight;
         sf::Vector2f                            _logOffset;
         deque<pair<string, sf::SoundBuffer*> >  _logList;
         vector<CTextLog*>                       _textLogs;
-        int                                     _index;
         CScrollbar                              _scrollbar;
-
-        void RefTextLogs();
     protected:
         bool CheckList(const Object& json);
         bool SetProperty(const Object& json, bool isLoad = true);
@@ -68,16 +64,17 @@ class CLogBox : public CBox
         CLogBox();
         
         static CLogBox* Create(const char* filename);
-        virtual bool OnMouseWheel(int delta);
         virtual bool OnRButtonDown(int x, int y);
         void OnCleanup();
 
         void AddLog(string text, const sf::SoundBuffer* voice);
-        bool Up();
-        bool Down();
+        void SetValue(int val);
         void Show();
         void Hide();
         void CleanLogList();
+
+        void PositiveOverflow();
+        void NegativeOverflow();
 };
 
 #endif

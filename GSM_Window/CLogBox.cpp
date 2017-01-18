@@ -74,8 +74,9 @@ void CLogBox::CVoiceButton::Exec(void* data)
 
 CLogBox::CLogBox()
 {
-    _logRowHeight = _logMax = _visNum = 0;
+    _logMax = _visNum = 0;
     AddChildNode(&_scrollbar);
+    _scrollbar.SetObjectForCallback(this);
 }
 
 CLogBox* CLogBox::Create(const char* filename)
@@ -92,38 +93,31 @@ CLogBox* CLogBox::Create(const char* filename)
     return NULL;
 }
 
-bool CLogBox::Down()
+void CLogBox::SetValue(int val)
 {
-    if (_logList.size() > _visNum){
-        if ((int)(_logList.size() - _visNum) > _index){
-            _index++;
-            RefTextLogs();
-            return true;
-        }
-    }
-    return false;
-}
+    if (val >= 0){
+        float __offset = 0;
+        for (size_t i = 0; i < _textLogs.size(); i++){
+            if (_logList.size() > i + _scrollbar.GetValue())
+                _textLogs[i]->SetTextLog(
+                    _logList[i + _scrollbar.GetValue()].first, 
+                    _logList[i + _scrollbar.GetValue()].second);
+            else
+                _textLogs[i]->SetTextLog("", NULL);
 
-bool CLogBox::Up()
-{
-    if (_logList.size() > _visNum){
-        if (_index > 0){
-            _index--;
-            RefTextLogs();
-            return true;
+            _textLogs[i]->SetPosition(_logOffset.x, _logOffset.y + __offset);
+            __offset += _textLogs[i]->GetHeight() + (float)_textLogs[i]->GetCharacterSize() * 0.8f;
         }
     }
-    return false;
 }
 
 void CLogBox::Show()
 {
     if (!IsShowed()){
-        _index = (int)(_logList.size() - _visNum) < 0 ? 0 : (int)(_logList.size() - _visNum);
-        RefTextLogs();
+        int __index = (int)(_logList.size() - _visNum) < 0 ? 0 : (int)(_logList.size() - _visNum);
         CreateActionOfAlphaToForSelf(100, 255.f, false);
-        _scrollbar.SetMaxValue(_index);
-        _scrollbar.SetValue(_index);
+        _scrollbar.SetMaxValue(__index);
+        _scrollbar.SetValue(__index);
     }
 }
 
@@ -152,16 +146,6 @@ void CLogBox::OnCleanup()
     _textLogs.clear();
 }
 
-void CLogBox::RefTextLogs()
-{
-    for (size_t i = 0; i < _textLogs.size(); i++){
-        if (_logList.size() > i + _index)
-            _textLogs[i]->SetTextLog(_logList[i + _index].first, _logList[i + _index].second);
-        else
-            _textLogs[i]->SetTextLog("", NULL);
-    }
-}
-
 //================================
 //property:
 //* PATH,
@@ -171,7 +155,6 @@ void CLogBox::RefTextLogs()
 //* OFFSET_X,
 //* OFFSET_Y,
 //* MAXNUM,
-//* ROW_HEIGHT,
 //* VISIBLE_NUM,
 //  SIZE
 //}
@@ -294,11 +277,6 @@ bool CLogBox::CheckList(const Object& json)
             cout << "can't find value of VISIBLE_NUM." << endl;
             __result = false;
         }
-
-        if (!__obj.has<Number>("ROW_HEIGHT")){
-            cout << "can't find value of ROW_HEIGHT." << endl;
-            __result = false;
-        }
     }
 
     if (!json.has<Object>("PLAY_BUTTON")){
@@ -343,14 +321,12 @@ bool CLogBox::SetProperty(const Object& json, bool isLoad)
         const Object& __obj = json.get<Object>("LOG");
         _logMax = __obj.get<Number>("MAXNUM");
         _visNum = __obj.get<Number>("VISIBLE_NUM");
-        _logRowHeight = __obj.get<Number>("ROW_HEIGHT");
         _logOffset.x = __obj.get<Number>("OFFSET_X");
         _logOffset.y = __obj.get<Number>("OFFSET_Y");
 
         for (size_t i = 0; i < _visNum; i++){
             _textLogs.push_back(new CTextLog());
             _textLogs.back()->SetFont(__obj.get<String>("FONT"));
-            _textLogs.back()->SetPosition(_logOffset.x, _logOffset.y + _logRowHeight * i);
 
             if (!_textLogs.back()->SetVoiceButton(json.get<Object>("PLAY_BUTTON")))
                 return false;
@@ -385,6 +361,14 @@ void CLogBox::CleanLogList()
         _textLogs[i]->SetTextLog("", NULL);
 }
 
+void CLogBox::PositiveOverflow()
+{}
+
+void CLogBox::NegativeOverflow()
+{
+    Hide();
+}
+
 void CLogBox::AddLog(string text, const sf::SoundBuffer* voice)
 {
     _logList.push_back(pair<string, sf::SoundBuffer*>(text, voice == NULL ? NULL : new sf::SoundBuffer(*voice)));
@@ -396,24 +380,6 @@ void CLogBox::AddLog(string text, const sf::SoundBuffer* voice)
 
         _logList.pop_front();
     }
-}
-
-bool CLogBox::OnMouseWheel(int delta)
-{
-    if (IsShowed()){
-        if (_actionList.GetSize() < 1){
-            if (delta > 0){
-                Up();
-            }
-            else{
-                if (!Down())
-                    Hide();
-            }
-            return true;
-        }
-    }
-
-    return false;
 }
 
 bool CLogBox::OnRButtonDown(int x, int y)

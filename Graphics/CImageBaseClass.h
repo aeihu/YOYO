@@ -48,6 +48,8 @@ class CImageBaseClass : public CDrawableClass
         virtual bool AddChildNode(CImageBaseClass* child);
         virtual bool RemoveChildNode(CImageBaseClass* child);
 
+        virtual float GetWidth() const = 0;
+        virtual float GetHeight() const = 0;
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
         virtual sf::Transform GetTransform() = 0;

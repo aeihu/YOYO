@@ -47,6 +47,11 @@ string CText::GetString()
 {
     return _sfText.getString();
 }
+
+size_t CText::GetCharacterSize()
+{
+    return _sfText.getCharacterSize();
+}
         
 void CText::SetCharacterSize(size_t size)
 {
@@ -124,6 +129,16 @@ void CText::SetStyle(vector<string> args)
         }
         SetStyle(__flag);
     }
+}
+
+float CText::GetWidth() const
+{
+    return _sfText.getGlobalBounds().width;
+}
+
+float CText::GetHeight() const
+{
+    return _sfText.getGlobalBounds().height;
 }
 
 void CText::OnLoop()

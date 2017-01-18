@@ -31,6 +31,8 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         
         virtual void FlipX();
         virtual void FlipY();
+        virtual float GetWidth() const;
+        virtual float GetHeight() const;
 
         virtual void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
