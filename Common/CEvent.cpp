@@ -54,15 +54,15 @@ void CEvent::OnEvent(sf::Event* Event) {
         case sf::Event::MouseButtonPressed: {
             switch(Event->mouseButton.button) {
                 case sf::Mouse::Left: {
-                    OnLButtonDown(Event->mouseButton.x, Event->mouseMove.y);
+                    OnLButtonDown(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
                 case sf::Mouse::Right: {
-                    OnRButtonDown(Event->mouseMove.x, Event->mouseMove.y);
+                    OnRButtonDown(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
                 case sf::Mouse::Middle: {
-                    OnMButtonDown(Event->mouseMove.x, Event->mouseMove.y);
+                    OnMButtonDown(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
             }
@@ -72,15 +72,15 @@ void CEvent::OnEvent(sf::Event* Event) {
         case sf::Event::MouseButtonReleased:{
             switch(Event->mouseButton.button) {
                 case sf::Mouse::Left: {
-                    OnLButtonUp(Event->mouseMove.x, Event->mouseMove.y);
+                    OnLButtonUp(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
                 case sf::Mouse::Right: {
-                    OnRButtonUp(Event->mouseMove.x, Event->mouseMove.y);
+                    OnRButtonUp(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
                 case sf::Mouse::Middle: {
-                    OnMButtonUp(Event->mouseMove.x, Event->mouseMove.y);
+                    OnMButtonUp(Event->mouseButton.x, Event->mouseButton.y);
                     break;
                 }
             }

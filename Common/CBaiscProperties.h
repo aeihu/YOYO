@@ -38,6 +38,8 @@ class CBaiscProperties : public CObject
         sf::Vector2f GetPosition();
         virtual void SetPosition(float x, float y);
         virtual void SetPosition(vector<float> args);
+        virtual void SetPositionX(float x);
+        virtual void SetPositionY(float y);
 
         virtual sf::Vector2f& GetScale();
         virtual void SetScale(float x, float y);

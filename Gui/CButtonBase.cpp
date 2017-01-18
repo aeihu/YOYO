@@ -30,8 +30,10 @@ bool CButtonBase::OnLButtonDown(int x, int y)
             _isMouseDown = true;
             SetCurrentImageFrame(GetMaxFrames());
             SetCurrentFrame(GetMaxFrames()-1);
-            CResourceControl::_ResourceManager._SoundControl.PlaySE(
-                _seNameOfMouseDown, 1.0f, false);
+
+            if (_seNameOfMouseDown != "")
+                CResourceControl::_ResourceManager._SoundControl.PlaySE(
+                    _seNameOfMouseDown, 1.0f, false);
             return true;
         }
 
@@ -41,8 +43,8 @@ bool CButtonBase::OnLButtonDown(int x, int y)
 bool CButtonBase::OnLButtonUp(int x, int y)
 {
     if (IsShowed()){
-        if(_isMouseOver){
-            _isMouseDown = false;
+        _isMouseDown = false;
+        if (_isMouseOver){
             SetCurrentImageFrame(GetMaxFrames()-1);
             Exec();
             return true;
@@ -57,7 +59,10 @@ bool CButtonBase::OnLButtonUp(int x, int y)
 
 void CButtonBase::OnLoop()
 {
-    if (!_isMouseDown){
+    if (_isMouseDown){
+        CImgLayer::OnLoop();
+    }
+    else{
         CSequenceOfSprite::OnLoop();
     }
 }
@@ -83,6 +88,10 @@ bool CButtonBase::OnMouseMove(int x, int y)
             {
                 _isMouseOver = true;
                 TurnOn(false);
+
+                if (_seNameOfMouseOver != "")
+                    CResourceControl::_ResourceManager._SoundControl.PlaySE(
+                    _seNameOfMouseOver, 1.0f, false);
             }
 
             _Type = CAnimation::Forward;
@@ -90,7 +99,6 @@ bool CButtonBase::OnMouseMove(int x, int y)
         }
         else{
             _isMouseOver = false;
-            _isMouseDown = false;
             _Type = CAnimation::Backward;
             TurnOn(false);
         }

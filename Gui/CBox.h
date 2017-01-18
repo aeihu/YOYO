@@ -11,7 +11,6 @@
 
 #include "../Graphics/CSurface.h"
 #include "../Common/CCommon.h"
-#include "CGuiCommon.h"
 #include "../Common/CConfigFile.h"
 #include "../Stage_Talk/CImgLayer.h"
 
@@ -68,5 +67,7 @@ class CBox : public CImgLayer
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual float GetWidth();
         virtual float GetHeight();
+
+        bool IsJiugone() const;
 };
 #endif

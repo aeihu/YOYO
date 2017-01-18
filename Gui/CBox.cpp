@@ -171,6 +171,11 @@ float CBox::GetHeight()
     return _isJiugone ? _jiugong.GetHeight() : _sprite.getGlobalBounds().height;
 }
 
+bool CBox::IsJiugone() const
+{
+    return _isJiugone;
+}
+
 //======================================================
 
 CBox::CJiugong::CJiugong()

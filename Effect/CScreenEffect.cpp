@@ -169,7 +169,7 @@ CScreenEffect* CScreenEffect::Create(size_t num, float width, float height)
     
     CScreenEffect* __result = new CScreenEffect();
     __result->SetClassName("ScrEffect");
-    float distance = width / (float)num;
+    float distance = num == 0 ? 0 : width / (float)num;
     num *= 4;
     __result->_vertexArray.resize(num);
     __result->_vertexData.resize(num);

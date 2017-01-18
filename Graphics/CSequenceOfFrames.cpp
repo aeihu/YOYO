@@ -93,7 +93,7 @@ void CSequenceOfFrames::Composite(sf::Image& baseImage, sf::Image& compositeImag
 void CSequenceOfFrames::SetCurrentImageFrame(int frame)
 {
     if (_destTexture != NULL){
-        size_t TilesetWidth  = _tile.getSize().x / _rect.width;
+        size_t TilesetWidth = _rect.width == 0 ? 0 : _tile.getSize().x / _rect.width;
 
         if (TilesetWidth == 0)
             return;

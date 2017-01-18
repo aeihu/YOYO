@@ -86,7 +86,7 @@ bool CSequenceOfSprite::SetProperty(const Object& json, bool isLoad)
 
 void CSequenceOfSprite::SetCurrentImageFrame(int frame)
 {
-    size_t TilesetWidth  = _texture->getSize().x / _rect.width;
+    size_t TilesetWidth = _rect.width == 0 ? 0 : _texture->getSize().x / _rect.width;
 
     if (TilesetWidth == 0)
         return;
