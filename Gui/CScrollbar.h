@@ -45,7 +45,11 @@ class CScrollbar : public CBox
                 void Exec(void* data = NULL);
             public:
                 using  CButtonBase::SetProperty;
+
+                bool OnMouseMove(int x, int y);
         }                       _btnBar;
+
+        friend class CBarButton;
 
         bool                    _isMouseDown;
         bool                    _isMouseOver;
@@ -55,10 +59,13 @@ class CScrollbar : public CBox
         CScrollbarCallback*     _obj;
 
         void Ref();
+        void SetBarPositionY(float y);
+        float ConvertPositionYToValue(float val);
     public:
         CScrollbar();
 
         virtual bool OnMouseWheel(int delta);
+        virtual bool OnLButtonDown(int x, int y);
         
         virtual bool CheckList(const Object& json);
         virtual bool SetProperty(const Object& json, bool isLoad = true);

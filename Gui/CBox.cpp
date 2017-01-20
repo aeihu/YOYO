@@ -138,6 +138,16 @@ sf::Transform CBox::GetTransform()
     return _isJiugone ? _jiugong.getTransform() : _sprite.getTransform();
 }
 
+bool CBox::Contains(float x, float y)
+{
+    sf::FloatRect __rect = IsJiugone() ?
+        sf::FloatRect(0, 0, GetWidth(), GetHeight())
+        : _sprite.getGlobalBounds();
+    __rect.left = __rect.top = 0.f;
+    __rect = GetTransform().transformRect(__rect);
+    return __rect.contains(sf::Vector2f(x, y));
+}
+
 void CBox::OnRender(sf::RenderTarget* Surf_Dest)
 {
     if (IsShowed()){

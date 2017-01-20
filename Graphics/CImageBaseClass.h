@@ -53,6 +53,7 @@ class CImageBaseClass : public CDrawableClass
         virtual void SetFlag(char flag);
         virtual char GetFlag() const;
         virtual sf::Transform GetTransform() = 0;
+        virtual bool Contains(float x, float y) = 0;
 
         virtual void CleanActionList();
         virtual void OnCleanup();

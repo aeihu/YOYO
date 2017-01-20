@@ -40,6 +40,7 @@ class CText : public CImageBaseClass
         float GetShadowPercent() const;
 
         virtual sf::Transform GetTransform();
+        virtual bool Contains(float x, float y);
         void SetShadowEnable(bool b);
         void SetShadowPercent(float percent);
         void SetFont(string name);

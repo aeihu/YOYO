@@ -63,6 +63,7 @@ class CBox : public CImgLayer
         ~CBox();
 
         virtual sf::Transform GetTransform();
+        virtual bool Contains(float x, float y);
         virtual void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);
         virtual float GetWidth();

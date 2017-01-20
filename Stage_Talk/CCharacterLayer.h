@@ -65,6 +65,7 @@ class CCharacterLayer : public CImageBaseClass, public CConfigFile
         void SetVoice(string name);
 
         virtual sf::Transform GetTransform();
+        virtual bool Contains(float x, float y);
         
         void OnLoop();
         virtual void OnRender(sf::RenderTarget* Surf_Dest);

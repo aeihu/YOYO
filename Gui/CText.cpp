@@ -193,6 +193,14 @@ sf::Transform CText::GetTransform()
 
     return _sfText.getTransform();
 }
+
+bool CText::Contains(float x, float y)
+{
+    sf::FloatRect __rect = _sfText.getGlobalBounds();
+    __rect.left = __rect.top = 0.f;
+    __rect = GetTransform().transformRect(__rect);
+    return __rect.contains(sf::Vector2f(x, y));
+}
 //void CText::FlipX()
 //{
 //

@@ -41,6 +41,7 @@ class CImgLayer : public CImageBaseClass, public CConfigFile
         virtual void OnCleanup();
 
         virtual sf::Transform CImgLayer::GetTransform();
+        virtual bool Contains(float x, float y);
 };
 
 #endif

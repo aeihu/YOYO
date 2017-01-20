@@ -37,6 +37,23 @@ bool CScrollbar::OnMouseWheel(int delta)
     return false;
 }
 
+bool CScrollbar::OnLButtonDown(int x, int y)
+{
+    if (CBox::OnLButtonDown(x, y))
+        return true;
+
+    if (IsShowed()){
+        sf::Vector2f __point;
+        __point = GetTransform().transformPoint(__point);
+        if (Contains(x, y)){
+            SetValue(ConvertPositionYToValue((float)y - __point.y));
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool CScrollbar::SetMaxValue(int value)
 {
     if (value < 1)
@@ -44,6 +61,7 @@ bool CScrollbar::SetMaxValue(int value)
 
     _maxValue = value;
     _incr = (GetHeight() - (float)_btnBar.GetHeight()) / (float)_maxValue;
+    _incr = _incr == 0.0f ? 0.01f : _incr;
     return true;
 }
 
@@ -58,6 +76,23 @@ void CScrollbar::Ref()
     _btnBar.SetPosition(
         _btnBar.GetPosition().x,
         _incr * _value);
+}
+
+void CScrollbar::SetBarPositionY(float y)
+{
+    sf::FloatRect __rect = IsJiugone() ?
+        sf::FloatRect(0, 0, GetWidth(), GetHeight())
+        : _sprite.getGlobalBounds();
+    __rect.left = __rect.top = 0.f;
+    __rect = GetTransform().transformRect(__rect);
+
+    if (y >= __rect.top && y <= __rect.top + __rect.height)
+        SetValue(ConvertPositionYToValue((float)y - __rect.top));
+}
+
+float CScrollbar::ConvertPositionYToValue(float val)
+{
+    return (val - _btnBar.GetHeight() / 2) / _incr;
 }
 
 void CScrollbar::SetValue(int val)
@@ -215,7 +250,7 @@ bool CScrollbar::SetProperty(const Object& json, bool isLoad)
     return CBox::SetProperty(json, isLoad);
 }
 
-//============================================
+//===================================================================
 
 void CScrollbar::CArrowUpButton::Exec(void *data)
 {
@@ -235,4 +270,19 @@ void CScrollbar::CArrowDownButton::Exec(void *data)
 
 void CScrollbar::CBarButton::Exec(void *data)
 {
+}
+
+bool CScrollbar::CBarButton::OnMouseMove(int x, int y)
+{
+    if (IsMouseDown()){
+        if (_baseNode){
+            CScrollbar* __scrollbar = static_cast<CScrollbar*>(_baseNode);
+            __scrollbar->SetBarPositionY(y);
+            return true;
+        }
+    }
+    else
+        return CButtonBase::OnMouseMove(x, y);
+
+    return false;
 }

@@ -58,6 +58,14 @@ sf::Transform CImgLayer::GetTransform()
     return _sprite.getTransform();
 }
 
+bool CImgLayer::Contains(float x, float y)
+{
+    sf::FloatRect __rect = _sprite.getGlobalBounds();
+    __rect.left = __rect.top = 0.f;
+    __rect = GetTransform().transformRect(__rect);
+    return __rect.contains(sf::Vector2f(x, y));
+}
+
 bool CImgLayer::LoadImgForSetProperty(const Object& json, string key)
 {
     if (!CSurface::GetTextureFromTextureList(json.get<String>(key), _texture))
