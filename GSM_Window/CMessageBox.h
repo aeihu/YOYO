@@ -21,9 +21,13 @@
 class CMessageBox : public CBox
 {        
     private:
+        class CSequenceFrames : public CSequenceOfSprite
+        {
+            public:
+                using CSequenceOfSprite::LoadImg;
+        }                   _frames;
         CText               _speakerName;
         CTextProcessing     _textProcessor;
-        CSequenceOfSprite   _frames;
         bool                _isFramesChanged;
         bool                _isUserWantToHideMsg;
 

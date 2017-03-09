@@ -57,7 +57,7 @@ bool CMessageBox::SetProperty(const Object& json, bool isLoad)
 
 //=================Init cursor==================================
     if (isLoad){
-        if (!_frames.LoadImgForSetProperty(json, "CURSOR_PATH"))
+        if (!_frames.LoadImg(json.get<String>("CURSOR_PATH")))
             return false;
 
         _frames.SetWidth(json.get<Number>("CURSOR_WIDTH"));

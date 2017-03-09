@@ -18,8 +18,8 @@ class CSequenceOfSprite : public CImgLayer, public CAnimation
     protected:
         virtual bool CheckList(const Object& json);
         virtual bool SetProperty(const Object& json, bool isLoad = true);
+        virtual bool LoadImg(string filename);
     public:
-        virtual bool LoadImgForSetProperty(const Object& json, string key);
 
         CSequenceOfSprite(float x=0.0f, float y=0.0f, int left=0, int top=0, int width=1, int height=1);
         void SetCurrentImageFrame(int frame);

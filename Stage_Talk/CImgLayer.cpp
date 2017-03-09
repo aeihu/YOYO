@@ -66,9 +66,9 @@ bool CImgLayer::Contains(float x, float y)
     return __rect.contains(sf::Vector2f(x, y));
 }
 
-bool CImgLayer::LoadImgForSetProperty(const Object& json, string key)
+bool CImgLayer::LoadImg(string filename)
 {
-    if (!CSurface::GetTextureFromTextureList(json.get<String>(key), _texture))
+    if (!CSurface::GetTextureFromTextureList(filename, _texture))
         return false;
 
     _sprite.setTexture(*_texture, true);
@@ -108,7 +108,7 @@ bool CImgLayer::CheckList(const Object& json)
 bool CImgLayer::SetProperty(const Object& json, bool isLoad)
 {
     if (isLoad)
-        if (!LoadImgForSetProperty(json, "PATH"))
+        if (!LoadImg(json.get<String>("PATH")))
             return false;
 
     if (json.has<Number>("SCALE")){

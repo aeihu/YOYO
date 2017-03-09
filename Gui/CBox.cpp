@@ -83,27 +83,35 @@ bool CBox::CheckList(const Object& json)
     return __result;
 }
 
-bool CBox::LoadImgForSetProperty(const Object& json, string key)
+bool CBox::SetProperty(const Object& json, bool isLoad)
 {
-    if (json.has<Object>("JIUGONG")){
-        sf::Image __tileset, __dest;
-        if (!CSurface::GetTextureFromTextureList(json.get<String>(key).c_str(), _texture))
-            return false;
+    _isJiugone = json.has<Object>("JIUGONG");
 
+    if (!CImgLayer::SetProperty(json, isLoad))
+        return false;
+
+    if (_isJiugone){
         Object __obj = json.get<Object>("JIUGONG");
 
-        _isJiugone = true;
-        _jiugong.SetTexture(*_texture, __obj.get<Number>("WIDTH"), __obj.get<Number>("HEIGHT"),
+        _jiugong.SetVertexArraySize(__obj.get<Number>("WIDTH"), __obj.get<Number>("HEIGHT"),
             __obj.get<Number>("LEFT_WIDTH"), __obj.get<Number>("RIGHT_WIDTH"),
             __obj.get<Number>("TOP_HEIGHT"), __obj.get<Number>("BOTTOM_HEIGHT"));
     }
-    else{
-        if (!CSurface::GetTextureFromTextureList(json.get<String>(key).c_str(), _texture))
-            return false;
-
+    else
         _isJiugone = false;
+
+    return true;
+}
+
+bool CBox::LoadImg(string filename)
+{
+    if (!CSurface::GetTextureFromTextureList(filename, _texture))
+        return false;
+
+    if (_isJiugone)
+        _jiugong.SetTexture(*_texture);
+    else
         _sprite.setTexture(*_texture, true);
-    }
 
     return true;
 }
@@ -236,8 +244,12 @@ void CBox::CJiugong::SetVectorForVertexArray(
     vectors[15] = sf::Vector2f(width, height);
 }
 
-void CBox::CJiugong::SetTexture(
-    const sf::Texture& texture,
+void CBox::CJiugong::SetTexture(const sf::Texture& texture)
+{
+    _pTexture = &texture;
+}
+
+void CBox::CJiugong::SetVertexArraySize(
     size_t width,
     size_t height,
     size_t leftWidth,
@@ -300,7 +312,6 @@ void CBox::CJiugong::SetTexture(
     _vertexArray[34].position = __vec[15];
     _vertexArray[35].position = _vertexArray[30].position;
 
-    _pTexture = &texture;
     SetVectorForVertexArray(
         __vec,
         _pTexture->getSize().x,

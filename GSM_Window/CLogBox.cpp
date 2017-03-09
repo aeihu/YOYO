@@ -343,7 +343,6 @@ bool CLogBox::SetProperty(const Object& json, bool isLoad)
     else
         CleanLogList();
 
-
     return CBox::SetProperty(json, isLoad);
 }
 

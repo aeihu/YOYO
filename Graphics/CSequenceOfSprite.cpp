@@ -17,9 +17,9 @@ CSequenceOfSprite::CSequenceOfSprite(float x, float y, int left, int top, int wi
     _rect.height = height;
 }
 
-bool CSequenceOfSprite::LoadImgForSetProperty(const Object& json, string key)
+bool CSequenceOfSprite::LoadImg(string filename)
 {
-    if (CImgLayer::LoadImgForSetProperty(json, key)){
+    if (CImgLayer::LoadImg(filename)){
         SetCurrentImageFrame(0);
         return true;
     }

@@ -36,13 +36,15 @@ class CBox : public CImgLayer
         public:
             CJiugong();
 
-            void SetTexture(const sf::Texture& texture,
+            void SetVertexArraySize(
                 size_t width,
                 size_t height,
                 size_t leftWidth,
                 size_t rightWidth,
                 size_t topHeight,
                 size_t bottomHeight);
+
+            void SetTexture(const sf::Texture& texture);
 
             size_t GetWidth() const;
             size_t GetHeight() const;
@@ -57,7 +59,8 @@ class CBox : public CImgLayer
         CJiugong    _jiugong;
 
         virtual bool CheckList(const Object& json);
-        virtual bool LoadImgForSetProperty(const Object& json, string key);
+        virtual bool SetProperty(const Object& json, bool isLoad = true);
+        virtual bool LoadImg(string filename);
     public:
         CBox();
         ~CBox();
