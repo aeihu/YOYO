@@ -141,7 +141,7 @@ bool CImgLayer::SetProperty(const Object& json, bool isLoad)
     SetRed(json.has<Number>("RED") ? json.get<Number>("RED") : 255);
     SetGreen(json.has<Number>("GREEN") ? json.get<Number>("GREEN") : 255);
     SetBlue(json.has<Number>("BLUE") ? json.get<Number>("BLUE") : 255);
-    SetAlpha(json.has<Number>("ALPHA") ? json.get<Number>("ALPHA") : 255);
+    SetAlpha(json.has<Number>("ALPHA") ? json.get<Number>("ALPHA") : 0);
 
     return true;
 }
@@ -163,7 +163,7 @@ CImgLayer* CImgLayer::Create(const char* filename)
 void CImgLayer::OnLoop()
 {
     CBaiscProperties::OnLoop();
-    
+
     if (_sprite.getColor().a != (sf::Uint8)GetAlpha() ||
         _sprite.getColor().r != (sf::Uint8)GetRed() ||
         _sprite.getColor().g != (sf::Uint8)GetGreen() ||
